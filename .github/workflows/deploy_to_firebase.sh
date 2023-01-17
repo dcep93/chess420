@@ -5,7 +5,6 @@ set -euo pipefail
 SA_KEY="$1"
 
 # # disable billing
-# # create firebase project
 # set -e
 # nvm install 16.4.0
 # firebase projects:addfirebase $GOOGLE_CLOUD_PROJECT
