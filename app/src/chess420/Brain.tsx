@@ -1,6 +1,6 @@
 import React from "react";
 
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 
 export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
