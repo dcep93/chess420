@@ -1,5 +1,7 @@
 import Brain from "./Brain";
 
+import { Chessboard } from "react-chessboard";
+
 export default function Board(props: { brain: Brain }) {
   return (
     <div style={{ backgroundColor: "goldenrod" }}>
@@ -23,7 +25,7 @@ export default function Board(props: { brain: Brain }) {
               display: "flex",
             }}
           >
-            <SubBoard />
+            <SubBoard brain={props.brain} />
           </div>
         </div>
       </div>
@@ -31,8 +33,10 @@ export default function Board(props: { brain: Brain }) {
   );
 }
 
-function SubBoard() {
+function SubBoard(props: { brain: Brain }) {
   return (
-    <div style={{ border: "10px black solid", width: "100%" }}>subboard</div>
+    <div style={{ border: "10px black solid", width: "100%" }}>
+      <Chessboard position={"start"} onPieceClick={() => alert("click")} />
+    </div>
   );
 }
