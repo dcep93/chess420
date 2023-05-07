@@ -1,0 +1,9 @@
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls * {
+    font-size: large
+}

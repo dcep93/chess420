@@ -1,6 +1,6 @@
 {
   "name": "chess420",
-  "description": "",
+  "description": "Allows querying lichess api to find mistakes in a user's games",
   "version": "0.0.1",
   "icons": {
     "16": "favicon.ico",
