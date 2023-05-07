@@ -1,10 +1,14 @@
 import Brain from "./Brain";
 
-import css from "./controls.module.css";
-
 export default function Controls(props: { brain: Brain }) {
   return (
-    <div className={css.controls}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div>
         <button onClick={props.brain.startOver}>start over</button>
         <button onClick={props.brain.newGame}>new game</button>

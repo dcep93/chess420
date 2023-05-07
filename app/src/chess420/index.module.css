@@ -1,0 +1,15 @@
+@media (orientation: portrait) { 
+    .responsiveFlexDirection {
+        flex-direction: column;
+    }
+}
+
+@media (orientation: landscape) { 
+    .responsiveFlexDirection {
+        flex-direction: row;
+    }
+}
+
+body * {
+    font-size: large
+}
