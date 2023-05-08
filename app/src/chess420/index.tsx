@@ -1,4 +1,3 @@
-import Chess, { ChessInstance } from "chess.js";
 import React from "react";
 import Board from "./Board";
 import Brain from "./Brain";
@@ -8,13 +7,11 @@ import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function Main() {
-  // @ts-ignore
-  const chess: ChessInstance = new Chess();
   const [history, updateHistory] = React.useState({
     index: 0,
     states: [
       {
-        chess,
+        chess: Brain.getChess(),
         orientationIsWhite: true,
         logs: [] as LogType[],
       },

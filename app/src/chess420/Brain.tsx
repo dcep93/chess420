@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ChessInstance, Square } from "chess.js";
+import Chess, { ChessInstance, Square } from "chess.js";
 import { LogType } from "./Log";
 
 type StateType = {
@@ -18,6 +18,10 @@ export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
   history: History;
   updateHistory: (history: History) => void;
+  static getChess(): ChessInstance {
+    // @ts-ignore
+    return new Chess();
+  }
 
   constructor(history: History, updateHistory: (history: History) => void) {
     this.history = history;
