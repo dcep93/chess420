@@ -1,13 +1,18 @@
 import React from "react";
 
-import { Chess } from "chess.js";
+export type ChessType = any;
 
 export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
   hasNoNovelty = React.createRef<HTMLButtonElement>();
   initialState = null;
-  position = "start";
-  chess = new Chess();
+  chess: ChessType;
+  updateChess: (chess: ChessType) => void;
+
+  constructor(chess: ChessType, updateChess: (chess: ChessType) => void) {
+    this.chess = chess;
+    this.updateChess = updateChess;
+  }
 
   // controls
   startOver() {}
@@ -23,7 +28,14 @@ export default class Brain {
   help() {}
 
   // board
-  onPieceDrop(s: any, target: any) {
-    return true;
+  onPieceDrop(from: string, to: string) {
+    const copy = { ...this.chess };
+    const move = copy.move({ from, to });
+    if (move !== null) {
+      this.updateChess(copy);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

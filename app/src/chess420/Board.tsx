@@ -1,3 +1,4 @@
+import React from "react";
 import Brain from "./Brain";
 
 import { Chessboard } from "react-chessboard";
@@ -34,9 +35,34 @@ export default function Board(props: { brain: Brain }) {
 }
 
 function SubBoard(props: { brain: Brain }) {
+  const [prevClicked, updateClicked] = React.useState<string | null>(null);
   return (
     <div style={{ border: "10px black solid", width: "100%" }}>
-      <Chessboard position={"start"} onPieceClick={() => alert("click")} />
+      <Chessboard
+        position={props.brain.chess.fen()}
+        customSquareStyles={{
+          [prevClicked || ""]: {
+            background: "rgba(255, 255, 0)",
+          },
+        }}
+        onPieceDrop={(from, to) => {
+          updateClicked(null);
+          return props.brain.onPieceDrop(from, to);
+        }}
+        onSquareClick={(clicked: string) => {
+          if (prevClicked === null) {
+            updateClicked(clicked);
+          } else if (prevClicked === clicked) {
+            updateClicked(null);
+          } else {
+            if (props.brain.onPieceDrop(prevClicked, clicked)) {
+              updateClicked(null);
+            } else {
+              updateClicked(clicked);
+            }
+          }
+        }}
+      />
     </div>
   );
 }
