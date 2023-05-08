@@ -28,7 +28,7 @@ export default class Brain {
   help() {}
 
   // board
-  onPieceDrop(from: string, to: string) {
+  moveFromTo(from: string, to: string) {
     const copy = { ...this.chess };
     const move = copy.move({ from, to });
     if (move !== null) {

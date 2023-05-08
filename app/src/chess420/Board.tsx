@@ -6,7 +6,7 @@ import { Chessboard } from "react-chessboard";
 export default function Board(props: { brain: Brain }) {
   return (
     <div style={{ backgroundColor: "goldenrod" }}>
-      <div style={{ margin: "auto", width: "80%" }}>
+      <div style={{ margin: "auto", width: "100%" }}>
         <div
           style={{
             position: "relative",
@@ -47,7 +47,7 @@ function SubBoard(props: { brain: Brain }) {
         }}
         onPieceDrop={(from, to) => {
           updateClicked(null);
-          return props.brain.onPieceDrop(from, to);
+          return props.brain.moveFromTo(from, to);
         }}
         onSquareClick={(clicked: string) => {
           if (prevClicked === null) {
@@ -55,7 +55,7 @@ function SubBoard(props: { brain: Brain }) {
           } else if (prevClicked === clicked) {
             updateClicked(null);
           } else {
-            if (props.brain.onPieceDrop(prevClicked, clicked)) {
+            if (props.brain.moveFromTo(prevClicked, clicked)) {
               updateClicked(null);
             } else {
               updateClicked(clicked);
