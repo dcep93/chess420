@@ -1,52 +1,77 @@
 import React from "react";
 
 import { ChessInstance, Square } from "chess.js";
+import { LogType } from "./Log";
+
+type StateType = {
+  chess: ChessInstance;
+  orientationIsWhite: boolean;
+  logs: LogType[];
+};
+
+type History = {
+  index: number;
+  states: StateType[];
+};
 
 export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
   hasNoNovelty = React.createRef<HTMLButtonElement>();
-  startOverState: { chess: ChessInstance; orientationIsWhite: boolean };
-  props: {
-    chess: ChessInstance;
-    updateChess: (chess: ChessInstance) => void;
-    orientationIsWhite: boolean;
-    updateOrientationIsWhite: (orientationIsWhite: boolean) => void;
-  };
+  history: History;
+  updateHistory: (history: History) => void;
 
-  constructor(
-    startOverState: { chess: ChessInstance; orientationIsWhite: boolean },
-    chess: ChessInstance,
-    updateChess: (chess: ChessInstance) => void,
-    orientationIsWhite: boolean,
-    updateOrientationIsWhite: (orientationIsWhite: boolean) => void
-  ) {
-    this.startOverState = startOverState;
-    this.props = {
-      chess,
-      updateChess,
-      orientationIsWhite,
-      updateOrientationIsWhite,
-    };
+  constructor(history: History, updateHistory: (history: History) => void) {
+    this.history = history;
+    this.updateHistory = updateHistory;
+  }
+
+  getState(): StateType {
+    return this.history.states[this.history.index];
+  }
+
+  setState(state: StateType) {
+    this.updateHistory({
+      index: 0,
+      states: [state].concat(this.history.states.slice(this.history.index)),
+    });
   }
 
   // controls
   startOver() {
-    const copy = { ...this.props.chess };
-    copy.load(this.startOverState.chess.fen());
-    this.props.updateChess(copy);
-    this.props.updateOrientationIsWhite(this.startOverState.orientationIsWhite);
+    const original = this.history.states[this.history.states.length - 1];
+    this.setState(original);
   }
+
   newGame() {
-    const copy = { ...this.props.chess };
-    copy.reset();
-    this.props.updateChess(copy);
-    this.props.updateOrientationIsWhite(!this.props.orientationIsWhite);
+    const state = this.getState();
+    const chess = { ...state.chess };
+    chess.reset();
+    this.setState({
+      chess,
+      orientationIsWhite: !state.orientationIsWhite,
+      logs: [],
+    });
   }
-  differentWeightedMove() {}
+
   undo() {
-    console.log(this.props.chess.history());
+    if (this.history.index - 1 < this.history.states.length) {
+      this.updateHistory({
+        ...this.history,
+        index: this.history.index + 1,
+      });
+    }
   }
-  redo() {}
+
+  redo() {
+    if (this.history.index > 0) {
+      this.updateHistory({
+        ...this.history,
+        index: this.history.index - 1,
+      });
+    }
+  }
+
+  differentWeightedMove() {}
   playWeighted() {}
   playBest() {}
   clearNovelty() {}
@@ -56,10 +81,11 @@ export default class Brain {
 
   // board
   moveFromTo(from: string, to: string) {
-    const copy = { ...this.props.chess };
-    const move = copy.move({ from: from as Square, to: to as Square });
+    const state = this.getState();
+    const chess = { ...state.chess };
+    const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      this.props.updateChess(copy);
+      this.setState({ ...state, chess });
       return true;
     } else {
       return false;

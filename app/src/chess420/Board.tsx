@@ -36,13 +36,12 @@ export default function Board(props: { brain: Brain }) {
 
 function SubBoard(props: { brain: Brain }) {
   const [prevClicked, updateClicked] = React.useState<string | null>(null);
+  const state = props.brain.getState();
   return (
     <div style={{ border: "10px black solid", width: "100%" }}>
       <Chessboard
-        boardOrientation={
-          props.brain.props.orientationIsWhite ? "white" : "black"
-        }
-        position={props.brain.props.chess.fen()}
+        boardOrientation={state.orientationIsWhite ? "white" : "black"}
+        position={state.chess.fen()}
         customSquareStyles={{
           [prevClicked || ""]: {
             background: "rgba(255, 255, 0)",

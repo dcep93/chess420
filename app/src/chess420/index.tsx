@@ -3,19 +3,24 @@ import React from "react";
 import Board from "./Board";
 import Brain from "./Brain";
 import Controls from "./Controls";
-import Log from "./Log";
+import Log, { LogType } from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function Main() {
   // @ts-ignore
   const chess: ChessInstance = new Chess();
-  const brainProps = { chess, orientationIsWhite: true };
-  const brain = new Brain(
-    brainProps,
-    ...React.useState(brainProps.chess),
-    ...React.useState(brainProps.orientationIsWhite)
-  );
+  const [history, updateHistory] = React.useState({
+    index: 0,
+    states: [
+      {
+        chess,
+        orientationIsWhite: true,
+        logs: [] as LogType[],
+      },
+    ],
+  });
+  const brain = new Brain(history, updateHistory);
   return (
     <div
       className={css.responsiveFlexDirection}
