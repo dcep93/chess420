@@ -1,24 +1,51 @@
 import React from "react";
 
-export type ChessType = any;
+import { ChessInstance, Square } from "chess.js";
 
 export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
   hasNoNovelty = React.createRef<HTMLButtonElement>();
-  initialState = null;
-  chess: ChessType;
-  updateChess: (chess: ChessType) => void;
+  startOverState: { chess: ChessInstance; orientationIsWhite: boolean };
+  props: {
+    chess: ChessInstance;
+    updateChess: (chess: ChessInstance) => void;
+    orientationIsWhite: boolean;
+    updateOrientationIsWhite: (orientationIsWhite: boolean) => void;
+  };
 
-  constructor(chess: ChessType, updateChess: (chess: ChessType) => void) {
-    this.chess = chess;
-    this.updateChess = updateChess;
+  constructor(
+    startOverState: { chess: ChessInstance; orientationIsWhite: boolean },
+    chess: ChessInstance,
+    updateChess: (chess: ChessInstance) => void,
+    orientationIsWhite: boolean,
+    updateOrientationIsWhite: (orientationIsWhite: boolean) => void
+  ) {
+    this.startOverState = startOverState;
+    this.props = {
+      chess,
+      updateChess,
+      orientationIsWhite,
+      updateOrientationIsWhite,
+    };
   }
 
   // controls
-  startOver() {}
-  newGame() {}
+  startOver() {
+    const copy = { ...this.props.chess };
+    copy.load(this.startOverState.chess.fen());
+    this.props.updateChess(copy);
+    this.props.updateOrientationIsWhite(this.startOverState.orientationIsWhite);
+  }
+  newGame() {
+    const copy = { ...this.props.chess };
+    copy.reset();
+    this.props.updateChess(copy);
+    this.props.updateOrientationIsWhite(!this.props.orientationIsWhite);
+  }
   differentWeightedMove() {}
-  undo() {}
+  undo() {
+    console.log(this.props.chess.history());
+  }
   redo() {}
   playWeighted() {}
   playBest() {}
@@ -29,10 +56,10 @@ export default class Brain {
 
   // board
   moveFromTo(from: string, to: string) {
-    const copy = { ...this.chess };
-    const move = copy.move({ from, to });
+    const copy = { ...this.props.chess };
+    const move = copy.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      this.updateChess(copy);
+      this.props.updateChess(copy);
       return true;
     } else {
       return false;

@@ -10,11 +10,15 @@ export default function Controls(props: { brain: Brain }) {
       }}
     >
       <div>
-        <button onClick={props.brain.startOver}>start over</button>
-        <button onClick={props.brain.newGame}>new game</button>
-        <button onClick={props.brain.undo}>undo</button>
-        <button onClick={props.brain.redo}>redo</button>
-        <button onClick={props.brain.help}>help</button>
+        <button onClick={props.brain.startOver.bind(props.brain)}>
+          start over
+        </button>
+        <button onClick={props.brain.newGame.bind(props.brain)}>
+          new game
+        </button>
+        <button onClick={props.brain.undo.bind(props.brain)}>undo</button>
+        <button onClick={props.brain.redo.bind(props.brain)}>redo</button>
+        <button onClick={props.brain.help.bind(props.brain)}>help</button>
       </div>
       <div>
         <label style={{ paddingRight: "10px" }}>
@@ -25,27 +29,31 @@ export default function Controls(props: { brain: Brain }) {
           />
           <span>Auto Reply</span>
         </label>
-        <button onClick={props.brain.playBest}>play best</button>
+        <button onClick={props.brain.playBest.bind(props.brain)}>
+          play best
+        </button>
       </div>
       <div>
-        <button onClick={props.brain.differentWeightedMove}>
+        <button onClick={props.brain.differentWeightedMove.bind(props.brain)}>
           different weighted move
         </button>
-        <button onClick={props.brain.playWeighted}>play weighted</button>
+        <button onClick={props.brain.playWeighted.bind(props.brain)}>
+          play weighted
+        </button>
       </div>
       <div>
         <button
           ref={props.brain.hasNoNovelty}
-          onClick={props.brain.clearNovelty}
+          onClick={props.brain.clearNovelty.bind(props.brain)}
         >
           clear novelty
         </button>
-        <button onClick={props.brain.memorizeWithQuizlet}>
+        <button onClick={props.brain.memorizeWithQuizlet.bind(props.brain)}>
           memorize with Quizlet
         </button>
       </div>
       <div>
-        <button onClick={props.brain.findMistakes}>
+        <button onClick={props.brain.findMistakes.bind(props.brain)}>
           find my online mistakes
         </button>
       </div>
