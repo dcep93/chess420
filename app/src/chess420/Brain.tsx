@@ -71,6 +71,15 @@ export default class Brain {
     }
   }
 
+  _playMove(san: string) {
+    const state = this.getState();
+    const chess = { ...state.chess };
+    const move = chess.move(san);
+    const log = { chess: state.chess, san: move!.san };
+    const logs = state.logs.concat(log);
+    this.setState({ ...state, chess, logs });
+  }
+
   differentWeightedMove() {}
   playWeighted() {}
   playBest() {}
@@ -85,7 +94,9 @@ export default class Brain {
     const chess = { ...state.chess };
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      this.setState({ ...state, chess });
+      const log = { chess: state.chess, san: move.san };
+      const logs = state.logs.concat(log);
+      this.setState({ ...state, chess, logs });
       return true;
     } else {
       return false;
