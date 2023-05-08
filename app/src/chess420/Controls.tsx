@@ -43,7 +43,7 @@ export default function Controls(props: { brain: Brain }) {
       </div>
       <div>
         <button
-          ref={props.brain.hasNoNovelty}
+          disabled={props.brain.hasNoNovelty()}
           onClick={props.brain.clearNovelty.bind(props.brain)}
         >
           clear novelty

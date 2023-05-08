@@ -16,13 +16,20 @@ type History = {
 
 export default class Brain {
   autoreply = React.createRef<HTMLInputElement>();
-  hasNoNovelty = React.createRef<HTMLButtonElement>();
   history: History;
   updateHistory: (history: History) => void;
 
   constructor(history: History, updateHistory: (history: History) => void) {
     this.history = history;
     this.updateHistory = updateHistory;
+
+    const state = this.getState();
+    if (
+      this.history.index === 0 &&
+      this.autoreply.current!.checked &&
+      state.chess.turn() !== (state.orientationIsWhite ? "w" : "b")
+    )
+      this.playWeighted();
   }
 
   getState(): StateType {
@@ -55,6 +62,7 @@ export default class Brain {
 
   undo() {
     if (this.history.index - 1 < this.history.states.length) {
+      this.autoreply.current!.checked = false;
       this.updateHistory({
         ...this.history,
         index: this.history.index + 1,
@@ -80,13 +88,34 @@ export default class Brain {
     this.setState({ ...state, chess, logs });
   }
 
-  differentWeightedMove() {}
-  playWeighted() {}
-  playBest() {}
-  clearNovelty() {}
-  memorizeWithQuizlet() {}
-  findMistakes() {}
-  help() {}
+  differentWeightedMove() {
+    alert("TODO");
+  }
+
+  playWeighted() {
+    alert("TODO");
+  }
+
+  playBest() {
+    alert("TODO");
+  }
+
+  hasNoNovelty() {
+    alert("TODO");
+    return true;
+  }
+  clearNovelty() {
+    alert("TODO");
+  }
+  memorizeWithQuizlet() {
+    alert("TODO");
+  }
+  findMistakes() {
+    alert("TODO");
+  }
+  help() {
+    alert("TODO");
+  }
 
   // board
   moveFromTo(from: string, to: string) {
