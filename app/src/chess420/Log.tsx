@@ -6,6 +6,7 @@ import lichess, { LiMove } from "./Lichess";
 export type LogType = { chess: ChessInstance; san: string };
 
 export default function Log(props: { brain: Brain }) {
+  return null;
   const rawLogs = props.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
   const logs =

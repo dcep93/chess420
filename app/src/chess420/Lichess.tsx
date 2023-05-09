@@ -21,13 +21,25 @@ function score(chess: ChessInstance, move: LiMove): number {
   return Math.pow(p, 3) * Math.pow(move.total, 0.42);
 }
 
+const promises: { [key: string]: Promise<LiMove[]> } = {};
+
 export default function lichess(
   chess: ChessInstance,
   isOriginal: boolean = true,
   attempt: number = 1,
   ratings: number[] = [2000, 2200, 2500]
 ): Promise<LiMove[]> {
-  return helper(chess, attempt, ratings)
+  const key = JSON.stringify({
+    chess: chess.fen(),
+    isOriginal,
+    attempt,
+    ratings,
+  });
+  const pp = promises[key];
+  if (pp) {
+    return pp;
+  }
+  const p = helper(chess, attempt, ratings)
     .then((moves) =>
       moves.map((move: LiMove) => ({
         ...move,
@@ -52,6 +64,8 @@ export default function lichess(
         );
       return moves;
     });
+  promises[key] = p;
+  return p;
 }
 
 async function helper(
