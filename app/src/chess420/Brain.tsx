@@ -57,7 +57,6 @@ export default class Brain {
     });
   }
 
-  // controls
   startOver() {
     const original = this.history.states[this.history.states.length - 1];
     this.setState(original);
@@ -169,12 +168,13 @@ export default class Brain {
   }
 
   // board
-  moveFromTo(from: string, to: string) {
+  moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
     const state = this.getState();
     const chess = { ...state.chess };
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      const log = { chess: state.chess, san: move.san };
+      if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move);
+      const log = { chess, san: move.san };
       const logs = state.logs.concat(log);
       this.setState({ ...state, chess, logs });
       return true;

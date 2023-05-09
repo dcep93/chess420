@@ -19,13 +19,16 @@ export default function Main() {
     ],
   });
   const brain = new Brain(history, updateHistory);
+  const [isShift, updateIsShift] = React.useState(false);
   return (
     <div
       className={css.responsiveFlexDirection}
       style={{ minHeight: "100vH", display: "flex" }}
+      onKeyDown={(e) => e.shiftKey && updateIsShift(true)}
+      onKeyUp={(e) => e.shiftKey && updateIsShift(false)}
     >
       <div style={{ minWidth: "20em" }}>
-        <Board brain={brain} />
+        <Board brain={brain} isShift={isShift} />
         <Summary brain={brain} />
       </div>
       <div
