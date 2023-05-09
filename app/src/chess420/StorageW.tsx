@@ -1,7 +1,7 @@
 export default class StorageW {
-  static getLichess(url: string): string | null {
+  static get(key: string): any {
     return null;
   }
 
-  static setLichess(url: string, content: any) {}
+  static set(key: string, content: any) {}
 }

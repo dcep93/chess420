@@ -1,7 +1,10 @@
 import React from "react";
 
 import Chess, { ChessInstance, Square } from "chess.js";
+import lichess, { Move } from "./Lichess";
 import { LogType } from "./Log";
+import score from "./Score";
+import StorageW from "./StorageW";
 
 type StateType = {
   chess: ChessInstance;
@@ -12,6 +15,7 @@ type StateType = {
 type History = {
   index: number;
   states: StateType[];
+  different: string | null;
 };
 
 export default class Brain {
@@ -27,13 +31,18 @@ export default class Brain {
     this.history = history;
     this.updateHistory = updateHistory;
 
+    if (this.history.index === 0) {
+      if (this.history.different !== null) {
+        this.playWeighted(this.history.different);
+      } else if (this.autoreply.current!.checked && !this._isMyTurn()) {
+        this.playWeighted(null);
+      }
+    }
+  }
+
+  _isMyTurn(): boolean {
     const state = this.getState();
-    if (
-      this.history.index === 0 &&
-      this.autoreply.current!.checked &&
-      state.chess.turn() !== (state.orientationIsWhite ? "w" : "b")
-    )
-      this.playWeighted();
+    return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");
   }
 
   getState(): StateType {
@@ -44,6 +53,7 @@ export default class Brain {
     this.updateHistory({
       index: 0,
       states: [state].concat(this.history.states.slice(this.history.index)),
+      different: null,
     });
   }
 
@@ -92,31 +102,68 @@ export default class Brain {
     this.setState({ ...state, chess, logs });
   }
 
-  differentWeightedMove() {
-    alert("TODO");
+  _getLichess() {
+    return lichess(this.getState().chess.fen());
   }
 
-  playWeighted() {
-    alert("TODO");
+  differentWeightedMove() {
+    const logs = this.getState().logs;
+    const san = logs[logs.length - 1]?.san;
+    if (san !== undefined) {
+      this.updateHistory({
+        ...this.history,
+        different: san,
+      });
+    }
+  }
+
+  playWeighted(different: string | null) {
+    this._getLichess().then((moves) => {
+      const weights = moves
+        .filter((move: Move) => move.san !== different)
+        .map((move: Move) => Math.pow(move.total, 1.5));
+      var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
+      for (let i = 0; i < weights.length; i++) {
+        choice -= weights[i];
+        if (choice <= 0) return this._playMove(moves[i].san);
+      }
+      if (different !== null) this._playMove(different);
+    });
   }
 
   playBest() {
-    alert("TODO");
+    if (this._isMyTurn()) {
+      const novelty = this.getNovelty();
+      if (novelty !== null) {
+        return this._playMove(novelty);
+      }
+    }
+    this._getLichess()
+      .then((moves) =>
+        moves
+          .map((move: Move) => ({ move, score: score(move, moves) }))
+          .sort((a, b) => b.score - a.score)
+      )
+      .then((moves) => moves[0].move.san)
+      .then((san) => this._playMove(san));
   }
 
-  hasNoNovelty() {
-    alert("TODO");
-    return true;
+  getNovelty(): string | null {
+    return StorageW.get(this.getState().chess.fen());
   }
+
   clearNovelty() {
-    alert("TODO");
+    StorageW.set(this.getState().chess.fen(), null);
   }
+
   memorizeWithQuizlet() {
     alert("TODO");
   }
+
   findMistakes() {
     alert("TODO");
   }
+
   help() {
     alert("TODO");
   }

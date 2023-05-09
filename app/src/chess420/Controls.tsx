@@ -37,13 +37,13 @@ export default function Controls(props: { brain: Brain }) {
         <button onClick={props.brain.differentWeightedMove.bind(props.brain)}>
           different weighted move
         </button>
-        <button onClick={props.brain.playWeighted.bind(props.brain)}>
+        <button onClick={() => props.brain.playWeighted(null)}>
           play weighted
         </button>
       </div>
       <div>
         <button
-          disabled={props.brain.hasNoNovelty()}
+          disabled={props.brain.getNovelty() === null}
           onClick={props.brain.clearNovelty.bind(props.brain)}
         >
           clear novelty
