@@ -18,7 +18,7 @@ export default function Log(props: { brain: Brain }) {
     (_, i) => [rawLogs[i], rawLogs[i + 1]]
   );
   return (
-    <div style={{ overflow: "scroll" }}>
+    <div style={{ overflowX: "scroll" }}>
       <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
         <tbody>
           <tr>
