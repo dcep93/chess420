@@ -1,7 +1,7 @@
 import { ChessInstance } from "chess.js";
-import { Move } from "./Lichess";
+import { LiMove } from "./Lichess";
 
-export default function score(chess: ChessInstance, move: Move): number {
+export default function score(chess: ChessInstance, move: LiMove): number {
   const isWhite = chess.turn() === "w";
   const p =
     (isWhite ? move.white : move.black) /

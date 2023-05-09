@@ -1,7 +1,7 @@
 import { ChessInstance } from "chess.js";
 import { useState } from "react";
 import Brain from "./Brain";
-import lichess, { Move } from "./Lichess";
+import lichess, { LiMove } from "./Lichess";
 
 export type LogType = { chess: ChessInstance; san: string };
 
@@ -29,7 +29,7 @@ export default function Log(props: { brain: Brain }) {
 }
 
 function GetLog(log: LogType) {
-  const [moves, update] = useState<Move[] | null>(null);
+  const [moves, update] = useState<LiMove[] | null>(null);
   lichess(log.chess, false).then(update);
   if (moves === null) return <></>;
   return (
@@ -41,7 +41,7 @@ function GetLog(log: LogType) {
   );
 }
 
-function getParts(san: string, moves: Move[]) {
+function getParts(san: string, moves: LiMove[]) {
   const move = moves.find((move) => move.san === san);
   if (move === undefined) {
     return [san, "s/", "p/", "ww/", "d/", "t/"];

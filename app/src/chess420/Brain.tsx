@@ -1,7 +1,7 @@
 import React from "react";
 
 import Chess, { ChessInstance, Square } from "chess.js";
-import lichess, { Move } from "./Lichess";
+import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import score from "./Score";
 import StorageW from "./StorageW";
@@ -119,8 +119,8 @@ export default class Brain {
   playWeighted(different: string | null) {
     this._getLichess().then((moves) => {
       const weights = moves
-        .filter((move: Move) => move.san !== different)
-        .map((move: Move) => Math.pow(move.total, 1.5));
+        .filter((move: LiMove) => move.san !== different)
+        .map((move: LiMove) => Math.pow(move.total, 1.5));
       var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
       for (let i = 0; i < weights.length; i++) {
         choice -= weights[i];
@@ -140,7 +140,7 @@ export default class Brain {
     this._getLichess()
       .then((moves) =>
         moves
-          .map((move: Move) => ({
+          .map((move: LiMove) => ({
             move,
             score: score(this.getState().chess, move),
           }))

@@ -3,7 +3,7 @@ import Brain from "./Brain";
 import score from "./Score";
 import StorageW from "./StorageW";
 
-export type Move = {
+export type LiMove = {
   san: string;
   white: number;
   black: number;
@@ -19,9 +19,9 @@ export default function lichess(
   isOriginal: boolean = true,
   attempt: number = 1,
   ratings: number[] = [2000, 2200, 2500]
-): Promise<Move[]> {
+): Promise<LiMove[]> {
   return helper(chess, isOriginal, attempt, ratings).then((moves) =>
-    moves.map((move: Move) => ({
+    moves.map((move: LiMove) => ({
       ...move,
       score: score(chess, move),
       total: move.black + move.white + move.draws,
@@ -57,13 +57,13 @@ async function helper(
   const moves = json.moves;
   StorageW.set(url, json);
   const total = moves
-    .map((move: Move) => move.total)
+    .map((move: LiMove) => move.total)
     .reduce((a: number, b: number) => a + b, 0);
   if (isOriginal)
     setTimeout(() =>
       moves
-        .filter((move: Move) => move.total >= total * 0.01)
-        .forEach((move: Move) => {
+        .filter((move: LiMove) => move.total >= total * 0.01)
+        .forEach((move: LiMove) => {
           const subChess = Brain.getChess();
           subChess.load(chess.fen());
           subChess.move(move.san);
