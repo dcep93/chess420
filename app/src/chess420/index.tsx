@@ -25,6 +25,7 @@ export default function Main() {
       style={{ minHeight: "100vH", display: "flex" }}
       onKeyDown={(e) => e.shiftKey && updateIsShift(true)}
       onKeyUp={(e) => e.shiftKey && updateIsShift(false)}
+      tabIndex={0}
     >
       <div style={{ minWidth: "20em" }}>
         <Board brain={brain} isShift={isShift} />
