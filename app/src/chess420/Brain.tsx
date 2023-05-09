@@ -14,7 +14,6 @@ type StateType = {
 type History = {
   index: number;
   states: StateType[];
-  different: string | null;
 };
 
 export default class Brain {
@@ -22,22 +21,16 @@ export default class Brain {
   history: History;
   updateHistory: (history: History) => void;
 
-  static getChess(): ChessInstance {
+  static getChess(prevChess: ChessInstance | null = null): ChessInstance {
     // @ts-ignore
-    return new Chess();
+    const chess = new Chess();
+    if (prevChess !== null) chess.load(prevChess.fen());
+    return chess;
   }
 
   constructor(history: History, updateHistory: (history: History) => void) {
     this.history = history;
     this.updateHistory = updateHistory;
-
-    // if (this.history.index === 0) {
-    //   if (this.history.different !== null) {
-    //     this.playWeighted(this.history.different);
-    //   } else if (this.autoreply.current?.checked && !this._isMyTurn()) {
-    //     this.playWeighted(null);
-    //   }
-    // }
   }
 
   _isMyTurn(): boolean {
@@ -53,8 +46,20 @@ export default class Brain {
     this.updateHistory({
       index: 0,
       states: [state].concat(this.history.states.slice(this.history.index)),
-      different: null,
     });
+    if (
+      this.autoreply.current?.checked &&
+      state.chess.turn() === (state.orientationIsWhite ? "b" : "w")
+    ) {
+      this._getWeighted(state).then((san) => {
+        if (!san) return;
+        const chess = Brain.getChess(state.chess);
+        chess.move(san);
+        const log = { chess, san };
+        const logs = state.logs.concat(log);
+        this.setState({ ...state, chess, logs });
+      });
+    }
   }
 
   startOver() {
@@ -64,7 +69,7 @@ export default class Brain {
 
   newGame() {
     const state = this.getState();
-    const chess = { ...state.chess };
+    const chess = Brain.getChess(state.chess);
     chess.reset();
     this.setState({
       chess,
@@ -94,40 +99,28 @@ export default class Brain {
 
   _playMove(san: string) {
     const state = this.getState();
-    const chess = { ...state.chess };
+    const chess = Brain.getChess(state.chess);
     chess.move(san);
     const log = { chess: state.chess, san };
     const logs = state.logs.concat(log);
     this.setState({ ...state, chess, logs });
   }
 
-  _getLichess() {
-    return lichess(this.getState().chess);
-  }
-
-  differentWeightedMove() {
-    const logs = this.getState().logs;
-    const san = logs[logs.length - 1]?.san;
-    if (san !== undefined) {
-      this.updateHistory({
-        ...this.history,
-        different: san,
-      });
-    }
-  }
-
-  playWeighted(different: string | null) {
-    this._getLichess().then((moves) => {
-      const weights = moves
-        .filter((move: LiMove) => move.san !== different)
-        .map((move: LiMove) => Math.pow(move.total, 1.5));
+  _getWeighted(state: StateType) {
+    return lichess(state.chess).then((moves) => {
+      const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
       var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
       for (let i = 0; i < weights.length; i++) {
         choice -= weights[i];
-        if (choice <= 0) return this._playMove(moves[i].san);
+        if (choice <= 0) return moves[i].san;
       }
-      if (different !== null) this._playMove(different);
     });
+  }
+
+  playWeighted() {
+    this._getWeighted(this.getState()).then(
+      (san) => san && this._playMove(san)
+    );
   }
 
   playBest() {
@@ -137,7 +130,7 @@ export default class Brain {
         return this._playMove(novelty);
       }
     }
-    this._getLichess()
+    lichess(this.getState().chess)
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0].san)
       .then((san) => this._playMove(san));
@@ -166,7 +159,7 @@ export default class Brain {
   // board
   moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
     const state = this.getState();
-    const chess = { ...state.chess };
+    const chess = Brain.getChess(state.chess);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move);

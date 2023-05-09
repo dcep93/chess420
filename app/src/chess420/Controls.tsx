@@ -34,10 +34,7 @@ export default function Controls(props: { brain: Brain }) {
         </button>
       </div>
       <div>
-        <button onClick={props.brain.differentWeightedMove.bind(props.brain)}>
-          different weighted move
-        </button>
-        <button onClick={() => props.brain.playWeighted(null)}>
+        <button onClick={props.brain.playWeighted.bind(props.brain)}>
           play weighted
         </button>
       </div>

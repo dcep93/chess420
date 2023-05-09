@@ -8,7 +8,6 @@ import css from "./index.module.css";
 
 export default function Main() {
   const [history, updateHistory] = useState({
-    different: null as string | null,
     index: 0,
     states: [
       {
