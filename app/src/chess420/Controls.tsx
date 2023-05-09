@@ -16,9 +16,11 @@ export default function Controls(props: { brain: Brain }) {
         <button onClick={props.brain.newGame.bind(props.brain)}>
           new game
         </button>
+        <button onClick={props.brain.help.bind(props.brain)}>help</button>
+      </div>
+      <div>
         <button onClick={props.brain.undo.bind(props.brain)}>undo</button>
         <button onClick={props.brain.redo.bind(props.brain)}>redo</button>
-        <button onClick={props.brain.help.bind(props.brain)}>help</button>
       </div>
       <div>
         <label style={{ paddingRight: "10px" }}>

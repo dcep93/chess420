@@ -1,5 +1,5 @@
 import Brain from "./Brain";
 
 export default function Summary(props: { brain: Brain }) {
-  return <div>summary</div>;
+  return <div>TODO</div>;
 }

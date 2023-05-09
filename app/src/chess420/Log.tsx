@@ -31,6 +31,7 @@ export default function Log(props: { brain: Brain }) {
               <>
                 <td>{i + 1}.</td>
                 {line.map((log, j) =>
+                  // TODO onclick
                   log === undefined ? null : <GetLog key={j} log={log} />
                 )}
               </>
