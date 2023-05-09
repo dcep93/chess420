@@ -16,8 +16,7 @@ export type LiMove = {
 function score(chess: ChessInstance, move: LiMove): number {
   const isWhite = chess.turn() === "w";
   const p =
-    (isWhite ? move.white : move.black) /
-    (10 + (isWhite ? move.black : move.white));
+    (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
   return Math.pow(p, 3) * Math.pow(move.total, 0.42);
 }
 
@@ -41,11 +40,15 @@ export default function lichess(
   }
   const p = helper(chess, attempt, ratings)
     .then((moves) =>
-      moves.map((move: LiMove) => ({
-        ...move,
-        score: score(chess, move),
-        total: move.black + move.white + move.draws,
-      }))
+      moves
+        .map((move: LiMove) => ({
+          ...move,
+          total: move.black + move.white + move.draws,
+        }))
+        .map((move: LiMove) => ({
+          ...move,
+          score: score(chess, move),
+        }))
     )
     .then((moves) => {
       const total = moves

@@ -50,21 +50,21 @@ function getParts(san: string, moves: LiMove[]) {
   if (move === undefined) {
     return [san, "s/", "p/", "ww/", "d/", "t/0"];
   }
+  const s =
+    (100 * move.score) /
+    moves
+      .filter((m) => m.san !== san)
+      .map((m) => m.score)
+      .sort((a, b) => b - a)[0];
   return [
     san,
-    `s/${
-      (100 * move.score) /
-      moves
-        .filter((m) => m.san !== san)
-        .map((m) => m.score)
-        .sort((a, b) => b - a)[0]
-    }`,
-    `p/${
+    `s/${s > 420 ? 420 : s.toFixed(2)}`,
+    `p/${(
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)
-    }`,
-    `ww/${move.white / (move.white + move.black)}`,
-    `d/${move.draws / move.total}`,
+    ).toFixed(2)}`,
+    `ww/${(move.white / (move.white + move.black)).toFixed(2)}`,
+    `d/${(move.draws / move.total).toFixed(2)}`,
     `t/${move.total}`,
   ];
 }

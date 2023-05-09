@@ -43,9 +43,12 @@ export default class Brain {
   }
 
   setState(state: StateType) {
+    const states = [state].concat(
+      this.history.states.slice(this.history.index)
+    );
     this.updateHistory({
       index: 0,
-      states: [state].concat(this.history.states.slice(this.history.index)),
+      states,
     });
     if (
       this.autoreply.current?.checked &&
@@ -57,7 +60,10 @@ export default class Brain {
         chess.move(san);
         const log = { chess: state.chess, san };
         const logs = state.logs.concat(log);
-        this.setState({ ...state, chess, logs });
+        this.updateHistory({
+          index: 0,
+          states: [{ ...state, chess, logs }].concat(states),
+        });
       });
     }
   }
@@ -79,7 +85,7 @@ export default class Brain {
   }
 
   undo() {
-    if (this.history.index - 1 < this.history.states.length) {
+    if (this.history.index + 1 < this.history.states.length) {
       this.autoreply.current!.checked = false;
       this.updateHistory({
         ...this.history,
