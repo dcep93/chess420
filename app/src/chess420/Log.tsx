@@ -15,7 +15,7 @@ export default function Log(props: { brain: Brain }) {
       ? rawLogs
       : [undefined as LogType | undefined].concat(rawLogs);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
-    (_, i) => [rawLogs[i], rawLogs[i + 1]]
+    (_, i) => [rawLogs[2 * i], rawLogs[2 * i + 1]]
   );
   return (
     <div style={{ overflowX: "scroll" }}>
