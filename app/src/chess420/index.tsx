@@ -6,6 +6,8 @@ import Log, { LogType } from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
+const state: { [k: string]: boolean } = {};
+
 export default function Main() {
   const chess = Brain.getChess();
   // TODO set up initial
@@ -23,6 +25,8 @@ export default function Main() {
   // TODO update hash
   const [isShift, updateIsShift] = useState(false);
   useEffect(() => {
+    if (state.initialized) return;
+    state.initialized = true;
     document.addEventListener("keydown", (e) =>
       ((
         {
