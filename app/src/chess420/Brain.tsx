@@ -102,7 +102,7 @@ export default class Brain {
   }
 
   _getLichess() {
-    return lichess(this.getState().chess.fen());
+    return lichess(this.getState().chess);
   }
 
   differentWeightedMove() {
@@ -140,7 +140,10 @@ export default class Brain {
     this._getLichess()
       .then((moves) =>
         moves
-          .map((move: Move) => ({ move, score: score(move, moves) }))
+          .map((move: Move) => ({
+            move,
+            score: score(this.getState().chess, move),
+          }))
           .sort((a, b) => b.score - a.score)
       )
       .then((moves) => moves[0].move.san)

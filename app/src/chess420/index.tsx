@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Board from "./Board";
 import Brain from "./Brain";
 import Controls from "./Controls";
@@ -7,7 +7,7 @@ import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function Main() {
-  const [history, updateHistory] = React.useState({
+  const [history, updateHistory] = useState({
     different: null as string | null,
     index: 0,
     states: [
@@ -19,7 +19,7 @@ export default function Main() {
     ],
   });
   const brain = new Brain(history, updateHistory);
-  const [isShift, updateIsShift] = React.useState(false);
+  const [isShift, updateIsShift] = useState(false);
   return (
     <div
       className={css.responsiveFlexDirection}

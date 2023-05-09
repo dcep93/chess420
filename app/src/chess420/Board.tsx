@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Brain from "./Brain";
 
 import { Chessboard } from "react-chessboard";
@@ -37,7 +37,7 @@ export default function Board(props: PropsType) {
 }
 
 function SubBoard(props: PropsType) {
-  const [prevClicked, updateClicked] = React.useState<string | null>(null);
+  const [prevClicked, updateClicked] = useState<string | null>(null);
   const state = props.brain.getState();
   return (
     <div style={{ border: "10px black solid", width: "100%" }}>
