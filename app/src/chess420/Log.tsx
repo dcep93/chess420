@@ -5,6 +5,8 @@ import lichess, { LiMove } from "./Lichess";
 
 export type LogType = { chess: ChessInstance; san: string };
 
+const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
+
 export default function Log(props: { brain: Brain }) {
   const rawLogs = props.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
@@ -16,17 +18,26 @@ export default function Log(props: { brain: Brain }) {
     (_, i) => [rawLogs[i], rawLogs[i + 1]]
   );
   return (
-    <div style={{ height: "100%" }}>
-      {lines.map((line, i) => (
-        <div key={i} style={{ display: "flex" }}>
-          <>
-            <div>{i + 1}</div>
-            {line.map((log, j) =>
-              log === undefined ? null : <GetLog key={j} log={log} />
-            )}
-          </>
-        </div>
-      ))}
+    <div style={{ overflow: "scroll" }}>
+      <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
+        <tbody>
+          <tr>
+            {columnWidths.map((em, i) => (
+              <th key={i} style={{ minWidth: `${em}em` }}></th>
+            ))}
+          </tr>
+          {lines.map((line, i) => (
+            <tr key={i}>
+              <>
+                <td>{i + 1}.</td>
+                {line.map((log, j) =>
+                  log === undefined ? null : <GetLog key={j} log={log} />
+                )}
+              </>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -37,11 +48,13 @@ function GetLog(props: { log: LogType }) {
     lichess(props.log.chess, false).then((moves) => update(moves));
   }
   return (
-    <div style={{ display: "flex" }}>
+    <>
       {getParts(props.log.san, moves || []).map((movePart, i) => (
-        <div key={i}>{movePart}</div>
+        <td key={i} style={{ fontWeight: i === 0 ? "bold" : "initial" }}>
+          {movePart}
+        </td>
       ))}
-    </div>
+    </>
   );
 }
 
@@ -62,9 +75,9 @@ function getParts(san: string, moves: LiMove[]) {
     `p/${(
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)
-    ).toFixed(2)}`,
-    `ww/${(move.white / (move.white + move.black)).toFixed(2)}`,
-    `d/${(move.draws / move.total).toFixed(2)}`,
+    ).toFixed(0)}%`,
+    `ww/${((100 * move.white) / (move.white + move.black)).toFixed(0)}%`,
+    `d/${((100 * move.draws) / move.total).toFixed(0)}%`,
     `t/${move.total}`,
   ];
 }

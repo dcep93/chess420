@@ -32,8 +32,6 @@ export default function Controls(props: { brain: Brain }) {
         <button onClick={props.brain.playBest.bind(props.brain)}>
           play best
         </button>
-      </div>
-      <div>
         <button onClick={props.brain.playWeighted.bind(props.brain)}>
           play weighted
         </button>
