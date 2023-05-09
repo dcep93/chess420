@@ -18,10 +18,13 @@ export default function Log(props: { brain: Brain }) {
   return (
     <div style={{ height: "100%" }}>
       {lines.map((line, i) => (
-        <div key={i}>
-          {line.map((log, j) =>
-            log === undefined ? null : <GetLog key={j} log={log} />
-          )}
+        <div key={i} style={{ display: "flex" }}>
+          <>
+            <div>{i + 1}</div>
+            {line.map((log, j) =>
+              log === undefined ? null : <GetLog key={j} log={log} />
+            )}
+          </>
         </div>
       ))}
     </div>
@@ -34,7 +37,7 @@ function GetLog(props: { log: LogType }) {
     lichess(props.log.chess, false).then((moves) => update(moves));
   }
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       {getParts(props.log.san, moves || []).map((movePart, i) => (
         <div key={i}>{movePart}</div>
       ))}
@@ -45,7 +48,7 @@ function GetLog(props: { log: LogType }) {
 function getParts(san: string, moves: LiMove[]) {
   const move = moves.find((move) => move.san === san);
   if (move === undefined) {
-    return [san, "s/", "p/", "ww/", "d/", "t/"];
+    return [san, "s/", "p/", "ww/", "d/", "t/0"];
   }
   return [
     san,

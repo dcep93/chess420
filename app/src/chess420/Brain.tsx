@@ -55,7 +55,7 @@ export default class Brain {
         if (!san) return;
         const chess = Brain.getChess(state.chess);
         chess.move(san);
-        const log = { chess, san };
+        const log = { chess: state.chess, san };
         const logs = state.logs.concat(log);
         this.setState({ ...state, chess, logs });
       });
@@ -163,7 +163,7 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move);
-      const log = { chess, san: move.san };
+      const log = { chess: state.chess, san: move.san };
       const logs = state.logs.concat(log);
       this.setState({ ...state, chess, logs });
       return true;
