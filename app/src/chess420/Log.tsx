@@ -11,7 +11,7 @@ export default function Log(props: { brain: Brain }) {
   const logs =
     rawLogs[0].chess.turn() === "w"
       ? rawLogs
-      : [null as LogType | null].concat(rawLogs);
+      : [undefined as LogType | undefined].concat(rawLogs);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [rawLogs[i], rawLogs[i + 1]]
   );
@@ -20,7 +20,7 @@ export default function Log(props: { brain: Brain }) {
       {lines.map((line, i) => (
         <div key={i}>
           {line.map((log, j) =>
-            log === null ? null : <div key={j}>{GetLog(log)}</div>
+            log === undefined ? undefined : <div key={j}>{GetLog(log)}</div>
           )}
         </div>
       ))}
@@ -30,8 +30,10 @@ export default function Log(props: { brain: Brain }) {
 
 function GetLog(log: LogType) {
   const [moves, update] = useState<LiMove[] | null>(null);
-  lichess(log.chess, false).then(update);
-  if (moves === null) return <></>;
+  if (moves === null) {
+    lichess(log.chess, false).then(update);
+    return <></>;
+  }
   return (
     <>
       {getParts(log.san, moves).map((movePart, i) => (

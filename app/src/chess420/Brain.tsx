@@ -3,7 +3,6 @@ import React from "react";
 import Chess, { ChessInstance, Square } from "chess.js";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
-import score from "./Score";
 import StorageW from "./StorageW";
 
 type StateType = {
@@ -34,7 +33,7 @@ export default class Brain {
     if (this.history.index === 0) {
       if (this.history.different !== null) {
         this.playWeighted(this.history.different);
-      } else if (this.autoreply.current!.checked && !this._isMyTurn()) {
+      } else if (this.autoreply.current?.checked && !this._isMyTurn()) {
         this.playWeighted(null);
       }
     }
@@ -138,15 +137,8 @@ export default class Brain {
       }
     }
     this._getLichess()
-      .then((moves) =>
-        moves
-          .map((move: LiMove) => ({
-            move,
-            score: score(this.getState().chess, move),
-          }))
-          .sort((a, b) => b.score - a.score)
-      )
-      .then((moves) => moves[0].move.san)
+      .then((moves) => moves.sort((a, b) => b.score - a.score))
+      .then((moves) => moves[0].san)
       .then((san) => this._playMove(san));
   }
 
