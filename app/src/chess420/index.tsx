@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Board from "./Board";
 import Brain from "./Brain";
 import Controls from "./Controls";
@@ -22,31 +22,37 @@ export default function Main() {
   const brain = new Brain(history, updateHistory);
   // TODO update hash
   const [isShift, updateIsShift] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) =>
+      ((
+        {
+          ArrowUp: brain.playBest.bind(brain),
+          ArrowDown: brain.newGame.bind(brain),
+          Enter: brain.startOver.bind(brain),
+          ArrowLeft: brain.undo.bind(brain),
+          ArrowRight: brain.redo.bind(brain),
+          KewW: brain.playWeighted.bind(brain),
+          KeyM: brain.findMistakes.bind(brain),
+          KeyH: brain.help.bind(brain),
+          KeyQ: brain.memorizeWithQuizlet.bind(brain),
+          KeyA: () =>
+            (brain.autoreply.current!.checked =
+              !brain.autoreply.current!.checked),
+        }[e.code] || (() => e.shiftKey && updateIsShift(true))
+      )())
+    );
+
+    document.addEventListener(
+      "keyup",
+      (e) => e.shiftKey && updateIsShift(false)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     // TODO pretty
     <div
       className={css.responsiveFlexDirection}
       style={{ minHeight: "100vH", display: "flex" }}
-      onKeyDown={(e) =>
-        ((
-          {
-            ArrowUp: brain.playBest.bind(brain),
-            ArrowDown: brain.newGame.bind(brain),
-            Enter: brain.startOver.bind(brain),
-            ArrowLeft: brain.undo.bind(brain),
-            ArrowRight: brain.redo.bind(brain),
-            KewW: brain.playWeighted.bind(brain),
-            KeyM: brain.findMistakes.bind(brain),
-            KeyH: brain.help.bind(brain),
-            KeyQ: brain.memorizeWithQuizlet.bind(brain),
-            KeyA: () =>
-              (brain.autoreply.current!.checked =
-                !brain.autoreply.current!.checked),
-          }[e.code] || (() => e.shiftKey && updateIsShift(true))
-        )())
-      }
-      onKeyUp={(e) => e.shiftKey && updateIsShift(false)}
-      tabIndex={0}
     >
       <div
         style={{
