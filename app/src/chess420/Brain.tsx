@@ -31,13 +31,13 @@ export default class Brain {
     this.history = history;
     this.updateHistory = updateHistory;
 
-    if (this.history.index === 0) {
-      if (this.history.different !== null) {
-        this.playWeighted(this.history.different);
-      } else if (this.autoreply.current?.checked && !this._isMyTurn()) {
-        this.playWeighted(null);
-      }
-    }
+    // if (this.history.index === 0) {
+    //   if (this.history.different !== null) {
+    //     this.playWeighted(this.history.different);
+    //   } else if (this.autoreply.current?.checked && !this._isMyTurn()) {
+    //     this.playWeighted(null);
+    //   }
+    // }
   }
 
   _isMyTurn(): boolean {

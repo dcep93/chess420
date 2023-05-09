@@ -1,4 +1,4 @@
-const version = "0.1.0";
+const version = "0.1.3";
 
 export default class StorageW {
   static get(key: string): any {

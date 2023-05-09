@@ -6,7 +6,6 @@ import lichess, { LiMove } from "./Lichess";
 export type LogType = { chess: ChessInstance; san: string };
 
 export default function Log(props: { brain: Brain }) {
-  return null;
   const rawLogs = props.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
   const logs =
@@ -21,7 +20,7 @@ export default function Log(props: { brain: Brain }) {
       {lines.map((line, i) => (
         <div key={i}>
           {line.map((log, j) =>
-            log === undefined ? undefined : <div key={j}>{GetLog(log)}</div>
+            log === undefined ? null : <GetLog key={j} log={log} />
           )}
         </div>
       ))}
@@ -29,18 +28,17 @@ export default function Log(props: { brain: Brain }) {
   );
 }
 
-function GetLog(log: LogType) {
+function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(log.chess, false).then(update);
-    return <></>;
+    lichess(props.log.chess, false).then((moves) => update(moves));
   }
   return (
-    <>
-      {getParts(log.san, moves).map((movePart, i) => (
+    <div>
+      {getParts(props.log.san, moves || []).map((movePart, i) => (
         <div key={i}>{movePart}</div>
       ))}
-    </>
+    </div>
   );
 }
 
