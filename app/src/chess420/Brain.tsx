@@ -18,9 +18,10 @@ type History = {
 };
 
 export default class Brain {
-  autoreply = React.createRef<HTMLInputElement>();
+  autoreply = React.useRef<HTMLInputElement>(null);
   history: History;
   updateHistory: (history: History) => void;
+
   static getChess(): ChessInstance {
     // @ts-ignore
     return new Chess();
@@ -94,8 +95,8 @@ export default class Brain {
   _playMove(san: string) {
     const state = this.getState();
     const chess = { ...state.chess };
-    const move = chess.move(san);
-    const log = { chess: state.chess, san: move!.san };
+    chess.move(san);
+    const log = { chess: state.chess, san };
     const logs = state.logs.concat(log);
     this.setState({ ...state, chess, logs });
   }
