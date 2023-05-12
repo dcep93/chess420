@@ -38,6 +38,13 @@ export default class Brain {
     Brain.brain = this;
   }
 
+  hash(): string {
+    const state = this.getState();
+    return `${state.orientationIsWhite ? "w" : "b"}//${state.chess
+      .fen()
+      .replaceAll(" ", "_")}`;
+  }
+
   _isMyTurn(): boolean {
     const state = this.getState();
     return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");

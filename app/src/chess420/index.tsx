@@ -9,19 +9,25 @@ import css from "./index.module.css";
 export default function Main() {
   const state: { [k: string]: boolean } = {};
   const chess = Brain.getChess();
-  // TODO set up initial
+  var orientationIsWhite = true;
+  const hash = window.location.hash.split("#")[1];
+  if (hash !== undefined) {
+    const parts = hash.split("//");
+    orientationIsWhite = parts[0] === "w";
+    chess.load(parts[1].replaceAll("_", " "));
+  }
   const [history, updateHistory] = useState({
     index: 0,
     states: [
       {
         chess,
-        orientationIsWhite: true,
+        orientationIsWhite,
         logs: [] as LogType[],
       },
     ],
   });
   const brain = new Brain(history, updateHistory);
-  // TODO update hash
+  window.location.hash = brain.hash();
   const [isShift, updateIsShift] = useState(false);
   useEffect(() => {
     if (state.initialized) return;
