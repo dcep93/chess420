@@ -178,8 +178,8 @@ export default class Brain {
     }
     lichess(this.getState().chess)
       .then((moves) => moves.sort((a, b) => b.score - a.score))
-      .then((moves) => moves[0].san)
-      .then((san) => this._playMove(san));
+      .then((moves) => moves[0]?.san)
+      .then((san) => san && this._playMove(san));
   }
 
   getNovelty(): string | null {

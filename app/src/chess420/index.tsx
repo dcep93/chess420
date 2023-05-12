@@ -46,11 +46,11 @@ export default function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (!brain.getState()) return null;
-  return <SubMain brain={brain} isShift={isShift} />;
+  return <SubMain isShift={isShift} />;
 }
 
-function SubMain(props: { brain: Brain; isShift: boolean }) {
-  window.location.hash = Brain.hash(props.brain.getState().chess);
+function SubMain(props: { isShift: boolean }) {
+  window.location.hash = Brain.hash(Brain.brain.getState().chess);
   return (
     // TODO pretty
     <div
