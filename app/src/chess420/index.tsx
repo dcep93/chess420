@@ -13,8 +13,10 @@ export default function Main() {
   const hash = window.location.hash.split("#")[1];
   if (hash !== undefined) {
     const parts = hash.split("//");
-    orientationIsWhite = parts[0] === "w";
-    chess.load(parts[1].replaceAll("_", " "));
+    if (parts.length === 2) {
+      orientationIsWhite = parts[0] === "w";
+      chess.load(parts[1].replaceAll("_", " "));
+    }
   }
   const [history, updateHistory] = useState({
     index: 0,

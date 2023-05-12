@@ -1,9 +1,8 @@
-import { ChessInstance } from "chess.js";
 import { useState } from "react";
 import Brain from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 
-export type LogType = { chess: ChessInstance; san: string };
+export type LogType = { brain: Brain; san: string };
 
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
@@ -11,7 +10,7 @@ export default function Log(props: { brain: Brain }) {
   const rawLogs = props.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
   const logs =
-    rawLogs[0].chess.turn() === "w"
+    rawLogs[0].brain.getState().chess.turn() === "w"
       ? rawLogs
       : [undefined as LogType | undefined].concat(rawLogs);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
@@ -31,7 +30,6 @@ export default function Log(props: { brain: Brain }) {
               <>
                 <td>{i + 1}.</td>
                 {line.map((log, j) =>
-                  // TODO onclick
                   log === undefined ? null : <GetLog key={j} log={log} />
                 )}
               </>
@@ -46,18 +44,22 @@ export default function Log(props: { brain: Brain }) {
 function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(props.log.chess, false).then((moves) => update(moves));
+    lichess(props.log.brain.getState().chess, false).then((moves) =>
+      update(moves)
+    );
   }
+  const parts = getParts(props.log.san, moves || []);
   return (
     <>
-      {getParts(props.log.san, moves || []).map((movePart, i) => (
-        <td
-          key={i}
-          style={{ fontWeight: i === 0 ? "bold" : "initial" }}
-          title={moves === null || i !== 0 ? undefined : getTitle(moves)}
-        >
-          {movePart}
-        </td>
+      <td
+        style={{ fontWeight: "bold" }}
+        title={moves === null ? undefined : getTitle(moves)}
+        onClick={() => window.open(`#${props.log.brain.hash()}`)}
+      >
+        {parts[0]}
+      </td>
+      {parts.slice(1).map((movePart, i) => (
+        <td key={i}>{movePart}</td>
       ))}
     </>
   );

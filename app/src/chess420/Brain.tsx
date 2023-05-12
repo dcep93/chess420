@@ -5,7 +5,7 @@ import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import StorageW from "./StorageW";
 
-const REPLY_DELAY_MS = 500;
+const REPLY_DELAY_MS = 100;
 
 type StateType = {
   chess: ChessInstance;
@@ -92,7 +92,7 @@ export default class Brain {
 
   newGame() {
     const state = this.getState();
-    const chess = Brain.getChess(state.chess);
+    const chess = Brain.getChess();
     chess.reset();
     this.setState({
       chess,
