@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Brain from "./Brain";
 
 import { Chessboard } from "react-chessboard";
+import Brain from "./Brain";
 
-type PropsType = { brain: Brain; isShift: boolean };
+type PropsType = { isShift: boolean };
 
 export default function Board(props: PropsType) {
   return (
@@ -38,7 +38,7 @@ export default function Board(props: PropsType) {
 
 function SubBoard(props: PropsType) {
   const [prevClicked, updateClicked] = useState<string | null>(null);
-  const state = props.brain.getState();
+  const state = Brain.brain.getState();
   return (
     <div style={{ border: "10px black solid", width: "100%" }}>
       <Chessboard
@@ -51,7 +51,7 @@ function SubBoard(props: PropsType) {
         }}
         onPieceDrop={(from, to) => {
           updateClicked(null);
-          return props.brain.moveFromTo(from, to, props.isShift);
+          return Brain.brain.moveFromTo(from, to, props.isShift);
         }}
         onSquareClick={(clicked: string) => {
           if (prevClicked === null) {
@@ -59,7 +59,7 @@ function SubBoard(props: PropsType) {
           } else if (prevClicked === clicked) {
             updateClicked(null);
           } else {
-            if (props.brain.moveFromTo(prevClicked, clicked, props.isShift)) {
+            if (Brain.brain.moveFromTo(prevClicked, clicked, props.isShift)) {
               updateClicked(null);
             } else {
               updateClicked(clicked);

@@ -64,8 +64,8 @@ function SubMain(props: { brain: Brain; isShift: boolean }) {
           flexDirection: "column",
         }}
       >
-        <Board brain={props.brain} isShift={props.isShift} />
-        <Summary brain={props.brain} />
+        <Board isShift={props.isShift} />
+        <Summary />
       </div>
       <div
         style={{
@@ -74,9 +74,9 @@ function SubMain(props: { brain: Brain; isShift: boolean }) {
           flexDirection: "column",
         }}
       >
-        <Controls brain={props.brain} />
+        <Controls />
         <div style={{ flexGrow: 1, display: "grid" }}>
-          <Log brain={props.brain} />
+          <Log />
         </div>
       </div>
     </div>

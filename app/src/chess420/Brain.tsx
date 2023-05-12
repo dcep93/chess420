@@ -5,7 +5,7 @@ import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import StorageW from "./StorageW";
 
-const REPLY_DELAY_MS = 100;
+const REPLY_DELAY_MS = 300;
 
 export type StateType = {
   chess: ChessInstance;

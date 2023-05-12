@@ -1,6 +1,6 @@
 import Brain from "./Brain";
 
-export default function Controls(props: { brain: Brain }) {
+export default function Controls() {
   return (
     <div
       style={{
@@ -10,53 +10,53 @@ export default function Controls(props: { brain: Brain }) {
       }}
     >
       <div>
-        <button onClick={props.brain.startOver.bind(props.brain)}>
+        <button onClick={Brain.brain.startOver.bind(Brain.brain)}>
           start over
         </button>
-        <button onClick={props.brain.newGame.bind(props.brain)}>
+        <button onClick={Brain.brain.newGame.bind(Brain.brain)}>
           new game
         </button>
-        <button onClick={props.brain.help.bind(props.brain)}>help</button>
+        <button onClick={Brain.brain.help.bind(Brain.brain)}>help</button>
       </div>
       <div>
-        <button onClick={props.brain.undo.bind(props.brain)}>undo</button>
-        <button onClick={props.brain.redo.bind(props.brain)}>redo</button>
+        <button onClick={Brain.brain.undo.bind(Brain.brain)}>undo</button>
+        <button onClick={Brain.brain.redo.bind(Brain.brain)}>redo</button>
       </div>
       <div>
         <label style={{ paddingRight: "10px" }}>
           <input
-            ref={props.brain.autoreplyRef}
+            ref={Brain.brain.autoreplyRef}
             type={"checkbox"}
             defaultChecked={true}
           />
           <span>Auto Reply</span>
         </label>
-        <button onClick={props.brain.playBest.bind(props.brain)}>
+        <button onClick={Brain.brain.playBest.bind(Brain.brain)}>
           play best
         </button>
-        <button onClick={props.brain.playWeighted.bind(props.brain)}>
+        <button onClick={Brain.brain.playWeighted.bind(Brain.brain)}>
           play weighted
         </button>
       </div>
       <div>
         <button
-          disabled={props.brain.getNovelty() === null}
-          onClick={props.brain.clearNovelty.bind(props.brain)}
+          disabled={Brain.brain.getNovelty() === null}
+          onClick={Brain.brain.clearNovelty.bind(Brain.brain)}
         >
           clear novelty
         </button>
-        <button onClick={props.brain.memorizeWithQuizlet.bind(props.brain)}>
+        <button onClick={Brain.brain.memorizeWithQuizlet.bind(Brain.brain)}>
           memorize with Quizlet
         </button>
       </div>
       <div>
         <span>lichess: </span>
-        <input ref={props.brain.lichessRef} style={{ width: "4em" }} />
+        <input ref={Brain.brain.lichessRef} style={{ width: "4em" }} />
         <span>
-          <button onClick={props.brain.findMistakes.bind(props.brain)}>
+          <button onClick={Brain.brain.findMistakes.bind(Brain.brain)}>
             find mistakes
           </button>
-          <button onClick={props.brain.playVs.bind(props.brain)}>
+          <button onClick={Brain.brain.playVs.bind(Brain.brain)}>
             play vs user
           </button>
         </span>

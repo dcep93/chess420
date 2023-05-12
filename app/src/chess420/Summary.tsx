@@ -1,5 +1,3 @@
-import Brain from "./Brain";
-
-export default function Summary(props: { brain: Brain }) {
+export default function Summary() {
   return <div>TODO</div>;
 }

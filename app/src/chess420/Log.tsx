@@ -10,8 +10,8 @@ export type LogType = {
 
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
-export default function Log(props: { brain: Brain }) {
-  const rawLogs = props.brain.getState().logs;
+export default function Log() {
+  const rawLogs = Brain.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
   const logs =
     rawLogs[0].chess.turn() === "w"
