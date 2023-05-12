@@ -19,11 +19,10 @@ type History = {
 };
 
 export default class Brain {
-  static brain: Brain;
-  autoreplyRef = React.useRef<HTMLInputElement>(null);
-  lichessRef = React.useRef<HTMLInputElement>(null);
-  history: History;
-  updateHistory: (history: History) => void;
+  static autoreplyRef = React.useRef<HTMLInputElement>(null);
+  static lichessRef = React.useRef<HTMLInputElement>(null);
+  static history: History;
+  static updateHistory: (history: History) => void;
 
   static getChess(prevChess: ChessInstance | null = null): ChessInstance {
     // @ts-ignore
@@ -32,19 +31,13 @@ export default class Brain {
     return chess;
   }
 
-  constructor(history: History, updateHistory: (history: History) => void) {
-    this.history = history;
-    this.updateHistory = updateHistory;
-    Brain.brain = this;
-  }
-
   static hash(chess: ChessInstance): string {
-    return `${Brain.brain.getState().orientationIsWhite ? "w" : "b"}//${chess
+    return `${Brain.getState().orientationIsWhite ? "w" : "b"}//${chess
       .fen()
       .replaceAll(" ", "_")}`;
   }
 
-  setInitialState() {
+  static setInitialState() {
     const chess = Brain.getChess();
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
@@ -55,23 +48,18 @@ export default class Brain {
         chess.load(parts[1].replaceAll("_", " "));
       }
     }
-    this.setState({
+    Brain.setState({
       chess,
       orientationIsWhite,
       logs: [] as LogType[],
     });
   }
 
-  _isMyTurn(): boolean {
-    const state = this.getState();
-    return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");
+  static getState(): StateType {
+    return Brain.history.states[this.history.index];
   }
 
-  getState(): StateType {
-    return this.history.states[this.history.index];
-  }
-
-  setState(state: StateType) {
+  static setState(state: StateType) {
     const states = [state].concat(
       this.history.states.slice(this.history.index)
     );
@@ -87,7 +75,7 @@ export default class Brain {
     }
   }
 
-  reply(states: StateType[]) {
+  static reply(states: StateType[]) {
     const state = states[0];
     this._getWeighted(state).then((san) => {
       if (!san) return;
@@ -105,12 +93,12 @@ export default class Brain {
     });
   }
 
-  startOver() {
+  static startOver() {
     const original = this.history.states[this.history.states.length - 1];
     this.setState(original);
   }
 
-  newGame() {
+  static newGame() {
     const state = this.getState();
     const chess = Brain.getChess();
     chess.reset();
@@ -121,7 +109,7 @@ export default class Brain {
     });
   }
 
-  undo() {
+  static undo() {
     if (this.history.index + 1 < this.history.states.length) {
       this.autoreplyRef.current!.checked = false;
       this.updateHistory({
@@ -131,7 +119,7 @@ export default class Brain {
     }
   }
 
-  redo() {
+  static redo() {
     if (this.history.index > 0) {
       this.updateHistory({
         ...this.history,
@@ -140,7 +128,7 @@ export default class Brain {
     }
   }
 
-  _playMove(san: string) {
+  static _playMove(san: string) {
     const state = this.getState();
     const chess = Brain.getChess(state.chess);
     chess.move(san);
@@ -152,7 +140,7 @@ export default class Brain {
     this.setState({ ...state, chess, logs });
   }
 
-  _getWeighted(state: StateType) {
+  static _getWeighted(state: StateType) {
     return lichess(state.chess).then((moves) => {
       const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
       var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
@@ -163,14 +151,15 @@ export default class Brain {
     });
   }
 
-  playWeighted() {
+  static playWeighted() {
     this._getWeighted(this.getState()).then(
       (san) => san && this._playMove(san)
     );
   }
 
-  playBest() {
-    if (this._isMyTurn()) {
+  static playBest() {
+    const state = this.getState();
+    if (state.chess.turn() === (state.orientationIsWhite ? "w" : "b")) {
       const novelty = this.getNovelty();
       if (novelty !== null) {
         return this._playMove(novelty);
@@ -182,32 +171,32 @@ export default class Brain {
       .then((san) => san && this._playMove(san));
   }
 
-  getNovelty(): string | null {
+  static getNovelty(): string | null {
     return StorageW.get(this.getState().chess.fen());
   }
 
-  clearNovelty() {
+  static clearNovelty() {
     StorageW.set(this.getState().chess.fen(), null);
   }
 
-  memorizeWithQuizlet() {
+  static memorizeWithQuizlet() {
     alert("TODO");
   }
 
-  findMistakes() {
+  static findMistakes() {
     alert("TODO");
   }
 
-  playVs() {
+  static playVs() {
     alert("TODO");
   }
 
-  help() {
+  static help() {
     alert("TODO");
   }
 
   // board
-  moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
+  static moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
     const state = this.getState();
     const chess = Brain.getChess(state.chess);
     const move = chess.move({ from: from as Square, to: to as Square });

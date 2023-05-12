@@ -10,55 +10,43 @@ export default function Controls() {
       }}
     >
       <div>
-        <button onClick={Brain.brain.startOver.bind(Brain.brain)}>
-          start over
-        </button>
-        <button onClick={Brain.brain.newGame.bind(Brain.brain)}>
-          new game
-        </button>
-        <button onClick={Brain.brain.help.bind(Brain.brain)}>help</button>
+        <button onClick={Brain.startOver}>start over</button>
+        <button onClick={Brain.newGame}>new game</button>
+        <button onClick={Brain.help}>help</button>
       </div>
       <div>
-        <button onClick={Brain.brain.undo.bind(Brain.brain)}>undo</button>
-        <button onClick={Brain.brain.redo.bind(Brain.brain)}>redo</button>
+        <button onClick={Brain.undo}>undo</button>
+        <button onClick={Brain.redo}>redo</button>
       </div>
       <div>
         <label style={{ paddingRight: "10px" }}>
           <input
-            ref={Brain.brain.autoreplyRef}
+            ref={Brain.autoreplyRef}
             type={"checkbox"}
             defaultChecked={true}
           />
           <span>Auto Reply</span>
         </label>
-        <button onClick={Brain.brain.playBest.bind(Brain.brain)}>
-          play best
-        </button>
-        <button onClick={Brain.brain.playWeighted.bind(Brain.brain)}>
-          play weighted
-        </button>
+        <button onClick={Brain.playBest}>play best</button>
+        <button onClick={Brain.playWeighted}>play weighted</button>
       </div>
       <div>
         <button
-          disabled={Brain.brain.getNovelty() === null}
-          onClick={Brain.brain.clearNovelty.bind(Brain.brain)}
+          disabled={Brain.getNovelty() === null}
+          onClick={Brain.clearNovelty}
         >
           clear novelty
         </button>
-        <button onClick={Brain.brain.memorizeWithQuizlet.bind(Brain.brain)}>
+        <button onClick={Brain.memorizeWithQuizlet}>
           memorize with Quizlet
         </button>
       </div>
       <div>
         <span>lichess: </span>
-        <input ref={Brain.brain.lichessRef} style={{ width: "4em" }} />
+        <input ref={Brain.lichessRef} style={{ width: "4em" }} />
         <span>
-          <button onClick={Brain.brain.findMistakes.bind(Brain.brain)}>
-            find mistakes
-          </button>
-          <button onClick={Brain.brain.playVs.bind(Brain.brain)}>
-            play vs user
-          </button>
+          <button onClick={Brain.findMistakes}>find mistakes</button>
+          <button onClick={Brain.playVs}>play vs user</button>
         </span>
       </div>
     </div>

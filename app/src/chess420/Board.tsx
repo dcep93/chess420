@@ -38,7 +38,7 @@ export default function Board(props: PropsType) {
 
 function SubBoard(props: PropsType) {
   const [prevClicked, updateClicked] = useState<string | null>(null);
-  const state = Brain.brain.getState();
+  const state = Brain.getState();
   return (
     <div style={{ border: "10px black solid", width: "100%" }}>
       <Chessboard
@@ -51,7 +51,7 @@ function SubBoard(props: PropsType) {
         }}
         onPieceDrop={(from, to) => {
           updateClicked(null);
-          return Brain.brain.moveFromTo(from, to, props.isShift);
+          return Brain.moveFromTo(from, to, props.isShift);
         }}
         onSquareClick={(clicked: string) => {
           if (prevClicked === null) {
@@ -59,7 +59,7 @@ function SubBoard(props: PropsType) {
           } else if (prevClicked === clicked) {
             updateClicked(null);
           } else {
-            if (Brain.brain.moveFromTo(prevClicked, clicked, props.isShift)) {
+            if (Brain.moveFromTo(prevClicked, clicked, props.isShift)) {
               updateClicked(null);
             } else {
               updateClicked(clicked);
