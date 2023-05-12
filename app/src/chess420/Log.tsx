@@ -59,13 +59,7 @@ function GetLog(props: { log: LogType }) {
         onClick={() => {
           const chess = { ...props.log.chess };
           chess.move(props.log.san);
-          window.open(
-            `#${Brain.hash({
-              chess,
-              orientationIsWhite: Brain.brain.getState().orientationIsWhite,
-              logs: [],
-            })}`
-          );
+          window.open(`#${Brain.hash(chess)}`);
         }}
       >
         {parts[0]}

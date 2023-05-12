@@ -7,7 +7,7 @@ import StorageW from "./StorageW";
 
 const REPLY_DELAY_MS = 100;
 
-type StateType = {
+export type StateType = {
   chess: ChessInstance;
   orientationIsWhite: boolean;
   logs: LogType[];
@@ -38,8 +38,8 @@ export default class Brain {
     Brain.brain = this;
   }
 
-  static hash(state: StateType): string {
-    return `${state.orientationIsWhite ? "w" : "b"}//${state.chess
+  static hash(chess: ChessInstance): string {
+    return `${Brain.brain.getState().orientationIsWhite ? "w" : "b"}//${chess
       .fen()
       .replaceAll(" ", "_")}`;
   }
@@ -62,7 +62,7 @@ export default class Brain {
       states,
     });
     if (
-      this.autoreplyRef.current?.checked &&
+      (!this.autoreplyRef.current || this.autoreplyRef.current!.checked) &&
       state.chess.turn() === (state.orientationIsWhite ? "b" : "w")
     ) {
       setTimeout(() => this.reply(states), REPLY_DELAY_MS);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Board from "./Board";
-import Brain from "./Brain";
+import Brain, { StateType } from "./Brain";
 import Controls from "./Controls";
 import Log, { LogType } from "./Log";
 import Summary from "./Summary";
@@ -20,16 +20,9 @@ export default function Main() {
   }
   const [history, updateHistory] = useState({
     index: 0,
-    states: [
-      {
-        chess,
-        orientationIsWhite,
-        logs: [] as LogType[],
-      },
-    ],
+    states: [] as StateType[],
   });
   const brain = new Brain(history, updateHistory);
-  window.location.hash = Brain.hash(brain.getState());
   const [isShift, updateIsShift] = useState(false);
   useEffect(() => {
     if (state.initialized) return;
@@ -58,8 +51,15 @@ export default function Main() {
       "keyup",
       (e) => e.shiftKey && updateIsShift(false)
     );
+    brain.setState({
+      chess,
+      orientationIsWhite,
+      logs: [] as LogType[],
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  if (!brain.getState()) return null;
+  window.location.hash = Brain.hash(brain.getState().chess);
   return (
     // TODO pretty
     <div
