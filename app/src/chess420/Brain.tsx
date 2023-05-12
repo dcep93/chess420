@@ -19,6 +19,7 @@ type History = {
 };
 
 export default class Brain {
+  static brain: Brain;
   autoreplyRef = React.useRef<HTMLInputElement>(null);
   lichessRef = React.useRef<HTMLInputElement>(null);
   history: History;
@@ -34,6 +35,7 @@ export default class Brain {
   constructor(history: History, updateHistory: (history: History) => void) {
     this.history = history;
     this.updateHistory = updateHistory;
+    Brain.brain = this;
   }
 
   _isMyTurn(): boolean {

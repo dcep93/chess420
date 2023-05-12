@@ -6,9 +6,8 @@ import Log, { LogType } from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
-const state: { [k: string]: boolean } = {};
-
 export default function Main() {
+  const state: { [k: string]: boolean } = {};
   const chess = Brain.getChess();
   // TODO set up initial
   const [history, updateHistory] = useState({
@@ -27,9 +26,10 @@ export default function Main() {
   useEffect(() => {
     if (state.initialized) return;
     state.initialized = true;
-    document.addEventListener("keydown", (e) =>
-      ((
-        {
+    document.addEventListener("keydown", (e) => {
+      const brain = Brain.brain;
+      (
+        ({
           ArrowUp: brain.playBest.bind(brain),
           ArrowDown: brain.newGame.bind(brain),
           Enter: brain.startOver.bind(brain),
@@ -42,9 +42,9 @@ export default function Main() {
           KeyA: () =>
             (brain.autoreplyRef.current!.checked =
               !brain.autoreplyRef.current!.checked),
-        }[e.code] || (() => e.shiftKey && updateIsShift(true))
-      )())
-    );
+        })[e.code] || (() => e.shiftKey && updateIsShift(true))
+      )();
+    });
 
     document.addEventListener(
       "keyup",
