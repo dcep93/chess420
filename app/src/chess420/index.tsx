@@ -29,7 +29,7 @@ export default function Main() {
     ],
   });
   const brain = new Brain(history, updateHistory);
-  window.location.hash = brain.hash();
+  window.location.hash = Brain.hash(brain.getState());
   const [isShift, updateIsShift] = useState(false);
   useEffect(() => {
     if (state.initialized) return;

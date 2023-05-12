@@ -38,8 +38,7 @@ export default class Brain {
     Brain.brain = this;
   }
 
-  hash(): string {
-    const state = this.getState();
+  static hash(state: StateType): string {
     return `${state.orientationIsWhite ? "w" : "b"}//${state.chess
       .fen()
       .replaceAll(" ", "_")}`;
@@ -76,7 +75,10 @@ export default class Brain {
       if (!san) return;
       const chess = Brain.getChess(state.chess);
       chess.move(san);
-      const log = { chess: state.chess, san };
+      const log = {
+        chess: state.chess,
+        san,
+      };
       const logs = state.logs.concat(log);
       this.updateHistory({
         index: 0,
@@ -124,7 +126,10 @@ export default class Brain {
     const state = this.getState();
     const chess = Brain.getChess(state.chess);
     chess.move(san);
-    const log = { chess: state.chess, san };
+    const log = {
+      chess: state.chess,
+      san,
+    };
     const logs = state.logs.concat(log);
     this.setState({ ...state, chess, logs });
   }
@@ -190,7 +195,10 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move.san);
-      const log = { chess: state.chess, san: move.san };
+      const log = {
+        chess: state.chess,
+        san: move.san,
+      };
       const logs = state.logs.concat(log);
       this.setState({ ...state, chess, logs });
       return true;

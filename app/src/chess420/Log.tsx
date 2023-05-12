@@ -1,8 +1,12 @@
+import { ChessInstance } from "chess.js";
 import { useState } from "react";
 import Brain from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 
-export type LogType = { brain: Brain; san: string };
+export type LogType = {
+  chess: ChessInstance;
+  san: string;
+};
 
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
@@ -10,7 +14,7 @@ export default function Log(props: { brain: Brain }) {
   const rawLogs = props.brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
   const logs =
-    rawLogs[0].brain.getState().chess.turn() === "w"
+    rawLogs[0].chess.turn() === "w"
       ? rawLogs
       : [undefined as LogType | undefined].concat(rawLogs);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
@@ -44,9 +48,7 @@ export default function Log(props: { brain: Brain }) {
 function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(props.log.brain.getState().chess, false).then((moves) =>
-      update(moves)
-    );
+    lichess(props.log.chess, false).then((moves) => update(moves));
   }
   const parts = getParts(props.log.san, moves || []);
   return (
@@ -54,7 +56,17 @@ function GetLog(props: { log: LogType }) {
       <td
         style={{ fontWeight: "bold" }}
         title={moves === null ? undefined : getTitle(moves)}
-        onClick={() => window.open(`#${props.log.brain.hash()}`)}
+        onClick={() => {
+          const chess = { ...props.log.chess };
+          chess.move(props.log.san);
+          window.open(
+            `#${Brain.hash({
+              chess,
+              orientationIsWhite: Brain.brain.getState().orientationIsWhite,
+              logs: [],
+            })}`
+          );
+        }}
       >
         {parts[0]}
       </td>
