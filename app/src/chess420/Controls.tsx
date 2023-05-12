@@ -51,13 +51,15 @@ export default function Controls(props: { brain: Brain }) {
       </div>
       <div>
         <span>lichess: </span>
-        <input ref={props.brain.lichessRef} style={{ width: "5em" }} />
-        <button onClick={props.brain.findMistakes.bind(props.brain)}>
-          find mistakes
-        </button>
-        <button onClick={props.brain.playVs.bind(props.brain)}>
-          play vs user
-        </button>
+        <input ref={props.brain.lichessRef} style={{ width: "4em" }} />
+        <span>
+          <button onClick={props.brain.findMistakes.bind(props.brain)}>
+            find mistakes
+          </button>
+          <button onClick={props.brain.playVs.bind(props.brain)}>
+            play vs user
+          </button>
+        </span>
       </div>
     </div>
   );

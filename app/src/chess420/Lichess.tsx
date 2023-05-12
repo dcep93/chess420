@@ -29,14 +29,14 @@ export default function lichess(
   ratings: number[] = [2000, 2200, 2500]
 ): Promise<LiMove[]> {
   return Promise.resolve(
-    chess.moves().map((san) => ({
+    chess.moves().map((san, i) => ({
       san,
       white: 0,
       black: 0,
       draws: 0,
       averageRating: 0,
-      total: 1,
-      score: 0,
+      total: 0,
+      score: 100 - i,
     }))
   );
   const key = JSON.stringify({
