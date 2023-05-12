@@ -44,6 +44,24 @@ export default class Brain {
       .replaceAll(" ", "_")}`;
   }
 
+  setInitialState() {
+    const chess = Brain.getChess();
+    var orientationIsWhite = true;
+    const hash = window.location.hash.split("#")[1];
+    if (hash !== undefined) {
+      const parts = hash.split("//");
+      if (parts.length === 2) {
+        orientationIsWhite = parts[0] === "w";
+        chess.load(parts[1].replaceAll("_", " "));
+      }
+    }
+    this.setState({
+      chess,
+      orientationIsWhite,
+      logs: [] as LogType[],
+    });
+  }
+
   _isMyTurn(): boolean {
     const state = this.getState();
     return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");

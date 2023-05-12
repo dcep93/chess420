@@ -2,28 +2,18 @@ import { useEffect, useState } from "react";
 import Board from "./Board";
 import Brain, { StateType } from "./Brain";
 import Controls from "./Controls";
-import Log, { LogType } from "./Log";
+import Log from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function Main() {
-  const state: { [k: string]: boolean } = {};
-  const chess = Brain.getChess();
-  var orientationIsWhite = true;
-  const hash = window.location.hash.split("#")[1];
-  if (hash !== undefined) {
-    const parts = hash.split("//");
-    if (parts.length === 2) {
-      orientationIsWhite = parts[0] === "w";
-      chess.load(parts[1].replaceAll("_", " "));
-    }
-  }
   const [history, updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
   });
   const brain = new Brain(history, updateHistory);
   const [isShift, updateIsShift] = useState(false);
+  const state: { [k: string]: boolean } = {};
   useEffect(() => {
     if (state.initialized) return;
     state.initialized = true;
@@ -51,15 +41,16 @@ export default function Main() {
       "keyup",
       (e) => e.shiftKey && updateIsShift(false)
     );
-    brain.setState({
-      chess,
-      orientationIsWhite,
-      logs: [] as LogType[],
-    });
+
+    brain.setInitialState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (!brain.getState()) return null;
-  window.location.hash = Brain.hash(brain.getState().chess);
+  return <SubMain brain={brain} isShift={isShift} />;
+}
+
+function SubMain(props: { brain: Brain; isShift: boolean }) {
+  window.location.hash = Brain.hash(props.brain.getState().chess);
   return (
     // TODO pretty
     <div
@@ -73,8 +64,8 @@ export default function Main() {
           flexDirection: "column",
         }}
       >
-        <Board brain={brain} isShift={isShift} />
-        <Summary brain={brain} />
+        <Board brain={props.brain} isShift={props.isShift} />
+        <Summary brain={props.brain} />
       </div>
       <div
         style={{
@@ -83,9 +74,9 @@ export default function Main() {
           flexDirection: "column",
         }}
       >
-        <Controls brain={brain} />
+        <Controls brain={props.brain} />
         <div style={{ flexGrow: 1, display: "grid" }}>
-          <Log brain={brain} />
+          <Log brain={props.brain} />
         </div>
       </div>
     </div>
