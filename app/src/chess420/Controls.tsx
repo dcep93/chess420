@@ -25,7 +25,7 @@ export default function Controls(props: { brain: Brain }) {
       <div>
         <label style={{ paddingRight: "10px" }}>
           <input
-            ref={props.brain.autoreply}
+            ref={props.brain.autoreplyRef}
             type={"checkbox"}
             defaultChecked={true}
           />
@@ -50,8 +50,13 @@ export default function Controls(props: { brain: Brain }) {
         </button>
       </div>
       <div>
+        <span>lichess: </span>
+        <input ref={props.brain.lichessRef} style={{ width: "5em" }} />
         <button onClick={props.brain.findMistakes.bind(props.brain)}>
-          find my online mistakes
+          find mistakes
+        </button>
+        <button onClick={props.brain.playVs.bind(props.brain)}>
+          play vs user
         </button>
       </div>
     </div>

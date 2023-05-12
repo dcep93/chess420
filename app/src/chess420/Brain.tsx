@@ -5,6 +5,8 @@ import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import StorageW from "./StorageW";
 
+const REPLY_DELAY_MS = 500;
+
 type StateType = {
   chess: ChessInstance;
   orientationIsWhite: boolean;
@@ -17,7 +19,8 @@ type History = {
 };
 
 export default class Brain {
-  autoreply = React.useRef<HTMLInputElement>(null);
+  autoreplyRef = React.useRef<HTMLInputElement>(null);
+  lichessRef = React.useRef<HTMLInputElement>(null);
   history: History;
   updateHistory: (history: History) => void;
 
@@ -51,21 +54,26 @@ export default class Brain {
       states,
     });
     if (
-      this.autoreply.current?.checked &&
+      this.autoreplyRef.current?.checked &&
       state.chess.turn() === (state.orientationIsWhite ? "b" : "w")
     ) {
-      this._getWeighted(state).then((san) => {
-        if (!san) return;
-        const chess = Brain.getChess(state.chess);
-        chess.move(san);
-        const log = { chess: state.chess, san };
-        const logs = state.logs.concat(log);
-        this.updateHistory({
-          index: 0,
-          states: [{ ...state, chess, logs }].concat(states),
-        });
-      });
+      setTimeout(() => this.reply(states), REPLY_DELAY_MS);
     }
+  }
+
+  reply(states: StateType[]) {
+    const state = states[0];
+    this._getWeighted(state).then((san) => {
+      if (!san) return;
+      const chess = Brain.getChess(state.chess);
+      chess.move(san);
+      const log = { chess: state.chess, san };
+      const logs = state.logs.concat(log);
+      this.updateHistory({
+        index: 0,
+        states: [{ ...state, chess, logs }].concat(states),
+      });
+    });
   }
 
   startOver() {
@@ -86,7 +94,7 @@ export default class Brain {
 
   undo() {
     if (this.history.index + 1 < this.history.states.length) {
-      this.autoreply.current!.checked = false;
+      this.autoreplyRef.current!.checked = false;
       this.updateHistory({
         ...this.history,
         index: this.history.index + 1,
@@ -155,6 +163,10 @@ export default class Brain {
   }
 
   findMistakes() {
+    alert("TODO");
+  }
+
+  playVs() {
     alert("TODO");
   }
 

@@ -40,8 +40,8 @@ export default function Main() {
           KeyH: brain.help.bind(brain),
           KeyQ: brain.memorizeWithQuizlet.bind(brain),
           KeyA: () =>
-            (brain.autoreply.current!.checked =
-              !brain.autoreply.current!.checked),
+            (brain.autoreplyRef.current!.checked =
+              !brain.autoreplyRef.current!.checked),
         }[e.code] || (() => e.shiftKey && updateIsShift(true))
       )())
     );

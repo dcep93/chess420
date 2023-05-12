@@ -51,12 +51,23 @@ function GetLog(props: { log: LogType }) {
   return (
     <>
       {getParts(props.log.san, moves || []).map((movePart, i) => (
-        <td key={i} style={{ fontWeight: i === 0 ? "bold" : "initial" }}>
+        <td
+          key={i}
+          style={{ fontWeight: i === 0 ? "bold" : "initial" }}
+          title={moves === null || i !== 0 ? undefined : getTitle(moves)}
+        >
           {movePart}
         </td>
       ))}
     </>
   );
+}
+
+function getTitle(moves: LiMove[]) {
+  return moves
+    .map((move) => getParts(move.san, moves))
+    .map((parts) => parts.join(" "))
+    .join("\n");
 }
 
 function getParts(san: string, moves: LiMove[]) {
