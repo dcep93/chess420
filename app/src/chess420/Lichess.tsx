@@ -28,6 +28,17 @@ export default function lichess(
   attempt: number = 1,
   ratings: number[] = [2000, 2200, 2500]
 ): Promise<LiMove[]> {
+  return Promise.resolve(
+    chess.moves().map((san) => ({
+      san,
+      white: 0,
+      black: 0,
+      draws: 0,
+      averageRating: 0,
+      total: 1,
+      score: 0,
+    }))
+  );
   const key = JSON.stringify({
     chess: chess.fen(),
     isOriginal,
