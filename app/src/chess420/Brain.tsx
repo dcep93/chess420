@@ -47,7 +47,7 @@ export default class Brain {
       .replaceAll(" ", "_")}`;
   }
 
-  static setInitialState() {
+  static getInitialState() {
     const chess = Brain.getChess(null);
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
@@ -58,11 +58,15 @@ export default class Brain {
         chess.load(parts[1].replaceAll("_", " "));
       }
     }
-    Brain.setState({
+    return {
       chess,
       orientationIsWhite,
       logs: [] as LogType[],
-    });
+    };
+  }
+
+  static setInitialState() {
+    Brain.setState(Brain.getInitialState());
   }
 
   //
