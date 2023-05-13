@@ -46,10 +46,29 @@ export default function Log() {
   );
 }
 
+function getScore(
+  chess: ChessInstance,
+  move: LiMove,
+  depth: number = 2
+): Promise<number> {
+  const isWhite = chess.turn() === "w";
+  const p =
+    (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
+  const score = Math.pow(p, 3) * Math.pow(move.total, 0.42);
+  return Promise.resolve(score);
+}
+
 function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(props.log.chess, false).then((moves) => update(moves));
+    lichess(props.log.chess, false)
+      .then((moves) =>
+        moves.map((move) =>
+          getScore(props.log.chess, move).then((score) => ({ ...move, score }))
+        )
+      )
+      .then((movePromises) => Promise.all(movePromises))
+      .then((moves) => update(moves));
   }
   const parts = getParts(props.log.san, moves || []);
   return (
@@ -81,6 +100,7 @@ function getTitle(moves: LiMove[]) {
 
 function getParts(san: string, moves: LiMove[]) {
   const move = moves.find((move) => move.san === san);
+  console.log(move?.score);
   if (move === undefined) {
     return [san, "s/", "p/", "ww/", "d/", "t/0"];
   }

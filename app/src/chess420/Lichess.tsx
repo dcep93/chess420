@@ -13,11 +13,7 @@ export type LiMove = {
   score: number;
 };
 
-function getScore(
-  chess: ChessInstance,
-  move: LiMove,
-  depth: number
-): Promise<number> {
+function getScore(chess: ChessInstance, move: LiMove): Promise<number> {
   const isWhite = chess.turn() === "w";
   const p =
     (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
@@ -30,8 +26,7 @@ const promises: { [key: string]: Promise<LiMove[]> } = {};
 export default function lichess(
   chess: ChessInstance,
   isOriginal: boolean = true,
-  attempt: number = 1,
-  depth: number = 2
+  attempt: number = 1
 ): Promise<LiMove[]> {
   const key = JSON.stringify({
     chess: chess.fen(),
@@ -50,7 +45,7 @@ export default function lichess(
           total: move.black + move.white + move.draws,
         }))
         .map((move: LiMove) =>
-          getScore(chess, move, depth).then((score) => ({ ...move, score }))
+          getScore(chess, move).then((score) => ({ ...move, score }))
         )
     )
     .then((movePromises: Promise<LiMove>[]) => Promise.all(movePromises))
