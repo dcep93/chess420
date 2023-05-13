@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Board from "./Board";
 import Brain, { StateType } from "./Brain";
 import Controls from "./Controls";
@@ -7,6 +7,8 @@ import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function Main() {
+  Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
+  Brain.lichessRef = React.useRef<HTMLInputElement>(null);
   [Brain.history, Brain.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
