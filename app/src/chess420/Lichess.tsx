@@ -21,16 +21,44 @@ function getScore(chess: ChessInstance, move: LiMove): Promise<number> {
   return Promise.resolve(score);
 }
 
+// function getScore(
+//   chess: ChessInstance,
+//   move: LiMove,
+//   depth: number = 1
+// ): Promise<number> {
+//   if (depth === 0) {
+//     const isWhite = chess.turn() === "w";
+//     const p =
+//       (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
+//     const score = Math.pow(p, 3) * Math.pow(move.total, 0.42);
+//     return Promise.resolve(score);
+//   }
+//   return lichess(Brain.getChess(chess, [move.san]))
+//     .then((moves) => moves.sort((m1, m2) => m2.score - m1.score)[0])
+//     .then((bestMove) => {
+//       console.log("a", bestMove);
+//       return bestMove.san;
+//     })
+//     .then((bestResponse) =>
+//       lichess(Brain.getChess(chess, [move.san, bestResponse]))
+//     )
+//     .then((moves) => moves.sort((m1, m2) => m2.score - m1.score)[0])
+//     .then((bestMove) => {
+//       console.log("b", bestMove);
+//       return bestMove.total;
+//     });
+// }
+
 const promises: { [key: string]: Promise<LiMove[]> } = {};
 
 export default function lichess(
   chess: ChessInstance,
-  isOriginal: boolean = true,
+  prepareNext: boolean = false,
   attempt: number = 1
 ): Promise<LiMove[]> {
   const key = JSON.stringify({
     chess: chess.fen(),
-    isOriginal,
+    prepareNext,
     attempt,
   });
   const pp = promises[key];
@@ -53,7 +81,7 @@ export default function lichess(
       const total = moves
         .map((move: LiMove) => move.total)
         .reduce((a: number, b: number) => a + b, 0);
-      if (isOriginal)
+      if (prepareNext)
         setTimeout(() =>
           moves
             .filter((move: LiMove) => move.total >= total * 0.01)

@@ -144,7 +144,7 @@ export default class Brain {
   }
 
   static playWeighted() {
-    lichess(Brain.getState().chess)
+    lichess(Brain.getState().chess, true)
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
         var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
@@ -164,7 +164,7 @@ export default class Brain {
         return Brain.playMove(novelty);
       }
     }
-    lichess(Brain.getState().chess)
+    lichess(Brain.getState().chess, true)
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
       .then((san) => san && Brain.playMove(san));
