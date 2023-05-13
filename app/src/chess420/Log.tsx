@@ -20,6 +20,7 @@ export default function Log() {
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [rawLogs[2 * i], rawLogs[2 * i + 1]]
   );
+  // todo no table
   return (
     <div style={{ overflowX: "scroll" }}>
       <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>

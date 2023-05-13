@@ -13,11 +13,12 @@ export type LiMove = {
   score: number;
 };
 
-function score(chess: ChessInstance, move: LiMove): number {
+function getScore(chess: ChessInstance, move: LiMove): Promise<number> {
   const isWhite = chess.turn() === "w";
   const p =
     (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
-  return Math.pow(p, 3) * Math.pow(move.total, 0.42);
+  const score = Math.pow(p, 3) * Math.pow(move.total, 0.42);
+  return Promise.resolve(score);
 }
 
 const promises: { [key: string]: Promise<LiMove[]> } = {};
@@ -25,43 +26,30 @@ const promises: { [key: string]: Promise<LiMove[]> } = {};
 export default function lichess(
   chess: ChessInstance,
   isOriginal: boolean = true,
-  attempt: number = 1,
-  ratings: number[] = [2000, 2200, 2500]
+  attempt: number = 1
 ): Promise<LiMove[]> {
-  return Promise.resolve(
-    chess.moves().map((san, i) => ({
-      san,
-      white: 0,
-      black: 0,
-      draws: 0,
-      averageRating: 0,
-      total: 0,
-      score: 100 - i,
-    }))
-  );
   const key = JSON.stringify({
     chess: chess.fen(),
     isOriginal,
     attempt,
-    ratings,
   });
   const pp = promises[key];
   if (pp) {
     return pp;
   }
-  const p = helper(chess, attempt, ratings)
+  const p = helper(chess, attempt)
     .then((moves) =>
       moves
         .map((move: LiMove) => ({
           ...move,
           total: move.black + move.white + move.draws,
         }))
-        .map((move: LiMove) => ({
-          ...move,
-          score: score(chess, move),
-        }))
+        .map((move: LiMove) =>
+          getScore(chess, move).then((score) => ({ ...move, score }))
+        )
     )
-    .then((moves) => {
+    .then((movePromises: Promise<LiMove>[]) => Promise.all(movePromises))
+    .then((moves: LiMove[]) => {
       const total = moves
         .map((move: LiMove) => move.total)
         .reduce((a: number, b: number) => a + b, 0);
@@ -82,11 +70,8 @@ export default function lichess(
   return p;
 }
 
-async function helper(
-  chess: ChessInstance,
-  attempt: number,
-  ratings: number[]
-): Promise<any[]> {
+async function helper(chess: ChessInstance, attempt: number): Promise<any[]> {
+  const ratings = [2000, 2200, 2500];
   if (attempt > 10) return [];
   const url = `https://explorer.lichess.ovh/lichess?variant=standard&speeds=rapid,classical&ratings=${ratings.join(
     ","
@@ -99,8 +84,7 @@ async function helper(
   if (!response.ok)
     return new Promise((resolve, reject) =>
       setTimeout(
-        () =>
-          helper(chess, attempt + 1, ratings).then((moves) => resolve(moves)),
+        () => helper(chess, attempt + 1).then((moves) => resolve(moves)),
         1000
       )
     );
