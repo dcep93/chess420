@@ -24,6 +24,10 @@ export default class Brain {
   static history: History;
   static updateHistory: (history: History) => void;
 
+  static timeout: NodeJS.Timeout;
+
+  //
+
   static getChess(
     prevChess: ChessInstance | null,
     sans: string[] = []
@@ -34,6 +38,8 @@ export default class Brain {
     sans.forEach((san) => chess.move(san));
     return chess;
   }
+
+  //
 
   static hash(chess: ChessInstance): string {
     return `${Brain.getState().orientationIsWhite ? "w" : "b"}//${chess
@@ -59,11 +65,14 @@ export default class Brain {
     });
   }
 
+  //
+
   static getState(): StateType {
     return Brain.history.states[Brain.history.index];
   }
 
   static setState(state: StateType) {
+    clearTimeout(Brain.timeout);
     const states = [state].concat(
       Brain.history.states.slice(Brain.history.index)
     );
@@ -75,29 +84,11 @@ export default class Brain {
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
       state.chess.turn() === (state.orientationIsWhite ? "b" : "w")
     ) {
-      setTimeout(() => Brain.reply(states), REPLY_DELAY_MS);
+      Brain.timeout = setTimeout(Brain.playWeighted, REPLY_DELAY_MS);
     }
   }
 
-  static reply(states: StateType[]) {
-    const state = states[0];
-    Brain._getWeighted(state).then((san) => {
-      if (!san) return;
-      Brain.updateHistory({
-        index: 0,
-        states: [
-          {
-            ...state,
-            chess: Brain.getChess(state.chess, [san]),
-            logs: state.logs.concat({
-              chess: state.chess,
-              san,
-            }),
-          },
-        ].concat(states),
-      });
-    });
-  }
+  //
 
   static startOver() {
     const original = Brain.history.states[Brain.history.states.length - 1];
@@ -134,7 +125,9 @@ export default class Brain {
     }
   }
 
-  static _playMove(san: string) {
+  //
+
+  static playMove(san: string) {
     const state = Brain.getState();
     Brain.setState({
       ...state,
@@ -146,21 +139,17 @@ export default class Brain {
     });
   }
 
-  static _getWeighted(state: StateType) {
-    return lichess(state.chess).then((moves) => {
-      const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
-      var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
-      for (let i = 0; i < weights.length; i++) {
-        choice -= weights[i];
-        if (choice <= 0) return moves[i].san;
-      }
-    });
-  }
-
   static playWeighted() {
-    Brain._getWeighted(Brain.getState()).then(
-      (san) => san && Brain._playMove(san)
-    );
+    lichess(Brain.getState().chess)
+      .then((moves) => {
+        const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
+        var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
+        for (let i = 0; i < weights.length; i++) {
+          choice -= weights[i];
+          if (choice <= 0) return moves[i].san;
+        }
+      })
+      .then((san) => san && Brain.playMove(san));
   }
 
   static playBest() {
@@ -168,13 +157,13 @@ export default class Brain {
     if (state.chess.turn() === (state.orientationIsWhite ? "w" : "b")) {
       const novelty = Brain.getNovelty();
       if (novelty !== null) {
-        return Brain._playMove(novelty);
+        return Brain.playMove(novelty);
       }
     }
     lichess(Brain.getState().chess)
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
-      .then((san) => san && Brain._playMove(san));
+      .then((san) => san && Brain.playMove(san));
   }
 
   static getNovelty(): string | null {
@@ -184,6 +173,8 @@ export default class Brain {
   static clearNovelty() {
     StorageW.set(Brain.getState().chess.fen(), null);
   }
+
+  //
 
   static memorizeWithQuizlet() {
     alert("TODO");
@@ -208,12 +199,14 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move.san);
-      const log = {
-        chess: state.chess,
-        san: move.san,
-      };
-      const logs = state.logs.concat(log);
-      Brain.setState({ ...state, chess, logs });
+      Brain.setState({
+        ...state,
+        chess,
+        logs: state.logs.concat({
+          chess: state.chess,
+          san: move.san,
+        }),
+      });
       return true;
     } else {
       return false;
