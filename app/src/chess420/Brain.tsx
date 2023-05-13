@@ -20,13 +20,18 @@ type History = {
 export default class Brain {
   static autoreplyRef: RefObject<HTMLInputElement>;
   static lichessRef: RefObject<HTMLInputElement>;
+
   static history: History;
   static updateHistory: (history: History) => void;
 
-  static getChess(prevChess: ChessInstance | null = null): ChessInstance {
+  static getChess(
+    prevChess: ChessInstance | null,
+    sans: string[] = []
+  ): ChessInstance {
     // @ts-ignore
     const chess = new Chess();
     if (prevChess !== null) chess.load(prevChess.fen());
+    sans.forEach((san) => chess.move(san));
     return chess;
   }
 
@@ -37,7 +42,7 @@ export default class Brain {
   }
 
   static setInitialState() {
-    const chess = Brain.getChess();
+    const chess = Brain.getChess(null);
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
     if (hash !== undefined) {
@@ -78,16 +83,18 @@ export default class Brain {
     const state = states[0];
     Brain._getWeighted(state).then((san) => {
       if (!san) return;
-      const chess = Brain.getChess(state.chess);
-      chess.move(san);
-      const log = {
-        chess: state.chess,
-        san,
-      };
-      const logs = state.logs.concat(log);
       Brain.updateHistory({
         index: 0,
-        states: [{ ...state, chess, logs }].concat(states),
+        states: [
+          {
+            ...state,
+            chess: Brain.getChess(state.chess, [san]),
+            logs: state.logs.concat({
+              chess: state.chess,
+              san,
+            }),
+          },
+        ].concat(states),
       });
     });
   }
@@ -99,7 +106,7 @@ export default class Brain {
 
   static newGame() {
     const state = Brain.getState();
-    const chess = Brain.getChess();
+    const chess = Brain.getChess(null);
     chess.reset();
     Brain.setState({
       chess,
@@ -129,14 +136,14 @@ export default class Brain {
 
   static _playMove(san: string) {
     const state = Brain.getState();
-    const chess = Brain.getChess(state.chess);
-    chess.move(san);
-    const log = {
-      chess: state.chess,
-      san,
-    };
-    const logs = state.logs.concat(log);
-    Brain.setState({ ...state, chess, logs });
+    Brain.setState({
+      ...state,
+      chess: Brain.getChess(state.chess, [san]),
+      logs: state.logs.concat({
+        chess: state.chess,
+        san,
+      }),
+    });
   }
 
   static _getWeighted(state: StateType) {
