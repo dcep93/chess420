@@ -43,7 +43,11 @@ export default function Controls() {
       </div>
       <div>
         <span>lichess: </span>
-        <input ref={Brain.lichessRef} style={{ width: "4em" }} />
+        <input
+          defaultValue={Brain.getInitialState().lichessUsername}
+          ref={Brain.lichessRef}
+          style={{ width: "4em" }}
+        />
         <span>
           <button onClick={Brain.findMistakes}>find mistakes</button>
           <button onClick={Brain.playVs}>play vs user</button>

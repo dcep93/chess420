@@ -26,6 +26,8 @@ export default class Brain {
 
   static timeout: NodeJS.Timeout;
 
+  static initialHash: string;
+
   //
 
   static getChess(
@@ -42,31 +44,46 @@ export default class Brain {
   //
 
   static hash(chess: ChessInstance): string {
-    return `${Brain.getState().orientationIsWhite ? "w" : "b"}//${chess
-      .fen()
-      .replaceAll(" ", "_")}`;
+    return [
+      Brain.getState().orientationIsWhite ? "w" : "b",
+      chess.fen().replaceAll(" ", "_"),
+      Brain.getLichessUsername(),
+    ].join("//");
   }
 
   static getInitialState() {
     const chess = Brain.getChess(null);
     var orientationIsWhite = true;
-    const hash = window.location.hash.split("#")[1];
-    if (hash !== undefined) {
-      const parts = hash.split("//");
-      if (parts.length === 2) {
+    var lichessUsername = undefined;
+    if (Brain.initialHash !== undefined) {
+      const parts = Brain.initialHash.split("//");
+      if (parts.length === 3) {
         orientationIsWhite = parts[0] === "w";
         chess.load(parts[1].replaceAll("_", " "));
+        lichessUsername = parts[2] || undefined;
       }
     }
     return {
       chess,
       orientationIsWhite,
       logs: [] as LogType[],
+      lichessUsername,
     };
   }
 
   static setInitialState() {
+    Brain.initialHash = window.location.hash.split("#")[1];
     Brain.setState(Brain.getInitialState());
+  }
+
+  //
+
+  static getLichessUsername() {
+    const current = Brain.lichessRef.current;
+    if (!current) {
+      return Brain.getInitialState().lichessUsername;
+    }
+    return current!.value || undefined;
   }
 
   //
@@ -152,7 +169,7 @@ export default class Brain {
   }
 
   static playWeighted() {
-    const username = "dcep93";
+    const username = Brain.getLichessUsername();
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
@@ -173,7 +190,7 @@ export default class Brain {
         return Brain.playMove(novelty, undefined);
       }
     }
-    const username = "dcep93";
+    const username = Brain.getLichessUsername();
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
