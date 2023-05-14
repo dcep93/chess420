@@ -6,11 +6,11 @@ import Log from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
-export default function Main() {
-  return <SubMain />;
+export default function App() {
+  return <Main />;
 }
 
-function SubMain() {
+function Main() {
   Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
   Brain.lichessRef = React.useRef<HTMLInputElement>(null);
   [Brain.history, Brain.updateHistory] = useState({
@@ -50,10 +50,10 @@ function SubMain() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (!Brain.getState()) return null;
-  return <View isShift={isShift} />;
+  return <SubMain isShift={isShift} />;
 }
 
-function View(props: { isShift: boolean }) {
+function SubMain(props: { isShift: boolean }) {
   window.location.hash = Brain.hash(Brain.getState().chess);
   return (
     // TODO pretty
