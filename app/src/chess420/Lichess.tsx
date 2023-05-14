@@ -65,7 +65,11 @@ export default function lichess(
             .filter((move: LiMove) => move.total >= total * 0.01)
             .forEach((move: LiMove) => {
               const subChess = Brain.getChess(chess, [move.san]);
-              lichess(subChess, { prepareNext: false, attempt: attempt + 1 });
+              lichess(subChess, {
+                ...options,
+                prepareNext: false,
+                attempt: attempt + 1,
+              });
             })
         );
       return moves;
