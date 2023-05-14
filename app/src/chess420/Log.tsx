@@ -6,6 +6,7 @@ import lichess, { LiMove } from "./Lichess";
 export type LogType = {
   chess: ChessInstance;
   san: string;
+  username: string | undefined;
 };
 
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
@@ -49,7 +50,9 @@ export default function Log() {
 function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(props.log.chess).then((moves) => update(moves));
+    lichess(props.log.chess, { username: props.log.username }).then((moves) =>
+      update(moves)
+    );
   }
   const parts = getParts(props.log.san, moves || []);
   return (

@@ -26,11 +26,16 @@ export default function lichess(
 ): Promise<LiMove[]> {
   const prepareNext = options.prepareNext || false;
   const attempt = options.attempt || 0;
+  const username = options.username;
 
-  const ratings = [2000, 2200, 2500];
-  const url = `https://explorer.lichess.ovh/lichess?variant=standard&speeds=rapid,classical&ratings=${ratings.join(
-    ","
-  )}&fen=${chess.fen()}`;
+  const url =
+    username === undefined
+      ? `https://explorer.lichess.ovh/lichess?variant=standard&speeds=rapid,classical&ratings=${[
+          2000, 2200, 2500,
+        ].join(",")}&fen=${chess.fen()}`
+      : `https://explorer.lichess.ovh/player?variant=standard&player=${username}&color=${
+          chess.turn() === "w" ? "white" : "black"
+        }&recentGames=0&fen=${chess.fen()}`;
   const key = JSON.stringify({
     url,
   });
@@ -83,7 +88,8 @@ async function helper(url: string, attempt: number): Promise<any[]> {
         1000
       )
     );
-  const json = await response.json();
+  const text = await response.text();
+  const json = JSON.parse(text.trim().split("\n").reverse()[0]);
   const moves = json.moves;
   StorageW.set(url, json);
   return moves;

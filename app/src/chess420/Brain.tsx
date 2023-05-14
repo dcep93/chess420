@@ -135,7 +135,7 @@ export default class Brain {
 
   //
 
-  static playMove(san: string) {
+  static playMove(san: string, username: string | undefined) {
     const state = Brain.getState();
     Brain.setState({
       ...state,
@@ -143,11 +143,13 @@ export default class Brain {
       logs: state.logs.concat({
         chess: state.chess,
         san,
+        username,
       }),
     });
   }
 
   static playWeighted() {
+    const username = "dcep93";
     lichess(Brain.getState().chess, { prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
@@ -157,7 +159,7 @@ export default class Brain {
           if (choice <= 0) return moves[i].san;
         }
       })
-      .then((san) => san && Brain.playMove(san));
+      .then((san) => san && Brain.playMove(san, username));
   }
 
   static playBest() {
@@ -165,13 +167,14 @@ export default class Brain {
     if (state.chess.turn() === (state.orientationIsWhite ? "w" : "b")) {
       const novelty = Brain.getNovelty();
       if (novelty !== null) {
-        return Brain.playMove(novelty);
+        return Brain.playMove(novelty, undefined);
       }
     }
+    const username = "dcep93";
     lichess(Brain.getState().chess, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
-      .then((san) => san && Brain.playMove(san));
+      .then((san) => san && Brain.playMove(san, username));
   }
 
   static getNovelty(): string | null {
@@ -213,6 +216,7 @@ export default class Brain {
         logs: state.logs.concat({
           chess: state.chess,
           san: move.san,
+          username: undefined,
         }),
       });
       return true;
