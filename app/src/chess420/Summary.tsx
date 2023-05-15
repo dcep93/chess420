@@ -11,5 +11,7 @@ export default function Summary() {
       </div>
     );
   }
-  return <div>TODO b summary</div>;
+  return (
+    <div>TODO b summary {Brain.traversing ? "traversing" : "default"}</div>
+  );
 }
