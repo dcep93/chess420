@@ -223,9 +223,8 @@ export default class Brain {
     const vars = { bad: 0, ok: 0, best: 0 };
     function helper(): Promise<void> {
       const state = states.shift();
-      console.log(state);
       if (!state) {
-        return new Promise((resolve) =>
+        return new Promise<void>((resolve) =>
           Brain.setState({
             ...start,
             message: {
@@ -235,7 +234,7 @@ export default class Brain {
               f: resolve,
             },
           })
-        );
+        ).then(() => Brain.setState(start));
       }
       vars.bad++;
       return new Promise<void>((resolve) =>
@@ -250,7 +249,7 @@ export default class Brain {
         })
       ).then(helper);
     }
-    return helper().then(() => Brain.setState(start));
+    return helper();
   }
 
   static playVs(username: string) {
