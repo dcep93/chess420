@@ -190,7 +190,8 @@ export default class Brain {
       .then((san) => Brain.playMove(san, username));
   }
 
-  static getNovelty(): string | null {
+  static getNovelty(state?: StateType): string | null {
+    if (!state) state = Brain.getState();
     return StorageW.get(Brain.getState().fen);
   }
 
@@ -208,7 +209,6 @@ export default class Brain {
     if (!username) return alert("no username provided");
 
     return traverse((state) =>
-      // todo a novelty
       lichess(state.fen, { username })
         .then((moves) => ({
           moves,

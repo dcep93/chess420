@@ -2,6 +2,7 @@ import Brain, { StateType } from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 
+// todo d stateful instead of promise based
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<LiMove | undefined>
 ) {
@@ -12,7 +13,8 @@ export default function traverse(
   ];
   const vars = { bad: 0, ok: 0, best: 0 };
   const thresholdOdds = 0.01;
-  function helper(): Promise<void> {
+  function helper(rawStates: (StateType & { odds: number })[]): Promise<void> {
+    const states = rawStates.slice();
     const state = states.pop();
     if (!state) {
       return new Promise<void>((resolve) =>
@@ -46,7 +48,7 @@ export default function traverse(
             .sort((a, b) => b.odds - a.odds)
             .forEach((moveState) => states.push(moveState))
         )
-        .then(helper);
+        .then(() => helper(states));
     }
     return getMyMoveRaw(state)
       .then((myMoveRaw) =>
@@ -58,7 +60,10 @@ export default function traverse(
       )
       .then(({ bestMove, myMove, myMoveRaw }) => {
         if (bestMove === undefined) return;
-        if (bestMove.san === myMove?.san) {
+        if (
+          bestMove.san === myMove?.san ||
+          (myMove !== undefined && Brain.getNovelty(state) === myMove.san)
+        ) {
           vars.best++;
           states.push(Brain.genState(state, myMove!.san));
           return;
@@ -96,8 +101,7 @@ export default function traverse(
           })
         );
       })
-      .then(helper);
+      .then(() => helper(states));
   }
-  // todo a pass state to promise
-  return helper();
+  return helper(states);
 }

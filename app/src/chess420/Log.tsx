@@ -11,9 +11,9 @@ export type LogType = {
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
 export default function Log() {
-  const logs = Brain.getState().logs;
+  const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length === 0) return <></>;
-  // todo b ...
+  if (Brain.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
@@ -31,11 +31,9 @@ export default function Log() {
             <tr key={i}>
               <>
                 <td>{i + 1}.</td>
-                {line.map((log, j) =>
-                  log === undefined ? null : (
-                    <GetLog key={JSON.stringify(log)} log={log} />
-                  )
-                )}
+                {line.map((log, j) => (
+                  <GetLog key={JSON.stringify({ j, log })} log={log} />
+                ))}
               </>
             </tr>
           ))}
@@ -45,21 +43,30 @@ export default function Log() {
   );
 }
 
-function GetLog(props: { log: LogType }) {
+function GetLog(props: { log: LogType | null | undefined }) {
   const [moves, update] = useState<LiMove[] | null>(null);
-  if (moves === null) {
-    lichess(props.log.fen, { username: props.log.username }).then((moves) =>
-      update(moves)
+  const log = props.log;
+  if (log === null)
+    return (
+      <>
+        <td>...</td>
+        {Array.from(new Array((columnWidths.length - 3) / 2)).map((_, i) => (
+          <td key={i}></td>
+        ))}
+      </>
     );
+  if (log === undefined) return null;
+  if (moves === null) {
+    lichess(log.fen, { username: log.username }).then((moves) => update(moves));
   }
-  const parts = getParts(props.log.san, moves || []);
+  const parts = getParts(log.san, moves || []);
   return (
     <>
       <td
         style={{ fontWeight: "bold" }}
         title={moves === null ? undefined : getTitle(moves)}
         onClick={() => {
-          const fen = Brain.getFen(props.log.fen, props.log.san);
+          const fen = Brain.getFen(log.fen, log.san);
           window.open(`#${Brain.hash(fen)}`);
         }}
       >
@@ -74,6 +81,8 @@ function GetLog(props: { log: LogType }) {
 
 function getTitle(moves: LiMove[]) {
   return moves
+    .slice()
+    .sort((a, b) => b.score - a.score)
     .map((move) => getParts(move.san, moves))
     .map((parts) => parts.join(" "))
     .join("\n");
@@ -84,15 +93,9 @@ function getParts(san: string, moves: LiMove[]) {
   if (move === undefined) {
     return [san, "s/", "p/", "ww/", "d/", "t/0"];
   }
-  const s =
-    (100 * move.score) /
-    moves
-      .filter((m) => m.san !== san)
-      .map((m) => m.score)
-      .sort((a, b) => b - a)[0];
   return [
     san,
-    `s/${s > 420 ? 420 : s.toFixed(2)}`, // todo a move 420 score calc
+    `s/${move.score > 420 ? 420 : move.score.toFixed(2)}`,
     `p/${(
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)

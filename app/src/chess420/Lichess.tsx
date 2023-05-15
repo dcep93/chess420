@@ -56,6 +56,17 @@ export default function lichess(
         )
     )
     .then((movePromises: Promise<LiMove>[]) => Promise.all(movePromises))
+    .then((moves: LiMove[]) =>
+      moves.map((move) => ({
+        ...move,
+        score:
+          (100 * move.score) /
+          moves
+            .filter((m) => m.san !== move.san)
+            .map((m) => m.score)
+            .sort((a, b) => b - a)[0],
+      }))
+    )
     .then((moves: LiMove[]) => {
       const total = moves
         .map((move: LiMove) => move.total)
