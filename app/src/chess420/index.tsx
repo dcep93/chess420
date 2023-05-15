@@ -17,6 +17,9 @@ export default function App() {
     } else {
       console.log("TODO", "play vs", username);
     }
+  } else if (pathParts.length > 1) {
+    alert("invalid path");
+    return null;
   } else {
     console.log("main");
   }
