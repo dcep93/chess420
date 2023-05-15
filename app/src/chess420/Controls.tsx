@@ -2,7 +2,6 @@ import React from "react";
 import Brain from "./Brain";
 
 export default function Controls() {
-  // TODO c go home
   const lichessRef = React.useRef<HTMLInputElement>(null);
   return (
     <div
@@ -39,18 +38,29 @@ export default function Controls() {
         <button onClick={Brain.playBest}>play best</button>
         <button onClick={Brain.playWeighted}>play weighted</button>
       </div>
-      <div>
-        <span>lichess: </span>
-        <input ref={lichessRef} style={{ width: "4em" }} />
-        <span>
-          <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
-            play vs user
+      {Brain.lichessUsername === undefined ? (
+        <div>
+          <span>lichess: </span>
+          <input ref={lichessRef} style={{ width: "4em" }} />
+          <span>
+            <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
+              play vs user
+            </button>
+            <button
+              onClick={() => Brain.findMistakes(lichessRef.current!.value)}
+            >
+              find mistakes
+            </button>
+          </span>
+        </div>
+      ) : (
+        <div>
+          <span>playing vs {Brain.lichessUsername} </span>
+          <button onClick={() => (window.location.href = "/")}>
+            restore to default
           </button>
-          <button onClick={() => Brain.findMistakes(lichessRef.current!.value)}>
-            find mistakes
-          </button>
-        </span>
-      </div>
+        </div>
+      )}
       <div>
         <button onClick={Brain.memorizeWithQuizlet}>
           memorize with Quizlet

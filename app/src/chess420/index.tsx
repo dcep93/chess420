@@ -8,9 +8,7 @@ import css from "./index.module.css";
 
 export default function App() {
   const pathParts = window.location.pathname.split("/");
-  if (pathParts[1] === "quizlet") {
-    console.log("TODO b", "quizlet");
-  } else if (pathParts[1] === "lichess") {
+  if (pathParts[1] === "lichess") {
     const username = pathParts[2];
     if (username === "") {
       alert("invalid path - no lichess opponent");

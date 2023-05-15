@@ -2,7 +2,7 @@ import Brain, { StateType } from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 
-// todo d stateful instead of promise based
+// todo d stateful instead of promise based so we can undo and stuff
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<LiMove | undefined>
 ) {

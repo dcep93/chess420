@@ -202,7 +202,7 @@ export default class Brain {
   //
 
   static memorizeWithQuizlet() {
-    window.location.href = `/quizlet#${Brain.hash(Brain.getState().fen)}`;
+    // TODO a quizlet
   }
 
   static findMistakes(username: string) {
@@ -229,7 +229,7 @@ export default class Brain {
   }
 
   static help() {
-    alert("TODO c");
+    alert("TODO c help");
   }
 
   // board
