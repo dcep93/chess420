@@ -3,6 +3,7 @@ import { RefObject } from "react";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import StorageW from "./StorageW";
+import traverse from "./Traverse";
 
 const REPLY_DELAY_MS = 500;
 
@@ -151,21 +152,11 @@ export default class Brain {
 
   //
 
-  static playMove(san: string | undefined, username: string | undefined) {
+  static playMove(san?: string, username?: string) {
     if (!san) {
       return alert("no move to play");
     }
-    // todo helper
-    const state = Brain.getState();
-    Brain.setState({
-      ...state,
-      fen: Brain.getFen(state.fen, san),
-      logs: state.logs.concat({
-        fen: state.fen,
-        san,
-        username,
-      }),
-    });
+    Brain.setState(Brain.genState(Brain.getState(), san, username));
   }
 
   static playWeighted() {
@@ -216,120 +207,17 @@ export default class Brain {
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
-    const start = { ...Brain.getState(), logs: [] as LogType[] };
-    const states = [
-      { odds: 1, ...start, orientationIsWhite: !start.orientationIsWhite },
-      { odds: 1, ...start },
-    ];
-    const vars = { bad: 0, ok: 0, best: 0 };
-    const thresholdOdds = 0.001;
-    function helper(): Promise<void> {
-      const state = states.pop();
-      if (!state) {
-        return new Promise<void>((resolve) =>
-          Brain.setState({
-            ...start,
-            message: {
-              ms: Object.entries(vars).map(
-                ([key, value]) => `${key}: ${value}`
-              ),
-              f: resolve,
-            },
-          })
-        ).then(() => Brain.setState(start));
-      }
-      if (!Brain.isMyTurn(state)) {
-        return lichess(state.fen)
-          .then((moves) => ({
-            moves,
-            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-          }))
-          .then(({ moves, total }) =>
-            moves
-              .map((move) => ({
-                ...state,
-                odds: (state.odds * move.total) / total,
-                fen: Brain.getFen(state.fen, move.san),
-                logs: state.logs.concat({
-                  fen: state.fen,
-                  san: move.san,
-                }),
-              }))
-              .filter((moveState) => moveState.odds >= thresholdOdds)
-              .sort((a, b) => b.odds - a.odds)
-              .forEach((moveState) => states.push(moveState))
-          )
-          .then(helper);
-      }
-      return (
-        lichess(state.fen, { username })
-          .then((moves) => ({
-            moves,
-            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-          }))
-          .then(({ moves, total }) =>
-            moves.find((move) => move.total > total / 2)
-          )
-          // todo novelty
-          .then((myMoveRaw) =>
-            lichess(state.fen).then((moves) => ({
-              bestMove: moves.sort((a, b) => b.score - a.score)[0],
-              myMoveRaw,
-              myMove: moves.find((move) => move.san === myMoveRaw?.san),
-            }))
-          )
-          .then(({ bestMove, myMove, myMoveRaw }) => {
-            if (bestMove === undefined) return;
-            if (bestMove.san === myMove?.san) {
-              vars.best++;
-              states.push({
-                ...state,
-                fen: Brain.getFen(state.fen, myMove!.san),
-                logs: state.logs.concat({
-                  fen: state.fen,
-                  san: myMove.san,
-                }),
-              });
-              return;
-            }
-            const ok =
-              myMove !== undefined &&
-              (state.orientationIsWhite
-                ? myMove.white > myMove.black
-                : myMove.black > myMove.white);
-            if (ok) {
-              vars.ok++;
-            } else {
-              vars.bad++;
-            }
-            return new Promise<void>((resolve) =>
-              Brain.setState({
-                ...state,
-                message: {
-                  ms: [
-                    ok ? "ok" : "bad",
-                    `odds: ${(state.odds * 100).toFixed(2)}%`,
-                    `the best move is ${
-                      bestMove.san
-                    } s/${bestMove.score.toFixed(2)}`,
-                    myMove === undefined
-                      ? myMoveRaw === undefined
-                        ? "you don't have a most common move"
-                        : `you usually play ${myMoveRaw.san} which is a novelty`
-                      : `you usually play ${
-                          myMove.san
-                        } s/${myMove.score.toFixed(2)}`,
-                  ],
-                  f: resolve,
-                },
-              })
-            );
-          })
-          .then(helper)
-      );
-    }
-    // todo
-    return helper();
+    return traverse((state) =>
+      // todo novelty
+      lichess(state.fen, { username })
+        .then((moves) => ({
+          moves,
+          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+        }))
+        .then(({ moves, total }) =>
+          moves.find((move) => move.total > total / 2)
+        )
+    );
   }
 
   static playVs(username: string) {
@@ -351,17 +239,26 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      Brain.setState({
-        ...state,
-        fen: chess.fen(),
-        logs: state.logs.concat({
-          fen: state.fen,
-          san: move.san,
-        }),
-      });
+      Brain.setState(Brain.genState(state, move.san));
       return true;
     } else {
       return false;
     }
+  }
+
+  static genState<T extends StateType>(
+    startingState: T,
+    san: string,
+    username?: string
+  ): T {
+    return {
+      ...startingState,
+      fen: Brain.getFen(startingState.fen, san),
+      logs: startingState.logs.concat({
+        fen: startingState.fen,
+        san,
+        username,
+      }),
+    };
   }
 }
