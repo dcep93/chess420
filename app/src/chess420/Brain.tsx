@@ -10,6 +10,7 @@ export type StateType = {
   chess: ChessInstance;
   orientationIsWhite: boolean;
   logs: LogType[];
+  message?: { m: string; f: () => void };
 };
 
 type History = {
@@ -101,6 +102,7 @@ export default class Brain {
 
   static maybeReply(state: StateType) {
     if (
+      state.message === undefined &&
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
       !Brain.isMyTurn(state)
     ) {
@@ -211,18 +213,49 @@ export default class Brain {
   }
 
   static findMistakes(username: string) {
-    if (!username) {
-      return alert("no username provided");
+    if (!username) return alert("no username provided");
+
+    const start = { ...Brain.getState(), logs: [] };
+    const states = [
+      { ...start },
+      { ...start, orientationIsWhite: !start.orientationIsWhite },
+    ];
+    const vars = { bad: 0, ok: 0, best: 0 };
+    function helper(): Promise<void> {
+      const state = states.shift();
+      console.log(state);
+      if (!state) {
+        return new Promise((resolve) =>
+          Brain.setState({
+            ...start,
+            message: {
+              m: Object.entries(vars)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join("\n"),
+              f: resolve,
+            },
+          })
+        );
+      }
+      vars.bad++;
+      return new Promise<void>((resolve) =>
+        Brain.setState({
+          ...state,
+          message: {
+            m: Object.entries(vars)
+              .map(([key, value]) => `${key}: ${value}`)
+              .join("\n"),
+            f: resolve,
+          },
+        })
+      ).then(helper);
     }
-    window.location.href = `/lichess/${username}/mistakes#${Brain.hash(
-      Brain.getState().chess
-    )}`;
+    return helper().then(() => Brain.setState(start));
   }
 
   static playVs(username: string) {
-    if (!username) {
-      return alert("no username provided");
-    }
+    if (!username) return alert("no username provided");
+
     window.location.href = `/lichess/${username}#${Brain.hash(
       Brain.getState().chess
     )}`;

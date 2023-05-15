@@ -42,7 +42,7 @@ export default function Controls() {
       <div>
         <span>lichess: </span>
         <input
-          defaultValue={Brain.getInitialState().lichessUsername}
+          defaultValue={"dcep93"} // TODO
           ref={lichessRef}
           style={{ width: "4em" }}
         />

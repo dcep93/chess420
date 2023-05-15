@@ -16,16 +16,7 @@ export default function App() {
       alert("invalid path - no lichess opponent");
       return null;
     }
-    if (pathParts[3] === "mistakes") {
-      console.log("TODO", "mistakes", username);
-    } else {
-      Brain.lichessUsername = username;
-    }
-  } else if (pathParts.length > 1) {
-    alert("invalid path - unknown");
-    return null;
-  } else {
-    console.log("main");
+    Brain.lichessUsername = username;
   }
   return <Main />;
 }
@@ -37,10 +28,7 @@ function Main() {
     states: [] as StateType[],
   });
   const [isShift, updateIsShift] = useState(false);
-  const state: { [k: string]: boolean } = {};
-  useEffect(() => {
-    if (state.initialized) return;
-    state.initialized = true;
+  DoOnce("Main.initBrain", () => {
     document.addEventListener("keydown", (e) => {
       (
         ({
@@ -64,8 +52,7 @@ function Main() {
     );
 
     Brain.setInitialState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
   if (!Brain.getState()) return null;
   return <SubMain isShift={isShift} />;
 }
@@ -102,4 +89,15 @@ function SubMain(props: { isShift: boolean }) {
       </div>
     </div>
   );
+}
+
+const done: { [k: string]: boolean } = {};
+
+function DoOnce(key: string, f: () => void) {
+  useEffect(() => {
+    if (done[key]) return;
+    done[key] = true;
+    f();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
