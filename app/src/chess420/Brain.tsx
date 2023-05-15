@@ -93,10 +93,16 @@ export default class Brain {
     Brain.maybeReply(state);
   }
 
+  static isMyTurn(state: StateType) {
+    return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");
+  }
+
+  //
+
   static maybeReply(state: StateType) {
     if (
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
-      state.chess.turn() === (state.orientationIsWhite ? "b" : "w")
+      !Brain.isMyTurn(state)
     ) {
       Brain.timeout = setTimeout(Brain.playWeighted, REPLY_DELAY_MS);
     }
@@ -160,7 +166,9 @@ export default class Brain {
   }
 
   static playWeighted() {
-    const username = Brain.lichessUsername;
+    const username = Brain.isMyTurn(Brain.getState())
+      ? undefined
+      : Brain.lichessUsername;
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
@@ -175,13 +183,13 @@ export default class Brain {
 
   static playBest() {
     const state = Brain.getState();
-    if (state.chess.turn() === (state.orientationIsWhite ? "w" : "b")) {
+    if (Brain.isMyTurn(state)) {
       const novelty = Brain.getNovelty();
       if (novelty !== null) {
         return Brain.playMove(novelty, undefined);
       }
     }
-    const username = Brain.lichessUsername;
+    const username = Brain.isMyTurn(state) ? undefined : Brain.lichessUsername;
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)

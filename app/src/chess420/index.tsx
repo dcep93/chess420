@@ -12,13 +12,17 @@ export default function App() {
     console.log("TODO", "quizlet");
   } else if (pathParts[1] === "lichess") {
     const username = pathParts[2];
-    if (pathParts[2] === "mistakes") {
+    if (username === "") {
+      alert("invalid path - no lichess opponent");
+      return null;
+    }
+    if (pathParts[3] === "mistakes") {
       console.log("TODO", "mistakes", username);
     } else {
-      console.log("TODO", "play vs", username);
+      Brain.lichessUsername = username;
     }
   } else if (pathParts.length > 1) {
-    alert("invalid path");
+    alert("invalid path - unknown");
     return null;
   } else {
     console.log("main");
