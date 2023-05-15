@@ -208,7 +208,7 @@ export default class Brain {
     if (!username) return alert("no username provided");
 
     return traverse((state) =>
-      // todo novelty
+      // todo a novelty
       lichess(state.fen, { username })
         .then((moves) => ({
           moves,
@@ -229,7 +229,7 @@ export default class Brain {
   }
 
   static help() {
-    alert("TODO");
+    alert("TODO c");
   }
 
   // board

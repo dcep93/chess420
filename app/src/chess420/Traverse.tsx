@@ -5,10 +5,10 @@ import { LogType } from "./Log";
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<LiMove | undefined>
 ) {
-  const start = { ...Brain.getState(), logs: [] as LogType[] };
-  const states = [
-    { odds: 1, ...start, orientationIsWhite: !start.orientationIsWhite },
-    { odds: 1, ...start },
+  const start = { odds: 1, ...Brain.getState(), logs: [] as LogType[] };
+  const states: (StateType & { odds: number })[] = [
+    { ...start, orientationIsWhite: !start.orientationIsWhite },
+    { ...start },
   ];
   const vars = { bad: 0, ok: 0, best: 0 };
   const thresholdOdds = 0.01;
@@ -98,6 +98,6 @@ export default function traverse(
       })
       .then(helper);
   }
-  // todo pass state to promise
+  // todo a pass state to promise
   return helper();
 }

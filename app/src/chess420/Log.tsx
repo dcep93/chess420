@@ -13,11 +13,11 @@ const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 export default function Log() {
   const logs = Brain.getState().logs;
   if (logs.length === 0) return <></>;
-  // todo ...
+  // todo b ...
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
-  // todo no table
+  // todo c no table
   return (
     <div style={{ overflowX: "scroll" }}>
       <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
@@ -92,7 +92,7 @@ function getParts(san: string, moves: LiMove[]) {
       .sort((a, b) => b - a)[0];
   return [
     san,
-    `s/${s > 420 ? 420 : s.toFixed(2)}`, // todo move 420 score calc
+    `s/${s > 420 ? 420 : s.toFixed(2)}`, // todo a move 420 score calc
     `p/${(
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)

@@ -2,7 +2,7 @@ import React from "react";
 import Brain from "./Brain";
 
 export default function Controls() {
-  // TODO go home
+  // TODO c go home
   const lichessRef = React.useRef<HTMLInputElement>(null);
   return (
     <div
@@ -42,7 +42,7 @@ export default function Controls() {
       <div>
         <span>lichess: </span>
         <input
-          defaultValue={"dcep93"} // TODO
+          defaultValue={"dcep93"} // TODO b
           ref={lichessRef}
           style={{ width: "4em" }}
         />

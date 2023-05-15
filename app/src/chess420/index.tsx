@@ -9,7 +9,7 @@ import css from "./index.module.css";
 export default function App() {
   const pathParts = window.location.pathname.split("/");
   if (pathParts[1] === "quizlet") {
-    console.log("TODO", "quizlet");
+    console.log("TODO b", "quizlet");
   } else if (pathParts[1] === "lichess") {
     const username = pathParts[2];
     if (username === "") {
@@ -60,7 +60,7 @@ function Main() {
 function SubMain(props: { isShift: boolean }) {
   window.location.hash = Brain.hash(Brain.getState().fen);
   return (
-    // TODO pretty
+    // TODO c pretty
     <div
       className={css.responsiveFlexDirection}
       style={{ minHeight: "100vH", display: "flex" }}
