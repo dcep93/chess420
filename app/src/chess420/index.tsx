@@ -7,12 +7,24 @@ import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function App() {
+  const pathParts = window.location.pathname.split("/");
+  if (pathParts[1] === "quizlet") {
+    console.log("TODO", "quizlet");
+  } else if (pathParts[1] === "lichess") {
+    const username = pathParts[2];
+    if (pathParts[2] === "mistakes") {
+      console.log("TODO", "mistakes", username);
+    } else {
+      console.log("TODO", "play vs", username);
+    }
+  } else {
+    console.log("main");
+  }
   return <Main />;
 }
 
 function Main() {
   Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
-  Brain.lichessRef = React.useRef<HTMLInputElement>(null);
   [Brain.history, Brain.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
@@ -31,9 +43,7 @@ function Main() {
           ArrowLeft: Brain.undo,
           ArrowRight: Brain.redo,
           KewW: Brain.playWeighted,
-          KeyM: Brain.findMistakes,
           KeyH: Brain.help,
-          KeyQ: Brain.memorizeWithQuizlet,
           KeyA: () =>
             (Brain.autoreplyRef.current!.checked =
               !Brain.autoreplyRef.current!.checked),

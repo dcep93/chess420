@@ -19,14 +19,15 @@ type History = {
 
 export default class Brain {
   static autoreplyRef: RefObject<HTMLInputElement>;
-  static lichessRef: RefObject<HTMLInputElement>;
 
   static history: History;
   static updateHistory: (history: History) => void;
 
   static timeout: NodeJS.Timeout;
 
-  static initialHash: string;
+  //
+
+  static lichessUsername: string | undefined;
 
   //
 
@@ -47,7 +48,6 @@ export default class Brain {
     return [
       Brain.getState().orientationIsWhite ? "w" : "b",
       chess.fen().replaceAll(" ", "_"),
-      Brain.getLichessUsername(),
     ].join("//");
   }
 
@@ -55,12 +55,12 @@ export default class Brain {
     const chess = Brain.getChess(null);
     var orientationIsWhite = true;
     var lichessUsername = undefined;
-    if (Brain.initialHash !== undefined) {
-      const parts = Brain.initialHash.split("//");
+    const hash = window.location.hash.split("#")[1];
+    if (hash !== undefined) {
+      const parts = hash.split("//");
       if (parts.length === 3) {
         orientationIsWhite = parts[0] === "w";
         chess.load(parts[1].replaceAll("_", " "));
-        lichessUsername = parts[2] || undefined;
       }
     }
     return {
@@ -72,18 +72,7 @@ export default class Brain {
   }
 
   static setInitialState() {
-    Brain.initialHash = window.location.hash.split("#")[1];
     Brain.setState(Brain.getInitialState());
-  }
-
-  //
-
-  static getLichessUsername() {
-    const current = Brain.lichessRef.current;
-    if (!current) {
-      return Brain.getInitialState().lichessUsername;
-    }
-    return current!.value || undefined;
   }
 
   //
@@ -132,22 +121,24 @@ export default class Brain {
   }
 
   static undo() {
-    if (Brain.history.index + 1 < Brain.history.states.length) {
-      Brain.autoreplyRef.current!.checked = false;
-      Brain.updateHistory({
-        ...Brain.history,
-        index: Brain.history.index + 1,
-      });
+    if (Brain.history.index + 1 >= Brain.history.states.length) {
+      return alert("no undo available");
     }
+    Brain.autoreplyRef.current!.checked = false;
+    Brain.updateHistory({
+      ...Brain.history,
+      index: Brain.history.index + 1,
+    });
   }
 
   static redo() {
-    if (Brain.history.index > 0) {
-      Brain.updateHistory({
-        ...Brain.history,
-        index: Brain.history.index - 1,
-      });
+    if (Brain.history.index <= 0) {
+      return alert("no redo available");
     }
+    Brain.updateHistory({
+      ...Brain.history,
+      index: Brain.history.index - 1,
+    });
   }
 
   //
@@ -169,7 +160,7 @@ export default class Brain {
   }
 
   static playWeighted() {
-    const username = Brain.getLichessUsername();
+    const username = Brain.lichessUsername;
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
@@ -190,7 +181,7 @@ export default class Brain {
         return Brain.playMove(novelty, undefined);
       }
     }
-    const username = Brain.getLichessUsername();
+    const username = Brain.lichessUsername;
     lichess(Brain.getState().chess, { username, prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
@@ -208,15 +199,25 @@ export default class Brain {
   //
 
   static memorizeWithQuizlet() {
-    alert("TODO");
+    window.location.href = `/quizlet#${Brain.hash(Brain.getState().chess)}`;
   }
 
-  static findMistakes() {
-    alert("TODO");
+  static findMistakes(username: string) {
+    if (!username) {
+      return alert("no username provided");
+    }
+    window.location.href = `/lichess/${username}/mistakes#${Brain.hash(
+      Brain.getState().chess
+    )}`;
   }
 
-  static playVs() {
-    alert("TODO");
+  static playVs(username: string) {
+    if (!username) {
+      return alert("no username provided");
+    }
+    window.location.href = `/lichess/${username}#${Brain.hash(
+      Brain.getState().chess
+    )}`;
   }
 
   static help() {
