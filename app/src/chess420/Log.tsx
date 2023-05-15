@@ -1,10 +1,9 @@
-import { ChessInstance } from "chess.js";
 import { useState } from "react";
 import Brain from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 
 export type LogType = {
-  chess: ChessInstance;
+  fen: string;
   san: string;
   username?: string;
 };
@@ -12,15 +11,11 @@ export type LogType = {
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
 export default function Log() {
-  const rawLogs = Brain.getState().logs;
-  if (rawLogs.length === 0) return <></>;
+  const logs = Brain.getState().logs;
+  if (logs.length === 0) return <></>;
   // todo ...
-  const logs =
-    rawLogs[0].chess.turn() === "w"
-      ? rawLogs
-      : [undefined as LogType | undefined].concat(rawLogs);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
-    (_, i) => [rawLogs[2 * i], rawLogs[2 * i + 1]]
+    (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
   // todo no table
   return (
@@ -37,7 +32,9 @@ export default function Log() {
               <>
                 <td>{i + 1}.</td>
                 {line.map((log, j) =>
-                  log === undefined ? null : <GetLog key={j} log={log} />
+                  log === undefined ? null : (
+                    <GetLog key={JSON.stringify(log)} log={log} />
+                  )
                 )}
               </>
             </tr>
@@ -51,7 +48,7 @@ export default function Log() {
 function GetLog(props: { log: LogType }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   if (moves === null) {
-    lichess(props.log.chess, { username: props.log.username }).then((moves) =>
+    lichess(props.log.fen, { username: props.log.username }).then((moves) =>
       update(moves)
     );
   }
@@ -62,9 +59,8 @@ function GetLog(props: { log: LogType }) {
         style={{ fontWeight: "bold" }}
         title={moves === null ? undefined : getTitle(moves)}
         onClick={() => {
-          const chess = { ...props.log.chess };
-          chess.move(props.log.san);
-          window.open(`#${Brain.hash(chess)}`);
+          const fen = Brain.getFen(props.log.fen, props.log.san);
+          window.open(`#${Brain.hash(fen)}`);
         }}
       >
         {parts[0]}

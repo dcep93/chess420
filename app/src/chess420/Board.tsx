@@ -43,7 +43,7 @@ function SubBoard(props: PropsType) {
     <div style={{ border: "10px black solid", width: "100%" }}>
       <Chessboard
         boardOrientation={state.orientationIsWhite ? "white" : "black"}
-        position={state.chess.fen()}
+        position={state.fen}
         customSquareStyles={{
           [prevClicked || ""]: {
             background: "rgba(255, 255, 0)",

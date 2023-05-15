@@ -21,13 +21,14 @@ type OptionsType = {
 };
 
 export default function lichess(
-  chess: ChessInstance,
+  fen: string,
   options: OptionsType = {}
 ): Promise<LiMove[]> {
   const prepareNext = options.prepareNext || false;
   const attempt = options.attempt || 0;
   const username = options.username;
 
+  const chess = Brain.getChess(fen);
   const url =
     username === undefined
       ? `https://explorer.lichess.ovh/lichess?variant=standard&speeds=rapid,classical&ratings=${[
@@ -64,8 +65,8 @@ export default function lichess(
           moves
             .filter((move: LiMove) => move.total >= total * 0.01)
             .forEach((move: LiMove) => {
-              const subChess = Brain.getChess(chess, [move.san]);
-              lichess(subChess, {
+              const subFen = Brain.getFen(fen, move.san);
+              lichess(subFen, {
                 ...options,
                 prepareNext: false,
                 attempt: attempt + 1,

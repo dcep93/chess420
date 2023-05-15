@@ -58,7 +58,7 @@ function Main() {
 }
 
 function SubMain(props: { isShift: boolean }) {
-  window.location.hash = Brain.hash(Brain.getState().chess);
+  window.location.hash = Brain.hash(Brain.getState().fen);
   return (
     // TODO pretty
     <div

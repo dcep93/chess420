@@ -7,7 +7,7 @@ import StorageW from "./StorageW";
 const REPLY_DELAY_MS = 500;
 
 export type StateType = {
-  chess: ChessInstance;
+  fen: string;
   orientationIsWhite: boolean;
   logs: LogType[];
   message?: { ms: string[]; f: () => void };
@@ -32,43 +32,43 @@ export default class Brain {
 
   //
 
-  static getChess(
-    prevChess: ChessInstance | null,
-    sans: string[] = []
-  ): ChessInstance {
+  static getFen(start?: string, san?: string): string {
+    const chess = Brain.getChess(start);
+    if (san) chess.move(san);
+    return chess.fen();
+  }
+
+  static getChess(fen?: string): ChessInstance {
     // @ts-ignore
     const chess = new Chess();
-    if (prevChess !== null) chess.load(prevChess.fen());
-    sans.forEach((san) => chess.move(san));
+    if (fen !== undefined) chess.load(fen);
     return chess;
   }
 
   //
 
-  static hash(chess: ChessInstance): string {
+  static hash(fen: string): string {
     return [
       Brain.getState().orientationIsWhite ? "w" : "b",
-      chess.fen().replaceAll(" ", "_"),
+      fen.replaceAll(" ", "_"),
     ].join("//");
   }
 
-  static getInitialState() {
-    const chess = Brain.getChess(null);
+  static getInitialState(): StateType {
+    var fen = Brain.getFen();
     var orientationIsWhite = true;
-    var lichessUsername = undefined;
     const hash = window.location.hash.split("#")[1];
     if (hash !== undefined) {
       const parts = hash.split("//");
       if (parts.length === 2) {
         orientationIsWhite = parts[0] === "w";
-        chess.load(parts[1].replaceAll("_", " "));
+        fen = Brain.getFen(parts[1].replaceAll("_", " "));
       }
     }
     return {
-      chess,
+      fen,
       orientationIsWhite,
       logs: [] as LogType[],
-      lichessUsername,
     };
   }
 
@@ -95,7 +95,10 @@ export default class Brain {
   }
 
   static isMyTurn(state: StateType) {
-    return state.chess.turn() === (state.orientationIsWhite ? "w" : "b");
+    return (
+      Brain.getChess(state.fen).turn() ===
+      (state.orientationIsWhite ? "w" : "b")
+    );
   }
 
   //
@@ -118,12 +121,9 @@ export default class Brain {
   }
 
   static newGame() {
-    const state = Brain.getState();
-    const chess = Brain.getChess(null);
-    chess.reset();
     Brain.setState({
-      chess,
-      orientationIsWhite: !state.orientationIsWhite,
+      fen: Brain.getFen(),
+      orientationIsWhite: !Brain.getState().orientationIsWhite,
       logs: [],
     });
   }
@@ -155,12 +155,13 @@ export default class Brain {
     if (!san) {
       return alert("no move to play");
     }
+    // todo helper
     const state = Brain.getState();
     Brain.setState({
       ...state,
-      chess: Brain.getChess(state.chess, [san]),
+      fen: Brain.getFen(state.fen, san),
       logs: state.logs.concat({
-        chess: state.chess,
+        fen: state.fen,
         san,
         username,
       }),
@@ -171,7 +172,7 @@ export default class Brain {
     const username = Brain.isMyTurn(Brain.getState())
       ? undefined
       : Brain.lichessUsername;
-    lichess(Brain.getState().chess, { username, prepareNext: true })
+    lichess(Brain.getState().fen, { username, prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
         var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
@@ -192,24 +193,24 @@ export default class Brain {
       }
     }
     const username = Brain.isMyTurn(state) ? undefined : Brain.lichessUsername;
-    lichess(Brain.getState().chess, { username, prepareNext: true })
+    lichess(Brain.getState().fen, { username, prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
       .then((san) => Brain.playMove(san, username));
   }
 
   static getNovelty(): string | null {
-    return StorageW.get(Brain.getState().chess.fen());
+    return StorageW.get(Brain.getState().fen);
   }
 
   static clearNovelty() {
-    StorageW.set(Brain.getState().chess.fen(), null);
+    StorageW.set(Brain.getState().fen, null);
   }
 
   //
 
   static memorizeWithQuizlet() {
-    window.location.href = `/quizlet#${Brain.hash(Brain.getState().chess)}`;
+    window.location.href = `/quizlet#${Brain.hash(Brain.getState().fen)}`;
   }
 
   static findMistakes(username: string) {
@@ -238,7 +239,7 @@ export default class Brain {
         ).then(() => Brain.setState(start));
       }
       if (!Brain.isMyTurn(state)) {
-        return lichess(state.chess)
+        return lichess(state.fen)
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -248,9 +249,9 @@ export default class Brain {
               .map((move) => ({
                 ...state,
                 odds: (state.odds * move.total) / total,
-                chess: Brain.getChess(state.chess, [move.san]),
+                fen: Brain.getFen(state.fen, move.san),
                 logs: state.logs.concat({
-                  chess: state.chess,
+                  fen: state.fen,
                   san: move.san,
                 }),
               }))
@@ -261,7 +262,7 @@ export default class Brain {
           .then(helper);
       }
       return (
-        lichess(state.chess, { username })
+        lichess(state.fen, { username })
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -271,7 +272,7 @@ export default class Brain {
           )
           // todo novelty
           .then((myMoveRaw) =>
-            lichess(state.chess).then((moves) => ({
+            lichess(state.fen).then((moves) => ({
               bestMove: moves.sort((a, b) => b.score - a.score)[0],
               myMoveRaw,
               myMove: moves.find((move) => move.san === myMoveRaw?.san),
@@ -283,9 +284,9 @@ export default class Brain {
               vars.best++;
               states.push({
                 ...state,
-                chess: Brain.getChess(state.chess, [myMove!.san]),
+                fen: Brain.getFen(state.fen, myMove!.san),
                 logs: state.logs.concat({
-                  chess: state.chess,
+                  fen: state.fen,
                   san: myMove.san,
                 }),
               });
@@ -335,7 +336,7 @@ export default class Brain {
     if (!username) return alert("no username provided");
 
     window.location.href = `/lichess/${username}#${Brain.hash(
-      Brain.getState().chess
+      Brain.getState().fen
     )}`;
   }
 
@@ -346,15 +347,15 @@ export default class Brain {
   // board
   static moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
     const state = Brain.getState();
-    const chess = Brain.getChess(state.chess);
+    const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      if (shouldSaveNovelty) StorageW.set(state.chess.fen(), move.san);
+      if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
       Brain.setState({
         ...state,
-        chess,
+        fen: chess.fen(),
         logs: state.logs.concat({
-          chess: state.chess,
+          fen: state.fen,
           san: move.san,
         }),
       });
