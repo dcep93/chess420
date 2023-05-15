@@ -1,11 +1,12 @@
 import Brain, { StateType } from "./Brain";
-import lichess, { LiMove } from "./Lichess";
+import lichess from "./Lichess";
 import { LogType } from "./Log";
 
 // todo d stateful instead of promise based so we can undo and stuff
 export default function traverse(
-  getMyMoveRaw: (state: StateType) => Promise<LiMove | undefined>
+  getMyMoveRaw: (state: StateType) => Promise<string | undefined>
 ) {
+  Brain.traversing = true;
   const start = { odds: 1, ...Brain.getState(), logs: [] as LogType[] };
   const states: (StateType & { odds: number })[] = [
     { ...start, orientationIsWhite: !start.orientationIsWhite },
@@ -18,14 +19,21 @@ export default function traverse(
     const state = states.pop();
     if (!state) {
       return new Promise<void>((resolve) =>
-        Brain.setState({
-          ...start,
-          message: {
-            ms: Object.entries(vars).map(([key, value]) => `${key}: ${value}`),
-            f: resolve,
+        Brain.setState(
+          {
+            ...start,
+            message: {
+              ms: Object.entries(vars).map(
+                ([key, value]) => `${key}: ${value}`
+              ),
+              f: resolve,
+            },
           },
-        })
-      ).then(() => Brain.setState(start));
+          true
+        )
+      )
+        .then(() => (Brain.traversing = false))
+        .then(() => Brain.setState(start));
     }
     if (!Brain.isMyTurn(state)) {
       return lichess(state.fen)
@@ -55,7 +63,7 @@ export default function traverse(
         lichess(state.fen).then((moves) => ({
           bestMove: moves.sort((a, b) => b.score - a.score)[0],
           myMoveRaw,
-          myMove: moves.find((move) => move.san === myMoveRaw?.san),
+          myMove: moves.find((move) => move.san === myMoveRaw),
         }))
       )
       .then(({ bestMove, myMove, myMoveRaw }) => {
@@ -79,26 +87,29 @@ export default function traverse(
           vars.bad++;
         }
         return new Promise<void>((resolve) =>
-          Brain.setState({
-            ...state,
-            message: {
-              ms: [
-                ok ? "ok" : "bad",
-                `odds: ${(state.odds * 100).toFixed(2)}%`,
-                `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
-                  2
-                )}`,
-                myMove === undefined
-                  ? myMoveRaw === undefined
-                    ? "you don't have a most common move"
-                    : `you usually play ${myMoveRaw.san} which isn't popular`
-                  : `you usually play ${myMove.san} s/${myMove.score.toFixed(
-                      2
-                    )}`,
-              ],
-              f: resolve,
+          Brain.setState(
+            {
+              ...state,
+              message: {
+                ms: [
+                  ok ? "ok" : "bad",
+                  `odds: ${(state.odds * 100).toFixed(2)}%`,
+                  `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
+                    2
+                  )}`,
+                  myMove === undefined
+                    ? myMoveRaw === undefined
+                      ? "you don't have a most common move"
+                      : `you usually play ${myMoveRaw} which isn't popular`
+                    : `you usually play ${myMove.san} s/${myMove.score.toFixed(
+                        2
+                      )}`,
+                ],
+                f: resolve,
+              },
             },
-          })
+            true
+          )
         );
       })
       .then(() => helper(states));

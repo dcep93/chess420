@@ -26,6 +26,8 @@ export default class Brain {
   static updateHistory: (history: History) => void;
 
   static timeout: NodeJS.Timeout;
+  static traversing = false;
+  static traversePromise?: (san: string) => void;
 
   //
 
@@ -83,7 +85,25 @@ export default class Brain {
     return Brain.history.states[Brain.history.index];
   }
 
-  static setState(state: StateType) {
+  static genState<T extends StateType>(
+    startingState: T,
+    san: string,
+    username?: string
+  ): T {
+    return {
+      ...startingState,
+      fen: Brain.getFen(startingState.fen, san),
+      logs: startingState.logs.concat({
+        fen: startingState.fen,
+        san,
+        username,
+      }),
+    };
+  }
+
+  static setState(state: StateType, forTraverse?: boolean) {
+    if (Brain.traversing && !forTraverse)
+      return alert("are you crazy? you've got a job to do!");
     clearTimeout(Brain.timeout);
     const states = [state].concat(
       Brain.history.states.slice(Brain.history.index)
@@ -202,7 +222,14 @@ export default class Brain {
   //
 
   static memorizeWithQuizlet() {
-    // TODO a quizlet
+    return traverse((state) =>
+      new Promise<string>((resolve) => (Brain.traversePromise = resolve)).then(
+        (san) => {
+          Brain.traversePromise = undefined;
+          return san;
+        }
+      )
+    );
   }
 
   static findMistakes(username: string) {
@@ -214,8 +241,9 @@ export default class Brain {
           moves,
           total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
         }))
-        .then(({ moves, total }) =>
-          moves.find((move) => move.total > total / 2)
+        .then(
+          ({ moves, total }) =>
+            moves.find((move) => move.total > total / 2)?.san
         )
     );
   }
@@ -239,26 +267,15 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      Brain.setState(Brain.genState(state, move.san));
+      Brain.moveFromToHelper(move.san);
       return true;
     } else {
       return false;
     }
   }
 
-  static genState<T extends StateType>(
-    startingState: T,
-    san: string,
-    username?: string
-  ): T {
-    return {
-      ...startingState,
-      fen: Brain.getFen(startingState.fen, san),
-      logs: startingState.logs.concat({
-        fen: startingState.fen,
-        san,
-        username,
-      }),
-    };
+  static moveFromToHelper(san: string) {
+    if (Brain.traversePromise !== undefined) return Brain.traversePromise(san);
+    Brain.setState(Brain.genState(Brain.getState(), san));
   }
 }
