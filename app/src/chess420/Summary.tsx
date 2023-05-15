@@ -12,6 +12,8 @@ export default function Summary() {
     );
   }
   return (
-    <div>TODO b summary {Brain.traversing ? "traversing" : "default"}</div>
+    <div>
+      TODO b summary {Brain.getState().traversing ? "traversing" : "default"}
+    </div>
   );
 }

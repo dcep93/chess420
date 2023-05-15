@@ -11,6 +11,7 @@ export type StateType = {
   fen: string;
   orientationIsWhite: boolean;
   logs: LogType[];
+  traversing?: boolean;
   message?: { ms: string[]; f: () => void };
 };
 
@@ -26,7 +27,6 @@ export default class Brain {
   static updateHistory: (history: History) => void;
 
   static timeout: NodeJS.Timeout;
-  static traversing = false;
   static traversePromise?: (san: string) => void;
 
   //
@@ -102,7 +102,7 @@ export default class Brain {
   }
 
   static setState(state: StateType, forTraverse?: boolean) {
-    if (Brain.traversing && !forTraverse)
+    if (Brain.getState()?.traversing && !forTraverse)
       return alert("are you crazy? you've got a job to do!");
     clearTimeout(Brain.timeout);
     const states = [state].concat(

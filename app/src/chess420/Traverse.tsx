@@ -6,8 +6,13 @@ import { LogType } from "./Log";
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<string | undefined>
 ) {
-  Brain.traversing = true;
-  const start = { odds: 1, ...Brain.getState(), logs: [] as LogType[] };
+  const init = {
+    ...Brain.getState(),
+    traversing: true,
+    logs: [] as LogType[],
+  };
+  Brain.setState(init);
+  const start = { odds: 1, ...init };
   const states: (StateType & { odds: number })[] = [
     { ...start, orientationIsWhite: !start.orientationIsWhite },
     { ...start },
@@ -21,7 +26,7 @@ export default function traverse(
       return new Promise<void>((resolve) =>
         Brain.setState(
           {
-            ...start,
+            ...init,
             message: {
               ms: Object.entries(vars).map(
                 ([key, value]) => `${key}: ${value}`
@@ -31,9 +36,7 @@ export default function traverse(
           },
           true
         )
-      )
-        .then(() => (Brain.traversing = false))
-        .then(() => Brain.setState(start));
+      ).then(() => Brain.setState({ ...init, traversing: false }));
     }
     if (!Brain.isMyTurn(state)) {
       return lichess(state.fen)
