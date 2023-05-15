@@ -267,15 +267,12 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      Brain.moveFromToHelper(move.san);
+      Brain.traversePromise !== undefined
+        ? Brain.traversePromise(move.san)
+        : Brain.setState(Brain.genState(Brain.getState(), move.san));
       return true;
     } else {
       return false;
     }
-  }
-
-  static moveFromToHelper(san: string) {
-    if (Brain.traversePromise !== undefined) return Brain.traversePromise(san);
-    Brain.setState(Brain.genState(Brain.getState(), san));
   }
 }
