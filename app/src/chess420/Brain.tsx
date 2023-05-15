@@ -255,67 +255,77 @@ export default class Brain {
                 }),
               }))
               .filter((moveState) => moveState.odds >= thresholdOdds)
-              .sort((a, b) => (a.odds > b.odds ? 1 : -1))
+              .sort((a, b) => b.odds - a.odds)
               .forEach((moveState) => states.push(moveState))
           )
           .then(helper);
       }
-      return lichess(state.chess, { username })
-        .then((moves) => ({
-          moves,
-          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-        }))
-        .then(({ moves, total }) =>
-          moves.find((move) => move.total > total / 2)
-        )
-        .then((move) =>
-          lichess(state.chess)
-            .then(
-              (moves) => moves.sort((a, b) => (a.score > b.score ? 1 : -1))[0]
-            )
-            .then((bestMove) => ({ bestMove, move }))
-        )
-        .then(({ bestMove, move }) => {
-          if (bestMove === undefined) return;
-          if (bestMove.san === move?.san) {
-            vars.best++;
-            states.push({
-              ...state,
-              chess: Brain.getChess(state.chess, [move!.san]),
-              logs: state.logs.concat({ chess: state.chess, san: move.san }),
-            });
-            return;
-          }
-          const ok =
-            move !== undefined &&
-            (state.orientationIsWhite
-              ? move.white > move.black
-              : move.black > move.white);
-          if (ok) {
-            vars.ok++;
-          } else {
-            vars.bad++;
-          }
-          return new Promise<void>((resolve) =>
-            Brain.setState({
-              ...state,
-              message: {
-                ms: [
-                  ok ? "ok" : "bad",
-                  `odds: ${(state.odds * 100).toFixed(2)}%`,
-                  `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
-                    2
-                  )}`,
-                  move === undefined
-                    ? "you don't have a most common move"
-                    : `you usually play ${move.san} s/${move.score.toFixed(2)}`,
-                ],
-                f: resolve,
-              },
-            })
-          );
-        })
-        .then(helper);
+      return (
+        lichess(state.chess, { username })
+          .then((moves) => ({
+            moves,
+            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+          }))
+          .then(({ moves, total }) =>
+            moves.find((move) => move.total > total / 2)
+          )
+          // todo novelty
+          .then((myMoveRaw) =>
+            lichess(state.chess).then((moves) => ({
+              bestMove: moves.sort((a, b) => b.score - a.score)[0],
+              myMoveRaw,
+              myMove: moves.find((move) => move.san === myMoveRaw?.san),
+            }))
+          )
+          .then(({ bestMove, myMove, myMoveRaw }) => {
+            if (bestMove === undefined) return;
+            if (bestMove.san === myMove?.san) {
+              vars.best++;
+              states.push({
+                ...state,
+                chess: Brain.getChess(state.chess, [myMove!.san]),
+                logs: state.logs.concat({
+                  chess: state.chess,
+                  san: myMove.san,
+                }),
+              });
+              return;
+            }
+            const ok =
+              myMove !== undefined &&
+              (state.orientationIsWhite
+                ? myMove.white > myMove.black
+                : myMove.black > myMove.white);
+            if (ok) {
+              vars.ok++;
+            } else {
+              vars.bad++;
+            }
+            return new Promise<void>((resolve) =>
+              Brain.setState({
+                ...state,
+                message: {
+                  ms: [
+                    ok ? "ok" : "bad",
+                    `odds: ${(state.odds * 100).toFixed(2)}%`,
+                    `the best move is ${
+                      bestMove.san
+                    } s/${bestMove.score.toFixed(2)}`,
+                    myMove === undefined
+                      ? myMoveRaw === undefined
+                        ? "you don't have a most common move"
+                        : `you usually play ${myMoveRaw.san} which is a novelty`
+                      : `you usually play ${
+                          myMove.san
+                        } s/${myMove.score.toFixed(2)}`,
+                  ],
+                  f: resolve,
+                },
+              })
+            );
+          })
+          .then(helper)
+      );
     }
     return helper();
   }
