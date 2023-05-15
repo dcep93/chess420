@@ -223,12 +223,13 @@ export default class Brain {
 
   static memorizeWithQuizlet() {
     return traverse((state) =>
-      new Promise<string>((resolve) => (Brain.traversePromise = resolve)).then(
-        (san) => {
-          Brain.traversePromise = undefined;
-          return san;
-        }
-      )
+      new Promise<string>((resolve) => {
+        Brain.traversePromise = resolve;
+        Brain.setState(state, true);
+      }).then((san) => {
+        Brain.traversePromise = undefined;
+        return san;
+      })
     );
   }
 

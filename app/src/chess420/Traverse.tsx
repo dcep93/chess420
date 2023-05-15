@@ -56,7 +56,7 @@ export default function traverse(
               )
             )
             .filter((moveState) => moveState.odds >= thresholdOdds)
-            .sort((a, b) => b.odds - a.odds)
+            .sort((a, b) => a.odds - b.odds)
             .forEach((moveState) => states.push(moveState))
         )
         .then(() => helper(states));
