@@ -2,6 +2,8 @@ import Brain, { StateType } from "./Brain";
 import lichess from "./Lichess";
 import { LogType } from "./Log";
 
+type TraverseState = StateType & { odds: number };
+
 // todo d stateful instead of promise based so we can undo and stuff
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<string | undefined>
@@ -13,11 +15,15 @@ export default function traverse(
   };
   Brain.setState(init);
   const start = { odds: 1, ...init };
-  const states: (StateType & { odds: number })[] = [
+  const states: TraverseState[] = [
     { ...start, orientationIsWhite: !start.orientationIsWhite },
     { ...start },
   ];
-  const vars = { bad: 0, ok: 0, best: 0 };
+  const vars = {
+    bad: [] as TraverseState[],
+    ok: [] as TraverseState[],
+    best: [] as TraverseState[],
+  };
   const thresholdOdds = 0.01;
   function helper(rawStates: (StateType & { odds: number })[]): Promise<void> {
     const states = rawStates.slice();
@@ -71,12 +77,13 @@ export default function traverse(
       )
       .then(({ bestMove, myMove, myMoveRaw }) => {
         if (bestMove === undefined) return;
+        const nextState = Brain.genState(state, bestMove!.san);
         if (
           bestMove.san === myMove?.san ||
           (myMove !== undefined && Brain.getNovelty(state) === myMove.san)
         ) {
-          vars.best++;
-          states.push(Brain.genState(state, myMove!.san));
+          vars.best.push(nextState);
+          states.push(nextState);
           return;
         }
         const ok =
@@ -85,9 +92,9 @@ export default function traverse(
             ? myMove.white > myMove.black
             : myMove.black > myMove.white);
         if (ok) {
-          vars.ok++;
+          vars.ok.push(nextState);
         } else {
-          vars.bad++;
+          vars.bad.push(nextState);
         }
         return new Promise<void>((resolve) =>
           Brain.setState(
@@ -117,5 +124,5 @@ export default function traverse(
       })
       .then(() => helper(states));
   }
-  return helper(states);
+  return helper(states).then(() => vars);
 }
