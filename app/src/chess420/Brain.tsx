@@ -61,13 +61,13 @@ export default class Brain {
     var fen = Brain.getFen();
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
-    // if (hash !== undefined) {
-    //   const parts = hash.split("//");
-    //   if (parts.length === 2) {
-    //     orientationIsWhite = parts[0] === "w";
-    //     fen = Brain.getFen(parts[1].replaceAll("_", " "));
-    //   }
-    // }
+    if (hash !== undefined) {
+      const parts = hash.split("//");
+      if (parts.length === 2) {
+        orientationIsWhite = parts[0] === "w";
+        fen = Brain.getFen(parts[1].replaceAll("_", " "));
+      }
+    }
     return {
       fen,
       orientationIsWhite,
