@@ -37,8 +37,7 @@ export default class Brain {
     sans: string[] = []
   ): ChessInstance {
     // @ts-ignore
-    const chess = new Chess();
-    if (prevChess !== null) chess.load(prevChess.fen());
+    const chess = prevChess === null ? new Chess() : { ...prevChess };
     sans.forEach((san) => chess.move(san));
     return chess;
   }
