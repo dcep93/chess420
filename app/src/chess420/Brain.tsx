@@ -32,13 +32,13 @@ export default class Brain {
 
   //
 
-  // todo ugh
   static getChess(
     prevChess: ChessInstance | null,
     sans: string[] = []
   ): ChessInstance {
     // @ts-ignore
-    const chess = prevChess === null ? new Chess() : { ...prevChess };
+    const chess = new Chess();
+    if (prevChess !== null) chess.load(prevChess.fen());
     sans.forEach((san) => chess.move(san));
     return chess;
   }
@@ -327,6 +327,7 @@ export default class Brain {
           .then(helper)
       );
     }
+    // todo
     return helper();
   }
 
