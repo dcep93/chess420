@@ -11,7 +11,7 @@ export default function traverse(
     { odds: 1, ...start },
   ];
   const vars = { bad: 0, ok: 0, best: 0 };
-  const thresholdOdds = 0.001;
+  const thresholdOdds = 0.01;
   function helper(): Promise<void> {
     const state = states.pop();
     if (!state) {
