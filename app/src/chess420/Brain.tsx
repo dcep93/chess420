@@ -32,6 +32,7 @@ export default class Brain {
 
   //
 
+  // todo ugh
   static getChess(
     prevChess: ChessInstance | null,
     sans: string[] = []
