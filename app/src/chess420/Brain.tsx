@@ -10,7 +10,7 @@ export type StateType = {
   chess: ChessInstance;
   orientationIsWhite: boolean;
   logs: LogType[];
-  message?: { m: string; f: () => void };
+  message?: { ms: string[]; f: () => void };
 };
 
 type History = {
@@ -59,7 +59,7 @@ export default class Brain {
     const hash = window.location.hash.split("#")[1];
     if (hash !== undefined) {
       const parts = hash.split("//");
-      if (parts.length === 3) {
+      if (parts.length === 2) {
         orientationIsWhite = parts[0] === "w";
         chess.load(parts[1].replaceAll("_", " "));
       }
@@ -215,39 +215,107 @@ export default class Brain {
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
-    const start = { ...Brain.getState(), logs: [] };
+    const start = { ...Brain.getState(), logs: [] as LogType[] };
     const states = [
-      { ...start },
-      { ...start, orientationIsWhite: !start.orientationIsWhite },
+      { odds: 1, ...start, orientationIsWhite: !start.orientationIsWhite },
+      { odds: 1, ...start },
     ];
     const vars = { bad: 0, ok: 0, best: 0 };
+    const thresholdOdds = 0.001;
     function helper(): Promise<void> {
-      const state = states.shift();
+      const state = states.pop();
       if (!state) {
         return new Promise<void>((resolve) =>
           Brain.setState({
             ...start,
             message: {
-              m: Object.entries(vars)
-                .map(([key, value]) => `${key}: ${value}`)
-                .join("\n"),
+              ms: Object.entries(vars).map(
+                ([key, value]) => `${key}: ${value}`
+              ),
               f: resolve,
             },
           })
         ).then(() => Brain.setState(start));
       }
-      vars.bad++;
-      return new Promise<void>((resolve) =>
-        Brain.setState({
-          ...state,
-          message: {
-            m: Object.entries(vars)
-              .map(([key, value]) => `${key}: ${value}`)
-              .join("\n"),
-            f: resolve,
-          },
+      if (!Brain.isMyTurn(state)) {
+        return lichess(state.chess)
+          .then((moves) => ({
+            moves,
+            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+          }))
+          .then(({ moves, total }) =>
+            moves
+              .map((move) => ({
+                ...state,
+                odds: (state.odds * move.total) / total,
+                chess: Brain.getChess(state.chess, [move.san]),
+                logs: state.logs.concat({
+                  chess: state.chess,
+                  san: move.san,
+                }),
+              }))
+              .filter((moveState) => moveState.odds >= thresholdOdds)
+              .sort((a, b) => (a.odds > b.odds ? 1 : -1))
+              .forEach((moveState) => states.push(moveState))
+          )
+          .then(helper);
+      }
+      return lichess(state.chess, { username })
+        .then((moves) => ({
+          moves,
+          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+        }))
+        .then(({ moves, total }) =>
+          moves.find((move) => move.total > total / 2)
+        )
+        .then((move) =>
+          lichess(state.chess)
+            .then(
+              (moves) => moves.sort((a, b) => (a.score > b.score ? 1 : -1))[0]
+            )
+            .then((bestMove) => ({ bestMove, move }))
+        )
+        .then(({ bestMove, move }) => {
+          if (bestMove === undefined) return;
+          if (bestMove.san === move?.san) {
+            vars.best++;
+            states.push({
+              ...state,
+              chess: Brain.getChess(state.chess, [move!.san]),
+              logs: state.logs.concat({ chess: state.chess, san: move.san }),
+            });
+            return;
+          }
+          const ok =
+            move !== undefined &&
+            (state.orientationIsWhite
+              ? move.white > move.black
+              : move.black > move.white);
+          if (ok) {
+            vars.ok++;
+          } else {
+            vars.bad++;
+          }
+          return new Promise<void>((resolve) =>
+            Brain.setState({
+              ...state,
+              message: {
+                ms: [
+                  ok ? "ok" : "bad",
+                  `odds: ${(state.odds * 100).toFixed(2)}%`,
+                  `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
+                    2
+                  )}`,
+                  move === undefined
+                    ? "you don't have a most common move"
+                    : `you usually play ${move.san} s/${move.score.toFixed(2)}`,
+                ],
+                f: resolve,
+              },
+            })
+          );
         })
-      ).then(helper);
+        .then(helper);
     }
     return helper();
   }
@@ -277,7 +345,6 @@ export default class Brain {
         logs: state.logs.concat({
           chess: state.chess,
           san: move.san,
-          username: undefined,
         }),
       });
       return true;

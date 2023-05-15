@@ -6,7 +6,7 @@ import lichess, { LiMove } from "./Lichess";
 export type LogType = {
   chess: ChessInstance;
   san: string;
-  username: string | undefined;
+  username?: string;
 };
 
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
@@ -14,6 +14,7 @@ const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 export default function Log() {
   const rawLogs = Brain.getState().logs;
   if (rawLogs.length === 0) return <></>;
+  // todo ...
   const logs =
     rawLogs[0].chess.turn() === "w"
       ? rawLogs
@@ -95,7 +96,7 @@ function getParts(san: string, moves: LiMove[]) {
       .sort((a, b) => b - a)[0];
   return [
     san,
-    `s/${s > 420 ? 420 : s.toFixed(2)}`,
+    `s/${s > 420 ? 420 : s.toFixed(2)}`, // todo move 420 score calc
     `p/${(
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)
