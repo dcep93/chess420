@@ -1,20 +1,45 @@
 import React, { useEffect, useState } from "react";
 import Board from "./Board";
-import Brain, { StateType } from "./Brain";
+import Brain, { StateType, View } from "./Brain";
 import Controls from "./Controls";
 import Log from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
 
 export default function App() {
-  const pathParts = window.location.pathname.split("/");
-  if (pathParts[1] === "lichess") {
-    const username = pathParts[2];
-    if (username === "") {
-      alert("invalid path - no lichess opponent");
+  const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
+  switch (pathParts[1]) {
+    case "lichess":
+      Brain.view = View.lichess;
+      const username = pathParts[2];
+      if (username === "") {
+        alert("invalid path - no lichess opponent");
+        return null;
+      }
+      Brain.lichessUsername = username;
+      if (pathParts[3] === "mistakes") {
+        Brain.view = View.lichess_mistakes;
+      } else if (pathParts.length > 3) {
+        alert("invalid path");
+        return null;
+      }
+      break;
+    case "quizlet":
+      Brain.view = View.quizlet;
+      if (pathParts.length > 2) {
+        alert("invalid path");
+        return null;
+      }
+      break;
+    case undefined:
+      if (pathParts.length > 1) {
+        alert("invalid path");
+        return null;
+      }
+      break;
+    default:
+      alert("invalid path");
       return null;
-    }
-    Brain.lichessUsername = username;
   }
   return <Main />;
 }

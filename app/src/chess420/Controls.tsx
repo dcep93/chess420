@@ -39,20 +39,27 @@ export default function Controls() {
         <button onClick={Brain.playWeighted}>play weighted</button>
       </div>
       {Brain.lichessUsername === undefined ? (
-        <div>
-          <span>lichess: </span>
-          <input ref={lichessRef} style={{ width: "4em" }} />
-          <span>
-            <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
-              play vs user
+        <>
+          <div>
+            <span>lichess: </span>
+            <input ref={lichessRef} style={{ width: "4em" }} />
+            <span>
+              <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
+                play vs user
+              </button>
+              <button
+                onClick={() => Brain.findMistakes(lichessRef.current!.value)}
+              >
+                find mistakes
+              </button>
+            </span>
+          </div>
+          <div>
+            <button onClick={Brain.memorizeWithQuizlet}>
+              memorize with Quizlet
             </button>
-            <button
-              onClick={() => Brain.findMistakes(lichessRef.current!.value)}
-            >
-              find mistakes
-            </button>
-          </span>
-        </div>
+          </div>
+        </>
       ) : (
         <div>
           <span>playing vs {Brain.lichessUsername} </span>
@@ -61,11 +68,6 @@ export default function Controls() {
           </button>
         </div>
       )}
-      <div>
-        <button onClick={Brain.memorizeWithQuizlet}>
-          memorize with Quizlet
-        </button>
-      </div>
     </div>
   );
 }

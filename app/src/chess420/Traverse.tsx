@@ -4,7 +4,6 @@ import { LogType } from "./Log";
 
 type TraverseState = StateType & { odds: number };
 
-// todo d stateful instead of promise based so we can undo and stuff
 export default function traverse(
   getMyMoveRaw: (state: StateType) => Promise<string | undefined>
 ) {

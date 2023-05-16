@@ -20,6 +20,12 @@ type History = {
   states: StateType[];
 };
 
+export enum View {
+  lichess,
+  lichess_mistakes,
+  quizlet,
+}
+
 export default class Brain {
   static autoreplyRef: RefObject<HTMLInputElement>;
 
@@ -31,7 +37,8 @@ export default class Brain {
 
   //
 
-  static lichessUsername: string | undefined;
+  static view?: View;
+  static lichessUsername?: string;
 
   //
 
