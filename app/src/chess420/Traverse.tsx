@@ -5,10 +5,11 @@ import { LogType } from "./Log";
 type TraverseState = StateType & { odds: number };
 
 export default function traverse(
+  startingState: StateType,
   getMyMoveRaw: (state: StateType) => Promise<string | undefined>
 ) {
   const init = {
-    ...Brain.getState(),
+    ...startingState,
     traversing: true,
     logs: [] as LogType[],
   };

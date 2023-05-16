@@ -83,11 +83,12 @@ export default class Brain {
   }
 
   static setInitialState() {
-    Brain.setState(Brain.getInitialState());
+    const startingState = Brain.getInitialState();
+    Brain.setState(startingState, true);
 
     switch (Brain.view) {
       case View.lichess_mistakes:
-        traverse((state) =>
+        traverse(startingState, (state) =>
           lichess(state.fen, { username: Brain.lichessUsername })
             .then((moves) => ({
               moves,
@@ -100,7 +101,7 @@ export default class Brain {
         );
         break;
       case View.quizlet:
-        traverse((state) =>
+        traverse(startingState, (state) =>
           new Promise<string>((resolve) => {
             Brain.traversePromise = resolve;
             Brain.setState(state, true);
