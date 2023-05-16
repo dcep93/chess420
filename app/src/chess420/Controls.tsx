@@ -1,5 +1,5 @@
 import React from "react";
-import Brain from "./Brain";
+import Brain, { View } from "./Brain";
 
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
@@ -38,7 +38,7 @@ export default function Controls() {
         <button onClick={Brain.playBest}>play best</button>
         <button onClick={Brain.playWeighted}>play weighted</button>
       </div>
-      {Brain.lichessUsername === undefined ? (
+      {Brain.view === undefined ? (
         <>
           <div>
             <span>lichess: </span>
@@ -61,12 +61,20 @@ export default function Controls() {
           </div>
         </>
       ) : (
-        <div>
-          <span>playing vs {Brain.lichessUsername} </span>
-          <button onClick={() => (window.location.href = "/")}>
-            restore to default
-          </button>
-        </div>
+        <>
+          <div>
+            {Brain.view === View.lichess ? (
+              <span>playing vs {Brain.lichessUsername}</span>
+            ) : Brain.view === View.lichess_mistakes ? (
+              <span>finding mistakes of {Brain.lichessUsername}</span>
+            ) : Brain.view === View.quizlet ? (
+              <span>building Quizlet data</span>
+            ) : null}
+          </div>
+          <div>
+            <button onClick={() => (window.location.href = "/")}>escape</button>
+          </div>
+        </>
       )}
     </div>
   );
