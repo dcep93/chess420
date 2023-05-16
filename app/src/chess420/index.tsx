@@ -66,6 +66,7 @@ function Main() {
           KeyA: () =>
             (Brain.autoreplyRef.current!.checked =
               !Brain.autoreplyRef.current!.checked),
+          Escape: Brain.escape,
         })[e.code] || (() => e.shiftKey && updateIsShift(true))
       )();
     });
@@ -77,12 +78,13 @@ function Main() {
 
     Brain.setInitialState();
   });
-  if (!Brain.getState()) return null;
-  return <SubMain isShift={isShift} />;
+  const fen = Brain.getState()?.fen;
+  if (!fen) return null;
+  return <SubMain isShift={isShift} fen={fen} />;
 }
 
-function SubMain(props: { isShift: boolean }) {
-  window.location.hash = Brain.hash(Brain.getState().fen);
+function SubMain(props: { isShift: boolean; fen: string }) {
+  window.location.hash = Brain.hash(props.fen);
   return (
     // TODO c pretty
     <div

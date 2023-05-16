@@ -277,6 +277,13 @@ export default class Brain {
     )}`;
   }
 
+  static escape() {
+    setTimeout(() => {
+      window.location.assign("/#");
+      if (!Brain.view) window.location.reload();
+    });
+  }
+
   //
 
   static help() {
