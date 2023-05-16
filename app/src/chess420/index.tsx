@@ -10,19 +10,20 @@ export default function App() {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
   switch (pathParts[1]) {
     case "lichess":
-      Brain.view = View.lichess;
-      const username = pathParts[2];
-      if (username === "") {
-        alert("invalid path - no lichess opponent");
-        return null;
-      }
-      Brain.lichessUsername = username;
       if (pathParts[3] === "mistakes") {
         Brain.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
         alert("invalid path");
         return null;
+      } else {
+        Brain.view = View.lichess;
       }
+      const username = pathParts[2];
+      if (username === "") {
+        alert("invalid path");
+        return null;
+      }
+      Brain.lichessUsername = username;
       break;
     case "quizlet":
       Brain.view = View.quizlet;
