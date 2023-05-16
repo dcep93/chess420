@@ -84,6 +84,33 @@ export default class Brain {
 
   static setInitialState() {
     Brain.setState(Brain.getInitialState());
+
+    switch (Brain.view) {
+      case View.lichess_mistakes:
+        traverse((state) =>
+          lichess(state.fen, { username: Brain.lichessUsername })
+            .then((moves) => ({
+              moves,
+              total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+            }))
+            .then(
+              ({ moves, total }) =>
+                moves.find((move) => move.total > total / 2)?.san
+            )
+        );
+        break;
+      case View.quizlet:
+        traverse((state) =>
+          new Promise<string>((resolve) => {
+            Brain.traversePromise = resolve;
+            Brain.setState(state, true);
+          }).then((san) => {
+            Brain.traversePromise = undefined;
+            return san;
+          })
+        );
+        break;
+    }
   }
 
   //
@@ -132,6 +159,8 @@ export default class Brain {
   //
 
   static maybeReply(state: StateType) {
+    if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet)
+      return;
     if (
       state.message === undefined &&
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
@@ -229,31 +258,15 @@ export default class Brain {
   //
 
   static memorizeWithQuizlet() {
-    return traverse((state) =>
-      new Promise<string>((resolve) => {
-        Brain.traversePromise = resolve;
-        Brain.setState(state, true);
-      }).then((san) => {
-        Brain.traversePromise = undefined;
-        return san;
-      })
-    );
+    window.location.href = `/quizlet#${Brain.hash(Brain.getState().fen)}`;
   }
 
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
-    return traverse((state) =>
-      lichess(state.fen, { username })
-        .then((moves) => ({
-          moves,
-          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-        }))
-        .then(
-          ({ moves, total }) =>
-            moves.find((move) => move.total > total / 2)?.san
-        )
-    );
+    window.location.href = `/lichess/${username}/mistakes#${Brain.hash(
+      Brain.getState().fen
+    )}`;
   }
 
   static playVs(username: string) {
@@ -263,6 +276,8 @@ export default class Brain {
       Brain.getState().fen
     )}`;
   }
+
+  //
 
   static help() {
     alert("TODO c help");
