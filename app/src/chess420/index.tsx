@@ -61,7 +61,7 @@ function Main() {
           Enter: Brain.startOver,
           ArrowLeft: Brain.undo,
           ArrowRight: Brain.redo,
-          KewW: Brain.playWeighted,
+          KeyW: Brain.playWeighted,
           KeyH: Brain.help,
           KeyA: () =>
             (Brain.autoreplyRef.current!.checked =

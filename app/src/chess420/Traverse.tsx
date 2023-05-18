@@ -2,6 +2,8 @@ import Brain, { StateType } from "./Brain";
 import lichess from "./Lichess";
 import { LogType } from "./Log";
 
+// TODO a traverse stateful
+
 type TraverseState = StateType & { odds: number };
 
 export default function traverse(

@@ -3,6 +3,7 @@ import Brain, { View } from "./Brain";
 
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
+  const noveltyRef = React.useRef<HTMLButtonElement>(null);
   return (
     <div
       style={{
@@ -20,8 +21,13 @@ export default function Controls() {
         <button onClick={Brain.undo}>undo</button>
         <button onClick={Brain.redo}>redo</button>
         <button
+          ref={noveltyRef}
           disabled={Brain.getNovelty() === null}
-          onClick={Brain.clearNovelty}
+          onClick={() =>
+            Promise.resolve()
+              .then(Brain.clearNovelty)
+              .then(() => (noveltyRef.current!.disabled = true))
+          }
         >
           clear novelty
         </button>

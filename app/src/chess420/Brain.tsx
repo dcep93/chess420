@@ -109,7 +109,7 @@ export default class Brain {
             Brain.traversePromise = undefined;
             return san;
           })
-        );
+        ).then(({ bad, ok, best }) => alert("TODO bad ok best"));
         break;
     }
   }
