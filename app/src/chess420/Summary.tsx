@@ -7,7 +7,7 @@ export default function Summary() {
   DoOnce("Summary.openings", () =>
     Promise.all(
       ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
-        fetch(`/eco/dist/${f}`)
+        fetch(`eco/dist/${f}`)
           .then((response) => response.text())
           .then((text) =>
             text
