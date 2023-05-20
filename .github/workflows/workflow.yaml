@@ -11,4 +11,5 @@ jobs:
         with:
           fetch-depth: 2
       - run: bash .github/workflows/build_react.sh
+      - run: bash .github/workflows/build_chess_openings.sh
       - run: bash .github/workflows/deploy_to_firebase.sh '${{ secrets.SA_KEY }}'
