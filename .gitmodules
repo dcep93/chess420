@@ -1,0 +1,3 @@
+[submodule "app/public/eco"]
+	path = app/public/eco
+	url = git@github.com:niklasf/eco

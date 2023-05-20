@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Board from "./Board";
 import Brain, { StateType, View } from "./Brain";
 import Controls from "./Controls";
 import Log from "./Log";
 import Summary from "./Summary";
 import css from "./index.module.css";
+import { DoOnce } from "./utils";
 
 export default function App() {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
@@ -52,7 +53,7 @@ function Main() {
     states: [] as StateType[],
   });
   const [isShift, updateIsShift] = useState(false);
-  DoOnce("Main.initBrain", () => {
+  DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) => {
       (
         ({
@@ -115,15 +116,4 @@ function SubMain(props: { isShift: boolean; fen: string }) {
       </div>
     </div>
   );
-}
-
-const done: { [k: string]: boolean } = {};
-
-function DoOnce(key: string, f: () => void) {
-  useEffect(() => {
-    if (done[key]) return;
-    done[key] = true;
-    f();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 }
