@@ -32,20 +32,20 @@ export default function Controls() {
           clear novelty
         </button>
       </div>
-      <div>
-        <label style={{ paddingRight: "10px" }}>
-          <input
-            ref={Brain.autoreplyRef}
-            type={"checkbox"}
-            defaultChecked={true}
-          />
-          <span>Auto Reply</span>
-        </label>
-        <button onClick={Brain.playBest}>play best</button>
-        <button onClick={Brain.playWeighted}>play weighted</button>
-      </div>
       {Brain.view === undefined ? (
         <>
+          <div>
+            <label style={{ paddingRight: "10px" }}>
+              <input
+                ref={Brain.autoreplyRef}
+                type={"checkbox"}
+                defaultChecked={true}
+              />
+              <span>Auto Reply</span>
+            </label>
+            <button onClick={Brain.playBest}>play best</button>
+            <button onClick={Brain.playWeighted}>play weighted</button>
+          </div>
           <div>
             <span>lichess: </span>
             <input ref={lichessRef} style={{ width: "4em" }} />
