@@ -8,7 +8,9 @@ export default class StorageW {
   }
 
   static set(key: string, content: any) {
-    localStorage.setItem(getKey(key), JSON.stringify(content));
+    const k = getKey(key);
+    const v = JSON.stringify(content);
+    setTimeout(() => localStorage.setItem(k, v));
   }
 }
 
