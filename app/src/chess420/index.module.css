@@ -1,15 +1,26 @@
-@media (orientation: portrait) { 
-    .responsiveFlexDirection {
-        flex-direction: column;
-    }
-}
-
-@media (orientation: landscape) { 
-    .responsiveFlexDirection {
-        flex-direction: row;
-    }
-}
-
 body * {
-    font-size: large
+  font-size: large;
+}
+
+@media (orientation: portrait) {
+  .responsiveFlexDirection {
+    flex-direction: column;
+  }
+}
+
+@media (orientation: landscape) {
+  .responsiveFlexDirection {
+    flex-direction: row;
+  }
+}
+
+/* @media (orientation: portrait) {
+  .responsiveHidden {
+  }
+} */
+
+@media (orientation: landscape) {
+  .responsiveHidden {
+    display: none;
+  }
 }

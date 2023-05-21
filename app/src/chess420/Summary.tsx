@@ -1,8 +1,20 @@
 import { useState } from "react";
 import Brain from "./Brain";
+import { LogType } from "./Log";
+import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 export default function Summary() {
+  return (
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", width: "100%", overflowX: "scroll" }}>
+        <SubSummary />
+      </div>
+    </div>
+  );
+}
+
+function SubSummary() {
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null
   );
@@ -31,9 +43,9 @@ export default function Summary() {
   );
   if (openings === null) return null;
   const state = Brain.getState();
-  const message = state.message;
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
+  const message = state.message;
   if (message !== undefined) {
     return (
       <div style={{ position: "relative" }}>
@@ -43,14 +55,21 @@ export default function Summary() {
       </div>
     );
   }
+  const logMinus1 = state.logs[state.logs.length - 1];
+  const logMinus2 = state.logs[state.logs.length - 2];
   return (
     <div>
       <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
-      <div>
-        TODO b summary {Brain.getState().traversing ? "traversing" : "default"}
+      <div className={true ? "" : css.responsiveHidden}>
+        <SummaryMove log={logMinus1} />
+        <SummaryMove log={logMinus2} />
       </div>
     </div>
   );
+}
+
+function SummaryMove(props: { log: LogType }) {
+  return null;
 }
 
 function normalizeFen(fen: string) {
