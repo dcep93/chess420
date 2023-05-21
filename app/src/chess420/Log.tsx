@@ -32,7 +32,7 @@ export default function Log() {
               <>
                 <td>{i + 1}.</td>
                 {line.map((log, j) => (
-                  <GetLog key={JSON.stringify({ log })} log={log} />
+                  <GetLog key={JSON.stringify(log)} log={log} />
                 ))}
               </>
             </tr>
