@@ -89,7 +89,7 @@ function SummaryMove(props: { log: LogType; length: number }) {
   return (
     <tr>
       <td>{cell}</td>
-      <GetLog log={props.log} key={JSON.stringify(props)} />
+      <GetLog log={props.log} key={JSON.stringify(props.log)} />
     </tr>
   );
 }
