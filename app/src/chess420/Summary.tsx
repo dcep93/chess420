@@ -47,16 +47,6 @@ function SubSummary() {
   const state = Brain.getState();
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
-  const message = state.message;
-  if (message !== undefined) {
-    return (
-      <div style={{ position: "relative" }}>
-        <pre onClick={message.f} style={{ position: "absolute" }}>
-          <div>{message.ms.join("\n")}</div>
-        </pre>
-      </div>
-    );
-  }
   const logMinus1 = state.logs[state.logs.length - 1];
   const logMinus2 = state.logs[state.logs.length - 2];
   return (

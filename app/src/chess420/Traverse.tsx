@@ -1,49 +1,47 @@
 import Brain, { StateType } from "./Brain";
 import lichess from "./Lichess";
-import { LogType } from "./Log";
-
-// TODO a traverse stateful
 
 type TraverseState = StateType & { odds: number };
+export type TraverseType = {
+  message: string;
+  states: TraverseState[];
+  fens: string[];
+};
 
-export default function traverse(
-  startingState: StateType,
-  getMyMoveRaw: (state: StateType) => Promise<string | undefined>
-) {
-  const init = {
-    ...startingState,
-    traversing: true,
-    logs: [] as LogType[],
-  };
-  Brain.setState(init);
-  const start = { odds: 1, ...init };
-  const states: TraverseState[] = [
-    { ...start, orientationIsWhite: !start.orientationIsWhite },
-    { ...start },
-  ];
-  const vars = {
-    bad: [] as TraverseState[],
-    ok: [] as TraverseState[],
-    best: [] as TraverseState[],
-  };
+// traverse(startingState, (state) =>
+//   lichess(state.fen, { username: Brain.lichessUsername })
+//     .then((moves) => ({
+//       moves,
+//       total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+//     }))
+//     .then(
+//       ({ moves, total }) => moves.find((move) => move.total > total / 2)?.san
+//     )
+// );
+// traverse(startingState, (state) =>
+//   new Promise<string>((resolve) => {
+//     Brain.traversePromise = resolve;
+//     Brain.setState(state);
+//   }).then((san) => {
+//     Brain.traversePromise = undefined;
+//     return san;
+//   })
+// ).then(({ bad, ok, best }) => alert("TODO bad ok best"));
+
+export default function traverse(t: TraverseType): Promise<TraverseType> {
   const thresholdOdds = 0.01;
   function helper(rawStates: (StateType & { odds: number })[]): Promise<void> {
     const states = rawStates.slice();
     const state = states.pop();
     if (!state) {
       return new Promise<void>((resolve) =>
-        Brain.setState(
-          {
-            ...init,
-            message: {
-              ms: Object.entries(vars).map(
-                ([key, value]) => `${key}: ${value}`
-              ),
-              f: resolve,
-            },
+        Brain.setState({
+          ...init,
+          message: {
+            ms: Object.entries(vars).map(([key, value]) => `${key}: ${value}`),
+            f: resolve,
           },
-          true
-        )
+        })
       ).then(() => Brain.setState({ ...init, traversing: false }));
     }
     if (!Brain.isMyTurn(state)) {
@@ -99,32 +97,28 @@ export default function traverse(
           vars.bad.push(nextState);
         }
         return new Promise<void>((resolve) =>
-          Brain.setState(
-            {
-              ...state,
-              message: {
-                ms: [
-                  ok ? "ok" : "bad",
-                  `odds: ${(state.odds * 100).toFixed(2)}%`,
-                  `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
-                    2
-                  )}`,
-                  myMove === undefined
-                    ? myMoveRaw === undefined
-                      ? "you don't have a most common move"
-                      : `you usually play ${myMoveRaw} which isn't popular`
-                    : `you usually play ${myMove.san} s/${myMove.score.toFixed(
-                        2
-                      )}`,
-                ],
-                f: resolve,
-              },
+          Brain.setState({
+            ...state,
+            message: {
+              ms: [
+                ok ? "ok" : "bad",
+                `odds: ${(state.odds * 100).toFixed(2)}%`,
+                `the best move is ${bestMove.san} s/${bestMove.score.toFixed(
+                  2
+                )}`,
+                myMove === undefined
+                  ? myMoveRaw === undefined
+                    ? "you don't have a most common move"
+                    : `you usually play ${myMoveRaw} which isn't popular`
+                  : `you usually play ${myMove.san} s/${myMove.score.toFixed(
+                      2
+                    )}`,
+              ],
+              f: resolve,
             },
-            true
-          )
+          })
         );
       })
       .then(() => helper(states));
   }
-  return helper(states).then(() => vars);
 }

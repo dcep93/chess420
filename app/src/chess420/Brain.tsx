@@ -1,9 +1,9 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import { RefObject } from "react";
+import React from "react";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
 import StorageW from "./StorageW";
-import traverse from "./Traverse";
+import traverse, { TraverseType } from "./Traverse";
 
 const REPLY_DELAY_MS = 500;
 
@@ -11,8 +11,7 @@ export type StateType = {
   fen: string;
   orientationIsWhite: boolean;
   logs: LogType[];
-  traversing?: boolean;
-  message?: { ms: string[]; f: () => void };
+  traverse?: TraverseType;
 };
 
 type History = {
@@ -27,7 +26,7 @@ export enum View {
 }
 
 export default class Brain {
-  static autoreplyRef: RefObject<HTMLInputElement>;
+  static autoreplyRef = React.useRef<HTMLInputElement>(null);
 
   static history: History;
   static updateHistory: (history: History) => void;
@@ -84,34 +83,19 @@ export default class Brain {
 
   static setInitialState() {
     const startingState = Brain.getInitialState();
-    Brain.setState(startingState, true);
-
     switch (Brain.view) {
       case View.lichess_mistakes:
-        traverse(startingState, (state) =>
-          lichess(state.fen, { username: Brain.lichessUsername })
-            .then((moves) => ({
-              moves,
-              total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-            }))
-            .then(
-              ({ moves, total }) =>
-                moves.find((move) => move.total > total / 2)?.san
-            )
-        );
-        break;
       case View.quizlet:
-        traverse(startingState, (state) =>
-          new Promise<string>((resolve) => {
-            Brain.traversePromise = resolve;
-            Brain.setState(state, true);
-          }).then((san) => {
-            Brain.traversePromise = undefined;
-            return san;
-          })
-        ).then(({ bad, ok, best }) => alert("TODO bad ok best"));
-        break;
+        const start = { odds: 1, ...startingState };
+        const states = [
+          { ...start, orientationIsWhite: !start.orientationIsWhite },
+          { ...start },
+        ];
+        traverse({ message: "", fens: [], states })
+          .then((traverse) => (startingState.traverse = traverse))
+          .then(() => Brain.setState(startingState));
     }
+    Brain.setState(startingState);
   }
 
   //
@@ -136,9 +120,7 @@ export default class Brain {
     };
   }
 
-  static setState(state: StateType, forTraverse?: boolean) {
-    if (Brain.getState()?.traversing && !forTraverse)
-      return alert("are you crazy? you've got a job to do!");
+  static setState(state: StateType) {
     clearTimeout(Brain.timeout);
     const states = [state].concat(
       Brain.history.states.slice(Brain.history.index)
@@ -163,7 +145,6 @@ export default class Brain {
     if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet)
       return;
     if (
-      state.message === undefined &&
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
       !Brain.isMyTurn(state)
     ) {
