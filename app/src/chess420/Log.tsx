@@ -43,7 +43,7 @@ export default function Log() {
   );
 }
 
-function GetLog(props: { log: LogType | null | undefined }) {
+export function GetLog(props: { log: LogType | null | undefined }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   const log = props.log;
   if (log === null)

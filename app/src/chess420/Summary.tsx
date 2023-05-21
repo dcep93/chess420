@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Brain from "./Brain";
-import { LogType } from "./Log";
+import { GetLog, LogType } from "./Log";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
@@ -8,7 +8,9 @@ export default function Summary() {
   return (
     <div style={{ position: "relative" }}>
       <div style={{ position: "absolute", width: "100%", overflowX: "scroll" }}>
-        <SubSummary />
+        <div style={{ padding: "1em" }}>
+          <SubSummary />
+        </div>
       </div>
     </div>
   );
@@ -59,17 +61,37 @@ function SubSummary() {
   const logMinus2 = state.logs[state.logs.length - 2];
   return (
     <div>
-      <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
+      <div
+        style={{
+          paddingLeft: "4em",
+          textIndent: "-4em",
+        }}
+      >
+        {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
+      </div>
       <div className={true ? "" : css.responsiveHidden}>
-        <SummaryMove log={logMinus1} />
-        <SummaryMove log={logMinus2} />
+        <table>
+          <tbody>
+            <SummaryMove log={logMinus2} length={state.logs.length - 2} />
+            <SummaryMove log={logMinus1} length={state.logs.length - 1} />
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
 
-function SummaryMove(props: { log: LogType }) {
-  return null;
+function SummaryMove(props: { log: LogType; length: number }) {
+  if (!props.log) return null;
+  const chess = Brain.getChess(props.log.fen);
+  const cell =
+    chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
+  return (
+    <tr>
+      <td>{cell}</td>
+      <GetLog log={props.log} />
+    </tr>
+  );
 }
 
 function normalizeFen(fen: string) {
