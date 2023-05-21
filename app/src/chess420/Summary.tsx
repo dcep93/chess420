@@ -61,14 +61,6 @@ function SubSummary() {
   const logMinus2 = state.logs[state.logs.length - 2];
   return (
     <div>
-      <div
-        style={{
-          paddingLeft: "4em",
-          textIndent: "-4em",
-        }}
-      >
-        {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
-      </div>
       <div className={true ? "" : css.responsiveHidden}>
         <table>
           <tbody>
@@ -76,6 +68,14 @@ function SubSummary() {
             <SummaryMove log={logMinus1} length={state.logs.length - 1} />
           </tbody>
         </table>
+      </div>
+      <div
+        style={{
+          paddingLeft: "4em",
+          textIndent: "-4em",
+        }}
+      >
+        {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
       </div>
     </div>
   );
@@ -89,7 +89,7 @@ function SummaryMove(props: { log: LogType; length: number }) {
   return (
     <tr>
       <td>{cell}</td>
-      <GetLog log={props.log} />
+      <GetLog log={props.log} key={JSON.stringify(props)} />
     </tr>
   );
 }
