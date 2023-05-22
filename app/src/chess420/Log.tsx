@@ -89,7 +89,7 @@ function getTitle(moves: LiMove[]) {
 function getParts(san: string, moves: LiMove[]) {
   const move = moves.find((move) => move.san === san);
   if (move === undefined) {
-    return [san, "s/", "p/", "ww/", "d/", "t/0"];
+    return [san];
   }
   return [
     san,

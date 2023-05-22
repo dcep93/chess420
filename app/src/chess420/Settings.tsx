@@ -10,7 +10,7 @@ const settings = {
   SCORE_Y: 3,
   SCORE_Z: 0.42,
   STORAGE_VERSION: "0.2.1",
-  SUMMARY_LEN: 2,
+  SUMMARY_LEN: 3,
   TRAVERSE_THRESHOLD_ODDS: 0.001,
 };
 

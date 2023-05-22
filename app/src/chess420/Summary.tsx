@@ -45,15 +45,19 @@ export default function Summary() {
             {Array.from(new Array(settings.SUMMARY_LEN))
               .map((_, i) => state.logs.length - i - 1)
               .map((index) => (
-                <SummaryMove log={state.logs[index]} length={index} />
+                <SummaryMove
+                  key={index}
+                  log={state.logs[index]}
+                  length={index}
+                />
               ))}
           </tbody>
         </table>
       </div>
       <div
         style={{
-          paddingLeft: "4em",
-          textIndent: "-4em",
+          paddingLeft: "2em",
+          textIndent: "-2em",
         }}
       >
         {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
@@ -63,7 +67,12 @@ export default function Summary() {
 }
 
 function SummaryMove(props: { log: LogType; length: number }) {
-  if (!props.log) return null;
+  if (!props.log)
+    return (
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    );
   const chess = Brain.getChess(props.log.fen);
   const cell =
     chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
