@@ -86,7 +86,8 @@ function Main() {
 }
 
 function SubMain(props: { isShift: boolean; fen: string }) {
-  window.location.hash = BrainC.hash(props.fen);
+  if (!BrainC.getState().traverse)
+    window.location.hash = BrainC.hash(props.fen);
   return (
     // TODO pretty
     <div
