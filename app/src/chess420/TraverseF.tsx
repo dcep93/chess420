@@ -122,7 +122,7 @@ export default function traverseF(
       return Promise.resolve({
         ...t,
         messages: [
-          "TODO gen traverse message",
+          "TODO traverse messages",
           `odds: ${(state.odds * 100).toFixed(2)}%`,
           `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
           myMoveSan === undefined
