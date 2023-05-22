@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Board from "./Board";
 import Brain, { StateType, View } from "./Brain";
 import Controls from "./Controls";
@@ -47,6 +47,7 @@ export default function App() {
 }
 
 function Main() {
+  Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
   [Brain.history, Brain.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],

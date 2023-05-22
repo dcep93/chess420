@@ -26,7 +26,7 @@ export enum View {
 }
 
 export default class Brain {
-  static autoreplyRef = React.useRef<HTMLInputElement>(null);
+  static autoreplyRef: React.RefObject<HTMLInputElement>;
 
   static history: History;
   static updateHistory: (history: History) => void;
