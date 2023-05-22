@@ -3,15 +3,17 @@ import lichess from "./Lichess";
 
 type TraverseState = StateType & { odds: number };
 export type TraverseType = {
-  messages?: string[];
   states: TraverseState[] | undefined;
-
-  globalNewFens?: string[]; // TODO object
-  bestFens?: string[];
-  okFens?: string[];
-  badFens?: string[];
-  personalNewFens?: string[];
+  messages?: string[];
+  results?: (TraverseState & { familiarity: Familiarity })[];
 };
+enum Familiarity {
+  globalNew,
+  best,
+  ok,
+  bad,
+  personalNew,
+}
 
 export default function traverse(
   t: TraverseType
@@ -65,7 +67,10 @@ export default function traverse(
         return traverse({
           ...t,
           states,
-          globalNewFens: (t.globalNewFens || []).concat(state.fen),
+          results: (t.results || []).concat({
+            ...state,
+            familiarity: Familiarity.globalNew,
+          }),
         });
       const nextState = Brain.genState(state, bestMove!.san);
       if (
@@ -75,18 +80,21 @@ export default function traverse(
         return traverse({
           ...t,
           states: states.concat(nextState),
-          bestFens: (t.bestFens || []).concat(state.fen),
+          results: (t.results || []).concat({
+            ...state,
+            familiarity: Familiarity.best,
+          }),
         });
       }
-      const fensKey =
+      const familiarity =
         myMoveSan === undefined
-          ? "personalNewFens"
+          ? Familiarity.personalNew
           : myMove !== undefined &&
             (state.orientationIsWhite
               ? myMove.white > myMove.black
               : myMove.black > myMove.white)
-          ? "okFens"
-          : "badFens";
+          ? Familiarity.ok
+          : Familiarity.bad;
       const verb =
         Brain.view === View.lichess_mistakes ? "usually play" : "played";
       return {
@@ -95,14 +103,17 @@ export default function traverse(
           "TODO traverse message",
           `odds: ${(state.odds * 100).toFixed(2)}%`,
           `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
-          fensKey === "personalNewFens"
+          myMoveSan === undefined
             ? "you don't have a most common move"
             : myMove === undefined
             ? `you ${verb} ${myMoveSan} which isn't popular`
             : `you ${verb} ${myMove.san} s/${myMove.score.toFixed(2)}`,
         ],
         states,
-        [fensKey]: (t[fensKey] || []).concat(state.fen),
+        results: (t.results || []).concat({
+          ...state,
+          familiarity,
+        }),
       };
     });
 }
