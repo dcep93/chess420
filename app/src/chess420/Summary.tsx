@@ -62,13 +62,7 @@ export default function Summary() {
       >
         {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
       </div>
-      <div
-        onClick={() =>
-          traverseF(state.traverse!).then((traverse) =>
-            BrainC.setState({ ...state, traverse: traverse })
-          )
-        }
-      >
+      <div onClick={() => state.traverse?.states && traverseF(state.traverse!)}>
         {state.traverse?.messages?.map((m) => (
           <div>{m}</div>
         ))}

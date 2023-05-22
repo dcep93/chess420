@@ -4,6 +4,7 @@ import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number };
 export type TraverseType = {
+  originalState: StateType;
   states: TraverseState[] | undefined;
   san?: string;
   messages?: string[];
@@ -17,22 +18,17 @@ enum Familiarity {
   personalNew,
 }
 
-// TODO fix traverse
-export default function traverseF(
-  t: TraverseType
-): Promise<TraverseType | undefined> {
-  if (t.states === undefined) {
-    return Promise.resolve(undefined);
-  }
-  if (t.states.length === 0) {
-    return Promise.resolve({
-      ...t,
-      states: undefined,
-    });
-  }
-  const states = t.states.slice();
+export default function traverseF(t: TraverseType): Promise<void> {
+  const states = t.states!.slice();
   const state = states.pop()!;
-  if (!BrainC.isMyTurn(state)) {
+  if (!state)
+    return Promise.resolve().then(() =>
+      BrainC.setState({
+        ...t.originalState,
+        traverse: { ...t, states: undefined },
+      })
+    );
+  if (!BrainC.isMyTurn(state))
     return lichessF(state.fen)
       .then((moves) => ({
         moves,
@@ -60,9 +56,15 @@ export default function traverseF(
         states: states.concat(moveStates),
       }))
       .then(traverseF);
-  }
+  if (BrainC.view === View.quizlet && t.san === undefined)
+    return Promise.resolve({ ...t }).then((traverse) =>
+      BrainC.setState({
+        ...state,
+        traverse,
+      })
+    );
   return (
-    t.san !== undefined
+    BrainC.view === View.quizlet
       ? Promise.resolve(t.san)
       : lichessF(state.fen, { username: BrainC.lichessUsername })
           .then((moves) => ({
@@ -116,7 +118,7 @@ export default function traverseF(
           : Familiarity.bad;
       const verb =
         BrainC.view === View.lichess_mistakes ? "usually play" : "played";
-      return {
+      return Promise.resolve({
         ...t,
         san: undefined,
         messages: [
@@ -134,6 +136,11 @@ export default function traverseF(
           ...state,
           familiarity,
         }),
-      };
+      }).then((traverse) =>
+        BrainC.setState({
+          ...state,
+          traverse,
+        })
+      );
     });
 }

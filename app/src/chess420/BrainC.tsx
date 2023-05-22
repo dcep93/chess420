@@ -86,6 +86,7 @@ export default class BrainC {
       case View.quizlet:
         const traverseState = { odds: 1, ...startingState };
         traverseF({
+          originalState: startingState,
           states: [
             {
               ...traverseState,
@@ -93,9 +94,8 @@ export default class BrainC {
             },
             { ...traverseState },
           ],
-        })
-          .then((traverse) => (startingState.traverse = traverse))
-          .then(() => BrainC.setState(startingState));
+        });
+        return;
     }
     BrainC.setState(startingState);
   }
@@ -284,9 +284,7 @@ export default class BrainC {
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
-        traverseF({ ...state.traverse, san: move.san }).then((traverse) =>
-          BrainC.setState({ ...state, traverse })
-        );
+        traverseF({ ...state.traverse, san: move.san });
       } else {
         BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
       }
