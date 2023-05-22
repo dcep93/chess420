@@ -23,7 +23,10 @@ export default function traverse(
     return Promise.resolve(undefined);
   }
   if (t.states.length === 0) {
-    return Promise.resolve({ ...t, message: "TODO", states: undefined });
+    return Promise.resolve({
+      ...t,
+      states: undefined,
+    });
   }
   const states = t.states.slice();
   const state = states.pop()!;
@@ -102,7 +105,7 @@ export default function traverse(
       return {
         ...t,
         messages: [
-          "TODO traverse message",
+          "TODO gen traverse message",
           `odds: ${(state.odds * 100).toFixed(2)}%`,
           `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
           myMoveSan === undefined

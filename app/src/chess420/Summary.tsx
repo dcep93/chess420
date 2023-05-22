@@ -37,7 +37,7 @@ export default function Summary() {
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
   return (
-    // TODO traverse
+    // TODO traverse summary
     <div>
       <div className={true ? "" : css.responsiveHidden}>
         <table>

@@ -282,7 +282,7 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      // TODO moveFromTo while traverse
+      // TODO moveFromTo traverse
       Brain.traversePromise !== undefined
         ? Brain.traversePromise(move.san)
         : Brain.setState(Brain.genState(Brain.getState(), move.san));
