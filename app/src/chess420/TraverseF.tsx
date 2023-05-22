@@ -58,9 +58,7 @@ export default function traverseF(
         san: undefined,
         states: states.concat(moveStates),
       }))
-      .then((traverse) =>
-        BrainC.view === View.quizlet ? traverse : traverseF(traverse)
-      );
+      .then(traverseF);
   }
   return (
     t.san !== undefined

@@ -122,9 +122,8 @@ export default class BrainC {
     };
   }
 
-  static setState(_state: StateType) {
+  static setState(state: StateType) {
     clearTimeout(BrainC.timeout);
-    const state = { ...BrainC.getState(), ..._state };
     const states = [state].concat(
       BrainC.history.states.slice(BrainC.history.index)
     );
