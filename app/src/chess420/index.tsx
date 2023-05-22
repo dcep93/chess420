@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Board from "./Board";
-import Brain, { StateType, View } from "./Brain";
+import BrainC, { StateType, View } from "./BrainC";
 import Controls from "./Controls";
 import Log from "./Log";
 import settings from "./Settings";
@@ -13,22 +13,22 @@ export default function App() {
   switch (pathParts[1]) {
     case "lichess":
       if (pathParts[3] === "mistakes") {
-        Brain.view = View.lichess_mistakes;
+        BrainC.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
         alert("invalid path");
         return null;
       } else {
-        Brain.view = View.lichess;
+        BrainC.view = View.lichess;
       }
       const username = pathParts[2];
       if (username === "") {
         alert("invalid path");
         return null;
       }
-      Brain.lichessUsername = username;
+      BrainC.lichessUsername = username;
       break;
     case "quizlet":
-      Brain.view = View.quizlet;
+      BrainC.view = View.quizlet;
       if (pathParts.length > 2) {
         alert("invalid path");
         return null;
@@ -48,8 +48,8 @@ export default function App() {
 }
 
 function Main() {
-  Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
-  [Brain.history, Brain.updateHistory] = useState({
+  BrainC.autoreplyRef = React.useRef<HTMLInputElement>(null);
+  [BrainC.history, BrainC.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
   });
@@ -58,17 +58,17 @@ function Main() {
     document.addEventListener("keydown", (e) => {
       (
         ({
-          ArrowUp: Brain.playBest,
-          ArrowDown: Brain.newGame,
-          Enter: Brain.startOver,
-          ArrowLeft: Brain.undo,
-          ArrowRight: Brain.redo,
-          KeyW: Brain.playWeighted,
-          KeyH: Brain.help,
+          ArrowUp: BrainC.playBest,
+          ArrowDown: BrainC.newGame,
+          Enter: BrainC.startOver,
+          ArrowLeft: BrainC.undo,
+          ArrowRight: BrainC.redo,
+          KeyW: BrainC.playWeighted,
+          KeyH: BrainC.help,
           KeyA: () =>
-            (Brain.autoreplyRef.current!.checked =
-              !Brain.autoreplyRef.current!.checked),
-          Escape: Brain.escape,
+            (BrainC.autoreplyRef.current!.checked =
+              !BrainC.autoreplyRef.current!.checked),
+          Escape: BrainC.escape,
         })[e.code] || (() => e.shiftKey && updateIsShift(true))
       )();
     });
@@ -78,15 +78,15 @@ function Main() {
       (e) => e.shiftKey && updateIsShift(false)
     );
 
-    Brain.setInitialState();
+    BrainC.setInitialState();
   });
-  const fen = Brain.getState()?.fen;
+  const fen = BrainC.getState()?.fen;
   if (!fen) return null;
   return <SubMain isShift={isShift} fen={fen} />;
 }
 
 function SubMain(props: { isShift: boolean; fen: string }) {
-  window.location.hash = Brain.hash(props.fen);
+  window.location.hash = BrainC.hash(props.fen);
   return (
     // TODO c pretty
     <div

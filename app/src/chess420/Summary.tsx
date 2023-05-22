@@ -1,7 +1,8 @@
 import { useState } from "react";
-import Brain from "./Brain";
+import BrainC from "./BrainC";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
+import traverseF from "./TraverseF";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
@@ -33,7 +34,7 @@ export default function Summary() {
       .then(updateOpenings)
   );
   if (openings === null) return null;
-  const state = Brain.getState();
+  const state = BrainC.getState();
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
   return (
@@ -62,6 +63,17 @@ export default function Summary() {
       >
         {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
       </div>
+      <div
+        onClick={() =>
+          traverseF(state.traverse!).then((traverse) =>
+            BrainC.setState({ ...state, traverse: traverse })
+          )
+        }
+      >
+        {state.traverse?.messages?.map((m) => (
+          <div>{m}</div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -73,7 +85,7 @@ function SummaryMove(props: { log: LogType; length: number }) {
         <td>&nbsp;</td>
       </tr>
     );
-  const chess = Brain.getChess(props.log.fen);
+  const chess = BrainC.getChess(props.log.fen);
   const cell =
     chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
   return (

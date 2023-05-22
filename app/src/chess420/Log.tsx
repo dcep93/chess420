@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Brain from "./Brain";
-import lichess, { LiMove } from "./Lichess";
+import BrainC from "./BrainC";
+import lichessF, { LiMove } from "./LichessF";
 
 export type LogType = {
   fen: string;
@@ -11,9 +11,9 @@ export type LogType = {
 const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
 
 export default function Log() {
-  const logs: (LogType | null)[] = Brain.getState().logs.slice();
+  const logs: (LogType | null)[] = BrainC.getState().logs.slice();
   if (logs.length === 0) return <></>;
-  if (Brain.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
+  if (BrainC.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
@@ -55,7 +55,9 @@ export function GetLog(props: { log: LogType | null | undefined }) {
     );
   if (log === undefined) return null;
   if (moves === null) {
-    lichess(log.fen, { username: log.username }).then((moves) => update(moves));
+    lichessF(log.fen, { username: log.username }).then((moves) =>
+      update(moves)
+    );
   }
   const parts = getParts(log.san, moves || []);
   return (
@@ -64,8 +66,8 @@ export function GetLog(props: { log: LogType | null | undefined }) {
         style={{ fontWeight: "bold" }}
         title={moves === null ? undefined : getTitle(moves)}
         onClick={() => {
-          const fen = Brain.getFen(log.fen, log.san);
-          window.open(`#${Brain.hash(fen)}`);
+          const fen = BrainC.getFen(log.fen, log.san);
+          window.open(`#${BrainC.hash(fen)}`);
         }}
       >
         {parts[0]}

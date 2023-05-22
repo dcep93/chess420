@@ -1,5 +1,5 @@
 import { ChessInstance } from "chess.js";
-import Brain from "./Brain";
+import BrainC from "./BrainC";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 
@@ -21,7 +21,7 @@ type OptionsType = {
   attempt?: number;
 };
 
-export default function lichess(
+export default function lichessF(
   fen: string,
   options: OptionsType = {}
 ): Promise<LiMove[]> {
@@ -29,7 +29,7 @@ export default function lichess(
   const attempt = options.attempt || 0;
   const username = options.username;
 
-  const chess = Brain.getChess(fen);
+  const chess = BrainC.getChess(fen);
   const url =
     username === undefined
       ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&${
@@ -80,8 +80,8 @@ export default function lichess(
                 move.total >= total * settings.PREPARE_NEXT_RATIO
             )
             .forEach((move: LiMove) => {
-              const subFen = Brain.getFen(fen, move.san);
-              lichess(subFen, {
+              const subFen = BrainC.getFen(fen, move.san);
+              lichessF(subFen, {
                 ...options,
                 prepareNext: false,
                 attempt: attempt + 1,
