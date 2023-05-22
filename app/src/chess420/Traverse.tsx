@@ -51,7 +51,8 @@ export default function traverse(
       }))
       .then(traverse);
   }
-  return getMyMoveSan(state)
+  return Promise.resolve()
+    .then(() => getMyMoveSan(state))
     .then((myMoveSan) =>
       lichess(state.fen).then((moves) => ({
         myMoveSan,
@@ -86,7 +87,8 @@ export default function traverse(
               : myMove.black > myMove.white)
           ? "okFens"
           : "badFens";
-      const verb = Brain.view === View.quizlet ? "played" : "usually play";
+      const verb =
+        Brain.view === View.lichess_mistakes ? "usually play" : "played";
       return {
         ...t,
         messages: [
@@ -105,26 +107,26 @@ export default function traverse(
     });
 }
 
-function getMyMoveSan(state: TraverseState): Promise<string | undefined> {
-  return Promise.resolve("TODO");
-
-  // traverse(startingState, (state) =>
-  //   lichess(state.fen, { username: Brain.lichessUsername })
-  //     .then((moves) => ({
-  //       moves,
-  //       total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-  //     }))
-  //     .then(
-  //       ({ moves, total }) => moves.find((move) => move.total > total / 2)?.san
-  //     )
-  // );
-  // traverse(startingState, (state) =>
-  //   new Promise<string>((resolve) => {
-  //     Brain.traversePromise = resolve;
-  //     Brain.setState(state);
-  //   }).then((san) => {
-  //     Brain.traversePromise = undefined;
-  //     return san;
-  //   })
-  // ).then(({ bad, ok, best }) => alert("TODO bad ok best"));
+function getMyMoveSan(
+  state: TraverseState
+): Promise<string | undefined> | undefined {
+  switch (Brain.view) {
+    case View.lichess_mistakes:
+      return lichess(state.fen, { username: Brain.lichessUsername })
+        .then((moves) => ({
+          moves,
+          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+        }))
+        .then(
+          ({ moves, total }) =>
+            moves.find((move) => move.total > total / 2)?.san
+        );
+    case View.quizlet:
+      return new Promise<string>((resolve) => {
+        Brain.traversePromise = resolve;
+      }).then((san) => {
+        Brain.traversePromise = undefined;
+        return san;
+      });
+  }
 }

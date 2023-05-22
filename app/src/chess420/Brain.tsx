@@ -32,6 +32,7 @@ export default class Brain {
   static updateHistory: (history: History) => void;
 
   static timeout: NodeJS.Timeout;
+  static traversePromise?: (san: string) => void;
 
   //
 
@@ -283,7 +284,9 @@ export default class Brain {
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
       // TODO moveFromTo while traverse
-      Brain.setState(Brain.genState(Brain.getState(), move.san));
+      Brain.traversePromise !== undefined
+        ? Brain.traversePromise(move.san)
+        : Brain.setState(Brain.genState(Brain.getState(), move.san));
       return true;
     } else {
       return false;
