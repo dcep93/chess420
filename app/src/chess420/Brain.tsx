@@ -32,7 +32,6 @@ export default class Brain {
   static updateHistory: (history: History) => void;
 
   static timeout: NodeJS.Timeout;
-  static traversePromise?: (san: string) => void;
 
   //
 
@@ -86,12 +85,16 @@ export default class Brain {
     switch (Brain.view) {
       case View.lichess_mistakes:
       case View.quizlet:
-        const start = { odds: 1, ...startingState };
-        const states = [
-          { ...start, orientationIsWhite: !start.orientationIsWhite },
-          { ...start },
-        ];
-        traverse({ message: "", fens: [], states })
+        const traverseState = { odds: 1, ...startingState };
+        traverse({
+          states: [
+            {
+              ...traverseState,
+              orientationIsWhite: !traverseState.orientationIsWhite,
+            },
+            { ...traverseState },
+          ],
+        })
           .then((traverse) => (startingState.traverse = traverse))
           .then(() => Brain.setState(startingState));
     }
@@ -279,9 +282,8 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      Brain.traversePromise !== undefined
-        ? Brain.traversePromise(move.san)
-        : Brain.setState(Brain.genState(Brain.getState(), move.san));
+      // TODO moveFromTo while traverse
+      Brain.setState(Brain.genState(Brain.getState(), move.san));
       return true;
     } else {
       return false;

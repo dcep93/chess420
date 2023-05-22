@@ -38,6 +38,7 @@ export default function Summary() {
   const logMinus1 = state.logs[state.logs.length - 1];
   const logMinus2 = state.logs[state.logs.length - 2];
   return (
+    // TODO traverse
     <div>
       <div className={true ? "" : css.responsiveHidden}>
         <table>

@@ -78,7 +78,7 @@ export default function Controls() {
             ) : null}
           </div>
           <div>
-            <button onClick={() => (window.location.href = "/")}>escape</button>
+            <button onClick={Brain.escape}>escape</button>
           </div>
         </>
       )}
