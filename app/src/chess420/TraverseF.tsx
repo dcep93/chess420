@@ -5,6 +5,7 @@ import settings from "./Settings";
 type TraverseState = StateType & { odds: number };
 export type TraverseType = {
   states: TraverseState[] | undefined;
+  san?: string;
   messages?: string[];
   results?: (TraverseState & { familiarity: Familiarity })[];
 };
@@ -52,14 +53,28 @@ export default function traverseF(
           )
           .sort((a, b) => a.odds - b.odds)
       )
-      .then((moves) => ({
+      .then((moveStates) => ({
         ...t,
-        states: states.concat(moves),
+        san: undefined,
+        states: states.concat(moveStates),
       }))
-      .then(traverseF);
+      .then((traverse) =>
+        BrainC.view === View.quizlet ? traverse : traverseF(traverse)
+      );
   }
-  return Promise.resolve()
-    .then(() => getMyMoveSan(state))
+  return (
+    t.san !== undefined
+      ? Promise.resolve(t.san)
+      : lichessF(state.fen, { username: BrainC.lichessUsername })
+          .then((moves) => ({
+            moves,
+            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
+          }))
+          .then(
+            ({ moves, total }) =>
+              moves.find((move) => move.total > total / 2)?.san
+          )
+  )
     .then((myMoveSan) =>
       lichessF(state.fen).then((moves) => ({
         myMoveSan,
@@ -104,6 +119,7 @@ export default function traverseF(
         BrainC.view === View.lichess_mistakes ? "usually play" : "played";
       return {
         ...t,
+        san: undefined,
         messages: [
           "TODO gen traverse message",
           `odds: ${(state.odds * 100).toFixed(2)}%`,
@@ -121,28 +137,4 @@ export default function traverseF(
         }),
       };
     });
-}
-
-function getMyMoveSan(
-  state: TraverseState
-): Promise<string | undefined> | undefined {
-  switch (BrainC.view) {
-    case View.lichess_mistakes:
-      return lichessF(state.fen, { username: BrainC.lichessUsername })
-        .then((moves) => ({
-          moves,
-          total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-        }))
-        .then(
-          ({ moves, total }) =>
-            moves.find((move) => move.total > total / 2)?.san
-        );
-    case View.quizlet:
-      return new Promise<string>((resolve) => {
-        BrainC.traversePromise = resolve;
-      }).then((san) => {
-        BrainC.traversePromise = undefined;
-        return san;
-      });
-  }
 }

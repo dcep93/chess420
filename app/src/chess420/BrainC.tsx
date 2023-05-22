@@ -122,8 +122,9 @@ export default class BrainC {
     };
   }
 
-  static setState(state: StateType) {
+  static setState(_state: StateType) {
     clearTimeout(BrainC.timeout);
+    const state = { ...BrainC.getState(), ..._state };
     const states = [state].concat(
       BrainC.history.states.slice(BrainC.history.index)
     );
@@ -283,10 +284,13 @@ export default class BrainC {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
-      // TODO moveFromTo traverse
-      BrainC.traversePromise !== undefined
-        ? BrainC.traversePromise(move.san)
-        : BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
+      if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
+        traverseF({ ...state.traverse, san: move.san }).then((traverse) =>
+          BrainC.setState({ ...state, traverse })
+        );
+      } else {
+        BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
+      }
       return true;
     } else {
       return false;
