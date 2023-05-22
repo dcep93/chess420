@@ -273,7 +273,7 @@ export default class BrainC {
   //
 
   static help() {
-    alert("TODO c help");
+    alert("TODO help");
   }
 
   // board

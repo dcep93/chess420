@@ -17,7 +17,7 @@ export default function Log() {
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
-  // todo c no table
+  // TODO no table
   return (
     <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
       <tbody>

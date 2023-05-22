@@ -88,7 +88,7 @@ function Main() {
 function SubMain(props: { isShift: boolean; fen: string }) {
   window.location.hash = BrainC.hash(props.fen);
   return (
-    // TODO c pretty
+    // TODO pretty
     <div
       className={css.responsiveFlexDirection}
       style={{ minHeight: "100vH", display: "flex" }}

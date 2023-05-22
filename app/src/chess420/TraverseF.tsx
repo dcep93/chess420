@@ -17,6 +17,7 @@ enum Familiarity {
   personalNew,
 }
 
+// TODO fix traverse
 export default function traverseF(
   t: TraverseType
 ): Promise<TraverseType | undefined> {
