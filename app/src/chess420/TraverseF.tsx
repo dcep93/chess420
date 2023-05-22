@@ -6,7 +6,6 @@ type TraverseState = StateType & { odds: number };
 export type TraverseType = {
   originalState: StateType;
   states: TraverseState[] | undefined;
-  san?: string;
   messages?: string[];
   results?: (TraverseState & { familiarity: Familiarity })[];
 };
@@ -18,7 +17,10 @@ enum Familiarity {
   personalNew,
 }
 
-export default function traverseF(t: TraverseType): Promise<void> {
+export default function traverseF(
+  t: TraverseType,
+  myMoveSan?: string
+): Promise<void> {
   const states = t.states!.slice();
   const state = states.pop()!;
   if (!state)
@@ -52,11 +54,10 @@ export default function traverseF(t: TraverseType): Promise<void> {
       )
       .then((moveStates) => ({
         ...t,
-        san: undefined,
         states: states.concat(moveStates),
       }))
       .then(traverseF);
-  if (BrainC.view === View.quizlet && t.san === undefined)
+  if (BrainC.view === View.quizlet && myMoveSan === undefined)
     return Promise.resolve({ ...t }).then((traverse) =>
       BrainC.setState({
         ...state,
@@ -65,7 +66,7 @@ export default function traverseF(t: TraverseType): Promise<void> {
     );
   return (
     BrainC.view === View.quizlet
-      ? Promise.resolve(t.san)
+      ? Promise.resolve(myMoveSan)
       : lichessF(state.fen, { username: BrainC.lichessUsername })
           .then((moves) => ({
             moves,
@@ -120,7 +121,6 @@ export default function traverseF(t: TraverseType): Promise<void> {
         BrainC.view === View.lichess_mistakes ? "usually play" : "played";
       return Promise.resolve({
         ...t,
-        san: undefined,
         messages: [
           "TODO gen traverse message",
           `odds: ${(state.odds * 100).toFixed(2)}%`,

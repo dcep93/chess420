@@ -284,7 +284,7 @@ export default class BrainC {
     if (move !== null) {
       if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
-        traverseF({ ...state.traverse, san: move.san });
+        traverseF(state.traverse, move.san);
       } else {
         BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
       }
