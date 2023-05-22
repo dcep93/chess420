@@ -1,5 +1,6 @@
 import { ChessInstance } from "chess.js";
 import Brain from "./Brain";
+import settings from "./Settings";
 import StorageW from "./StorageW";
 
 export type LiMove = {
@@ -31,12 +32,12 @@ export default function lichess(
   const chess = Brain.getChess(fen);
   const url =
     username === undefined
-      ? `https://explorer.lichess.ovh/lichess?variant=standard&speeds=rapid,classical&ratings=${[
-          2000, 2200, 2500,
-        ].join(",")}&fen=${chess.fen()}`
-      : `https://explorer.lichess.ovh/player?variant=standard&player=${username}&color=${
+      ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&${
+          settings.LICHESS_PARAMS
+        }`
+      : `https://explorer.lichess.ovh/player?player=${username}&color=${
           chess.turn() === "w" ? "white" : "black"
-        }&recentGames=0&fen=${chess.fen()}`;
+        }&recentGames=0&fen=${chess.fen()}&&${settings.LICHESS_PARAMS}`;
   const key = JSON.stringify({
     url,
   });
@@ -74,7 +75,10 @@ export default function lichess(
       if (prepareNext)
         setTimeout(() =>
           moves
-            .filter((move: LiMove) => move.total >= total * 0.01)
+            .filter(
+              (move: LiMove) =>
+                move.total >= total * settings.PREPARE_NEXT_RATIO
+            )
             .forEach((move: LiMove) => {
               const subFen = Brain.getFen(fen, move.san);
               lichess(subFen, {
@@ -91,14 +95,14 @@ export default function lichess(
 }
 
 async function helper(url: string, attempt: number): Promise<any[]> {
-  if (attempt > 10) return [];
+  if (attempt > settings.MAX_LICHESS_PER) return [];
   const storedMoves = StorageW.get(url);
   if (storedMoves !== null) return Promise.resolve(storedMoves.moves);
 
   console.log("fetching", attempt, url);
   const response = await fetch(url);
   if (!response.ok)
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve) =>
       setTimeout(
         () => helper(url, attempt + 1).then((moves) => resolve(moves)),
         1000
@@ -114,35 +118,9 @@ async function helper(url: string, attempt: number): Promise<any[]> {
 function getScore(chess: ChessInstance, move: LiMove): Promise<number> {
   const isWhite = chess.turn() === "w";
   const p =
-    (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
-  const score = Math.pow(p, 3) * Math.pow(move.total, 0.42);
+    (isWhite ? move.white : move.black) /
+    (settings.SCORE_X + (move.black + move.white));
+  const score =
+    Math.pow(p, settings.SCORE_Y) * Math.pow(move.total, settings.SCORE_Z);
   return Promise.resolve(score);
 }
-
-// function getScore(
-//   chess: ChessInstance,
-//   move: LiMove,
-//   depth: number = 1
-// ): Promise<number> {
-//   if (depth === 0) {
-//     const isWhite = chess.turn() === "w";
-//     const p =
-//       (isWhite ? move.white : move.black) / (10 + (move.black + move.white));
-//     const score = Math.pow(p, 3) * Math.pow(move.total, 0.42);
-//     return Promise.resolve(score);
-//   }
-//   return lichess(Brain.getChess(chess, [move.san]))
-//     .then((moves) => moves.sort((m1, m2) => m2.score - m1.score)[0])
-//     .then((bestMove) => {
-//       console.log("a", bestMove);
-//       return bestMove.san;
-//     })
-//     .then((bestResponse) =>
-//       lichess(Brain.getChess(chess, [move.san, bestResponse]))
-//     )
-//     .then((moves) => moves.sort((m1, m2) => m2.score - m1.score)[0])
-//     .then((bestMove) => {
-//       console.log("b", bestMove);
-//       return bestMove.total;
-//     });
-// }

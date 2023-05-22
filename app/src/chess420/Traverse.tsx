@@ -1,5 +1,6 @@
 import Brain, { StateType, View } from "./Brain";
 import lichess from "./Lichess";
+import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number };
 export type TraverseType = {
@@ -18,7 +19,6 @@ enum Familiarity {
 export default function traverse(
   t: TraverseType
 ): Promise<TraverseType | undefined> {
-  const thresholdOdds = 0.01;
   if (t.states === undefined) {
     return Promise.resolve(undefined);
   }
@@ -44,7 +44,9 @@ export default function traverse(
               move.san
             )
           )
-          .filter((moveState) => moveState.odds >= thresholdOdds)
+          .filter(
+            (moveState) => moveState.odds >= settings.TRAVERSE_THRESHOLD_ODDS
+          )
           .sort((a, b) => a.odds - b.odds)
       )
       .then((moves) => ({

@@ -3,6 +3,7 @@ import Board from "./Board";
 import Brain, { StateType, View } from "./Brain";
 import Controls from "./Controls";
 import Log from "./Log";
+import settings from "./Settings";
 import Summary from "./Summary";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
@@ -94,7 +95,7 @@ function SubMain(props: { isShift: boolean; fen: string }) {
     >
       <div
         style={{
-          minWidth: "18em",
+          minWidth: settings.CHESSBOARD_WIDTH,
           display: "flex",
           flexDirection: "column",
         }}

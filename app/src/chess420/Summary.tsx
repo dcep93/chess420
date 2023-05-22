@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Brain from "./Brain";
 import { GetLog, LogType } from "./Log";
+import settings from "./Settings";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
@@ -35,16 +36,17 @@ export default function Summary() {
   const state = Brain.getState();
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
-  const logMinus1 = state.logs[state.logs.length - 1];
-  const logMinus2 = state.logs[state.logs.length - 2];
   return (
     // TODO traverse
     <div>
       <div className={true ? "" : css.responsiveHidden}>
         <table>
           <tbody style={{ whiteSpace: "nowrap" }}>
-            <SummaryMove log={logMinus2} length={state.logs.length - 2} />
-            <SummaryMove log={logMinus1} length={state.logs.length - 1} />
+            {Array.from(new Array(settings.SUMMARY_LEN))
+              .map((_, i) => state.logs.length - i - 1)
+              .map((index) => (
+                <SummaryMove log={state.logs[index]} length={index} />
+              ))}
           </tbody>
         </table>
       </div>

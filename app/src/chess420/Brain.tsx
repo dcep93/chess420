@@ -2,10 +2,9 @@ import Chess, { ChessInstance, Square } from "chess.js";
 import React from "react";
 import lichess, { LiMove } from "./Lichess";
 import { LogType } from "./Log";
+import settings from "./Settings";
 import StorageW from "./StorageW";
 import traverse, { TraverseType } from "./Traverse";
-
-const REPLY_DELAY_MS = 500;
 
 export type StateType = {
   fen: string;
@@ -152,7 +151,7 @@ export default class Brain {
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
       !Brain.isMyTurn(state)
     ) {
-      Brain.timeout = setTimeout(Brain.playWeighted, REPLY_DELAY_MS);
+      Brain.timeout = setTimeout(Brain.playWeighted, settings.REPLY_DELAY_MS);
     }
   }
 

@@ -1,4 +1,4 @@
-const version = "0.2.1";
+import settings from "./Settings";
 
 export default class StorageW {
   static get(key: string): any {
@@ -15,5 +15,5 @@ export default class StorageW {
 }
 
 function getKey(key: string) {
-  return `${version}/${key}`;
+  return `${settings.STORAGE_VERSION}/${key}`;
 }
