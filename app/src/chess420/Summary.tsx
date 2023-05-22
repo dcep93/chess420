@@ -42,7 +42,7 @@ export default function Summary() {
     <div>
       <div className={true ? "" : css.responsiveHidden}>
         <table>
-          <tbody>
+          <tbody style={{ whiteSpace: "nowrap" }}>
             <SummaryMove log={logMinus2} length={state.logs.length - 2} />
             <SummaryMove log={logMinus1} length={state.logs.length - 1} />
           </tbody>
