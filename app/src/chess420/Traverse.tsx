@@ -4,7 +4,7 @@ import lichess from "./Lichess";
 type TraverseState = StateType & { odds: number };
 export type TraverseType = {
   message: string;
-  states: TraverseState[];
+  states?: TraverseState[];
   fens: string[];
 };
 
@@ -28,8 +28,17 @@ export type TraverseType = {
 //   })
 // ).then(({ bad, ok, best }) => alert("TODO bad ok best"));
 
-export default function traverse(t: TraverseType): Promise<TraverseType> {
+export default function traverse(
+  t: TraverseType
+): Promise<TraverseType | undefined> {
   const thresholdOdds = 0.01;
+  if (t.states === undefined) {
+    Brain.setState({});
+  }
+  const states = t.states.slice();
+  while (states.length !== 0) {
+    const state = states.pop();
+  }
   function helper(rawStates: (StateType & { odds: number })[]): Promise<void> {
     const states = rawStates.slice();
     const state = states.pop();

@@ -19,27 +19,25 @@ export default function Log() {
   );
   // todo c no table
   return (
-    <div style={{ overflowX: "scroll" }}>
-      <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
-        <tbody>
-          <tr>
-            {columnWidths.map((em, i) => (
-              <th key={i} style={{ minWidth: `${em}em` }}></th>
-            ))}
-          </tr>
-          {lines.map((line, i) => (
-            <tr key={i}>
-              <>
-                <td>{i + 1}.</td>
-                {line.map((log, j) => (
-                  <GetLog key={JSON.stringify(log)} log={log} />
-                ))}
-              </>
-            </tr>
+    <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
+      <tbody>
+        <tr>
+          {columnWidths.map((em, i) => (
+            <th key={i} style={{ minWidth: `${em}em` }}></th>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </tr>
+        {lines.map((line, i) => (
+          <tr key={i}>
+            <>
+              <td>{i + 1}.</td>
+              {line.map((log, j) => (
+                <GetLog key={JSON.stringify(log)} log={log} />
+              ))}
+            </>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 

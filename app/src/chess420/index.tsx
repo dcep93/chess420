@@ -98,8 +98,42 @@ function SubMain(props: { isShift: boolean; fen: string }) {
           flexDirection: "column",
         }}
       >
-        <Board isShift={props.isShift} />
-        <Summary />
+        <div style={{ backgroundColor: "goldenrod" }}>
+          <div style={{ margin: "auto", width: "100%" }}>
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  marginTop: "100%",
+                }}
+              ></div>
+              <div
+                style={{
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                }}
+              >
+                <Board {...props} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ position: "relative" }}>
+          <div
+            style={{ position: "absolute", width: "100%", overflowX: "scroll" }}
+          >
+            <div style={{ padding: "1em" }}>
+              <Summary />
+            </div>
+          </div>
+        </div>
       </div>
       <div
         style={{
@@ -110,7 +144,9 @@ function SubMain(props: { isShift: boolean; fen: string }) {
       >
         <Controls />
         <div style={{ flexGrow: 1, display: "grid" }}>
-          <Log />
+          <div style={{ overflowX: "scroll" }}>
+            <Log />
+          </div>
         </div>
       </div>
     </div>

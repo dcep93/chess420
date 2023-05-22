@@ -6,37 +6,6 @@ import Brain from "./Brain";
 type PropsType = { isShift: boolean };
 
 export default function Board(props: PropsType) {
-  return (
-    <div style={{ backgroundColor: "goldenrod" }}>
-      <div style={{ margin: "auto", width: "100%" }}>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              marginTop: "100%",
-            }}
-          ></div>
-          <div
-            style={{
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-              display: "flex",
-            }}
-          >
-            <SubBoard {...props} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SubBoard(props: PropsType) {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const state = Brain.getState();
   return (

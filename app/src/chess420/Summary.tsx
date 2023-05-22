@@ -5,18 +5,6 @@ import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 export default function Summary() {
-  return (
-    <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", width: "100%", overflowX: "scroll" }}>
-        <div style={{ padding: "1em" }}>
-          <SubSummary />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SubSummary() {
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null
   );
