@@ -127,14 +127,20 @@ function SubMain(props: { isShift: boolean; fen: string }) {
             </div>
           </div>
         </div>
-
-        <div style={{ position: "relative" }}>
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
           <div
-            style={{ position: "absolute", width: "100%", overflowX: "scroll" }}
+            style={{
+              flexGrow: 1,
+              width: 0,
+              margin: "1em",
+              overflow: "scroll",
+            }}
           >
-            <div style={{ padding: "1em" }}>
-              <Summary />
-            </div>
+            <Summary />
           </div>
         </div>
       </div>

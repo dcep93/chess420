@@ -29,7 +29,11 @@ export default function Summary() {
           )
       )
     )
-      .then((arr) => arr.flatMap((a) => a))
+      .then((arr) =>
+        arr
+          .flatMap((a) => a)
+          .concat([[normalizeFen(BrainC.getFen()), "starting position"]])
+      )
       .then(Object.fromEntries)
       .then(updateOpenings)
   );
@@ -39,7 +43,7 @@ export default function Summary() {
   if (opening && lastOpening !== opening) updateLastOpening(opening);
   return (
     <div>
-      <div className={true ? "" : css.responsiveHidden}>
+      <div className={css.responsiveHidden}>
         <table>
           <tbody style={{ whiteSpace: "nowrap" }}>
             {Array.from(new Array(settings.SUMMARY_LEN))
