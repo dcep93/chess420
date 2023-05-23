@@ -58,11 +58,12 @@ export default function traverseF(
       }))
       .then(traverseF);
   if (BrainC.view === View.quizlet && myMoveSan === undefined)
-    return Promise.resolve({ ...t }).then((traverse) =>
-      BrainC.setState({
-        ...state,
-        traverse,
-      })
+    return Promise.resolve({ ...t, messages: ["TODO quizlet message"] }).then(
+      (traverse) =>
+        BrainC.setState({
+          ...state,
+          traverse,
+        })
     );
   return (
     BrainC.view === View.quizlet
@@ -138,7 +139,7 @@ export default function traverseF(
         }),
       }).then((traverse) =>
         BrainC.setState({
-          ...state,
+          ...BrainC.genState(state, bestMove.san),
           traverse,
         })
       );

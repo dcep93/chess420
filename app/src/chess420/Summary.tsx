@@ -66,11 +66,18 @@ export default function Summary() {
       >
         {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
       </div>
-      <div onClick={() => state.traverse?.states && traverseF(state.traverse!)}>
-        {state.traverse?.messages?.map((m) => (
-          <div>{m}</div>
-        ))}
-      </div>
+      {state.traverse === undefined ? null : (
+        <div>
+          <div style={{ height: "2em" }}></div>
+          <div
+            onClick={() => state.traverse!.states && traverseF(state.traverse!)}
+          >
+            {state.traverse!.messages!.map((m, i) => (
+              <div key={i}>{m}</div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,6 +12,7 @@ const settings = {
   STORAGE_VERSION: "0.2.1",
   SUMMARY_LEN: 3,
   TRAVERSE_THRESHOLD_ODDS: 0.001,
+  SHOULD_UPDATE_HASH: true,
 };
 
 export default settings;
