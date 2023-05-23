@@ -48,6 +48,12 @@ export default function traverseF(
             )
           )
           .filter(
+            (moveState) =>
+              (t.results || []).find(
+                (result) => result.fen === moveState.fen
+              ) === undefined
+          )
+          .filter(
             (moveState) => moveState.odds >= settings.TRAVERSE_THRESHOLD_ODDS
           )
           .sort((a, b) => a.odds - b.odds)
@@ -58,12 +64,14 @@ export default function traverseF(
       }))
       .then(traverseF);
   if (BrainC.view === View.quizlet && myMoveSan === undefined)
-    return Promise.resolve({ ...t, messages: ["TODO quizlet message"] }).then(
-      (traverse) =>
-        BrainC.setState({
-          ...state,
-          traverse,
-        })
+    return Promise.resolve({
+      ...t,
+      messages: [`odds: ${(state.odds * 100).toFixed(2)}%`],
+    }).then((traverse) =>
+      BrainC.setState({
+        ...state,
+        traverse,
+      })
     );
   return (
     BrainC.view === View.quizlet
