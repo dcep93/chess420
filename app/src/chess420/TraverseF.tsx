@@ -2,9 +2,10 @@ import BrainC, { StateType, View } from "./BrainC";
 import lichessF from "./LichessF";
 import settings from "./Settings";
 
-type TraverseState = StateType & { odds: number };
+type TraverseState = StateType & { odds: number; progressPoints: number };
 export type TraverseType = {
   originalState: StateType;
+  progress: number;
   states: TraverseState[] | undefined;
   messages?: string[];
   results?: (TraverseState & { familiarity: Familiarity })[];
@@ -19,7 +20,7 @@ enum Familiarity {
 
 export default function traverseF(
   t: TraverseType,
-  myMoveSan?: string
+  myMoveSan?: string | null
 ): Promise<void> {
   const states = t.states!.slice();
   const state = states.pop()!;
@@ -58,21 +59,36 @@ export default function traverseF(
           )
           .sort((a, b) => a.odds - b.odds)
       )
+      .then((moveStates) =>
+        moveStates.map((moveState) => ({
+          ...moveState,
+          progressPoints: state.progressPoints / moveStates.length,
+        }))
+      )
       .then((moveStates) => ({
         ...t,
         states: states.concat(moveStates),
       }))
       .then(traverseF);
-  if (BrainC.view === View.quizlet && myMoveSan === undefined)
-    return Promise.resolve({
-      ...t,
-      messages: [`odds: ${(state.odds * 100).toFixed(2)}%`],
-    }).then((traverse) =>
-      BrainC.setState({
-        ...state,
-        traverse,
-      })
-    );
+  if (BrainC.view === View.quizlet) {
+    if (myMoveSan === null)
+      return Promise.resolve(t).then((traverse) =>
+        BrainC.setState({ ...state, traverse })
+      );
+    if (myMoveSan === undefined)
+      return Promise.resolve({
+        ...t,
+        messages: [
+          `progress: ${(t.progress * 100).toFixed(2)}%`,
+          `odds: ${(state.odds * 100).toFixed(2)}%`,
+        ],
+      }).then((traverse) =>
+        BrainC.setState({
+          ...state,
+          traverse,
+        })
+      );
+  }
   return (
     BrainC.view === View.quizlet
       ? Promise.resolve(myMoveSan)
@@ -131,7 +147,7 @@ export default function traverseF(
       return Promise.resolve({
         ...t,
         messages: [
-          "TODO traverse messages",
+          `progress: ${(t.progress * 100).toFixed(2)}%`,
           `odds: ${(state.odds * 100).toFixed(2)}%`,
           `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
           myMoveSan === undefined
@@ -152,4 +168,19 @@ export default function traverseF(
         })
       );
     });
+}
+
+export function startTraverseF(startingState: StateType) {
+  const traverseState = { odds: 1, progressPoints: 0.5, ...startingState };
+  traverseF({
+    originalState: startingState,
+    progress: 0,
+    states: [
+      {
+        ...traverseState,
+        orientationIsWhite: !traverseState.orientationIsWhite,
+      },
+      { ...traverseState },
+    ],
+  });
 }

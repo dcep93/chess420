@@ -4,7 +4,7 @@ import lichessF, { LiMove } from "./LichessF";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
-import traverseF, { TraverseType } from "./TraverseF";
+import traverseF, { TraverseType, startTraverseF } from "./TraverseF";
 
 export type StateType = {
   fen: string;
@@ -84,17 +84,7 @@ export default class BrainC {
     switch (BrainC.view) {
       case View.lichess_mistakes:
       case View.quizlet:
-        const traverseState = { odds: 1, ...startingState };
-        traverseF({
-          originalState: startingState,
-          states: [
-            {
-              ...traverseState,
-              orientationIsWhite: !traverseState.orientationIsWhite,
-            },
-            { ...traverseState },
-          ],
-        });
+        startTraverseF(startingState);
         return;
     }
     BrainC.setState(startingState);
@@ -173,7 +163,8 @@ export default class BrainC {
     if (BrainC.history.index + 1 >= BrainC.history.states.length) {
       return alert("no undo available");
     }
-    BrainC.autoreplyRef.current!.checked = false;
+    if (BrainC.autoreplyRef.current)
+      BrainC.autoreplyRef.current!.checked = false;
     BrainC.updateHistory({
       ...BrainC.history,
       index: BrainC.history.index + 1,
@@ -286,6 +277,7 @@ export default class BrainC {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverseF(state.traverse, move.san);
       } else {
+        console.log("works");
         BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
       }
       return true;
