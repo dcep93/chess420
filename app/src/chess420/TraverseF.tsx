@@ -18,6 +18,7 @@ enum Familiarity {
   personalNew,
 }
 
+// TODO traverseF fix bugs
 export default function traverseF(
   t: TraverseType,
   myMoveSan?: string
@@ -124,14 +125,13 @@ export default function traverseF(
             familiarity: Familiarity.globalNew,
           }),
         });
-      const nextState = BrainC.genState(state, bestMove!.san);
       if (
         bestMove.san === myMove?.san ||
-        (myMove !== undefined && BrainC.getNovelty(state) === myMove.san)
+        (myMoveSan !== undefined && BrainC.getNovelty(state) === myMoveSan)
       ) {
         return traverseF({
           ...t,
-          states: states.concat(nextState),
+          states: states.concat(BrainC.genState(state, myMoveSan!)),
           results: (t.results || []).concat({
             ...state,
             familiarity: Familiarity.best,

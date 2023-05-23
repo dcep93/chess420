@@ -8,7 +8,8 @@ export type LogType = {
   username?: string;
 };
 
-const columnWidths = [2, 2, 5.5, 3.8, 4, 3, 9, 2, 5.5, 3.8, 4, 3, 9];
+// TODO columnWidths
+const columnWidths = [2, 3, 5.5, 4.9, 4, 3, 9, 3, 5.5, 4.9, 4, 3, 9];
 
 export default function Log() {
   const logs: (LogType | null)[] = BrainC.getState().logs.slice();
@@ -17,9 +18,14 @@ export default function Log() {
   const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
-  // TODO no table
   return (
-    <table style={{ fontFamily: "Courier New", tableLayout: "fixed" }}>
+    <table
+      style={{
+        fontFamily: "Courier New",
+        tableLayout: "fixed",
+        whiteSpace: "nowrap",
+      }}
+    >
       <tbody>
         <tr>
           {columnWidths.map((em, i) => (

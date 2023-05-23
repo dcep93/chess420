@@ -277,7 +277,6 @@ export default class BrainC {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverseF(state.traverse, move.san);
       } else {
-        console.log("works");
         BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
       }
       return true;

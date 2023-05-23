@@ -12,15 +12,10 @@ body * {
   .responsiveFlexDirection {
     flex-direction: row;
   }
-}
-
-/* @media (orientation: portrait) {
-  .responsiveHidden {
-  }
-} */
-
-@media (orientation: landscape) {
   .responsiveHidden {
     display: none;
+  }
+  .responsiveMaxHeight {
+    max-height: 100vh;
   }
 }

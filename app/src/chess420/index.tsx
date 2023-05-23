@@ -145,6 +145,7 @@ function SubMain(props: { isShift: boolean; fen: string }) {
         </div>
       </div>
       <div
+        className={css.responsiveMaxHeight}
         style={{
           flexGrow: "1",
           display: "flex",
@@ -152,8 +153,8 @@ function SubMain(props: { isShift: boolean; fen: string }) {
         }}
       >
         <Controls />
-        <div style={{ flexGrow: 1, display: "grid" }}>
-          <div style={{ overflowX: "scroll" }}>
+        <div style={{ flexGrow: 1, display: "contents" }}>
+          <div style={{ overflow: "scroll" }}>
             <Log />
           </div>
         </div>
