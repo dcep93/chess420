@@ -50,7 +50,11 @@ export default function Controls() {
           </div>
           <div>
             <span>lichess: </span>
-            <input ref={lichessRef} style={{ width: "4em" }} />
+            <input
+              ref={lichessRef}
+              style={{ width: "4em" }}
+              onKeyDown={(e) => e.stopPropagation()}
+            />
             <span>
               <button onClick={() => BrainC.playVs(lichessRef.current!.value)}>
                 play vs user
