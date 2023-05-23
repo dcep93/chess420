@@ -8,6 +8,8 @@ import Summary from "./Summary";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 export default function App() {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
   switch (pathParts[1]) {
@@ -92,16 +94,23 @@ function SubMain(props: { isShift: boolean; fen: string }) {
     // TODO pretty
     <div
       className={css.responsiveFlexDirection}
-      style={{ minHeight: "100vH", display: "flex" }}
+      style={{
+        minHeight: "100vH",
+        display: "flex",
+        backgroundColor: "#212529",
+        color: "#f8f9fa",
+      }}
+      data-bs-theme="dark"
     >
       <div
+        className={css.responsiveMinWidth}
         style={{
           minWidth: settings.CHESSBOARD_WIDTH,
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <div style={{ backgroundColor: "goldenrod" }}>
+        <div style={{ opacity: 0.75 }}>
           <div style={{ margin: "auto", width: "100%" }}>
             <div
               style={{
