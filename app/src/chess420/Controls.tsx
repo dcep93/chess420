@@ -14,8 +14,10 @@ export default function Controls() {
     >
       <div>
         <button onClick={BrainC.startOver}>start over</button>
-        <button onClick={BrainC.newGame}>new game</button>
         <button onClick={BrainC.help}>help</button>
+        {BrainC.view !== undefined ? null : (
+          <button onClick={BrainC.newGame}>new game</button>
+        )}
       </div>
       <div>
         <button onClick={BrainC.undo}>undo</button>

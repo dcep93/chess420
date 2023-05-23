@@ -20,8 +20,12 @@ enum Familiarity {
 
 export default function traverseF(
   t: TraverseType,
-  myMoveSan?: string | null
+  myMoveSan?: string
 ): Promise<void> {
+  // console.log(
+  //   t.progress +
+  //     (t.states?.map((s) => s.progressPoints)?.reduce((a, b) => a + b, 0) || 0)
+  // );
   const states = t.states!.slice();
   const state = states.pop()!;
   if (!state)
@@ -67,14 +71,14 @@ export default function traverseF(
       )
       .then((moveStates) => ({
         ...t,
+        progress:
+          moveStates.length > 0
+            ? t.progress
+            : t.progress + state.progressPoints,
         states: states.concat(moveStates),
       }))
       .then(traverseF);
   if (BrainC.view === View.quizlet) {
-    if (myMoveSan === null)
-      return Promise.resolve(t).then((traverse) =>
-        BrainC.setState({ ...state, traverse })
-      );
     if (myMoveSan === undefined)
       return Promise.resolve({
         ...t,
@@ -113,6 +117,7 @@ export default function traverseF(
       if (bestMove === undefined)
         return traverseF({
           ...t,
+          progress: t.progress + state.progressPoints,
           states,
           results: (t.results || []).concat({
             ...state,
@@ -146,27 +151,32 @@ export default function traverseF(
         BrainC.view === View.lichess_mistakes ? "usually play" : "played";
       return Promise.resolve({
         ...t,
-        messages: [
-          `progress: ${(t.progress * 100).toFixed(2)}%`,
-          `odds: ${(state.odds * 100).toFixed(2)}%`,
-          `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
-          myMoveSan === undefined
-            ? "you don't have a most common move"
-            : myMove === undefined
-            ? `you ${verb} ${myMoveSan} which isn't popular`
-            : `you ${verb} ${myMove.san} s/${myMove.score.toFixed(2)}`,
-        ],
-        states,
-        results: (t.results || []).concat({
-          ...state,
-          familiarity,
-        }),
-      }).then((traverse) =>
-        BrainC.setState({
-          ...BrainC.genState(state, bestMove.san),
-          traverse,
-        })
-      );
+        progress: t.progress + state.progressPoints,
+      })
+        .then((t) => ({
+          ...t,
+          messages: [
+            `progress: ${(t.progress * 100).toFixed(2)}%`,
+            `odds: ${(state.odds * 100).toFixed(2)}%`,
+            `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
+            myMoveSan === undefined
+              ? "you don't have a most common move"
+              : myMove === undefined
+              ? `you ${verb} ${myMoveSan} which isn't popular`
+              : `you ${verb} ${myMove.san} s/${myMove.score.toFixed(2)}`,
+          ],
+          states,
+          results: (t.results || []).concat({
+            ...state,
+            familiarity,
+          }),
+        }))
+        .then((traverse) =>
+          BrainC.setState({
+            ...BrainC.genState(state, bestMove.san),
+            traverse,
+          })
+        );
     });
 }
 
