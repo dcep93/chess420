@@ -26,6 +26,7 @@ export default function Board(props: { isShift: boolean }) {
           } else if (prevClicked === clicked) {
             updateClicked(null);
           } else {
+            alert("gotem");
             if (BrainC.moveFromTo(prevClicked, clicked, props.isShift)) {
               updateClicked(null);
             } else {
