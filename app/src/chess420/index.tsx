@@ -72,7 +72,7 @@ function Main() {
           KeyA: () =>
             (BrainC.autoreplyRef.current!.checked =
               !BrainC.autoreplyRef.current!.checked),
-          Escape: BrainC.escape,
+          Escape: BrainC.home,
         })[e.code] || (() => e.shiftKey && updateIsShift(true))
       )();
     });

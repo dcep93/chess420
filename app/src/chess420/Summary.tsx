@@ -43,6 +43,7 @@ export default function Summary() {
   return (
     <div>
       <div className={css.responsiveHidden}>
+        <h4 style={{ textDecoration: "underline" }}>Recent Summary</h4>
         <table>
           <tbody style={{ whiteSpace: "nowrap" }}>
             {Array.from(new Array(settings.SUMMARY_LEN))
@@ -63,7 +64,8 @@ export default function Summary() {
           textIndent: "-2em",
         }}
       >
-        {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
+        <h2 style={{ textDecoration: "underline" }}>Opening Name</h2>
+        <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
       </div>
       {state.traverse === undefined ? null : (
         <div>

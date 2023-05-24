@@ -29,7 +29,9 @@ export default function Log() {
       <tbody>
         <tr>
           {columnWidths.map((em, i) => (
-            <th key={i} style={{ minWidth: `${em}em` }}></th>
+            <th key={i} style={{ minWidth: `${em}em` }}>
+              title
+            </th>
           ))}
         </tr>
         {lines.map((line, i) => (

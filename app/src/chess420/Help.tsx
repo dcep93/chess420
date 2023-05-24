@@ -29,7 +29,8 @@ export default function Help() {
           <ul>
             <li>
               s/score: this is a score out of a possible 420 representing the
-              strength of the move (how often it wins)
+              strength of the move (how often it wins and how often it is
+              played)
             </li>
             <li>
               p/probability: this shows the probability this move will be played

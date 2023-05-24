@@ -85,7 +85,7 @@ export default function traverseF(
         ...t,
         messages: [
           `progress: ${(t.progress * 100).toFixed(2)}%`,
-          `odds: ${(state.odds * 100).toFixed(2)}%`,
+          `seen: ${(state.odds * 100).toFixed(2)}%`,
         ],
       }).then((traverse) =>
         BrainC.setState({
@@ -157,7 +157,7 @@ export default function traverseF(
           ...t,
           messages: [
             `progress: ${(t.progress * 100).toFixed(2)}%`,
-            `odds: ${(state.odds * 100).toFixed(2)}%`,
+            `seen: ${(state.odds * 100).toFixed(2)}%`,
             `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
             myMoveSan === undefined
               ? "you don't have a most common move"

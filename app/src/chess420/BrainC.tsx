@@ -258,7 +258,7 @@ export default class BrainC {
     )}`;
   }
 
-  static escape() {
+  static home() {
     setTimeout(() => {
       window.location.assign("/#");
       if (BrainC.view === undefined) window.location.reload();

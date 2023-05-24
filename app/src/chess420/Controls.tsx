@@ -9,57 +9,64 @@ export default function Controls() {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        paddingLeft: "10em",
+        // alignItems: "center",
       }}
     >
+      <h1>♟ chess420: opening trainer ♟</h1>
       <div>
-        <button onClick={BrainC.startOver}>start over</button>
-        <button onClick={BrainC.help}>help</button>
+        {/* <button onClick={BrainC.startOver}>delete me start over</button> */}
         {BrainC.view !== undefined ? null : (
           <button onClick={BrainC.newGame}>new game</button>
         )}
-      </div>
-      <div>
         <button onClick={BrainC.undo}>undo</button>
         <button onClick={BrainC.redo}>redo</button>
-        <button
-          ref={noveltyRef}
-          disabled={BrainC.getNovelty() === null}
-          onClick={() =>
-            Promise.resolve()
-              .then(BrainC.clearNovelty)
-              .then(() => (noveltyRef.current!.disabled = true))
-          }
-        >
-          clear novelty
-        </button>
       </div>
       {BrainC.view === undefined ? (
         <>
           <div>
-            <label style={{ paddingRight: "10px" }}>
+            <button onClick={BrainC.playBest}>play best</button>
+            <button
+              ref={noveltyRef}
+              disabled={BrainC.getNovelty() === null}
+              onClick={() =>
+                Promise.resolve()
+                  .then(BrainC.clearNovelty)
+                  .then(() => (noveltyRef.current!.disabled = true))
+              }
+            >
+              clear novelty
+            </button>
+          </div>
+          <div>
+            <button onClick={BrainC.playWeighted}>play weighted</button>
+            <label style={{ paddingLeft: "10px" }}>
               <input
                 ref={BrainC.autoreplyRef}
                 type={"checkbox"}
                 defaultChecked={true}
               />
+              &nbsp;
               <span>Auto Reply</span>
             </label>
-            <button onClick={BrainC.playBest}>play best</button>
-            <button onClick={BrainC.playWeighted}>play weighted</button>
           </div>
+          {/* <div style={{ height: "1em" }}></div> */}
           <div>
             <button onClick={BrainC.memorizeWithQuizlet}>
               memorize with Quizlet
             </button>
+            <button onClick={BrainC.help}>help</button>
           </div>
+          <div style={{ height: "1em" }}></div>
           <div>
-            <span>lichess: </span>
+            <span>lichess username: </span>
             <input
               ref={lichessRef}
               style={{ width: "4em" }}
               onKeyDown={(e) => e.stopPropagation()}
             />
+          </div>
+          <div>
             <span>
               <button onClick={() => BrainC.playVs(lichessRef.current!.value)}>
                 play vs user
@@ -80,14 +87,16 @@ export default function Controls() {
             ) : BrainC.view === View.lichess_mistakes ? (
               <span>finding mistakes of {BrainC.lichessUsername}</span>
             ) : BrainC.view === View.quizlet ? (
-              <span>building Quizlet data</span>
+              <span>building Quizlet data TODO progress</span>
             ) : null}
           </div>
           <div>
-            <button onClick={BrainC.escape}>escape</button>
+            <button onClick={BrainC.home}>home</button>
           </div>
         </>
       )}
+      <div></div>
+      <div style={{ height: "1em" }}></div>
     </div>
   );
 }
