@@ -1,3 +1,7 @@
 export default function Help() {
-  return null;
+  return (
+    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+      hi
+    </div>
+  );
 }
