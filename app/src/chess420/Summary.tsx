@@ -66,13 +66,17 @@ export default function Summary() {
         {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
       </div>
       {state.traverse === undefined ? null : (
-        <div
-          onClick={() => state.traverse!.states && traverseF(state.traverse!)}
-          style={{ cursor: "pointer" }}
-        >
-          {state.traverse!.messages!.map((m, i) => (
-            <div key={i}>{m}</div>
-          ))}
+        <div>
+          <div
+            onClick={() => state.traverse!.states && traverseF(state.traverse!)}
+            style={{ cursor: "pointer" }}
+          >
+            {state.traverse!.messages!.map((m, i) => (
+              <div key={i}>{m}</div>
+            ))}
+          </div>
+          <div>{(state.traverse!.results || []).length} positions visited</div>
+          <textarea readOnly>TODO export to quizlet</textarea>
         </div>
       )}
     </div>
