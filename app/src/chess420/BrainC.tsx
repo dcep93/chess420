@@ -259,7 +259,7 @@ export default class BrainC {
   static escape() {
     setTimeout(() => {
       window.location.assign("/#");
-      if (!BrainC.view) window.location.reload();
+      if (BrainC.view === undefined) window.location.reload();
     });
   }
 

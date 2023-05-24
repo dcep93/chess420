@@ -49,6 +49,11 @@ export default function Controls() {
             <button onClick={BrainC.playWeighted}>play weighted</button>
           </div>
           <div>
+            <button onClick={BrainC.memorizeWithQuizlet}>
+              memorize with Quizlet
+            </button>
+          </div>
+          <div>
             <span>lichess: </span>
             <input
               ref={lichessRef}
@@ -65,11 +70,6 @@ export default function Controls() {
                 find mistakes
               </button>
             </span>
-          </div>
-          <div>
-            <button onClick={BrainC.memorizeWithQuizlet}>
-              memorize with Quizlet
-            </button>
           </div>
         </>
       ) : (
