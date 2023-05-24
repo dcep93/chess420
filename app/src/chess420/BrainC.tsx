@@ -198,7 +198,9 @@ export default class BrainC {
       : BrainC.lichessUsername;
     lichessF(BrainC.getState().fen, { username, prepareNext: true })
       .then((moves) => {
-        const weights = moves.map((move: LiMove) => Math.pow(move.total, 1.5));
+        const weights = moves.map((move: LiMove) =>
+          Math.pow(move.total, settings.WEIGHTED_POWER)
+        );
         var choice = Math.random() * weights.reduce((a, b) => a + b, 0);
         for (let i = 0; i < weights.length; i++) {
           choice -= weights[i];

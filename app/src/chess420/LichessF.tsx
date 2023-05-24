@@ -95,7 +95,7 @@ export default function lichessF(
 }
 
 async function helper(url: string, attempt: number): Promise<any[]> {
-  if (attempt > settings.MAX_LICHESS_PER) return [];
+  if (attempt > settings.MAX_LICHESS_ATTEMPTS) return [];
   const storedMoves = StorageW.get(url);
   if (storedMoves !== null) return Promise.resolve(storedMoves.moves);
 
