@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Board from "./Board";
 import BrainC, { StateType, View } from "./BrainC";
-import Controls from "./Controls";
-import Log from "./Log";
 import settings from "./Settings";
-import Summary from "./Summary";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import Board from "./Board";
+import Controls from "./Controls";
 import Help from "./Help";
+import Log from "./Log";
+import Summary from "./Summary";
 
 export default function App() {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
@@ -56,6 +56,7 @@ function Main() {
     index: 0,
     states: [] as StateType[],
   });
+  [BrainC.showHelp, BrainC.updateShowHelp] = useState(false);
   const [isShift, updateIsShift] = useState(false);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) => {
@@ -103,73 +104,78 @@ function SubMain(props: { isShift: boolean; fen: string }) {
       }}
       data-bs-theme="dark"
     >
-      <Help />
-      <div
-        className={css.responsiveMinWidth}
-        style={{
-          minWidth: settings.CHESSBOARD_WIDTH,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div style={{ opacity: 0.75 }}>
-          <div style={{ margin: "auto", width: "100%" }}>
+      {BrainC.showHelp ? (
+        <Help />
+      ) : (
+        <>
+          <div
+            className={css.responsiveMinWidth}
+            style={{
+              minWidth: settings.CHESSBOARD_WIDTH,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ opacity: 0.75 }}>
+              <div style={{ margin: "auto", width: "100%" }}>
+                <div
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginTop: "100%",
+                    }}
+                  ></div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      height: "100%",
+                      width: "100%",
+                      display: "flex",
+                    }}
+                  >
+                    <Board isShift={props.isShift} />
+                  </div>
+                </div>
+              </div>
+            </div>
             <div
               style={{
-                position: "relative",
                 display: "flex",
               }}
             >
               <div
                 style={{
-                  marginTop: "100%",
-                }}
-              ></div>
-              <div
-                style={{
-                  position: "absolute",
-                  height: "100%",
-                  width: "100%",
-                  display: "flex",
+                  flexGrow: 1,
+                  width: 0,
+                  margin: "1em",
+                  overflow: "scroll",
                 }}
               >
-                <Board {...props} />
+                <Summary />
               </div>
             </div>
           </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
           <div
+            className={css.responsiveMaxHeight}
             style={{
-              flexGrow: 1,
-              width: 0,
-              margin: "1em",
-              overflow: "scroll",
+              flexGrow: "1",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Summary />
+            <Controls />
+            <div style={{ flexGrow: 1, display: "contents" }}>
+              <div style={{ overflow: "scroll" }}>
+                <Log />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div
-        className={css.responsiveMaxHeight}
-        style={{
-          flexGrow: "1",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Controls />
-        <div style={{ flexGrow: 1, display: "contents" }}>
-          <div style={{ overflow: "scroll" }}>
-            <Log />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

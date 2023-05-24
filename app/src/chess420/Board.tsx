@@ -3,9 +3,7 @@ import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import BrainC from "./BrainC";
 
-type PropsType = { isShift: boolean };
-
-export default function Board(props: PropsType) {
+export default function Board(props: { isShift: boolean }) {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const state = BrainC.getState();
   return (

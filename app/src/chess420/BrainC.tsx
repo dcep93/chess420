@@ -29,6 +29,8 @@ export default class BrainC {
 
   static history: History;
   static updateHistory: (history: History) => void;
+  static showHelp: boolean;
+  static updateShowHelp: (showHelp: boolean) => void;
 
   static timeout: NodeJS.Timeout;
 
@@ -264,7 +266,7 @@ export default class BrainC {
   //
 
   static help() {
-    alert("TODO help");
+    BrainC.updateShowHelp(!BrainC.showHelp);
   }
 
   // board
