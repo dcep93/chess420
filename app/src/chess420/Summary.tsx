@@ -4,14 +4,13 @@ import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
 import traverseF from "./TraverseF";
 import css from "./index.module.css";
-import { DoOnce } from "./utils";
 
 export default function Summary() {
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null
   );
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
-  DoOnce("Summary.openings", () =>
+  if (openings === null) {
     Promise.all(
       ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
         fetch(`${process.env.PUBLIC_URL}/eco/dist/${f}`)
@@ -35,9 +34,9 @@ export default function Summary() {
           .concat([[normalizeFen(BrainC.getFen()), "starting position"]])
       )
       .then(Object.fromEntries)
-      .then(updateOpenings)
-  );
-  if (openings === null) return null;
+      .then(updateOpenings);
+    return null;
+  }
   const state = BrainC.getState();
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
