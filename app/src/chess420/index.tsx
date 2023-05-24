@@ -9,6 +9,7 @@ import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import Help from "./Help";
 
 export default function App() {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
@@ -102,6 +103,7 @@ function SubMain(props: { isShift: boolean; fen: string }) {
       }}
       data-bs-theme="dark"
     >
+      <Help />
       <div
         className={css.responsiveMinWidth}
         style={{
