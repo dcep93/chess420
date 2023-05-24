@@ -11,6 +11,7 @@ export default function Help() {
         overflow: "scroll",
         zIndex: 1,
         padding: "2em",
+        cursor: "pointer",
       }}
     >
       <h1>welcome to chess420</h1>
