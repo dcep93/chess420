@@ -110,6 +110,6 @@ function getParts(san: string, moves: LiMove[]) {
     ).toFixed(1)}%`,
     `ww/${((100 * move.white) / (move.white + move.black)).toFixed(0)}%`,
     `d/${((100 * move.draws) / move.total).toFixed(0)}%`,
-    `t/${move.total}`,
+    `t/${move.total < 10000 ? move.total : move.total.toExponential(2)}`,
   ];
 }

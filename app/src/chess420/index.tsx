@@ -117,7 +117,12 @@ function SubMain(props: { isShift: boolean; fen: string }) {
             }}
           >
             <div style={{ opacity: 0.75 }}>
-              <div style={{ margin: "auto", width: "100%" }}>
+              <div
+                style={{
+                  margin: "auto",
+                  width: "100%",
+                }}
+              >
                 <div
                   style={{
                     position: "relative",

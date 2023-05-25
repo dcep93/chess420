@@ -119,8 +119,10 @@ function getScore(chess: ChessInstance, move: LiMove): Promise<number> {
   const isWhite = chess.turn() === "w";
   const p =
     (isWhite ? move.white : move.black) /
-    (settings.SCORE_X + (move.black + move.white));
+      (settings.SCORE_FLUKE_DISCOUNT + move.black + move.white) -
+    0.5;
   const score =
-    Math.pow(p, settings.SCORE_Y) * Math.pow(move.total, settings.SCORE_Z);
+    (Math.atan(p * settings.SCORE_WIN_RATIO) + Math.PI / 2) *
+    Math.pow(move.total, settings.SCORE_TOTAL_POWER);
   return Promise.resolve(score);
 }
