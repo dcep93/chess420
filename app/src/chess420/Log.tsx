@@ -5,7 +5,6 @@ import lichessF, { LiMove } from "./LichessF";
 export type LogType = {
   fen: string;
   san: string;
-  username?: string;
 };
 
 // TODO columnWidths
@@ -63,9 +62,7 @@ export function GetLog(props: { log: LogType | null | undefined }) {
     );
   if (log === undefined) return null;
   if (moves === null) {
-    lichessF(log.fen, { username: log.username }).then((moves) =>
-      update(moves)
-    );
+    lichessF(log.fen).then((moves) => update(moves));
   }
   const parts = getParts(log.san, moves || []);
   return (

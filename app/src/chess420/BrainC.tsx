@@ -98,18 +98,13 @@ export default class BrainC {
     return BrainC.history.states[BrainC.history.index];
   }
 
-  static genState<T extends StateType>(
-    startingState: T,
-    san: string,
-    username?: string
-  ): T {
+  static genState<T extends StateType>(startingState: T, san: string): T {
     return {
       ...startingState,
       fen: BrainC.getFen(startingState.fen, san),
       logs: startingState.logs.concat({
         fen: startingState.fen,
         san,
-        username,
       }),
     };
   }
@@ -126,10 +121,10 @@ export default class BrainC {
     BrainC.maybeReply(state);
   }
 
-  static isMyTurn(state: StateType) {
+  static isMyTurn(fen: string) {
     return (
-      BrainC.getChess(state.fen).turn() ===
-      (state.orientationIsWhite ? "w" : "b")
+      BrainC.getChess(fen).turn() ===
+      (BrainC.getState().orientationIsWhite ? "w" : "b")
     );
   }
 
@@ -140,7 +135,8 @@ export default class BrainC {
       return;
     if (
       (!BrainC.autoreplyRef.current || BrainC.autoreplyRef.current!.checked) &&
-      !BrainC.isMyTurn(state)
+      BrainC.getState() &&
+      !BrainC.isMyTurn(state.fen)
     ) {
       BrainC.timeout = setTimeout(BrainC.playWeighted, settings.REPLY_DELAY_MS);
     }
@@ -185,18 +181,15 @@ export default class BrainC {
 
   //
 
-  static playMove(san?: string, username?: string) {
+  static playMove(san?: string) {
     if (!san) {
       return alert("no move to play");
     }
-    BrainC.setState(BrainC.genState(BrainC.getState(), san, username));
+    BrainC.setState(BrainC.genState(BrainC.getState(), san));
   }
 
   static playWeighted() {
-    const username = BrainC.isMyTurn(BrainC.getState())
-      ? undefined
-      : BrainC.lichessUsername;
-    lichessF(BrainC.getState().fen, { username, prepareNext: true })
+    lichessF(BrainC.getState().fen, { prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) =>
           Math.pow(move.total, settings.WEIGHTED_POWER)
@@ -207,24 +200,21 @@ export default class BrainC {
           if (choice <= 0) return moves[i].san;
         }
       })
-      .then((san) => BrainC.playMove(san, username));
+      .then((san) => BrainC.playMove(san));
   }
 
   static playBest() {
     const state = BrainC.getState();
-    if (BrainC.isMyTurn(state)) {
+    if (BrainC.isMyTurn(state.fen)) {
       const novelty = BrainC.getNovelty();
       if (novelty !== null) {
-        return BrainC.playMove(novelty, undefined);
+        return BrainC.playMove(novelty);
       }
     }
-    const username = BrainC.isMyTurn(state)
-      ? undefined
-      : BrainC.lichessUsername;
-    lichessF(BrainC.getState().fen, { username, prepareNext: true })
+    lichessF(BrainC.getState().fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
-      .then((san) => BrainC.playMove(san, username));
+      .then((san) => BrainC.playMove(san));
   }
 
   static getNovelty(state?: StateType): string | null {

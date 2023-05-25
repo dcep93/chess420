@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BrainC from "./BrainC";
+import lichessF from "./LichessF";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
 import traverseF from "./TraverseF";
 import css from "./index.module.css";
 
 export default function Summary() {
+  const state = BrainC.getState();
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null
   );
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
+  const [odds, updateOdds] = useState(NaN);
+  useEffect(() => {
+    Promise.resolve()
+      .then(() =>
+        state.logs
+          .filter((log) => !BrainC.isMyTurn(log.fen))
+          .map((log) =>
+            lichessF(log.fen).then(
+              (moves) =>
+                (moves.find((move) => move.san === log.san)?.total || 0) /
+                moves.map((move) => move.total).reduce((a, b) => a + b, 0)
+            )
+          )
+      )
+      .then((promises) => Promise.all(promises))
+      .then((move_probabilities) =>
+        move_probabilities.reduce((a, b) => a * b, 1)
+      )
+      .then(updateOdds);
+  }, [state.logs]);
   if (openings === null) {
     Promise.all(
       ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
@@ -37,7 +59,6 @@ export default function Summary() {
       .then(updateOpenings);
     return null;
   }
-  const state = BrainC.getState();
   const opening = openings[normalizeFen(state.fen)];
   if (opening && lastOpening !== opening) updateLastOpening(opening);
   return (
@@ -66,6 +87,7 @@ export default function Summary() {
       >
         <h2 style={{ textDecoration: "underline" }}>Opening Name</h2>
         <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
+        <div>{(odds * 100).toFixed(2)}%</div>
       </div>
       {state.traverse === undefined ? null : (
         <div>

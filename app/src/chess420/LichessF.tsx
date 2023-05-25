@@ -1,5 +1,5 @@
 import { ChessInstance } from "chess.js";
-import BrainC from "./BrainC";
+import BrainC, { View } from "./BrainC";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 
@@ -16,7 +16,7 @@ export type LiMove = {
 
 const promises: { [key: string]: Promise<LiMove[]> } = {};
 type OptionsType = {
-  username?: string;
+  ignoreUsername?: boolean;
   prepareNext?: boolean;
   attempt?: number;
 };
@@ -27,7 +27,13 @@ export default function lichessF(
 ): Promise<LiMove[]> {
   const prepareNext = options.prepareNext || false;
   const attempt = options.attempt || 0;
-  const username = options.username;
+  const ignoreUsername = options.ignoreUsername || false;
+
+  const username =
+    ignoreUsername ||
+    BrainC.isMyTurn(fen) !== (BrainC.view === View.lichess_mistakes)
+      ? undefined
+      : BrainC.lichessUsername;
 
   const chess = BrainC.getChess(fen);
   const url =

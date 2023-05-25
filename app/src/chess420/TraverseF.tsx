@@ -36,7 +36,7 @@ export default function traverseF(
         traverse: { ...t, states: undefined },
       })
     );
-  if (!BrainC.isMyTurn(state))
+  if (!BrainC.isMyTurn(state.fen))
     return lichessF(state.fen)
       .then((moves) => ({
         moves,
@@ -97,7 +97,7 @@ export default function traverseF(
   return (
     BrainC.view === View.quizlet
       ? Promise.resolve(myMoveSan)
-      : lichessF(state.fen, { username: BrainC.lichessUsername })
+      : lichessF(state.fen)
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -108,7 +108,7 @@ export default function traverseF(
           )
   )
     .then((myMoveSan) =>
-      lichessF(state.fen).then((moves) => ({
+      lichessF(state.fen, { ignoreUsername: true }).then((moves) => ({
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
         bestMove: moves.sort((a, b) => b.score - a.score)[0],
