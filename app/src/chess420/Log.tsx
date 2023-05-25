@@ -105,7 +105,7 @@ function getParts(san: string, moves: LiMove[]) {
       (100 * move.total) /
       moves.map((move) => move.total).reduce((a, b) => a + b, 0)
     ).toFixed(1)}%`,
-    `ww/${((100 * move.white) / (move.white + move.black)).toFixed(0)}%`,
+    `ww/${((100 * move.white) / (move.white + move.black)).toFixed(1)}%`,
     `d/${((100 * move.draws) / move.total).toFixed(0)}%`,
     `t/${move.total < 10000 ? move.total : move.total.toExponential(2)}`,
   ];
