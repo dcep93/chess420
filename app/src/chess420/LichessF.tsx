@@ -9,6 +9,7 @@ export type LiMove = {
   draws: number;
   averageRating: number;
 
+  ww: number;
   total: number;
   score: number;
 };
@@ -55,6 +56,7 @@ export default function lichessF(
       moves
         .map((move: LiMove) => ({
           ...move,
+          ww: move.white / (move.black + move.white),
           total: move.black + move.white + move.draws,
         }))
         .map((move: LiMove) =>
@@ -124,12 +126,14 @@ async function helper(url: string, attempt: number): Promise<any[]> {
 }
 
 function getScore(isWhite: boolean, move: LiMove): Promise<number> {
-  const p =
+  const winRate =
     (isWhite ? move.white : move.black) /
-      (settings.SCORE_FLUKE_DISCOUNT + move.black + move.white) +
-    0.5;
+    (settings.SCORE_FLUKE_DISCOUNT + move.black + move.white);
+  const rawScore =
+    settings.SCORE_WIN_FACTOR *
+    Math.atan(settings.SCORE_ATAN_FACTOR * (winRate - 0.5));
+  const positiveScore = rawScore > 0 ? rawScore + 1 : 1 / (1 - rawScore);
   const score =
-    Math.log(p * settings.SCORE_WIN_FACTOR) *
-    Math.pow(move.total, settings.SCORE_TOTAL_FACTOR);
+    positiveScore * Math.pow(move.total, settings.SCORE_TOTAL_FACTOR);
   return Promise.resolve(score);
 }
