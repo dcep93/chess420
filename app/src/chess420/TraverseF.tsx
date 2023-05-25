@@ -23,10 +23,6 @@ export default function traverseF(
   t: TraverseType,
   myMoveSan?: string
 ): Promise<void> {
-  // console.log(
-  //   t.progress +
-  //     (t.states?.map((s) => s.progressPoints)?.reduce((a, b) => a + b, 0) || 0)
-  // );
   const states = t.states!.slice();
   const state = states.pop()!;
   if (!state)

@@ -121,11 +121,10 @@ export default class BrainC {
     BrainC.maybeReply(state);
   }
 
-  static isMyTurn(fen: string) {
-    return (
-      BrainC.getChess(fen).turn() ===
-      (BrainC.getState().orientationIsWhite ? "w" : "b")
-    );
+  static isMyTurn(fen: string, orientationIsWhite?: boolean) {
+    if (orientationIsWhite === undefined)
+      orientationIsWhite = BrainC.getState().orientationIsWhite;
+    return BrainC.getChess(fen).turn() === (orientationIsWhite ? "w" : "b");
   }
 
   //
@@ -135,8 +134,7 @@ export default class BrainC {
       return;
     if (
       (!BrainC.autoreplyRef.current || BrainC.autoreplyRef.current!.checked) &&
-      BrainC.getState() &&
-      !BrainC.isMyTurn(state.fen)
+      !BrainC.isMyTurn(state.fen, state.orientationIsWhite)
     ) {
       BrainC.timeout = setTimeout(BrainC.playWeighted, settings.REPLY_DELAY_MS);
     }
