@@ -10,8 +10,10 @@ import Controls from "./Controls";
 import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
+import recorded_sha from "./recorded_sha";
 
 export default function App() {
+  console.log(recorded_sha);
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
   switch (pathParts[1]) {
     case "lichess":
