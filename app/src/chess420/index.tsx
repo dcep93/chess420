@@ -59,39 +59,36 @@ function Main() {
     states: [] as StateType[],
   });
   [BrainC.showHelp, BrainC.updateShowHelp] = useState(false);
-  const [isShift, updateIsShift] = useState(false);
   DoOnce("Main.brain", () => {
-    document.addEventListener("keydown", (e) => {
-      (
-        ({
-          ArrowUp: BrainC.playBest,
-          ArrowDown: BrainC.newGame,
-          Enter: BrainC.startOver,
-          ArrowLeft: BrainC.undo,
-          ArrowRight: BrainC.redo,
-          KeyW: BrainC.playWeighted,
-          KeyH: BrainC.help,
-          KeyA: () =>
-            (BrainC.autoreplyRef.current!.checked =
-              !BrainC.autoreplyRef.current!.checked),
-          Escape: BrainC.home,
-        })[e.code] || (() => e.shiftKey && updateIsShift(true))
-      )();
-    });
-
-    document.addEventListener(
-      "keyup",
-      (e) => e.shiftKey && updateIsShift(false)
+    document.addEventListener("keydown", (e) =>
+      Promise.resolve()
+        .then(
+          () =>
+            ({
+              ArrowUp: BrainC.playBest,
+              ArrowDown: BrainC.newGame,
+              Enter: BrainC.startOver,
+              ArrowLeft: BrainC.undo,
+              ArrowRight: BrainC.redo,
+              KeyW: BrainC.playWeighted,
+              KeyH: BrainC.help,
+              KeyA: () =>
+                (BrainC.autoreplyRef.current!.checked =
+                  !BrainC.autoreplyRef.current!.checked),
+              Escape: BrainC.home,
+            }[e.code])
+        )
+        .then((f) => f && f())
     );
 
     BrainC.setInitialState();
   });
   const fen = BrainC.getState()?.fen;
   if (!fen) return null;
-  return <SubMain isShift={isShift} fen={fen} />;
+  return <SubMain fen={fen} />;
 }
 
-function SubMain(props: { isShift: boolean; fen: string }) {
+function SubMain(props: { fen: string }) {
   if (settings.SHOULD_UPDATE_HASH && !BrainC.getState().traverse)
     window.location.hash = BrainC.hash(props.fen);
   return (
@@ -144,7 +141,7 @@ function SubMain(props: { isShift: boolean; fen: string }) {
                       display: "flex",
                     }}
                   >
-                    <Board isShift={props.isShift} />
+                    <Board />
                   </div>
                 </div>
               </div>

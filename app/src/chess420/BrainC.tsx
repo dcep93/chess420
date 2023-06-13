@@ -260,12 +260,12 @@ export default class BrainC {
   }
 
   // board
-  static moveFromTo(from: string, to: string, shouldSaveNovelty: boolean) {
+  static moveFromTo(from: string, to: string) {
     const state = BrainC.getState();
     const chess = BrainC.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      if (shouldSaveNovelty) StorageW.set(state.fen, move.san);
+      StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverseF(state.traverse, move.san);
       } else {
