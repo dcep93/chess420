@@ -21,6 +21,26 @@ type OptionsType = {
   attempt?: number;
 };
 
+export function getLatestGame(username: string) {
+  return fetch(`https://lichess.org/api/user/${username}/current-game`)
+    .then((resp) => resp.text())
+    .then((text) =>
+      Promise.resolve()
+        .then(() =>
+          text
+            .trim()
+            .split("\n")
+            .pop()!
+            .matchAll(/\. (\w+) /g)
+        )
+        .then((matches) => Array.from(matches).map((match) => match[1]))
+        .then((sans) => ({
+          sans,
+          orientationIsWhite: text.match(/White "(.*?)"/)![1] === username,
+        }))
+    );
+}
+
 export default function lichessF(
   fen: string,
   options: OptionsType = {}

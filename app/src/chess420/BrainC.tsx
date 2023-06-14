@@ -1,6 +1,6 @@
 import Chess, { ChessInstance, Square } from "chess.js";
 import React from "react";
-import lichessF, { LiMove } from "./LichessF";
+import lichessF, { LiMove, getLatestGame } from "./LichessF";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -244,6 +244,33 @@ export default class BrainC {
     window.location.href = `/lichess/${username}#${BrainC.hash(
       BrainC.getState().fen
     )}`;
+  }
+
+  static importLatestGame(username: string) {
+    if (!username) return alert("no username provided");
+
+    BrainC.autoreplyRef.current!.checked = false;
+    getLatestGame(username)
+      .then(({ sans, orientationIsWhite }) => {
+        const chess = BrainC.getChess();
+        clearTimeout(BrainC.timeout);
+        const logs: LogType[] = [];
+        return sans.map((san) => {
+          const fen = chess.fen();
+          chess.move(san);
+          logs.push({ fen, san });
+          return { fen: chess.fen(), orientationIsWhite, logs: logs.slice() };
+        });
+      })
+      .then((moveStates) => {
+        const states = moveStates
+          .reverse()
+          .concat(BrainC.history.states.slice(BrainC.history.index));
+        BrainC.updateHistory({
+          index: states.length - 2,
+          states,
+        });
+      });
   }
 
   static home() {

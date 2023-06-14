@@ -76,6 +76,13 @@ export default function Controls() {
               >
                 find mistakes
               </button>
+              <button
+                onClick={() =>
+                  BrainC.importLatestGame(lichessRef.current!.value)
+                }
+              >
+                import latest
+              </button>
             </span>
           </div>
         </>
