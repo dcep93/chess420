@@ -93,8 +93,9 @@ function SubMain(props: { fen: string }) {
       className={css.responsiveFlexDirection}
       style={{
         minHeight: "100vH",
-        width: "80vW",
+        width: "100vW",
         display: "flex",
+        alignContent: "stretch",
         backgroundColor: "#212529",
         color: "#f8f9fa",
       }}
@@ -111,14 +112,17 @@ function SubMain(props: { fen: string }) {
         <Board />
         <Summary />
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Controls />
-        <Log />
+      <div style={{ flexGrow: 1, overflow: "auto" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <Controls />
+          <Log />
+        </div>
       </div>
     </div>
   );

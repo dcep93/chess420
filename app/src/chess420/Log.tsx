@@ -15,13 +15,14 @@ const columnWidths = [2].concat(
 
 export default function Log() {
   return (
-    <div style={{ backgroundColor: "maroon", overflow: "scroll" }}>
+    <div style={{ overflow: "scroll", flexGrow: 1 }}>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
           maxWidth: "100%",
+          height: "100%",
         }}
       >
         <SubLog />

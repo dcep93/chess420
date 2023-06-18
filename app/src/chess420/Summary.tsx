@@ -106,9 +106,8 @@ function SubSummary() {
           textIndent: "-2em",
         }}
       >
-        <h2 style={{ textDecoration: "underline" }}>Opening Name</h2>
-        <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
         <div>{(odds * 100).toFixed(2)}%</div>
+        <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
       </div>
       {state.traverse === undefined ? null : (
         <div>
