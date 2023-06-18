@@ -7,7 +7,6 @@ import { DoOnce } from "./utils";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Board from "./Board";
 import Controls from "./Controls";
-import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
 import recorded_sha from "./recorded_sha";
@@ -58,7 +57,6 @@ function Main() {
     index: 0,
     states: [] as StateType[],
   });
-  [BrainC.showHelp, BrainC.updateShowHelp] = useState(false);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) =>
       Promise.resolve()
@@ -71,7 +69,6 @@ function Main() {
               ArrowLeft: BrainC.undo,
               ArrowRight: BrainC.redo,
               KeyW: BrainC.playWeighted,
-              KeyH: BrainC.help,
               KeyA: () =>
                 (BrainC.autoreplyRef.current!.checked =
                   !BrainC.autoreplyRef.current!.checked),
@@ -96,90 +93,33 @@ function SubMain(props: { fen: string }) {
       className={css.responsiveFlexDirection}
       style={{
         minHeight: "100vH",
-        minWidth: "100vW",
+        width: "80vW",
         display: "flex",
         backgroundColor: "#212529",
         color: "#f8f9fa",
       }}
       data-bs-theme="dark"
     >
-      {BrainC.showHelp ? (
-        <Help />
-      ) : (
-        <>
-          <div
-            className={css.responsiveMinWidth}
-            style={{
-              minWidth: settings.CHESSBOARD_WIDTH,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <div style={{ opacity: 0.75 }}>
-              <div
-                style={{
-                  margin: "auto",
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                  }}
-                >
-                  <div
-                    style={{
-                      marginTop: "100%",
-                    }}
-                  ></div>
-                  <div
-                    style={{
-                      position: "absolute",
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                    }}
-                  >
-                    <Board />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-              }}
-            >
-              <div
-                style={{
-                  flexGrow: 1,
-                  width: 0,
-                  margin: "1em",
-                  overflow: "scroll",
-                }}
-              >
-                <Summary />
-              </div>
-            </div>
-          </div>
-          <div
-            className={css.responsiveMaxHeight}
-            style={{
-              flexGrow: "1",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Controls />
-            <div style={{ flexGrow: 1, display: "contents" }}>
-              <div style={{ overflow: "scroll" }}>
-                <Log />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      <div
+        className={css.responsiveMinWidth}
+        style={{
+          minWidth: settings.CHESSBOARD_WIDTH,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Board />
+        <Summary />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Controls />
+        <Log />
+      </div>
     </div>
   );
 }

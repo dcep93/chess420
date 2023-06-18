@@ -7,6 +7,27 @@ import traverseF from "./TraverseF";
 import css from "./index.module.css";
 
 export default function Summary() {
+  return (
+    <div
+      style={{
+        display: "flex",
+      }}
+    >
+      <div
+        style={{
+          flexGrow: 1,
+          width: 0,
+          margin: "1em",
+          overflow: "scroll",
+        }}
+      >
+        <SubSummary />
+      </div>
+    </div>
+  );
+}
+
+function SubSummary() {
   const state = BrainC.getState();
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null

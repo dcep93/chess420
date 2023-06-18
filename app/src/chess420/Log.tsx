@@ -14,6 +14,23 @@ const columnWidths = [2].concat(
 );
 
 export default function Log() {
+  return (
+    <div style={{ backgroundColor: "maroon", overflow: "scroll" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          maxWidth: "100%",
+        }}
+      >
+        <SubLog />
+      </div>
+    </div>
+  );
+}
+
+function SubLog() {
   const logs: (LogType | null)[] = BrainC.getState().logs.slice();
   if (logs.length === 0) return <></>;
   if (BrainC.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
@@ -21,33 +38,35 @@ export default function Log() {
     (_, i) => [logs[2 * i], logs[2 * i + 1]]
   );
   return (
-    <table
-      style={{
-        fontFamily: "Courier New",
-        tableLayout: "fixed",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <tbody>
-        <tr>
-          {columnWidths.map((em, i) => (
-            <th key={i} style={{ minWidth: `${em}em` }}>
-              title
-            </th>
-          ))}
-        </tr>
-        {lines.map((line, i) => (
-          <tr key={i}>
-            <>
-              <td>{i + 1}.</td>
-              {line.map((log, j) => (
-                <GetLog key={JSON.stringify({ log, j })} log={log} />
-              ))}
-            </>
+    <div style={{ padding: "1em" }}>
+      <table
+        style={{
+          fontFamily: "Courier New",
+          tableLayout: "fixed",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <tbody>
+          <tr>
+            {columnWidths.map((em, i) => (
+              <th key={i} style={{ minWidth: `${em}em` }}>
+                title
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+          {lines.map((line, i) => (
+            <tr key={i}>
+              <>
+                <td>{i + 1}.</td>
+                {line.map((log, j) => (
+                  <GetLog key={JSON.stringify({ log, j })} log={log} />
+                ))}
+              </>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

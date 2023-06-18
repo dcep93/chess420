@@ -1,10 +1,4 @@
-body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-body * {
+* {
   font-size: large;
   font-family: "Helvetica";
 }
@@ -21,8 +15,5 @@ body * {
   }
   .responsiveHidden {
     display: none;
-  }
-  .responsiveMaxHeight {
-    max-height: 100vh;
   }
 }

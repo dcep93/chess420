@@ -5,6 +5,42 @@ import BrainC from "./BrainC";
 import lichessF from "./LichessF";
 
 export default function Board() {
+  return (
+    <div style={{ opacity: 0.75 }}>
+      <div
+        style={{
+          margin: "auto",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+          }}
+        >
+          <div
+            style={{
+              marginTop: "100%",
+            }}
+          ></div>
+          <div
+            style={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              display: "flex",
+            }}
+          >
+            <SubBoard />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [isUncommon, updateIsUncommon] = useState(false);
   const state = BrainC.getState();
