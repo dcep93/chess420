@@ -149,11 +149,8 @@ function getScore(isWhite: boolean, move: LiMove): Promise<number> {
   const winRate =
     (isWhite ? move.white : move.black) /
     (settings.SCORE_FLUKE_DISCOUNT + move.black + move.white);
-  const rawScore =
-    settings.SCORE_WIN_FACTOR *
-    Math.atan(settings.SCORE_ATAN_FACTOR * (winRate - 0.5));
-  const positiveScore = rawScore > 0 ? rawScore + 1 : 1 / (1 - rawScore);
-  const score =
-    positiveScore * Math.pow(move.total, settings.SCORE_TOTAL_FACTOR);
+  const rawScore = Math.atan(settings.SCORE_ATAN_FACTOR * (winRate - 0.5));
+  const powerScore = Math.pow(settings.SCORE_WIN_FACTOR, rawScore);
+  const score = powerScore * Math.pow(move.total, settings.SCORE_TOTAL_FACTOR);
   return Promise.resolve(score);
 }
