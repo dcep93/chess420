@@ -92,11 +92,11 @@ function SubMain(props: { fen: string }) {
   if (settings.SHOULD_UPDATE_HASH && !BrainC.getState().traverse)
     window.location.hash = BrainC.hash(props.fen);
   return (
-    // TODO pretty
     <div
       className={css.responsiveFlexDirection}
       style={{
         minHeight: "100vH",
+        minWidth: "100vW",
         display: "flex",
         backgroundColor: "#212529",
         color: "#f8f9fa",

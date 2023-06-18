@@ -7,8 +7,11 @@ export type LogType = {
   san: string;
 };
 
-// TODO columnWidths
-const columnWidths = [2, 3, 5.5, 4.9, 4, 3, 9, 3, 5.5, 4.9, 4, 3, 9];
+const columnWidths = [2].concat(
+  Array.from(new Array(2))
+    .map((_) => [3, 5.5, 4.9, 5, 3, 9])
+    .flatMap((i) => i)
+);
 
 export default function Log() {
   const logs: (LogType | null)[] = BrainC.getState().logs.slice();

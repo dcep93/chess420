@@ -18,7 +18,6 @@ enum Familiarity {
   personalNew,
 }
 
-// TODO traverseF fix bugs and export to quizlet
 export default function traverseF(
   t: TraverseType,
   myMoveSan?: string
