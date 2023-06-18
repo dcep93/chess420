@@ -35,6 +35,9 @@ export default function Controls() {
             <>
               <div>
                 <button onClick={BrainC.playBest}>play best</button>
+                <button onClick={BrainC.playWeighted}>play weighted</button>
+              </div>
+              <div>
                 <button
                   ref={noveltyRef}
                   disabled={BrainC.getNovelty() === null}
@@ -46,18 +49,6 @@ export default function Controls() {
                 >
                   clear novelty
                 </button>
-              </div>
-              <div>
-                <button onClick={BrainC.playWeighted}>play weighted</button>
-                <label style={{ paddingLeft: "10px" }}>
-                  <input
-                    ref={BrainC.autoreplyRef}
-                    type={"checkbox"}
-                    defaultChecked={true}
-                  />
-                  &nbsp;
-                  <span>Auto Reply</span>
-                </label>
               </div>
               <div>
                 <button onClick={BrainC.memorizeWithQuizlet}>

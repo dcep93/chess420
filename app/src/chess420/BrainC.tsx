@@ -1,5 +1,4 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import React from "react";
 import lichessF, { LiMove, getLatestGame } from "./LichessF";
 import { LogType } from "./Log";
 import settings from "./Settings";
@@ -25,8 +24,6 @@ export enum View {
 }
 
 export default class BrainC {
-  static autoreplyRef: React.RefObject<HTMLInputElement>;
-
   static history: History;
   static updateHistory: (history: History) => void;
   static showHelp: boolean;
@@ -132,10 +129,7 @@ export default class BrainC {
   static maybeReply(state: StateType) {
     if (BrainC.view === View.lichess_mistakes || BrainC.view === View.quizlet)
       return;
-    if (
-      (!BrainC.autoreplyRef.current || BrainC.autoreplyRef.current!.checked) &&
-      !BrainC.isMyTurn(state.fen, state.orientationIsWhite)
-    ) {
+    if (!BrainC.isMyTurn(state.fen, state.orientationIsWhite)) {
       BrainC.timeout = setTimeout(BrainC.playWeighted, settings.REPLY_DELAY_MS);
     }
   }
@@ -159,8 +153,6 @@ export default class BrainC {
     if (BrainC.history.index + 1 >= BrainC.history.states.length) {
       return alert("no undo available");
     }
-    if (BrainC.autoreplyRef.current)
-      BrainC.autoreplyRef.current!.checked = false;
     BrainC.updateHistory({
       ...BrainC.history,
       index: BrainC.history.index + 1,
@@ -249,7 +241,6 @@ export default class BrainC {
   static importLatestGame(username: string) {
     if (!username) return alert("no username provided");
 
-    BrainC.autoreplyRef.current!.checked = false;
     getLatestGame(username)
       .then(({ sans, orientationIsWhite }) => {
         const chess = BrainC.getChess();

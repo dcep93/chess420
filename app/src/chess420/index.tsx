@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import BrainC, { StateType, View } from "./BrainC";
 import settings from "./Settings";
 import css from "./index.module.css";
@@ -52,7 +52,6 @@ export default function App() {
 }
 
 function Main() {
-  BrainC.autoreplyRef = React.useRef<HTMLInputElement>(null);
   [BrainC.history, BrainC.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
@@ -69,9 +68,6 @@ function Main() {
               ArrowLeft: BrainC.undo,
               ArrowRight: BrainC.redo,
               KeyW: BrainC.playWeighted,
-              KeyA: () =>
-                (BrainC.autoreplyRef.current!.checked =
-                  !BrainC.autoreplyRef.current!.checked),
               Escape: BrainC.home,
             }[e.code])
         )
