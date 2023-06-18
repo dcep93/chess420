@@ -1,6 +1,10 @@
 import settings from "./Settings";
 
 export default class StorageW {
+  static clear() {
+    localStorage.clear();
+  }
+
   static get(key: string): any {
     const raw = localStorage.getItem(getKey(key));
     if (raw === null) return null;

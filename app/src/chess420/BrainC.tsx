@@ -216,6 +216,10 @@ export default class BrainC {
     StorageW.set(BrainC.getState().fen, null);
   }
 
+  static clearAllNovelties() {
+    StorageW.clear();
+  }
+
   //
 
   static memorizeWithQuizlet() {

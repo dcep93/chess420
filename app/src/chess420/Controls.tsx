@@ -51,6 +51,11 @@ export default function Controls() {
                 </button>
               </div>
               <div>
+                <button onClick={BrainC.clearAllNovelties}>
+                  clear all novelties
+                </button>
+              </div>
+              <div>
                 <button onClick={BrainC.memorizeWithQuizlet}>
                   memorize with Quizlet
                 </button>
