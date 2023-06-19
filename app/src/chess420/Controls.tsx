@@ -38,9 +38,7 @@ export default function Controls() {
                 <button onClick={BrainC.playWeighted}>play weighted</button>
               </div>
               <div>
-                <button onClick={BrainC.clearAllNovelties}>
-                  clear all novelties
-                </button>
+                <button onClick={BrainC.clearStorage}>clear storage</button>
               </div>
               <div>
                 <button

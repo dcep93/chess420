@@ -216,7 +216,7 @@ export default class BrainC {
     StorageW.set(BrainC.getState().fen, null);
   }
 
-  static clearAllNovelties() {
+  static clearStorage() {
     StorageW.clear();
   }
 
