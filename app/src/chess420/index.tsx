@@ -1,5 +1,5 @@
 import { useState } from "react";
-import BrainC, { StateType, View } from "./BrainC";
+import Brain, { StateType, View } from "./Brain";
 import settings from "./Settings";
 import css from "./index.module.css";
 import { DoOnce } from "./utils";
@@ -19,22 +19,22 @@ export default function App() {
   switch (pathParts[1]) {
     case "lichess":
       if (pathParts[3] === "mistakes") {
-        BrainC.view = View.lichess_mistakes;
+        Brain.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
         alert("invalid path");
         return null;
       } else {
-        BrainC.view = View.lichess;
+        Brain.view = View.lichess;
       }
       const username = pathParts[2];
       if (username === "") {
         alert("invalid path");
         return null;
       }
-      BrainC.lichessUsername = username;
+      Brain.lichessUsername = username;
       break;
     case "quizlet":
-      BrainC.view = View.quizlet;
+      Brain.view = View.quizlet;
       if (pathParts.length > 2) {
         alert("invalid path");
         return null;
@@ -54,44 +54,43 @@ export default function App() {
 }
 
 function Main() {
-  BrainC.autoreplyRef = React.useRef<HTMLInputElement>(null);
-  [BrainC.history, BrainC.updateHistory] = useState({
+  Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
+  [Brain.history, Brain.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
   });
-  [BrainC.showHelp, BrainC.updateShowHelp] = useState(false);
+  [Brain.showHelp, Brain.updateShowHelp] = useState(false);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) =>
       Promise.resolve()
         .then(
           () =>
             ({
-              ArrowUp: BrainC.playBest,
-              ArrowDown: BrainC.newGame,
-              Enter: BrainC.startOver,
-              ArrowLeft: BrainC.undo,
-              ArrowRight: BrainC.redo,
-              KeyW: BrainC.playWeighted,
-              KeyA: () =>
-                (BrainC.autoreplyRef.current!.checked =
-                  !BrainC.autoreplyRef.current!.checked),
-              Escape: BrainC.home,
+              ArrowUp: Brain.playBest,
+              ArrowDown: Brain.newGame,
+              Enter: Brain.startOver,
+              ArrowLeft: Brain.undo,
+              ArrowRight: Brain.redo,
+              KeyW: Brain.playWeighted,
+              KeyH: Brain.help,
+              KeyA: Brain.toggleAutoreply,
+              Escape: Brain.home,
             }[e.code])
         )
         .then((f) => f && f())
     );
 
-    BrainC.setInitialState();
+    Brain.setInitialState();
   });
-  if (BrainC.showHelp) return <Help />;
-  const fen = BrainC.getState()?.fen;
+  if (Brain.showHelp) return <Help />;
+  const fen = Brain.getState()?.fen;
   if (!fen) return null;
   return <SubMain fen={fen} />;
 }
 
 function SubMain(props: { fen: string }) {
-  if (settings.SHOULD_UPDATE_HASH && !BrainC.getState().traverse)
-    window.location.hash = BrainC.hash(props.fen);
+  if (settings.SHOULD_UPDATE_HASH && !Brain.getState().traverse)
+    window.location.hash = Brain.hash(props.fen);
   return (
     <div
       className={css.responsiveFlexDirection}

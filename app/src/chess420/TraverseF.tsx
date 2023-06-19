@@ -1,4 +1,4 @@
-import BrainC, { StateType, View } from "./BrainC";
+import Brain, { StateType, View } from "./Brain";
 import lichessF from "./LichessF";
 import settings from "./Settings";
 
@@ -26,12 +26,12 @@ export default function traverseF(
   const state = states.pop()!;
   if (!state)
     return Promise.resolve().then(() =>
-      BrainC.setState({
+      Brain.setState({
         ...t.originalState,
         traverse: { ...t, states: undefined },
       })
     );
-  if (!BrainC.isMyTurn(state.fen))
+  if (!Brain.isMyTurn(state.fen))
     return lichessF(state.fen)
       .then((moves) => ({
         moves,
@@ -40,7 +40,7 @@ export default function traverseF(
       .then(({ moves, total }) =>
         moves
           .map((move) =>
-            BrainC.genState(
+            Brain.genState(
               {
                 ...state,
                 odds: (state.odds * move.total) / total,
@@ -74,7 +74,7 @@ export default function traverseF(
         states: states.concat(moveStates),
       }))
       .then(traverseF);
-  if (BrainC.view === View.quizlet) {
+  if (Brain.view === View.quizlet) {
     if (myMoveSan === undefined)
       return Promise.resolve({
         ...t,
@@ -83,14 +83,14 @@ export default function traverseF(
           `seen: ${(state.odds * 100).toFixed(2)}%`,
         ],
       }).then((traverse) =>
-        BrainC.setState({
+        Brain.setState({
           ...state,
           traverse,
         })
       );
   }
   return (
-    BrainC.view === View.quizlet
+    Brain.view === View.quizlet
       ? Promise.resolve(myMoveSan)
       : lichessF(state.fen)
           .then((moves) => ({
@@ -122,11 +122,11 @@ export default function traverseF(
         });
       if (
         bestMove.san === myMove?.san ||
-        (myMoveSan !== undefined && BrainC.getNovelty(state) === myMoveSan)
+        (myMoveSan !== undefined && Brain.getNovelty(state) === myMoveSan)
       ) {
         return traverseF({
           ...t,
-          states: states.concat(BrainC.genState(state, myMoveSan!)),
+          states: states.concat(Brain.genState(state, myMoveSan!)),
           results: (t.results || []).concat({
             ...state,
             familiarity: Familiarity.best,
@@ -143,7 +143,7 @@ export default function traverseF(
           ? Familiarity.ok
           : Familiarity.bad;
       const verb =
-        BrainC.view === View.lichess_mistakes ? "usually play" : "played";
+        Brain.view === View.lichess_mistakes ? "usually play" : "played";
       return Promise.resolve({
         ...t,
         progress: t.progress + state.progressPoints,
@@ -167,8 +167,8 @@ export default function traverseF(
           }),
         }))
         .then((traverse) =>
-          BrainC.setState({
-            ...BrainC.genState(state, bestMove.san),
+          Brain.setState({
+            ...Brain.genState(state, bestMove.san),
             traverse,
           })
         );

@@ -1,4 +1,4 @@
-import BrainC, { View } from "./BrainC";
+import Brain, { View } from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 
@@ -51,11 +51,11 @@ export default function lichessF(
 
   const username =
     ignoreUsername ||
-    BrainC.isMyTurn(fen) !== (BrainC.view === View.lichess_mistakes)
+    Brain.isMyTurn(fen) !== (Brain.view === View.lichess_mistakes)
       ? undefined
-      : BrainC.lichessUsername;
+      : Brain.lichessUsername;
 
-  const chess = BrainC.getChess(fen);
+  const chess = Brain.getChess(fen);
   const url =
     username === undefined
       ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&${
@@ -112,7 +112,7 @@ export default function lichessF(
                 move.total >= total * settings.PREPARE_NEXT_RATIO
             )
             .forEach((move: LiMove) => {
-              const subFen = BrainC.getFen(fen, move.san);
+              const subFen = Brain.getFen(fen, move.san);
               lichessF(subFen, {
                 ...options,
                 prepareNext: false,

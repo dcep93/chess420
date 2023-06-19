@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
-import BrainC from "./BrainC";
+import Brain from "./Brain";
 import lichessF from "./LichessF";
 
 export default function Board() {
@@ -43,7 +43,7 @@ export default function Board() {
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [isUncommon, updateIsUncommon] = useState(false);
-  const state = BrainC.getState();
+  const state = Brain.getState();
   useEffect(() => {
     lichessF(state.fen)
       .then((moves) =>
@@ -68,7 +68,7 @@ function SubBoard() {
         }}
         onPieceDrop={(from, to) => {
           updateClicked(null);
-          return BrainC.moveFromTo(from, to);
+          return Brain.moveFromTo(from, to);
         }}
         onSquareClick={(clicked: string) => {
           if (prevClicked === null) {
@@ -76,7 +76,7 @@ function SubBoard() {
           } else if (prevClicked === clicked) {
             updateClicked(null);
           } else {
-            if (BrainC.moveFromTo(prevClicked, clicked)) {
+            if (Brain.moveFromTo(prevClicked, clicked)) {
               updateClicked(null);
             } else {
               updateClicked(clicked);

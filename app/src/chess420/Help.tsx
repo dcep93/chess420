@@ -1,9 +1,9 @@
-import BrainC from "./BrainC";
+import Brain from "./Brain";
 
 export default function Help() {
   return (
     <div
-      onClick={() => BrainC.updateShowHelp(false)}
+      onClick={() => Brain.updateShowHelp(false)}
       style={{
         backgroundColor: "#212529",
         color: "#f8f9fa",

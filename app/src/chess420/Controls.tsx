@@ -1,5 +1,5 @@
 import React from "react";
-import BrainC, { View } from "./BrainC";
+import Brain, { View } from "./Brain";
 
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
@@ -25,22 +25,22 @@ export default function Controls() {
       >
         <div>
           <div>
-            {BrainC.view !== undefined ? null : (
-              <button onClick={BrainC.newGame}>new game</button>
+            {Brain.view !== undefined ? null : (
+              <button onClick={Brain.newGame}>new game</button>
             )}
-            <button onClick={BrainC.undo}>undo</button>
-            <button onClick={BrainC.redo}>redo</button>
+            <button onClick={Brain.undo}>undo</button>
+            <button onClick={Brain.redo}>redo</button>
           </div>
-          {BrainC.view !== undefined ? null : (
+          {Brain.view !== undefined ? null : (
             <>
               <div>
-                <button onClick={BrainC.playBest}>play best</button>
+                <button onClick={Brain.playBest}>play best</button>
                 <button
                   ref={noveltyRef}
-                  disabled={BrainC.getNovelty() === null}
+                  disabled={Brain.getNovelty() === null}
                   onClick={() =>
                     Promise.resolve()
-                      .then(BrainC.clearNovelty)
+                      .then(Brain.clearNovelty)
                       .then(() => (noveltyRef.current!.disabled = true))
                   }
                 >
@@ -48,10 +48,10 @@ export default function Controls() {
                 </button>
               </div>
               <div>
-                <button onClick={BrainC.playWeighted}>play weighted</button>
+                <button onClick={Brain.playWeighted}>play weighted</button>
                 <label style={{ paddingLeft: "10px" }}>
                   <input
-                    ref={BrainC.autoreplyRef}
+                    ref={Brain.autoreplyRef}
                     type={"checkbox"}
                     defaultChecked={true}
                   />
@@ -60,8 +60,8 @@ export default function Controls() {
                 </label>
               </div>
               <div>
-                <button onClick={BrainC.help}>help</button>
-                <button onClick={BrainC.clearStorage}>clear storage</button>
+                <button onClick={Brain.help}>help</button>
+                <button onClick={Brain.clearStorage}>clear storage</button>
               </div>
             </>
           )}
@@ -73,10 +73,10 @@ export default function Controls() {
             justifyContent: "space-around",
           }}
         >
-          {BrainC.view === undefined ? (
+          {Brain.view === undefined ? (
             <>
               <div>
-                <button onClick={BrainC.memorizeWithQuizlet}>
+                <button onClick={Brain.memorizeWithQuizlet}>
                   memorize with Quizlet
                 </button>
               </div>
@@ -91,20 +91,20 @@ export default function Controls() {
                 </div>
                 <div>
                   <button
-                    onClick={() => BrainC.playVs(lichessRef.current!.value)}
+                    onClick={() => Brain.playVs(lichessRef.current!.value)}
                   >
                     play vs user
                   </button>
                   <button
                     onClick={() =>
-                      BrainC.findMistakes(lichessRef.current!.value)
+                      Brain.findMistakes(lichessRef.current!.value)
                     }
                   >
                     find mistakes
                   </button>
                   <button
                     onClick={() =>
-                      BrainC.importLatestGame(lichessRef.current!.value)
+                      Brain.importLatestGame(lichessRef.current!.value)
                     }
                   >
                     import latest
@@ -115,16 +115,16 @@ export default function Controls() {
           ) : (
             <>
               <div>
-                {BrainC.view === View.lichess ? (
-                  <span>playing vs {BrainC.lichessUsername}</span>
-                ) : BrainC.view === View.lichess_mistakes ? (
-                  <span>finding mistakes of {BrainC.lichessUsername}</span>
-                ) : BrainC.view === View.quizlet ? (
+                {Brain.view === View.lichess ? (
+                  <span>playing vs {Brain.lichessUsername}</span>
+                ) : Brain.view === View.lichess_mistakes ? (
+                  <span>finding mistakes of {Brain.lichessUsername}</span>
+                ) : Brain.view === View.quizlet ? (
                   <span>building Quizlet data TODO progress</span>
                 ) : null}
               </div>
               <div>
-                <button onClick={BrainC.home}>home</button>
+                <button onClick={Brain.home}>home</button>
               </div>
             </>
           )}

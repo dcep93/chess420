@@ -1,5 +1,5 @@
 import { useState } from "react";
-import BrainC from "./BrainC";
+import Brain from "./Brain";
 import lichessF, { LiMove } from "./LichessF";
 
 export type LogType = {
@@ -58,9 +58,9 @@ export default function Log() {
 }
 
 function SubLog() {
-  const logs: (LogType | null)[] = BrainC.getState().logs.slice();
+  const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length === 0) return <></>;
-  if (BrainC.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
+  if (Brain.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
   return (
     <div
       style={{
@@ -122,8 +122,8 @@ export function GetLog(props: { log: LogType | null }) {
     <div
       title={moves === null ? undefined : getTitle(moves)}
       onClick={() => {
-        const fen = BrainC.getFen(log.fen, log.san);
-        window.open(`#${BrainC.hash(fen)}`);
+        const fen = Brain.getFen(log.fen, log.san);
+        window.open(`#${Brain.hash(fen)}`);
       }}
     >
       {parts.map((movePart, i) => (

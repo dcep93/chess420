@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BrainC from "./BrainC";
+import Brain from "./Brain";
 import lichessF from "./LichessF";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
@@ -28,7 +28,7 @@ export default function Summary() {
 }
 
 function SubSummary() {
-  const state = BrainC.getState();
+  const state = Brain.getState();
   const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
     null
   );
@@ -38,7 +38,7 @@ function SubSummary() {
     Promise.resolve()
       .then(() =>
         state.logs
-          .filter((log) => !BrainC.isMyTurn(log.fen))
+          .filter((log) => !Brain.isMyTurn(log.fen))
           .map((log) =>
             lichessF(log.fen).then(
               (moves) =>
@@ -74,7 +74,7 @@ function SubSummary() {
       .then((arr) =>
         arr
           .flatMap((a) => a)
-          .concat([[normalizeFen(BrainC.getFen()), "starting position"]])
+          .concat([[normalizeFen(Brain.getFen()), "starting position"]])
       )
       .then(Object.fromEntries)
       .then(updateOpenings);
@@ -121,7 +121,7 @@ function SubSummary() {
 
 function SummaryMove(props: { log: LogType; length: number }) {
   if (!props.log) return null;
-  const chess = BrainC.getChess(props.log.fen);
+  const chess = Brain.getChess(props.log.fen);
   const cell =
     chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
   return (

@@ -23,7 +23,7 @@ export enum View {
   quizlet,
 }
 
-export default class BrainC {
+export default class Brain {
   static autoreplyRef: React.RefObject<HTMLInputElement>;
   static history: History;
   static updateHistory: (history: History) => void;
@@ -40,7 +40,7 @@ export default class BrainC {
   //
 
   static getFen(start?: string, san?: string): string {
-    const chess = BrainC.getChess(start);
+    const chess = Brain.getChess(start);
     if (san) chess.move(san);
     return chess.fen();
   }
@@ -56,20 +56,20 @@ export default class BrainC {
 
   static hash(fen: string): string {
     return [
-      BrainC.getState().orientationIsWhite ? "w" : "b",
+      Brain.getState().orientationIsWhite ? "w" : "b",
       fen.replaceAll(" ", "_"),
     ].join("//");
   }
 
   static getInitialState(): StateType {
-    var fen = BrainC.getFen();
+    var fen = Brain.getFen();
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
     if (hash !== undefined) {
       const parts = hash.split("//");
       if (parts.length === 2) {
         orientationIsWhite = parts[0] === "w";
-        fen = BrainC.getFen(parts[1].replaceAll("_", " "));
+        fen = Brain.getFen(parts[1].replaceAll("_", " "));
       }
     }
     return {
@@ -80,26 +80,26 @@ export default class BrainC {
   }
 
   static setInitialState() {
-    const startingState = BrainC.getInitialState();
-    switch (BrainC.view) {
+    const startingState = Brain.getInitialState();
+    switch (Brain.view) {
       case View.lichess_mistakes:
       case View.quizlet:
         startTraverseF(startingState);
         return;
     }
-    BrainC.setState(startingState);
+    Brain.setState(startingState);
   }
 
   //
 
   static getState(): StateType {
-    return BrainC.history.states[BrainC.history.index];
+    return Brain.history.states[Brain.history.index];
   }
 
   static genState<T extends StateType>(startingState: T, san: string): T {
     return {
       ...startingState,
-      fen: BrainC.getFen(startingState.fen, san),
+      fen: Brain.getFen(startingState.fen, san),
       logs: startingState.logs.concat({
         fen: startingState.fen,
         san,
@@ -108,68 +108,68 @@ export default class BrainC {
   }
 
   static setState(state: StateType) {
-    clearTimeout(BrainC.timeout);
+    clearTimeout(Brain.timeout);
     const states = [state].concat(
-      BrainC.history.states.slice(BrainC.history.index)
+      Brain.history.states.slice(Brain.history.index)
     );
-    BrainC.updateHistory({
+    Brain.updateHistory({
       index: 0,
       states,
     });
-    BrainC.maybeReply(state);
+    Brain.maybeReply(state);
   }
 
   static isMyTurn(fen: string, orientationIsWhite?: boolean) {
     if (orientationIsWhite === undefined)
-      orientationIsWhite = BrainC.getState().orientationIsWhite;
-    return BrainC.getChess(fen).turn() === (orientationIsWhite ? "w" : "b");
+      orientationIsWhite = Brain.getState().orientationIsWhite;
+    return Brain.getChess(fen).turn() === (orientationIsWhite ? "w" : "b");
   }
 
   //
 
   static maybeReply(state: StateType) {
-    if (BrainC.view === View.lichess_mistakes || BrainC.view === View.quizlet)
+    if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet)
       return;
     if (
-      (!BrainC.autoreplyRef.current || BrainC.autoreplyRef.current!.checked) &&
-      !BrainC.isMyTurn(state.fen, state.orientationIsWhite)
+      (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
+      !Brain.isMyTurn(state.fen, state.orientationIsWhite)
     ) {
-      BrainC.timeout = setTimeout(BrainC.playWeighted, settings.REPLY_DELAY_MS);
+      Brain.timeout = setTimeout(Brain.playWeighted, settings.REPLY_DELAY_MS);
     }
   }
 
   //
 
   static startOver() {
-    const original = BrainC.history.states[BrainC.history.states.length - 1];
-    BrainC.setState(original);
+    const original = Brain.history.states[Brain.history.states.length - 1];
+    Brain.setState(original);
   }
 
   static newGame() {
-    BrainC.setState({
-      fen: BrainC.getFen(),
-      orientationIsWhite: !BrainC.getState().orientationIsWhite,
+    Brain.setState({
+      fen: Brain.getFen(),
+      orientationIsWhite: !Brain.getState().orientationIsWhite,
       logs: [],
     });
   }
 
   static undo() {
-    if (BrainC.history.index + 1 >= BrainC.history.states.length) {
+    if (Brain.history.index + 1 >= Brain.history.states.length) {
       return alert("no undo available");
     }
-    BrainC.updateHistory({
-      ...BrainC.history,
-      index: BrainC.history.index + 1,
+    Brain.updateHistory({
+      ...Brain.history,
+      index: Brain.history.index + 1,
     });
   }
 
   static redo() {
-    if (BrainC.history.index <= 0) {
+    if (Brain.history.index <= 0) {
       return alert("no redo available");
     }
-    BrainC.updateHistory({
-      ...BrainC.history,
-      index: BrainC.history.index - 1,
+    Brain.updateHistory({
+      ...Brain.history,
+      index: Brain.history.index - 1,
     });
   }
 
@@ -179,11 +179,11 @@ export default class BrainC {
     if (!san) {
       return alert("no move to play");
     }
-    BrainC.setState(BrainC.genState(BrainC.getState(), san));
+    Brain.setState(Brain.genState(Brain.getState(), san));
   }
 
   static playWeighted() {
-    lichessF(BrainC.getState().fen, { prepareNext: true })
+    lichessF(Brain.getState().fen, { prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) =>
           Math.pow(move.total, settings.WEIGHTED_POWER)
@@ -194,30 +194,30 @@ export default class BrainC {
           if (choice <= 0) return moves[i].san;
         }
       })
-      .then((san) => BrainC.playMove(san));
+      .then((san) => Brain.playMove(san));
   }
 
   static playBest() {
-    const state = BrainC.getState();
-    if (BrainC.isMyTurn(state.fen)) {
-      const novelty = BrainC.getNovelty();
+    const state = Brain.getState();
+    if (Brain.isMyTurn(state.fen)) {
+      const novelty = Brain.getNovelty();
       if (novelty !== null) {
-        return BrainC.playMove(novelty);
+        return Brain.playMove(novelty);
       }
     }
-    lichessF(BrainC.getState().fen, { prepareNext: true })
+    lichessF(Brain.getState().fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
-      .then((san) => BrainC.playMove(san));
+      .then((san) => Brain.playMove(san));
   }
 
   static getNovelty(state?: StateType): string | null {
-    if (!state) state = BrainC.getState();
-    return StorageW.get(BrainC.getState().fen);
+    if (!state) state = Brain.getState();
+    return StorageW.get(Brain.getState().fen);
   }
 
   static clearNovelty() {
-    StorageW.set(BrainC.getState().fen, null);
+    StorageW.set(Brain.getState().fen, null);
   }
 
   static clearStorage() {
@@ -227,22 +227,22 @@ export default class BrainC {
   //
 
   static memorizeWithQuizlet() {
-    window.location.href = `/quizlet#${BrainC.hash(BrainC.getState().fen)}`;
+    window.location.href = `/quizlet#${Brain.hash(Brain.getState().fen)}`;
   }
 
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
-    window.location.href = `/lichess/${username}/mistakes#${BrainC.hash(
-      BrainC.getState().fen
+    window.location.href = `/lichess/${username}/mistakes#${Brain.hash(
+      Brain.getState().fen
     )}`;
   }
 
   static playVs(username: string) {
     if (!username) return alert("no username provided");
 
-    window.location.href = `/lichess/${username}#${BrainC.hash(
-      BrainC.getState().fen
+    window.location.href = `/lichess/${username}#${Brain.hash(
+      Brain.getState().fen
     )}`;
   }
 
@@ -251,8 +251,8 @@ export default class BrainC {
 
     getLatestGame(username)
       .then(({ sans, orientationIsWhite }) => {
-        const chess = BrainC.getChess();
-        clearTimeout(BrainC.timeout);
+        const chess = Brain.getChess();
+        clearTimeout(Brain.timeout);
         const logs: LogType[] = [];
         return sans.map((san) => {
           const fen = chess.fen();
@@ -264,8 +264,8 @@ export default class BrainC {
       .then((moveStates) => {
         const states = moveStates
           .reverse()
-          .concat(BrainC.history.states.slice(BrainC.history.index));
-        BrainC.updateHistory({
+          .concat(Brain.history.states.slice(Brain.history.index));
+        Brain.updateHistory({
           index: states.length - 2,
           states,
         });
@@ -275,27 +275,31 @@ export default class BrainC {
   static home() {
     setTimeout(() => {
       window.location.assign("/#");
-      if (BrainC.view === undefined) window.location.reload();
+      if (Brain.view === undefined) window.location.reload();
     });
   }
 
   //
 
   static help() {
-    BrainC.updateShowHelp(!BrainC.showHelp);
+    Brain.updateShowHelp(!Brain.showHelp);
+  }
+
+  static toggleAutoreply() {
+    Brain.autoreplyRef.current!.checked = !Brain.autoreplyRef.current!.checked;
   }
 
   // board
   static moveFromTo(from: string, to: string) {
-    const state = BrainC.getState();
-    const chess = BrainC.getChess(state.fen);
+    const state = Brain.getState();
+    const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverseF(state.traverse, move.san);
       } else {
-        BrainC.setState(BrainC.genState(BrainC.getState(), move.san));
+        Brain.setState(Brain.genState(Brain.getState(), move.san));
       }
       return true;
     } else {
