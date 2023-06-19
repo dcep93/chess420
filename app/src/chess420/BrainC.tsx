@@ -24,6 +24,7 @@ export enum View {
 }
 
 export default class BrainC {
+  static autoreplyRef: React.RefObject<HTMLInputElement>;
   static history: History;
   static updateHistory: (history: History) => void;
   static showHelp: boolean;
@@ -129,7 +130,10 @@ export default class BrainC {
   static maybeReply(state: StateType) {
     if (BrainC.view === View.lichess_mistakes || BrainC.view === View.quizlet)
       return;
-    if (!BrainC.isMyTurn(state.fen, state.orientationIsWhite)) {
+    if (
+      (!BrainC.autoreplyRef.current || BrainC.autoreplyRef.current!.checked) &&
+      !BrainC.isMyTurn(state.fen, state.orientationIsWhite)
+    ) {
       BrainC.timeout = setTimeout(BrainC.playWeighted, settings.REPLY_DELAY_MS);
     }
   }

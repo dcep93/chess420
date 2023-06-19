@@ -5,6 +5,7 @@ import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
 import Board from "./Board";
 import Controls from "./Controls";
 import Help from "./Help";
@@ -53,6 +54,7 @@ export default function App() {
 }
 
 function Main() {
+  BrainC.autoreplyRef = React.useRef<HTMLInputElement>(null);
   [BrainC.history, BrainC.updateHistory] = useState({
     index: 0,
     states: [] as StateType[],
@@ -70,6 +72,9 @@ function Main() {
               ArrowLeft: BrainC.undo,
               ArrowRight: BrainC.redo,
               KeyW: BrainC.playWeighted,
+              KeyA: () =>
+                (BrainC.autoreplyRef.current!.checked =
+                  !BrainC.autoreplyRef.current!.checked),
               Escape: BrainC.home,
             }[e.code])
         )

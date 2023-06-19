@@ -12,7 +12,7 @@ const titles = [
     f: (move: LiMove, moves: LiMove[]) => move.san,
     text: "",
     title: "",
-    width: 4.5,
+    width: 3.5,
   },
   {
     f: (move: LiMove, moves: LiMove[]) =>
@@ -69,7 +69,7 @@ function SubLog() {
         whiteSpace: "nowrap",
       }}
     >
-      <div style={{ marginRight: "-1em" }}>
+      <div style={{ width: "1em", marginRight: "-1em" }}>
         <div>&nbsp;</div>
         {logs
           .filter((_, i) => i % 2 === 0)
