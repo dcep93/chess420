@@ -38,6 +38,11 @@ export default function Controls() {
                 <button onClick={BrainC.playWeighted}>play weighted</button>
               </div>
               <div>
+                <button onClick={BrainC.clearAllNovelties}>
+                  clear all novelties
+                </button>
+              </div>
+              <div>
                 <button
                   ref={noveltyRef}
                   disabled={BrainC.getNovelty() === null}
@@ -49,50 +54,55 @@ export default function Controls() {
                 >
                   clear novelty
                 </button>
+                <button onClick={BrainC.help}>help</button>
               </div>
-              <div>
-                <button onClick={BrainC.clearAllNovelties}>
-                  clear all novelties
-                </button>
-              </div>
+            </>
+          )}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+          }}
+        >
+          {BrainC.view === undefined ? (
+            <>
               <div>
                 <button onClick={BrainC.memorizeWithQuizlet}>
                   memorize with Quizlet
                 </button>
               </div>
-            </>
-          )}
-        </div>
-        <div>
-          {BrainC.view === undefined ? (
-            <>
-              <div style={{ height: "1em" }}></div>
               <div>
-                <span>lichess username: </span>
-                <input
-                  ref={lichessRef}
-                  style={{ width: "4em" }}
-                  onKeyDown={(e) => e.stopPropagation()}
-                />
-              </div>
-              <div>
-                <button
-                  onClick={() => BrainC.playVs(lichessRef.current!.value)}
-                >
-                  play vs user
-                </button>
-                <button
-                  onClick={() => BrainC.findMistakes(lichessRef.current!.value)}
-                >
-                  find mistakes
-                </button>
-                <button
-                  onClick={() =>
-                    BrainC.importLatestGame(lichessRef.current!.value)
-                  }
-                >
-                  import latest
-                </button>
+                <div>
+                  <span>lichess username: </span>
+                  <input
+                    ref={lichessRef}
+                    style={{ width: "4em" }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  />
+                </div>
+                <div>
+                  <button
+                    onClick={() => BrainC.playVs(lichessRef.current!.value)}
+                  >
+                    play vs user
+                  </button>
+                  <button
+                    onClick={() =>
+                      BrainC.findMistakes(lichessRef.current!.value)
+                    }
+                  >
+                    find mistakes
+                  </button>
+                  <button
+                    onClick={() =>
+                      BrainC.importLatestGame(lichessRef.current!.value)
+                    }
+                  >
+                    import latest
+                  </button>
+                </div>
               </div>
             </>
           ) : (
@@ -112,7 +122,6 @@ export default function Controls() {
             </>
           )}
         </div>
-        <div style={{ height: "1em" }}></div>
       </div>
     </div>
   );

@@ -16,15 +16,7 @@ const columnWidths = [2].concat(
 export default function Log() {
   return (
     <div style={{ overflow: "scroll", flexGrow: 1 }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minWidth: 0,
-          maxWidth: "100%",
-          height: "100%",
-        }}
-      >
+      <div style={{ height: "100%" }}>
         <SubLog />
       </div>
     </div>
@@ -35,75 +27,62 @@ function SubLog() {
   const logs: (LogType | null)[] = BrainC.getState().logs.slice();
   if (logs.length === 0) return <></>;
   if (BrainC.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
-  const lines = Array.from(new Array(Math.ceil(logs.length / 2))).map(
-    (_, i) => [logs[2 * i], logs[2 * i + 1]]
-  );
   return (
-    <div style={{ padding: "1em" }}>
-      <table
-        style={{
-          fontFamily: "Courier New",
-          tableLayout: "fixed",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <tbody>
-          <tr>
-            {columnWidths.map((em, i) => (
-              <th key={i} style={{ minWidth: `${em}em` }}>
-                title
-              </th>
-            ))}
-          </tr>
-          {lines.map((line, i) => (
-            <tr key={i}>
-              <>
-                <td>{i + 1}.</td>
-                {line.map((log, j) => (
-                  <GetLog key={JSON.stringify({ log, j })} log={log} />
-                ))}
-              </>
-            </tr>
+    <div style={{ padding: "1em", display: "flex" }}>
+      <div>
+        {logs
+          .filter((_, i) => i % 2 === 0)
+          .map((_, i) => (
+            <div key={i}>{i + 1}.</div>
           ))}
-        </tbody>
-      </table>
+      </div>
+      {[0, 1].map((index) => (
+        <div key={index}>
+          <div>title</div>
+          {logs
+            .filter((_, i) => i % 2 === index)
+            .map((log, i) => (
+              <GetLog key={i} log={log} />
+            ))}
+        </div>
+      ))}
     </div>
   );
 }
 
-export function GetLog(props: { log: LogType | null | undefined }) {
+export function GetLog(props: { log: LogType | null }) {
   const [moves, update] = useState<LiMove[] | null>(null);
   const log = props.log;
   if (log === null)
     return (
-      <>
-        <td>...</td>
-        {Array.from(new Array((columnWidths.length - 3) / 2)).map((_, i) => (
-          <td key={i}></td>
-        ))}
-      </>
+      <div>
+        <div>...</div>
+      </div>
     );
-  if (log === undefined) return null;
   if (moves === null) {
     lichessF(log.fen).then((moves) => update(moves));
   }
   const parts = getParts(log.san, moves || []);
   return (
-    <>
-      <td
-        style={{ fontWeight: "bold" }}
-        title={moves === null ? undefined : getTitle(moves)}
-        onClick={() => {
-          const fen = BrainC.getFen(log.fen, log.san);
-          window.open(`#${BrainC.hash(fen)}`);
-        }}
-      >
-        {parts[0]}
-      </td>
-      {parts.slice(1).map((movePart, i) => (
-        <td key={i}>{movePart}</td>
+    <div
+      title={moves === null ? undefined : getTitle(moves)}
+      onClick={() => {
+        const fen = BrainC.getFen(log.fen, log.san);
+        window.open(`#${BrainC.hash(fen)}`);
+      }}
+    >
+      {parts.map((movePart, i) => (
+        <div
+          key={i}
+          style={{
+            display: "inline-block",
+            fontWeight: i === 0 ? "bold" : "initial",
+          }}
+        >
+          {movePart}
+        </div>
       ))}
-    </>
+    </div>
   );
 }
 

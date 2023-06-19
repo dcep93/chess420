@@ -85,20 +85,12 @@ function SubSummary() {
   return (
     <div>
       <div className={css.responsiveHidden}>
-        <h4 style={{ textDecoration: "underline" }}>Recent Summary</h4>
-        <table>
-          <tbody style={{ whiteSpace: "nowrap" }}>
-            {Array.from(new Array(settings.SUMMARY_LEN))
-              .map((_, i) => state.logs.length - i - 1)
-              .map((index) => (
-                <SummaryMove
-                  key={index}
-                  log={state.logs[index]}
-                  length={index}
-                />
-              ))}
-          </tbody>
-        </table>
+        <h4>Recent Summary</h4>
+        {Array.from(new Array(settings.SUMMARY_LEN))
+          .map((_, i) => state.logs.length - i - 1)
+          .map((index) => (
+            <SummaryMove key={index} log={state.logs[index]} length={index} />
+          ))}
       </div>
       <div
         style={{
@@ -128,20 +120,15 @@ function SubSummary() {
 }
 
 function SummaryMove(props: { log: LogType; length: number }) {
-  if (!props.log)
-    return (
-      <tr>
-        <td>&nbsp;</td>
-      </tr>
-    );
+  if (!props.log) return null;
   const chess = BrainC.getChess(props.log.fen);
   const cell =
     chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
   return (
-    <tr>
-      <td>{cell}</td>
+    <div style={{ display: "flex" }}>
+      <div>{cell}</div>
       <GetLog log={props.log} key={JSON.stringify(props.log)} />
-    </tr>
+    </div>
   );
 }
 

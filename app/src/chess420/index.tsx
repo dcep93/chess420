@@ -7,6 +7,7 @@ import { DoOnce } from "./utils";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Board from "./Board";
 import Controls from "./Controls";
+import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
 import recorded_sha from "./recorded_sha";
@@ -56,6 +57,7 @@ function Main() {
     index: 0,
     states: [] as StateType[],
   });
+  [BrainC.showHelp, BrainC.updateShowHelp] = useState(false);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) =>
       Promise.resolve()
@@ -76,6 +78,7 @@ function Main() {
 
     BrainC.setInitialState();
   });
+  if (BrainC.showHelp) return <Help />;
   const fen = BrainC.getState()?.fen;
   if (!fen) return null;
   return <SubMain fen={fen} />;
