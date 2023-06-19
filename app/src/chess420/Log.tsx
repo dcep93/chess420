@@ -41,7 +41,7 @@ const titles = [
   {
     f: (move: LiMove, moves: LiMove[]) =>
       `t/${move.total < 10000 ? move.total : move.total.toExponential(2)}`,
-    text: "total",
+    text: "total games",
     title: "number of lichess games in this position",
     width: 5,
   },

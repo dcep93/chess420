@@ -273,6 +273,7 @@ export default class Brain {
   }
 
   static home() {
+    if (Brain.showHelp) return Brain.updateShowHelp(false);
     setTimeout(() => {
       window.location.assign("/#");
       if (Brain.view === undefined) window.location.reload();

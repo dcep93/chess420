@@ -1,6 +1,7 @@
 import Brain, { View } from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
+import { getScore } from "./getScore";
 
 export type LiMove = {
   san: string;
@@ -145,14 +146,4 @@ async function helper(url: string, attempt: number): Promise<any[]> {
   const moves = json.moves;
   StorageW.set(url, json);
   return moves;
-}
-
-function getScore(isWhite: boolean, move: LiMove): number {
-  const winRate =
-    (isWhite ? move.white : move.black) /
-    (settings.SCORE_FLUKE_DISCOUNT + move.black + move.white);
-  const rawScore = Math.atan(settings.SCORE_ATAN_FACTOR * (winRate - 0.5));
-  const powerScore = Math.pow(settings.SCORE_WIN_FACTOR, rawScore);
-  const score = powerScore * Math.pow(move.total, settings.SCORE_TOTAL_FACTOR);
-  return score;
 }
