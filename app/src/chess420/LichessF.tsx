@@ -1,7 +1,7 @@
 import Brain, { View } from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
-import { getScore } from "./getScore";
+import { getRawScore } from "./getRawScore";
 
 export type LiMove = {
   san: string;
@@ -82,7 +82,7 @@ export default function lichessF(
         }))
         .map((move: LiMove) =>
           Promise.resolve()
-            .then(() => getScore(chess.turn() === "w", move))
+            .then(() => getRawScore(chess.turn() === "w", move))
             .then((score) => ({
               ...move,
               score,

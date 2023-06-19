@@ -21,10 +21,44 @@ export default function Help() {
         "Additionally, I'll always import my latest Lichess game after finishing so that I can find out where I went wrong!",
       ],
     },
-    { title: "How is a move's score calculated?", content: ["blah"] },
-    { title: "What is a novelty?", content: ["blah"] },
-    { title: "How do I memorize with Quizlet?", content: ["blah"] },
-    { title: "Keyboard Shortcuts", content: ["blah"] },
+    {
+      title: "How is a move's score calculated?",
+      content: [
+        "chess420 gives every move a raw score based on how often it wins decisive games and how often it's played. More commonly played moves are rewarded, and very uncommon moves are severely punished.",
+        "After a raw score is calculated, we provide a final score equal to the ratio of the next-best move's raw score, with a cap at 420.",
+        "You can check out the code here!\nhttps://github.com/dcep93/chess420/blob/main/app/src/chess420/getRawScore.tsx",
+      ],
+    },
+    {
+      title: "What is a novelty?",
+      content: [
+        'chess420 computes the best move in a position based on its score. But if you prefer your own repetoire, you can manually make a move on the board, and your novelty will be remembered.\nNext time you click "best move" in that position, your novelty will be played.',
+        'If you made a mistake or change your mind, you can click "clear novelty" from a position, or click "clear storage" to remove all saved data from all positions (and cached lichess data too).',
+      ],
+    },
+    {
+      title: "How do I memorize with Quizlet?",
+      content: [
+        "Try it out!",
+        "chess420 will traverse all likely positions from both sides of the board.\nIf a position has less than 1% chance of being reached from your opponent's moves, that line will be marked as complete, and you will go to the next line.",
+        "You can click that you don't know what move to make, or you can play a move on the board.\nIf you didn't play the best move, chess420 will remember that position for you, and you'll go to a new line. Alternatively, you can also save your move as a novelty and keep going.",
+        "After going through all positions (usually takes about 15 minutes), chess420 will give you instructions to save this data to your Quizlet account.\nThen you can use Quizlet's tools to help you memorize tricky positions!",
+      ],
+    },
+    {
+      title: "Keyboard Shortcuts",
+      content: [
+        "⬆: play best move",
+        "⬇: start a new game",
+        "⬅: undo",
+        "⮕: redo",
+        "enter: go to starting position",
+        "w: play weighted move",
+        "a: toggle autoreply",
+        "h: toggle help menu",
+        "esc: home",
+      ],
+    },
   ];
   const [selected, update] = useState(0);
   return (

@@ -3,7 +3,7 @@ import Brain from "./Brain";
 import lichessF from "./LichessF";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
-import traverseF from "./TraverseF";
+import traverse from "./Traverse";
 import css from "./index.module.css";
 
 export default function Summary() {
@@ -104,7 +104,7 @@ function SubSummary() {
       {state.traverse === undefined ? null : (
         <div>
           <div
-            onClick={() => state.traverse!.states && traverseF(state.traverse!)}
+            onClick={() => state.traverse!.states && traverse(state.traverse!)}
             style={{ cursor: "pointer" }}
           >
             {state.traverse!.messages!.map((m, i) => (

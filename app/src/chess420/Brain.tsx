@@ -3,7 +3,7 @@ import lichessF, { LiMove, getLatestGame } from "./LichessF";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
-import traverseF, { TraverseType, startTraverseF } from "./TraverseF";
+import traverse, { TraverseType, startTraverseF } from "./Traverse";
 
 export type StateType = {
   fen: string;
@@ -298,7 +298,7 @@ export default class Brain {
     if (move !== null) {
       StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
-        traverseF(state.traverse, move.san);
+        traverse(state.traverse, move.san);
       } else {
         Brain.setState(Brain.genState(Brain.getState(), move.san));
       }

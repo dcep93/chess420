@@ -18,7 +18,7 @@ enum Familiarity {
   personalNew,
 }
 
-export default function traverseF(
+export default function traverse(
   t: TraverseType,
   myMoveSan?: string
 ): Promise<void> {
@@ -73,7 +73,7 @@ export default function traverseF(
             : t.progress + state.progressPoints,
         states: states.concat(moveStates),
       }))
-      .then(traverseF);
+      .then(traverse);
   if (Brain.view === View.quizlet) {
     if (myMoveSan === undefined)
       return Promise.resolve({
@@ -111,7 +111,7 @@ export default function traverseF(
     )
     .then(({ myMoveSan, myMove, bestMove }) => {
       if (bestMove === undefined)
-        return traverseF({
+        return traverse({
           ...t,
           progress: t.progress + state.progressPoints,
           states,
@@ -124,7 +124,7 @@ export default function traverseF(
         bestMove.san === myMove?.san ||
         (myMoveSan !== undefined && Brain.getNovelty(state) === myMoveSan)
       ) {
-        return traverseF({
+        return traverse({
           ...t,
           states: states.concat(Brain.genState(state, myMoveSan!)),
           results: (t.results || []).concat({
@@ -177,7 +177,7 @@ export default function traverseF(
 
 export function startTraverseF(startingState: StateType) {
   const traverseState = { odds: 1, progressPoints: 0.5, ...startingState };
-  traverseF({
+  traverse({
     originalState: startingState,
     progress: 0,
     states: [

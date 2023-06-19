@@ -68,12 +68,12 @@ function Main() {
             ({
               ArrowUp: Brain.playBest,
               ArrowDown: Brain.newGame,
-              Enter: Brain.startOver,
               ArrowLeft: Brain.undo,
               ArrowRight: Brain.redo,
+              Enter: Brain.startOver,
               KeyW: Brain.playWeighted,
-              KeyH: Brain.help,
               KeyA: Brain.toggleAutoreply,
+              KeyH: Brain.help,
               Escape: Brain.home,
             }[e.code])
         )
