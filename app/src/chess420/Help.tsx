@@ -5,11 +5,10 @@ export default function Help() {
     <div
       onClick={() => BrainC.updateShowHelp(false)}
       style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        overflow: "scroll",
-        zIndex: 1,
+        backgroundColor: "#212529",
+        color: "#f8f9fa",
+        height: "100vH",
+        width: "100vW",
         padding: "2em",
         cursor: "pointer",
       }}
