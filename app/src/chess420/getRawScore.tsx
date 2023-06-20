@@ -1,4 +1,4 @@
-import { LiMove } from "./lichess";
+import { LiMove } from "./Lichess";
 import settings from "./Settings";
 
 // the final score is the ratio compared to other moves' rawScore

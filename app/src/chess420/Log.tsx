@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Brain from "./Brain";
-import lichess, { LiMove } from "./lichess";
+import lichess, { LiMove } from "./Lichess";
 
 export type LogType = {
   fen: string;
