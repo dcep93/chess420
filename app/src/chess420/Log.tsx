@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Brain from "./Brain";
-import lichessF, { LiMove } from "./LichessF";
+import lichess, { LiMove } from "./Lichess";
 
 export type LogType = {
   fen: string;
@@ -115,7 +115,7 @@ export function GetLog(props: { log: LogType | null }) {
       </div>
     );
   if (moves === null) {
-    lichessF(log.fen).then((moves) => update(moves));
+    lichess(log.fen).then((moves) => update(moves));
   }
   const parts = getParts(log.san, moves || []);
   return (

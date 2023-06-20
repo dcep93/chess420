@@ -1,5 +1,5 @@
 import Brain, { StateType, View } from "./Brain";
-import lichessF from "./LichessF";
+import lichess from "./Lichess";
 import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number; progressPoints: number };
@@ -32,7 +32,7 @@ export default function traverse(
       })
     );
   if (!Brain.isMyTurn(state.fen))
-    return lichessF(state.fen)
+    return lichess(state.fen)
       .then((moves) => ({
         moves,
         total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -92,7 +92,7 @@ export default function traverse(
   return (
     Brain.view === View.quizlet
       ? Promise.resolve(myMoveSan)
-      : lichessF(state.fen)
+      : lichess(state.fen)
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -103,7 +103,7 @@ export default function traverse(
           )
   )
     .then((myMoveSan) =>
-      lichessF(state.fen, { ignoreUsername: true }).then((moves) => ({
+      lichess(state.fen, { ignoreUsername: true }).then((moves) => ({
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
         bestMove: moves.sort((a, b) => b.score - a.score)[0],

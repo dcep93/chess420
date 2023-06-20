@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Brain from "./Brain";
-import lichessF from "./LichessF";
+import lichess from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
 import traverse from "./Traverse";
@@ -40,7 +40,7 @@ function SubSummary() {
         state.logs
           .filter((log) => !Brain.isMyTurn(log.fen))
           .map((log) =>
-            lichessF(log.fen).then(
+            lichess(log.fen).then(
               (moves) =>
                 (moves.find((move) => move.san === log.san)?.total || 0) /
                 moves.map((move) => move.total).reduce((a, b) => a + b, 0)

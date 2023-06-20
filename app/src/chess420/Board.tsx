@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
 import Brain from "./Brain";
-import lichessF from "./LichessF";
+import lichess from "./Lichess";
 
 export default function Board() {
   return (
@@ -45,7 +45,7 @@ function SubBoard() {
   const [isUncommon, updateIsUncommon] = useState(false);
   const state = Brain.getState();
   useEffect(() => {
-    lichessF(state.fen)
+    lichess(state.fen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )

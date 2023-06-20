@@ -1,5 +1,5 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import lichessF, { LiMove, getLatestGame } from "./LichessF";
+import lichess, { LiMove, getLatestGame } from "./Lichess";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -183,7 +183,7 @@ export default class Brain {
   }
 
   static playWeighted() {
-    lichessF(Brain.getState().fen, { prepareNext: true })
+    lichess(Brain.getState().fen, { prepareNext: true })
       .then((moves) => {
         const weights = moves.map((move: LiMove) =>
           Math.pow(move.total, settings.WEIGHTED_POWER)
@@ -205,7 +205,7 @@ export default class Brain {
         return Brain.playMove(novelty);
       }
     }
-    lichessF(Brain.getState().fen, { prepareNext: true })
+    lichess(Brain.getState().fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
       .then((san) => Brain.playMove(san));
