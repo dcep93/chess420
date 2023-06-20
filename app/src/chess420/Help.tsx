@@ -18,6 +18,7 @@ export default function Help() {
         'You can always make a move on the board or click "play best". If you manually play a move, chess420 will remember this as a novelty, whether or not it\'s the best move in a position.\nThen, chess420 will report statistics about your move and automatically play a weighted move for the opponent, preferring to play more common moves.',
         "Personally, I like to idly click \"play best\" over and over again to watch a game play out, and I'll quiz myself in my head along the way.\nIf the best move is different to what I would have played, I'll either undo and manually play my preferred move as a novelty, or I'll look into that opening - perhaps I want to make a change to my repetoire!\nRecently this introduced me to the Benko Gambit as black, which performs quite well!",
         "Additionally, I'll always import my latest Lichess game after finishing so that I can find out where I went wrong!",
+        "By the way, you can also play out a game to get to a position you want to practice (perhaps with turning off auto reply). Then refresh the page and watch the best moves repeatedly and press enter to start over against different opponent variations. It's a good way to drill a particular opening.",
       ],
     },
     {
@@ -51,7 +52,7 @@ export default function Help() {
         "⬇: start a new game",
         "⬅: undo",
         "⮕: redo",
-        "enter: go to starting position",
+        "enter: go to original position",
         "w: play weighted move",
         "a: toggle autoreply",
         "h: toggle help menu",

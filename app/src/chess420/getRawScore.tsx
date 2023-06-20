@@ -4,7 +4,7 @@ import settings from "./Settings";
 // the final score is the ratio compared to other moves' rawScore
 export function getRawScore(isWhite: boolean, move: LiMove): number {
   // ignore draws
-  // SCORE_FLUKE_DISCOUNT = 10 discounts positions
+  // SCORE_FLUKE_DISCOUNT = 100 discounts positions
   // that are very rare
   const winRate =
     (isWhite ? move.white : move.black) /
