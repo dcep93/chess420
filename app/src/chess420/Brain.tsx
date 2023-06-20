@@ -1,9 +1,9 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import lichess, { LiMove, getLatestGame } from "./Lichess";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import traverse, { TraverseType, startTraverseF } from "./Traverse";
+import lichess, { LiMove, getLatestGame } from "./lichess";
 
 export type StateType = {
   fen: string;

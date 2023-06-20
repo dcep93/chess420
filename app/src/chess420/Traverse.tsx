@@ -1,5 +1,5 @@
 import Brain, { StateType, View } from "./Brain";
-import lichess from "./Lichess";
+import lichess from "./lichess";
 import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number; progressPoints: number };

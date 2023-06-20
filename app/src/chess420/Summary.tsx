@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Brain from "./Brain";
-import lichess from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
 import traverse from "./Traverse";
 import css from "./index.module.css";
+import lichess from "./lichess";
 
 export default function Summary() {
   return (

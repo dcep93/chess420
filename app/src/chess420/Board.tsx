@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
 import Brain from "./Brain";
-import lichess from "./Lichess";
+import lichess from "./lichess";
 
 export default function Board() {
   return (
