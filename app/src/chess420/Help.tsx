@@ -3,7 +3,6 @@ import Brain from "./Brain";
 
 export default function Help() {
   const topics = [
-    // TODO chatgpt
     {
       title: "What is chess420?",
       content: [
