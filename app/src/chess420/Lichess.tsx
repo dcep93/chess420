@@ -3,6 +3,8 @@ import settings from "./Settings";
 import StorageW from "./StorageW";
 import { getRawScore } from "./getRawScore";
 
+alert("x");
+
 export type LiMove = {
   san: string;
   white: number;
