@@ -70,18 +70,26 @@ export default function Help() {
         width: "100vW",
         padding: "2em",
         whiteSpace: "pre-wrap",
+        overflow: "scroll",
       }}
     >
       <div>
-        <h1>welcome to chess420</h1>
+        <h1>welcome to chess420 - help page</h1>
         <button onClick={() => Brain.updateShowHelp(false)}>
           close help screen
         </button>
+        <div style={{ height: "3em" }}></div>
       </div>
       {topics.map((topic, i) => (
         <div key={i}>
           <div
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              backgroundColor: "black",
+              margin: "1em",
+              padding: "1em",
+              borderRadius: "1em",
+            }}
             onClick={() => update(selected === i ? -1 : i)}
           >
             {topic.title}
@@ -89,7 +97,9 @@ export default function Help() {
           {selected !== i ? null : (
             <div>
               {topic.content.map((text, j) => (
-                <p key={j}>{text}</p>
+                <p key={j} style={{ paddingLeft: "5em", maxWidth: "60em" }}>
+                  {text}
+                </p>
               ))}
             </div>
           )}
