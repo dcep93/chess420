@@ -45,20 +45,24 @@ export function getLatestGame(username: string) {
 
 export default function lichess(
   fen: string,
-  options: OptionsType = {}
+  _options: OptionsType = {}
 ): Promise<LiMove[]> {
-  const prepareNext = options.prepareNext || false;
-  const attempt = options.attempt || 0;
-  const ignoreUsername = options.ignoreUsername || false;
-  const orientationIsWhite = options.orientationIsWhite || undefined;
+  const options = Object.assign(
+    {
+      prepareNext: false,
+      attempt: 0,
+      ignoreUsername: false,
+      orientationIsWhite: undefined,
+    },
+    _options
+  );
 
   const username =
-    ignoreUsername ||
-    Brain.isMyTurn(fen, orientationIsWhite) !==
+    options.ignoreUsername ||
+    Brain.isMyTurn(fen, options.orientationIsWhite) !==
       (Brain.view === View.lichess_mistakes)
       ? undefined
       : Brain.lichessUsername;
-
   const chess = Brain.getChess(fen);
   const url =
     username === undefined
@@ -75,7 +79,7 @@ export default function lichess(
   if (pp) {
     return pp;
   }
-  const p = helper(url, attempt)
+  const p = helper(url, options.attempt)
     .then((moves) =>
       moves
         .map((move: LiMove) => ({
@@ -108,7 +112,7 @@ export default function lichess(
       const total = moves
         .map((move: LiMove) => move.total)
         .reduce((a: number, b: number) => a + b, 0);
-      if (prepareNext)
+      if (options.prepareNext)
         setTimeout(() =>
           moves
             .filter(
@@ -120,7 +124,7 @@ export default function lichess(
               lichess(subFen, {
                 ...options,
                 prepareNext: false,
-                attempt: attempt + 1,
+                attempt: options.attempt + 1,
               });
             })
         );

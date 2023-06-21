@@ -78,10 +78,7 @@ export default function traverse(
     if (myMoveSan === undefined)
       return Promise.resolve({
         ...t,
-        messages: [
-          `progress: ${(t.progress * 100).toFixed(2)}%`,
-          `seen: ${(state.odds * 100).toFixed(2)}%`,
-        ],
+        messages: [`progress: ${(t.progress * 100).toFixed(2)}%`],
       }).then((traverse) =>
         Brain.setState({
           ...state,
@@ -152,7 +149,6 @@ export default function traverse(
           ...t,
           messages: [
             `progress: ${(t.progress * 100).toFixed(2)}%`,
-            `seen: ${(state.odds * 100).toFixed(2)}%`,
             `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
             myMoveSan === undefined
               ? "you don't have a most common move"
