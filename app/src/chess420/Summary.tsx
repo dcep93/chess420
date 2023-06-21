@@ -112,7 +112,7 @@ function SubSummary() {
             ))}
           </div>
           <div>{(state.traverse!.results || []).length} positions visited</div>
-          <textarea readOnly>TODO export to quizlet</textarea>
+          <textarea readOnly value={"TODO export to quizlet"} />
         </div>
       )}
     </div>

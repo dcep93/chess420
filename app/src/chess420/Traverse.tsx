@@ -31,8 +31,8 @@ export default function traverse(
         traverse: { ...t, states: undefined },
       })
     );
-  if (!Brain.isMyTurn(state.fen))
-    return lichess(state.fen)
+  if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
+    return lichess(state.fen, { orientationIsWhite: state.orientationIsWhite })
       .then((moves) => ({
         moves,
         total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -92,7 +92,7 @@ export default function traverse(
   return (
     Brain.view === View.quizlet
       ? Promise.resolve(myMoveSan)
-      : lichess(state.fen)
+      : lichess(state.fen, { orientationIsWhite: state.orientationIsWhite })
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),

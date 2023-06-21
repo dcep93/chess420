@@ -20,6 +20,7 @@ type OptionsType = {
   ignoreUsername?: boolean;
   prepareNext?: boolean;
   attempt?: number;
+  orientationIsWhite?: boolean;
 };
 
 export function getLatestGame(username: string) {
@@ -49,10 +50,12 @@ export default function lichess(
   const prepareNext = options.prepareNext || false;
   const attempt = options.attempt || 0;
   const ignoreUsername = options.ignoreUsername || false;
+  const orientationIsWhite = options.orientationIsWhite || undefined;
 
   const username =
     ignoreUsername ||
-    Brain.isMyTurn(fen) !== (Brain.view === View.lichess_mistakes)
+    Brain.isMyTurn(fen, orientationIsWhite) !==
+      (Brain.view === View.lichess_mistakes)
       ? undefined
       : Brain.lichessUsername;
 

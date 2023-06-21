@@ -213,7 +213,7 @@ export default class Brain {
 
   static getNovelty(state?: StateType): string | null {
     if (!state) state = Brain.getState();
-    return StorageW.get(Brain.getState().fen);
+    return StorageW.get(state.fen);
   }
 
   static clearNovelty() {
