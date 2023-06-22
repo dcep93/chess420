@@ -10,3 +10,8 @@ export function DoOnce(key: string, f: () => void) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
+
+export function log<T>(t: T): T {
+  console.log(t);
+  return t;
+}

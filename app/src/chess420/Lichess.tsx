@@ -33,7 +33,7 @@ export function getLatestGame(username: string) {
             .trim()
             .split("\n")
             .pop()!
-            .matchAll(/\. (\w+) /g)
+            .matchAll(/\. (.+?) /g)
         )
         .then((matches) => Array.from(matches).map((match) => match[1]))
         .then((sans) => ({
