@@ -69,7 +69,7 @@ export default class Brain {
       const parts = hash.split("//");
       if (parts.length === 2) {
         orientationIsWhite = parts[0] === "w";
-        fen = Brain.getFen(parts[1].replaceAll("_", " "));
+        fen = Brain.getFen(decodeURI(parts[1]).replaceAll("_", " "));
       }
     }
     return {
