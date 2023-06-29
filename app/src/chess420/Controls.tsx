@@ -84,6 +84,9 @@ export default function Controls() {
                 <div>
                   <span>lichess username: </span>
                   <input
+                    defaultValue={
+                      localStorage.getItem("lichess_username") || undefined
+                    }
                     ref={lichessRef}
                     style={{ width: "4em" }}
                     onKeyDown={(e) => e.stopPropagation()}

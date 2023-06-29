@@ -249,6 +249,8 @@ export default class Brain {
   static importLatestGame(username: string) {
     if (!username) return alert("no username provided");
 
+    localStorage.setItem("lichess_username", username);
+
     getLatestGame(username)
       .then(({ sans, orientationIsWhite }) => {
         const chess = Brain.getChess();
@@ -296,10 +298,10 @@ export default class Brain {
     const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      StorageW.set(state.fen, move.san);
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverse(state.traverse, move.san);
       } else {
+        StorageW.set(state.fen, move.san);
         Brain.setState(Brain.genState(Brain.getState(), move.san));
       }
       return true;

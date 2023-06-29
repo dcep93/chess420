@@ -28,6 +28,7 @@ export default function traverse(
     return Promise.resolve().then(() =>
       Brain.setState({
         ...t.originalState,
+        // TODO results summary
         traverse: { ...t, states: undefined },
       })
     );
