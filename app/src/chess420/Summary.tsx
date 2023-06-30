@@ -120,22 +120,28 @@ function SubSummary() {
           {state.traverse!.messages!.map((m, i) => (
             <div key={i}>{m}</div>
           ))}
-          {!state.traverse!.states ? null : (
-            <div>
-              <button onClick={() => traverse(state.traverse!)}>
-                continue
-              </button>
-            </div>
-          )}
-          {state.traverse!.assignNovelty === undefined ? null : (
-            <div>
-              <button onClick={state.traverse!.assignNovelty}>
-                assign novelty
-              </button>
-            </div>
-          )}
-          {Brain.view !== View.quizlet ? null : (
-            <textarea readOnly value={"TODO export to quizlet"} />
+          {Brain.isTraversing ? (
+            <div>traversing...</div>
+          ) : (
+            <>
+              {!state.traverse!.states ? null : (
+                <div>
+                  <button onClick={() => traverse(state.traverse!)}>
+                    continue
+                  </button>
+                </div>
+              )}
+              {state.traverse!.assignNovelty === undefined ? null : (
+                <div>
+                  <button onClick={state.traverse!.assignNovelty}>
+                    assign novelty
+                  </button>
+                </div>
+              )}
+              {Brain.view !== View.quizlet ? null : (
+                <textarea readOnly value={"TODO export to quizlet"} />
+              )}
+            </>
           )}
         </div>
       )}

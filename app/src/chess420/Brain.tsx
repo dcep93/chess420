@@ -29,6 +29,8 @@ export default class Brain {
   static updateHistory: (history: History) => void;
   static showHelp: boolean;
   static updateShowHelp: (showHelp: boolean) => void;
+  static isTraversing: boolean;
+  static updateIsTraversing: (isTraversing: boolean) => void;
 
   static timeout: NodeJS.Timeout;
 
@@ -108,6 +110,7 @@ export default class Brain {
   }
 
   static setState(state: StateType) {
+    Brain.updateIsTraversing(false);
     clearTimeout(Brain.timeout);
     const states = [state].concat(
       Brain.history.states.slice(Brain.history.index)

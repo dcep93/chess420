@@ -60,6 +60,7 @@ function Main() {
     states: [] as StateType[],
   });
   [Brain.showHelp, Brain.updateShowHelp] = useState(false);
+  [Brain.isTraversing, Brain.updateIsTraversing] = useState(false);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) =>
       Promise.resolve()

@@ -23,6 +23,7 @@ export default function traverse(
   traverseT: TraverseType,
   traverseMyMoveSan?: string
 ): Promise<void> {
+  Brain.updateIsTraversing(true);
   const states = traverseT.states!.slice();
   const state = states.pop()!;
   if (!state)
