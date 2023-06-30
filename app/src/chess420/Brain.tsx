@@ -299,6 +299,10 @@ export default class Brain {
     Brain.autoreplyRef.current!.checked = !Brain.autoreplyRef.current!.checked;
   }
 
+  static setNovelty(fen: string, san: string) {
+    StorageW.set(fen, san);
+  }
+
   // board
   static moveFromTo(from: string, to: string) {
     const state = Brain.getState();
@@ -308,7 +312,7 @@ export default class Brain {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverse(state.traverse, move.san);
       } else {
-        StorageW.set(state.fen, move.san);
+        Brain.setNovelty(state.fen, move.san);
         Brain.setState(Brain.genState(Brain.getState(), move.san));
       }
       return true;

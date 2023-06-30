@@ -127,6 +127,11 @@ function SubSummary() {
               <div key={i}>{m}</div>
             ))}
           </div>
+          {state.traverse!.assignNovelty === undefined ? null : (
+            <button onClick={state.traverse!.assignNovelty}>
+              assign novelty
+            </button>
+          )}
           {Brain.view !== View.quizlet ? null : (
             <textarea readOnly value={"TODO export to quizlet"} />
           )}

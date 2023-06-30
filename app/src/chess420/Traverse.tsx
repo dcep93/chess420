@@ -9,6 +9,7 @@ export type TraverseType = {
   progress: number;
   states: TraverseState[] | undefined;
   messages?: string[];
+  assignNovelty?: () => void;
 };
 enum Familiarity {
   globalNew,
@@ -154,6 +155,13 @@ export default function traverse(
               ? `you ${verb} ${myMoveSan} which isn't popular`
               : `you ${verb} ${myMove.san} s/${myMove.score.toFixed(2)}`,
           ],
+          assignNovelty:
+            myMoveSan === undefined
+              ? undefined
+              : () =>
+                  Promise.resolve()
+                    .then(() => Brain.setNovelty(state.fen, myMoveSan))
+                    .then(() => traverse(t, myMoveSan)),
           states,
           results: (t.results || []).concat({
             ...state,
