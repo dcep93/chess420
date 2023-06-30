@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Brain from "./Brain";
+import Brain, { View } from "./Brain";
 import lichess, { LiMove } from "./Lichess";
 
 export type LogType = {
@@ -115,7 +115,13 @@ export function GetLog(props: { log: LogType | null }) {
       </div>
     );
   if (moves === null) {
-    lichess(log.fen).then((moves) => update(moves));
+    lichess(log.fen, {
+      username:
+        (Brain.isMyTurn(log.fen) && Brain.view === View.lichess_mistakes) ||
+        (!Brain.isMyTurn(log.fen) && Brain.view === View.lichess_vs)
+          ? Brain.lichessUsername
+          : undefined,
+    }).then((moves) => update(moves));
   }
   const parts = getParts(log.san, moves || []);
   return (

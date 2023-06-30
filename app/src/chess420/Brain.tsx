@@ -18,7 +18,7 @@ type History = {
 };
 
 export enum View {
-  lichess,
+  lichess_vs,
   lichess_mistakes,
   quizlet,
 }
@@ -183,7 +183,14 @@ export default class Brain {
   }
 
   static playWeighted() {
-    lichess(Brain.getState().fen, { prepareNext: true })
+    const fen = Brain.getState().fen;
+    lichess(fen, {
+      username:
+        Brain.isMyTurn(fen) || Brain.view !== View.lichess_vs
+          ? undefined
+          : Brain.lichessUsername,
+      prepareNext: true,
+    })
       .then((moves) => {
         const weights = moves.map((move: LiMove) =>
           Math.pow(move.total, settings.WEIGHTED_POWER)

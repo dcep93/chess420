@@ -32,7 +32,7 @@ export default function traverse(
       })
     );
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
-    return lichess(state.fen, { orientationIsWhite: state.orientationIsWhite })
+    return lichess(state.fen)
       .then((moves) => ({
         moves,
         total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -88,7 +88,7 @@ export default function traverse(
   return (
     Brain.view === View.quizlet
       ? Promise.resolve(myMoveSan)
-      : lichess(state.fen, { orientationIsWhite: state.orientationIsWhite })
+      : lichess(state.fen, { username: Brain.lichessUsername })
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -99,7 +99,7 @@ export default function traverse(
           )
   )
     .then((myMoveSan) =>
-      lichess(state.fen, { ignoreUsername: true }).then((moves) => ({
+      lichess(state.fen).then((moves) => ({
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
         bestMove: moves.sort((a, b) => b.score - a.score)[0],

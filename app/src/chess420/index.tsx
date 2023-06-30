@@ -24,7 +24,7 @@ export default function App() {
         alert("invalid path");
         return null;
       } else {
-        Brain.view = View.lichess;
+        Brain.view = View.lichess_vs;
       }
       const username = pathParts[2];
       if (username === "") {

@@ -1,4 +1,4 @@
-import Brain, { View } from "./Brain";
+import Brain from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import { getRawScore } from "./getRawScore";
@@ -17,10 +17,9 @@ export type LiMove = {
 
 const promises: { [key: string]: Promise<LiMove[]> } = {};
 type OptionsType = {
-  ignoreUsername?: boolean;
   prepareNext?: boolean;
   attempt?: number;
-  orientationIsWhite?: boolean;
+  username?: string;
 };
 
 export function getLatestGame(username: string) {
@@ -51,25 +50,18 @@ export default function lichess(
     {
       prepareNext: false,
       attempt: 0,
-      ignoreUsername: false,
-      orientationIsWhite: undefined,
+      username: undefined,
     },
     _options
   );
 
-  const username =
-    options.ignoreUsername ||
-    Brain.isMyTurn(fen, options.orientationIsWhite) !==
-      (Brain.view === View.lichess_mistakes)
-      ? undefined
-      : Brain.lichessUsername;
   const chess = Brain.getChess(fen);
   const url =
-    username === undefined
+    options.username === undefined
       ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&${
           settings.LICHESS_PARAMS
         }`
-      : `https://explorer.lichess.ovh/player?player=${username}&color=${
+      : `https://explorer.lichess.ovh/player?player=${options.username}&color=${
           chess.turn() === "w" ? "white" : "black"
         }&recentGames=0&fen=${chess.fen()}&&${settings.LICHESS_PARAMS}`;
   const key = JSON.stringify({

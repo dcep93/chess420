@@ -121,7 +121,7 @@ export default function Controls() {
                 <button onClick={Brain.home}>home</button>
               </div>
               <div>
-                {Brain.view === View.lichess ? (
+                {Brain.view === View.lichess_vs ? (
                   <span>playing vs {Brain.lichessUsername}</span>
                 ) : Brain.view === View.lichess_mistakes ? (
                   <span>finding mistakes of {Brain.lichessUsername}</span>
