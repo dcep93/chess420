@@ -126,7 +126,7 @@ export default function Controls() {
                 ) : Brain.view === View.lichess_mistakes ? (
                   <span>finding mistakes of {Brain.lichessUsername}</span>
                 ) : Brain.view === View.quizlet ? (
-                  <span>building Quizlet data TODO progress</span>
+                  <span>building Quizlet data</span>
                 ) : null}
               </div>
             </>

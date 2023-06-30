@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Brain from "./Brain";
+import Brain, { View } from "./Brain";
 import lichess from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
@@ -102,17 +102,29 @@ function SubSummary() {
         <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
       </div>
       {state.traverse === undefined ? null : (
-        <div>
+        <div
+          style={{
+            marginTop: "1em",
+            padding: "0.5em",
+            backgroundColor: "rgba(255, 255, 256, 0.2)",
+            borderRadius: "1em",
+          }}
+        >
           <div
             onClick={() => state.traverse!.states && traverse(state.traverse!)}
             style={{ cursor: "pointer" }}
           >
+            <div>
+              {(state.traverse!.results || []).length} positions visited
+            </div>
+            <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
             {state.traverse!.messages!.map((m, i) => (
               <div key={i}>{m}</div>
             ))}
           </div>
-          <div>{(state.traverse!.results || []).length} positions visited</div>
-          <textarea readOnly value={"TODO export to quizlet"} />
+          {Brain.view !== View.quizlet ? null : (
+            <textarea readOnly value={"TODO export to quizlet"} />
+          )}
         </div>
       )}
     </div>

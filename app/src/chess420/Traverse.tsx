@@ -4,11 +4,11 @@ import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number; progressPoints: number };
 export type TraverseType = {
+  results: (TraverseState & { familiarity: Familiarity })[];
   originalState: StateType;
   progress: number;
   states: TraverseState[] | undefined;
   messages?: string[];
-  results?: (TraverseState & { familiarity: Familiarity })[];
 };
 enum Familiarity {
   globalNew,
@@ -28,7 +28,6 @@ export default function traverse(
     return Promise.resolve().then(() =>
       Brain.setState({
         ...t.originalState,
-        // TODO results summary
         traverse: { ...t, states: undefined },
       })
     );
@@ -79,7 +78,6 @@ export default function traverse(
     if (myMoveSan === undefined)
       return Promise.resolve({
         ...t,
-        messages: [`progress: ${(t.progress * 100).toFixed(2)}%`],
       }).then((traverse) =>
         Brain.setState({
           ...state,
@@ -149,7 +147,6 @@ export default function traverse(
         .then((t) => ({
           ...t,
           messages: [
-            `progress: ${(t.progress * 100).toFixed(2)}%`,
             `the best move is ${bestMove.san} s/${bestMove.score.toFixed(2)}`,
             myMoveSan === undefined
               ? "you don't have a most common move"
@@ -165,7 +162,7 @@ export default function traverse(
         }))
         .then((traverse) =>
           Brain.setState({
-            ...Brain.genState(state, bestMove.san),
+            ...state,
             traverse,
           })
         );
@@ -173,8 +170,13 @@ export default function traverse(
 }
 
 export function startTraverseF(startingState: StateType) {
-  const traverseState = { odds: 1, progressPoints: 0.5, ...startingState };
+  const traverseState = {
+    odds: 1,
+    progressPoints: 0.5,
+    ...startingState,
+  };
   traverse({
+    results: [],
     originalState: startingState,
     progress: 0,
     states: [
