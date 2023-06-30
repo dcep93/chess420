@@ -104,7 +104,9 @@ function SubSummary() {
         }}
       >
         <div>{(odds * 100).toFixed(2)}%</div>
-        <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
+        <div style={{ height: "4em" }}>
+          {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
+        </div>
       </div>
       {state.traverse === undefined ? null : (
         <div
