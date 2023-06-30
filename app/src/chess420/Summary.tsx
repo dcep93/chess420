@@ -115,22 +115,24 @@ function SubSummary() {
             borderRadius: "1em",
           }}
         >
-          <div
-            onClick={() => state.traverse!.states && traverse(state.traverse!)}
-            style={{ cursor: "pointer" }}
-          >
+          <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
+          <div>positions visited: {(state.traverse!.results || []).length}</div>
+          {state.traverse!.messages!.map((m, i) => (
+            <div key={i}>{m}</div>
+          ))}
+          {!state.traverse!.states ? null : (
             <div>
-              {(state.traverse!.results || []).length} positions visited
+              <button onClick={() => traverse(state.traverse!)}>
+                continue
+              </button>
             </div>
-            <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
-            {state.traverse!.messages!.map((m, i) => (
-              <div key={i}>{m}</div>
-            ))}
-          </div>
+          )}
           {state.traverse!.assignNovelty === undefined ? null : (
-            <button onClick={state.traverse!.assignNovelty}>
-              assign novelty
-            </button>
+            <div>
+              <button onClick={state.traverse!.assignNovelty}>
+                assign novelty
+              </button>
+            </div>
           )}
           {Brain.view !== View.quizlet ? null : (
             <textarea readOnly value={"TODO export to quizlet"} />
