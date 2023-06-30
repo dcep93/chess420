@@ -301,6 +301,13 @@ export default class Brain {
 
   static setNovelty(fen: string, san: string) {
     StorageW.set(fen, san);
+    return new Promise<void>((resolve) => {
+      function helper() {
+        if (StorageW.get(fen) === san) return resolve();
+        setTimeout(helper, 100);
+      }
+      helper();
+    });
   }
 
   // board
@@ -312,8 +319,11 @@ export default class Brain {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverse(state.traverse, move.san);
       } else {
-        Brain.setNovelty(state.fen, move.san);
-        Brain.setState(Brain.genState(Brain.getState(), move.san));
+        Promise.resolve()
+          .then(() => Brain.setNovelty(state.fen, move.san))
+          .then(() =>
+            Brain.setState(Brain.genState(Brain.getState(), move.san))
+          );
       }
       return true;
     } else {

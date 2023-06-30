@@ -161,7 +161,7 @@ export default function traverse(
               : () =>
                   Promise.resolve()
                     .then(() => Brain.setNovelty(state.fen, myMoveSan))
-                    .then(() => traverse(traverseT)),
+                    .then(() => traverse(traverseT, traverseMyMoveSan)),
           states,
           results: (t.results || []).concat({
             ...state,
