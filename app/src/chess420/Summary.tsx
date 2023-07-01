@@ -87,7 +87,13 @@ function SubSummary() {
     return null;
   }
   const opening = openings[normalizeFen(state.fen)];
-  if (opening && lastOpening !== opening) updateLastOpening(opening);
+  if (opening && lastOpening !== opening) {
+    updateLastOpening(opening);
+  } else if (!opening && state.traverse) {
+    // @ts-ignore
+    const stateLastOpening: string = state.opening;
+    if (stateLastOpening !== lastOpening) updateLastOpening(stateLastOpening);
+  }
   return (
     <div>
       <div className={css.responsiveHidden}>

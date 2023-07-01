@@ -202,14 +202,13 @@ export default function traverseF(
 }
 
 function getOpening(fen: string): string | undefined {
-  // TODO
   return undefined;
 }
 
 export function startTraverseF(startingState: StateType) {
   const traverseState = {
     odds: 1,
-    opening: getOpening(startingState.fen) || "* unknown opening",
+    opening: getOpening(startingState.fen) || "TODO unknown opening",
     movePairs:
       Brain.getChess(startingState.fen).turn() === "w" ? [] : [["..."]],
     progressPoints: 0.5,
