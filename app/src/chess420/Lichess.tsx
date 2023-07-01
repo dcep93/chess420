@@ -42,7 +42,7 @@ export function getLatestGame(username: string) {
     );
 }
 
-export default function lichess(
+export default function lichessF(
   fen: string,
   _options: OptionsType = {}
 ): Promise<LiMove[]> {
@@ -113,7 +113,7 @@ export default function lichess(
             )
             .forEach((move: LiMove) => {
               const subFen = Brain.getFen(fen, move.san);
-              lichess(subFen, {
+              lichessF(subFen, {
                 ...options,
                 prepareNext: false,
                 attempt: options.attempt + 1,

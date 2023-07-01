@@ -1,5 +1,5 @@
 import Brain, { StateType, View } from "./Brain";
-import lichess from "./Lichess";
+import lichessF from "./Lichess";
 import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number; progressPoints: number };
@@ -19,7 +19,7 @@ enum Familiarity {
   personalNew,
 }
 
-export default function traverse(
+export default function traverseF(
   traverseT: TraverseType,
   traverseMyMoveSan?: string
 ): Promise<void> {
@@ -34,7 +34,7 @@ export default function traverse(
       })
     );
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
-    return lichess(state.fen)
+    return lichessF(state.fen)
       .then((moves) => ({
         moves,
         total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -75,7 +75,7 @@ export default function traverse(
             : traverseT.progress + state.progressPoints,
         states: states.concat(moveStates),
       }))
-      .then(traverse);
+      .then(traverseF);
   if (Brain.view === View.quizlet) {
     if (traverseMyMoveSan === undefined)
       return Promise.resolve({
@@ -90,7 +90,7 @@ export default function traverse(
   return (
     Brain.view === View.quizlet
       ? Promise.resolve(traverseMyMoveSan)
-      : lichess(state.fen, { username: Brain.lichessUsername })
+      : lichessF(state.fen, { username: Brain.lichessUsername })
           .then((moves) => ({
             moves,
             total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
@@ -101,7 +101,7 @@ export default function traverse(
           )
   )
     .then((myMoveSan) =>
-      lichess(state.fen).then((moves) => ({
+      lichessF(state.fen).then((moves) => ({
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
         bestMove: moves.sort((a, b) => b.score - a.score)[0],
@@ -109,7 +109,7 @@ export default function traverse(
     )
     .then(({ myMoveSan, myMove, bestMove }) => {
       if (bestMove === undefined)
-        return traverse({
+        return traverseF({
           ...traverseT,
           progress: traverseT.progress + state.progressPoints,
           states,
@@ -122,7 +122,7 @@ export default function traverse(
         bestMove.san === myMove?.san ||
         (myMoveSan !== undefined && Brain.getNovelty(state) === myMoveSan)
       ) {
-        return traverse({
+        return traverseF({
           ...traverseT,
           states: states.concat(Brain.genState(state, myMoveSan!)),
           results: (traverseT.results || []).concat({
@@ -162,7 +162,7 @@ export default function traverse(
               : () =>
                   Promise.resolve()
                     .then(() => Brain.setNovelty(state.fen, myMoveSan))
-                    .then(() => traverse(traverseT, traverseMyMoveSan)),
+                    .then(() => traverseF(traverseT, traverseMyMoveSan)),
           states,
           results: (t.results || []).concat({
             ...state,
@@ -184,7 +184,7 @@ export function startTraverseF(startingState: StateType) {
     progressPoints: 0.5,
     ...startingState,
   };
-  traverse({
+  traverseF({
     results: [],
     originalState: startingState,
     progress: 0,

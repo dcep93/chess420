@@ -1,9 +1,9 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import lichess, { LiMove, getLatestGame } from "./Lichess";
+import lichessF, { LiMove, getLatestGame } from "./Lichess";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
-import traverse, { TraverseType, startTraverseF } from "./Traverse";
+import traverseF, { TraverseType, startTraverseF } from "./Traverse";
 
 export type StateType = {
   fen: string;
@@ -187,7 +187,7 @@ export default class Brain {
 
   static playWeighted() {
     const fen = Brain.getState().fen;
-    lichess(fen, {
+    lichessF(fen, {
       username:
         Brain.isMyTurn(fen) || Brain.view !== View.lichess_vs
           ? undefined
@@ -215,7 +215,7 @@ export default class Brain {
         return Brain.playMove(novelty);
       }
     }
-    lichess(Brain.getState().fen, { prepareNext: true })
+    lichessF(Brain.getState().fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san)
       .then((san) => Brain.playMove(san));
@@ -320,7 +320,7 @@ export default class Brain {
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
-        traverse(state.traverse, move.san);
+        traverseF(state.traverse, move.san);
       } else {
         Promise.resolve()
           .then(() => Brain.setNovelty(state.fen, move.san))

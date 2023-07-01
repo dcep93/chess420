@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Brain, { View } from "./Brain";
-import lichess from "./Lichess";
+import lichessF from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
-import traverse from "./Traverse";
+import traverseF from "./Traverse";
 import css from "./index.module.css";
 
 export default function Summary() {
@@ -40,7 +40,7 @@ function SubSummary() {
         state.logs
           .filter((log) => !Brain.isMyTurn(log.fen))
           .map((log) =>
-            lichess(log.fen, {
+            lichessF(log.fen, {
               username:
                 !Brain.isMyTurn(log.fen) && Brain.view === View.lichess_vs
                   ? Brain.lichessUsername
@@ -128,7 +128,7 @@ function SubSummary() {
             <>
               {!state.traverse!.states ? null : (
                 <div>
-                  <button onClick={() => traverse(state.traverse!)}>
+                  <button onClick={() => traverseF(state.traverse!)}>
                     continue
                   </button>
                 </div>

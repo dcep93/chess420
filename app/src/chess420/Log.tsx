@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Brain, { View } from "./Brain";
-import lichess, { LiMove } from "./Lichess";
+import lichessF, { LiMove } from "./Lichess";
 
 export type LogType = {
   fen: string;
@@ -96,8 +96,8 @@ function SubLog() {
           </div>
           {logs
             .filter((_, i) => i % 2 === index)
-            .map((log, i) => (
-              <GetLog key={i} log={log} />
+            .map((log) => (
+              <GetLog key={JSON.stringify(log)} log={log} />
             ))}
         </div>
       ))}
@@ -115,7 +115,7 @@ export function GetLog(props: { log: LogType | null }) {
       </div>
     );
   if (moves === null) {
-    lichess(log.fen, {
+    lichessF(log.fen, {
       username:
         (Brain.isMyTurn(log.fen) && Brain.view === View.lichess_mistakes) ||
         (!Brain.isMyTurn(log.fen) && Brain.view === View.lichess_vs)
@@ -129,7 +129,7 @@ export function GetLog(props: { log: LogType | null }) {
       title={moves === null ? undefined : getTitle(moves)}
       onClick={() => {
         const fen = Brain.getFen(log.fen, log.san);
-        window.open(`#${Brain.hash(fen)}`);
+        window.open(`/#${Brain.hash(fen)}`);
       }}
     >
       {parts.map((movePart, i) => (
