@@ -3,7 +3,12 @@ import lichessF from "./Lichess";
 import { getParts } from "./Log";
 import settings from "./Settings";
 
-type TraverseState = StateType & { odds: number; progressPoints: number };
+type TraverseState = StateType & {
+  opening: string;
+  movePairs: string[][];
+  odds: number;
+  progressPoints: number;
+};
 export type TraverseType = {
   results: (TraverseState & {
     bestMoveParts: string[] | undefined;
@@ -43,6 +48,7 @@ export default function traverseF(
           },
         })
       );
+  state.opening = getOpening(state.fen) || state.opening;
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
       .then((moves) => ({
@@ -195,9 +201,17 @@ export default function traverseF(
     });
 }
 
+function getOpening(fen: string): string | undefined {
+  // TODO
+  return undefined;
+}
+
 export function startTraverseF(startingState: StateType) {
   const traverseState = {
     odds: 1,
+    opening: getOpening(startingState.fen) || "* unknown opening",
+    movePairs:
+      Brain.getChess(startingState.fen).turn() === "w" ? [] : [["..."]],
     progressPoints: 0.5,
     ...startingState,
   };

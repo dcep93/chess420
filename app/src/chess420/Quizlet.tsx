@@ -13,8 +13,10 @@ export default function quizletF(t: TraverseType) {
       const fen = r.fen.split(" ")[0];
       return {
         set_name: `chess ${new Date().toLocaleDateString()}`,
-        term_word: "TODO",
-        term_def: `${r.bestMoveParts![0]}\\n(${r.bestMoveParts!.join(" ")})`,
+        term_word: `${r.movePairs.map((ms) => ms.join(" ")).join("\n")}\n${
+          r.opening
+        }`,
+        term_def: `${r.bestMoveParts![0]}\n(${r.bestMoveParts!.join(" ")})`,
         term_def_image_url: `http://fen-to-image.com/image/${
           r.orientationIsWhite ? fen : fen.split("/").reverse().join("/")
         }`,
@@ -22,7 +24,7 @@ export default function quizletF(t: TraverseType) {
     });
   const csv = [headers]
     .concat(rows.map((row) => headers.map((h) => row[h])))
-    .map((csvRow) => csvRow.join(","))
+    .map((csvRow) => csvRow.join(",").replaceAll("\n", "\\n"))
     .join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
