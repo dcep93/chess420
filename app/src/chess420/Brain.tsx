@@ -110,7 +110,6 @@ export default class Brain {
   }
 
   static setState(state: StateType) {
-    Brain.updateIsTraversing(false);
     clearTimeout(Brain.timeout);
     const states = [state].concat(
       Brain.history.states.slice(Brain.history.index)

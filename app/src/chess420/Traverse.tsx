@@ -27,16 +27,18 @@ export default function traverseF(
   const states = traverseT.states!.slice();
   const state = states.pop()!;
   if (!state)
-    return Promise.resolve().then(() =>
-      Brain.setState({
-        ...traverseT.originalState,
-        traverse: {
-          ...traverseT,
-          messages: undefined,
-          assignNovelty: undefined,
-        },
-      })
-    );
+    return Promise.resolve()
+      .then(() => Brain.updateIsTraversing(false))
+      .then(() =>
+        Brain.setState({
+          ...traverseT.originalState,
+          traverse: {
+            ...traverseT,
+            messages: undefined,
+            assignNovelty: undefined,
+          },
+        })
+      );
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
       .then((moves) => ({
@@ -84,6 +86,7 @@ export default function traverseF(
     if (traverseMyMoveSan === undefined)
       return Promise.resolve({
         ...traverseT,
+        messages: ["make a move"],
         assignNovelty: undefined,
       }).then((traverse) =>
         Brain.setState({
@@ -147,6 +150,7 @@ export default function traverseF(
           : Familiarity.bad;
       const verb =
         Brain.view === View.lichess_mistakes ? "usually play" : "played";
+      Brain.updateIsTraversing(false);
       return Promise.resolve({
         ...traverseT,
         progress: traverseT.progress + state.progressPoints,
