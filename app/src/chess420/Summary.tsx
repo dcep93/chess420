@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
 import { GetLog, LogType } from "./Log";
+import quizletF from "./Quizlet";
 import settings from "./Settings";
 import traverseF, { Familiarity } from "./Traverse";
 import css from "./index.module.css";
@@ -165,6 +166,11 @@ function SubSummary() {
               )}
             </>
           )}
+          <div>
+            <button onClick={() => quizletF(state.traverse!)}>
+              download Quizlet csv
+            </button>
+          </div>
         </div>
       )}
     </div>
