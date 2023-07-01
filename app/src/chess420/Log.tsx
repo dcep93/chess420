@@ -132,16 +132,16 @@ export function GetLog(props: { log: LogType | null }) {
         window.open(`/#${Brain.hash(fen)}`);
       }}
     >
-      {parts.map((movePart, i) => (
+      {titles.map((titlePart, i) => (
         <div
           key={i}
           style={{
             display: "inline-block",
             fontWeight: i === 0 ? "bold" : "initial",
-            width: `${titles[i].width}em`,
+            width: `${titlePart.width}em`,
           }}
         >
-          {movePart}
+          {parts[i] || null}
         </div>
       ))}
     </div>
@@ -157,10 +157,10 @@ function getTitle(moves: LiMove[]) {
     .join("\n");
 }
 
-function getParts(san: string, moves: LiMove[]) {
+export function getParts(san: string, moves: LiMove[]) {
   const move = moves.find((move) => move.san === san);
   if (move === undefined) {
-    return [san].concat(titles.slice(1).map((_) => ""));
+    return [san];
   }
   return titles.map((t) => t.f(move, moves));
 }

@@ -1,10 +1,14 @@
 import Brain, { StateType, View } from "./Brain";
 import lichessF from "./Lichess";
+import { getParts } from "./Log";
 import settings from "./Settings";
 
 type TraverseState = StateType & { odds: number; progressPoints: number };
 export type TraverseType = {
-  results: (TraverseState & { familiarity: Familiarity })[];
+  results: (TraverseState & {
+    bestMoveParts: string[] | undefined;
+    familiarity: Familiarity;
+  })[];
   originalState: StateType;
   progress: number;
   states: TraverseState[] | undefined;
@@ -113,9 +117,10 @@ export default function traverseF(
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
         bestMove: moves.sort((a, b) => b.score - a.score)[0],
+        moves,
       }))
     )
-    .then(({ myMoveSan, myMove, bestMove }) => {
+    .then(({ myMoveSan, myMove, bestMove, moves }) => {
       if (bestMove === undefined)
         return traverseF({
           ...traverseT,
@@ -123,6 +128,7 @@ export default function traverseF(
           states,
           results: (traverseT.results || []).concat({
             ...state,
+            bestMoveParts: undefined,
             familiarity: Familiarity.globalNew,
           }),
         });
@@ -135,6 +141,7 @@ export default function traverseF(
           states: states.concat(Brain.genState(state, myMoveSan!)),
           results: (traverseT.results || []).concat({
             ...state,
+            bestMoveParts: getParts(myMoveSan!, moves),
             familiarity: Familiarity.best,
           }),
         });
@@ -175,6 +182,7 @@ export default function traverseF(
           states,
           results: (t.results || []).concat({
             ...state,
+            bestMoveParts: getParts(bestMove.san, moves),
             familiarity,
           }),
         }))
