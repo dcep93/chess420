@@ -146,6 +146,11 @@ function SubSummary() {
               </div>
             </div>
           )}
+          <div>
+            <button onClick={() => quizletF(state.traverse!)}>
+              download Quizlet csv
+            </button>
+          </div>
           {Brain.isTraversing ? (
             <div>traversing...</div>
           ) : (
@@ -166,11 +171,6 @@ function SubSummary() {
               )}
             </>
           )}
-          <div>
-            <button onClick={() => quizletF(state.traverse!)}>
-              download Quizlet csv
-            </button>
-          </div>
         </div>
       )}
     </div>
