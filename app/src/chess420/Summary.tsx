@@ -3,7 +3,7 @@ import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import settings from "./Settings";
-import traverseF from "./Traverse";
+import traverseF, { Familiarity } from "./Traverse";
 import css from "./index.module.css";
 
 export default function Summary() {
@@ -119,14 +119,37 @@ function SubSummary() {
         >
           <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
           <div>positions visited: {(state.traverse!.results || []).length}</div>
-          {state.traverse!.messages!.map((m, i) => (
-            <div key={i}>{m}</div>
-          ))}
+          {state.traverse!.messages ? (
+            <div style={{ height: "5.5em" }}>
+              {state.traverse!.messages!.map((m, i) => (
+                <div key={i}>{m}</div>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <div>traverse summary:</div>
+              <div style={{ textIndent: "1em" }}>
+                {(
+                  Object.values(Familiarity).filter(
+                    (v: any) => typeof v === "number"
+                  ) as Familiarity[]
+                ).map((f: Familiarity) => (
+                  <div key={f}>
+                    {Familiarity[f]}:{" "}
+                    {
+                      state.traverse!.results.filter((r) => r.familiarity === f)
+                        .length
+                    }
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {Brain.isTraversing ? (
             <div>traversing...</div>
           ) : (
             <>
-              {!state.traverse!.states ? null : (
+              {!state.traverse!.messages ? null : (
                 <div>
                   <button onClick={() => traverseF(state.traverse!)}>
                     continue
@@ -139,9 +162,6 @@ function SubSummary() {
                     assign novelty
                   </button>
                 </div>
-              )}
-              {Brain.view !== View.quizlet ? null : (
-                <textarea readOnly value={"TODO export to quizlet"} />
               )}
             </>
           )}

@@ -11,7 +11,7 @@ export type TraverseType = {
   messages?: string[];
   assignNovelty?: () => void;
 };
-enum Familiarity {
+export enum Familiarity {
   globalNew,
   best,
   ok,
@@ -30,7 +30,11 @@ export default function traverseF(
     return Promise.resolve().then(() =>
       Brain.setState({
         ...traverseT.originalState,
-        traverse: { ...traverseT, states: undefined },
+        traverse: {
+          ...traverseT,
+          messages: undefined,
+          assignNovelty: undefined,
+        },
       })
     );
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
@@ -80,6 +84,7 @@ export default function traverseF(
     if (traverseMyMoveSan === undefined)
       return Promise.resolve({
         ...traverseT,
+        assignNovelty: undefined,
       }).then((traverse) =>
         Brain.setState({
           ...state,
