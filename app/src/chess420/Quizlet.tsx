@@ -38,8 +38,6 @@ export default function quizletF(t: TraverseType) {
         .join(",")
     )
     .join("\n");
-  console.log(csv);
-  return;
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
