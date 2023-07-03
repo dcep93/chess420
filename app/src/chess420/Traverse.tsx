@@ -5,7 +5,6 @@ import settings from "./Settings";
 
 type TraverseState = StateType & {
   opening: string;
-  movePairs: string[][];
   odds: number;
   progressPoints: number;
 };
@@ -206,8 +205,6 @@ export function startTraverseF(startingState: StateType) {
   const traverseState = {
     odds: 1,
     opening: "",
-    movePairs:
-      Brain.getChess(startingState.fen).turn() === "w" ? [] : [["..."]],
     progressPoints: 0.5,
     ...startingState,
   };

@@ -16,7 +16,7 @@ const settings = {
   TRAVERSE_THRESHOLD_ODDS: 0.01,
   WEIGHTED_POWER: 1.5,
   SHOULD_UPDATE_HASH: true,
-  BOARD_REFRESH_PERIOD_MS: 500,
+  BOARD_REFRESH_PERIOD_MS: 750,
 };
 
 export default settings;
