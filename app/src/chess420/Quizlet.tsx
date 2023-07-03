@@ -2,7 +2,7 @@ import Brain from "./Brain";
 import { Familiarity, TraverseType } from "./Traverse";
 
 export default function quizletF(t: TraverseType) {
-  console.log(JSON.stringify(t));
+  console.log(t);
   const headers = ["set_name", "term_word", "term_def", "term_def_image_url"];
   const rows = t.results
     .filter(
