@@ -32,8 +32,8 @@ export default function quizletF(t: TraverseType) {
         set_word_lang: "en",
         set_def_lang: "en",
         set_name: `chess ${new Date().toLocaleDateString()}`,
-        term_word: `${r.bestMoveParts![0]}\n(${r.bestMoveParts!.join(" ")})`,
-        term_def: `${movePairs.map((ms) => ms.join(" ")).join("\n")}\n${
+        term_def: `${r.bestMoveParts![0]}\n(${r.bestMoveParts!.join(" ")})`,
+        term_word: `${movePairs.map((ms) => ms.join(" ")).join("\n")}\n${
           r.opening
         }`,
         term_def_image_url: `http://fen-to-image.com/image/${
