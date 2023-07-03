@@ -37,7 +37,7 @@ export default function quizletF(t: TraverseType) {
           r.opening
         }`,
         term_def_image_url: `http://fen-to-image.com/image/${
-          r.orientationIsWhite ? fen : fen.split("/").reverse().join("/")
+          r.orientationIsWhite ? fen : fen.split("").reverse().join("")
         }`,
       } as { [k: string]: string };
     });
