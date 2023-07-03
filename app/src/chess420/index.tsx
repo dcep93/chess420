@@ -61,6 +61,9 @@ function Main() {
   });
   [Brain.showHelp, Brain.updateShowHelp] = useState(false);
   [Brain.isTraversing, Brain.updateIsTraversing] = useState(false);
+  [Brain.openings, Brain.updateOpenings] = useState<{
+    [fen: string]: string;
+  } | null>(null);
   DoOnce("Main.brain", () => {
     document.addEventListener("keydown", (e) =>
       Promise.resolve()

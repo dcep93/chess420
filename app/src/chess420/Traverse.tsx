@@ -48,7 +48,7 @@ export default function traverseF(
           },
         })
       );
-  state.opening = getOpening(state.fen) || state.opening;
+  state.opening = Brain.getOpening(state.fen) || state.opening;
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
       .then((moves) => ({
@@ -201,14 +201,10 @@ export default function traverseF(
     });
 }
 
-function getOpening(fen: string): string | undefined {
-  return undefined;
-}
-
 export function startTraverseF(startingState: StateType) {
   const traverseState = {
     odds: 1,
-    opening: getOpening(startingState.fen) || "TODO unknown opening",
+    opening: "",
     movePairs:
       Brain.getChess(startingState.fen).turn() === "w" ? [] : [["..."]],
     progressPoints: 0.5,

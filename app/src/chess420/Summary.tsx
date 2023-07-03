@@ -30,9 +30,6 @@ export default function Summary() {
 
 function SubSummary() {
   const state = Brain.getState();
-  const [openings, updateOpenings] = useState<{ [fen: string]: string } | null>(
-    null
-  );
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
   useEffect(() => {
@@ -59,34 +56,7 @@ function SubSummary() {
       )
       .then(updateOdds);
   }, [state.logs]);
-  if (openings === null) {
-    Promise.all(
-      ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
-        fetch(`${process.env.PUBLIC_URL}/eco/dist/${f}`)
-          .then((response) => response.text())
-          .then((text) =>
-            text
-              .split("\n")
-              .slice(1)
-              .filter((l) => l)
-              .map((l) => l.split("\t"))
-              .map(([eco, name, pgn, uci, epd]) => [
-                normalizeFen(epd),
-                `${eco} ${name}`,
-              ])
-          )
-      )
-    )
-      .then((arr) =>
-        arr
-          .flatMap((a) => a)
-          .concat([[normalizeFen(Brain.getFen()), "starting position"]])
-      )
-      .then(Object.fromEntries)
-      .then(updateOpenings);
-    return null;
-  }
-  const opening = openings[normalizeFen(state.fen)];
+  const opening = Brain.getOpening(state.fen);
   if (opening && lastOpening !== opening) {
     updateLastOpening(opening);
   } else if (!opening && state.traverse) {
@@ -194,8 +164,4 @@ function SummaryMove(props: { log: LogType; length: number }) {
       <GetLog log={props.log} key={JSON.stringify(props.log)} />
     </div>
   );
-}
-
-function normalizeFen(fen: string) {
-  return fen.split(" ")[0];
 }

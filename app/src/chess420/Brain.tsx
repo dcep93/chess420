@@ -31,6 +31,10 @@ export default class Brain {
   static updateShowHelp: (showHelp: boolean) => void;
   static isTraversing: boolean;
   static updateIsTraversing: (isTraversing: boolean) => void;
+  static openings: {
+    [fen: string]: string;
+  } | null;
+  static updateOpenings: (openings: { [fen: string]: string }) => void;
 
   static timeout: NodeJS.Timeout;
 
@@ -83,13 +87,54 @@ export default class Brain {
 
   static setInitialState() {
     const startingState = Brain.getInitialState();
-    switch (Brain.view) {
-      case View.lichess_mistakes:
-      case View.quizlet:
-        startTraverseF(startingState);
-        return;
-    }
     Brain.setState(startingState);
+    if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet) {
+      Promise.resolve()
+        .then(Brain.fetchOpenings)
+        .then(
+          () =>
+            (Brain.view === View.lichess_mistakes ||
+              Brain.view === View.quizlet) &&
+            startTraverseF(startingState)
+        );
+    }
+  }
+
+  static fetchOpenings() {
+    return Promise.all(
+      ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
+        fetch(`${process.env.PUBLIC_URL}/eco/dist/${f}`)
+          .then((response) => response.text())
+          .then((text) =>
+            text
+              .split("\n")
+              .slice(1)
+              .filter((l) => l)
+              .map((l) => l.split("\t"))
+              .map(([eco, name, pgn, uci, epd]) => [
+                Brain.normalizeFenForOpening(epd),
+                `${eco} ${name}`,
+              ])
+          )
+      )
+    )
+      .then((arr) =>
+        arr
+          .flatMap((a) => a)
+          .concat([
+            [Brain.normalizeFenForOpening(Brain.getFen()), "starting position"],
+          ])
+      )
+      .then(Object.fromEntries)
+      .then(Brain.updateOpenings);
+  }
+
+  static normalizeFenForOpening(fen: string) {
+    return fen.split(" ")[0];
+  }
+
+  static getOpening(fen: string) {
+    return (Brain.openings || {})[Brain.normalizeFenForOpening(fen)];
   }
 
   //
