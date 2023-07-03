@@ -41,14 +41,16 @@ export default function Board() {
   );
 }
 
-const vars = { release: Date.now() };
+const vars = { release: Date.now(), fen: "" };
 
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [isUncommon, updateIsUncommon] = useState(false);
-  const [fen, updateFen] = useState("");
+  const [fen, updateFen] = useState(vars.fen);
   const state = Brain.getState();
   useEffect(() => {
+    if (vars.fen === state.fen) return;
+    vars.fen = state.fen;
     const now = Date.now();
     const delay = vars.release - now;
     vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
