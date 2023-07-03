@@ -368,7 +368,11 @@ export default class Brain {
         traverseF(state.traverse, move.san);
       } else {
         Promise.resolve()
-          .then(() => Brain.setNovelty(state.fen, move.san))
+          .then(() =>
+            Brain.isMyTurn(state.fen)
+              ? Brain.setNovelty(state.fen, move.san)
+              : null
+          )
           .then(() =>
             Brain.setState(Brain.genState(Brain.getState(), move.san))
           );
