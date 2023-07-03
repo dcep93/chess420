@@ -88,16 +88,14 @@ export default class Brain {
   static setInitialState() {
     const startingState = Brain.getInitialState();
     Brain.setState(startingState);
-    if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet) {
-      Promise.resolve()
-        .then(Brain.fetchOpenings)
-        .then(
-          () =>
-            (Brain.view === View.lichess_mistakes ||
-              Brain.view === View.quizlet) &&
-            startTraverseF(startingState)
-        );
-    }
+    Promise.resolve()
+      .then(Brain.fetchOpenings)
+      .then(
+        () =>
+          (Brain.view === View.lichess_mistakes ||
+            Brain.view === View.quizlet) &&
+          startTraverseF(startingState)
+      );
   }
 
   static fetchOpenings() {
