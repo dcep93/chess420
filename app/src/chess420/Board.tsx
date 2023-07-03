@@ -52,13 +52,9 @@ function SubBoard() {
     if (vars.fen === state.fen) return;
     vars.fen = state.fen;
     const now = Date.now();
-    const delay = vars.release - now;
+    const delay = Math.max(1, vars.release - now);
     vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
-    if (delay > 0) {
-      setTimeout(() => updateFen(state.fen), delay);
-    } else {
-      updateFen(state.fen);
-    }
+    setTimeout(() => updateFen(state.fen), delay);
     lichessF(state.fen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
