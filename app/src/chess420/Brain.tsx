@@ -367,15 +367,10 @@ export default class Brain {
       if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
         traverseF(state.traverse, move.san);
       } else {
-        Promise.resolve()
-          .then(() =>
-            Brain.isMyTurn(state.fen)
-              ? Brain.setNovelty(state.fen, move.san)
-              : null
-          )
-          .then(() =>
-            Brain.setState(Brain.genState(Brain.getState(), move.san))
-          );
+        Brain.setState(Brain.genState(Brain.getState(), move.san));
+        if (Brain.isMyTurn(state.fen)) {
+          Brain.setNovelty(state.fen, move.san);
+        }
       }
       return true;
     } else {
