@@ -202,6 +202,7 @@ export default function traverseF(
 }
 
 export function startTraverseF(startingState: StateType) {
+  Brain.updateIsTraversing(true);
   const traverseState = {
     odds: 1,
     opening: "",
@@ -210,16 +211,20 @@ export function startTraverseF(startingState: StateType) {
     progressPoints: 0.5,
     ...startingState,
   };
-  traverseF({
-    results: [],
-    originalState: startingState,
-    progress: 0,
-    states: [
-      {
-        ...traverseState,
-        orientationIsWhite: !traverseState.orientationIsWhite,
-      },
-      { ...traverseState },
-    ],
-  });
+  setTimeout(
+    () =>
+      traverseF({
+        results: [],
+        originalState: startingState,
+        progress: 0,
+        states: [
+          {
+            ...traverseState,
+            orientationIsWhite: !traverseState.orientationIsWhite,
+          },
+          { ...traverseState },
+        ],
+      }),
+    300
+  );
 }
