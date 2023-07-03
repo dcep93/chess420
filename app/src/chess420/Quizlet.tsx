@@ -3,7 +3,15 @@ import { Familiarity, TraverseType } from "./Traverse";
 
 export default function quizletF(t: TraverseType) {
   console.log(t);
-  const headers = ["set_name", "term_word", "term_def", "term_def_image_url"];
+  const headers = [
+    "folder_name",
+    "set_word_lang",
+    "set_def_lang",
+    "set_name",
+    "term_word",
+    "term_def",
+    "term_def_image_url",
+  ];
   const rows = t.results
     .filter(
       (r) =>
@@ -20,6 +28,9 @@ export default function quizletF(t: TraverseType) {
         new Array(Math.ceil(moveSans.length / 2))
       ).map((_, i) => [moveSans[2 * i], moveSans[2 * i + 1] || ""]);
       return {
+        folder_name: "chess420",
+        set_word_lang: "en",
+        set_def_lang: "en",
         set_name: `chess ${new Date().toLocaleDateString()}`,
         term_word: `${movePairs.map((ms) => ms.join(" ")).join("\n")}\n${
           r.opening
