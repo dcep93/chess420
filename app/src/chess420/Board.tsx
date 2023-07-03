@@ -41,18 +41,18 @@ export default function Board() {
   );
 }
 
-const vars = { release: Date.now(), fen: "" };
+const vars = { release: Date.now(), last: 0 };
 
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [isUncommon, updateIsUncommon] = useState(false);
-  const [fen, updateFen] = useState(vars.fen);
+  const [fen, updateFen] = useState("");
   const state = Brain.getState();
+  const now = Date.now();
   useEffect(() => {
-    if (vars.fen === state.fen) return;
+    if (vars.last === now) return;
+    vars.last = now;
     if (settings.IS_DEV) {
-      vars.fen = state.fen;
-      const now = Date.now();
       const delay = Math.max(1, vars.release - now);
       vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
       setTimeout(() => updateFen(state.fen), delay);
@@ -64,6 +64,7 @@ function SubBoard() {
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
       .then((total) => updateIsUncommon(total < 10000));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.fen]);
   if (!fen) return null;
   return (
