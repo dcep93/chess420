@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import Brain from "./Brain";
 import lichessF from "./Lichess";
+import settings from "./Settings";
 
 export default function Board() {
   return (
@@ -40,17 +41,29 @@ export default function Board() {
   );
 }
 
+const vars = { release: Date.now() };
+
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [isUncommon, updateIsUncommon] = useState(false);
+  const [fen, updateFen] = useState("");
   const state = Brain.getState();
   useEffect(() => {
+    const now = Date.now();
+    const delay = vars.release - now;
+    vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
+    if (delay > 0) {
+      setTimeout(() => updateFen(state.fen), delay);
+    } else {
+      updateFen(state.fen);
+    }
     lichessF(state.fen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
       .then((total) => updateIsUncommon(total < 10000));
   }, [state.fen]);
+  if (!fen) return null;
   return (
     <div
       style={{
@@ -60,7 +73,7 @@ function SubBoard() {
     >
       <Chessboard
         boardOrientation={state.orientationIsWhite ? "white" : "black"}
-        position={state.fen}
+        position={fen}
         customSquareStyles={{
           [prevClicked || ""]: {
             background: "rgba(255, 255, 0)",
