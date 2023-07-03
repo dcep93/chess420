@@ -61,6 +61,9 @@ export default class Brain {
   //
 
   static hash(fen: string): string {
+    if (Brain.getState().orientationIsWhite && Brain.getFen() === fen) {
+      return "";
+    }
     return [
       Brain.getState().orientationIsWhite ? "w" : "b",
       fen.replaceAll(" ", "_"),
