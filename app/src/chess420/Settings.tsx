@@ -1,4 +1,5 @@
 const settings = {
+  IS_DEV: !process.env.NODE_ENV || process.env.NODE_ENV === "development",
   CHESSBOARD_WIDTH: "18em",
   REPLY_DELAY_MS: 500,
   LICHESS_PARAMS: `variant=standard&speeds=rapid,classical&ratings=${[
@@ -15,7 +16,7 @@ const settings = {
   TRAVERSE_THRESHOLD_ODDS: 0.01,
   WEIGHTED_POWER: 1.5,
   SHOULD_UPDATE_HASH: true,
-  BOARD_REFRESH_PERIOD_MS: 0,
+  BOARD_REFRESH_PERIOD_MS: 500,
 };
 
 export default settings;

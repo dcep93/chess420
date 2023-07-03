@@ -50,11 +50,15 @@ function SubBoard() {
   const state = Brain.getState();
   useEffect(() => {
     if (vars.fen === state.fen) return;
-    vars.fen = state.fen;
-    const now = Date.now();
-    const delay = Math.max(1, vars.release - now);
-    vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
-    setTimeout(() => updateFen(state.fen), delay);
+    if (settings.IS_DEV) {
+      vars.fen = state.fen;
+      const now = Date.now();
+      const delay = Math.max(1, vars.release - now);
+      vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
+      setTimeout(() => updateFen(state.fen), delay);
+    } else {
+      updateFen(state.fen);
+    }
     lichessF(state.fen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
