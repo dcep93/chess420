@@ -91,7 +91,7 @@ export default function traverseF(
         states: states.concat(moveStates),
       }))
       .then(traverseF);
-  if (Brain.view === View.quizlet) {
+  if (Brain.view === View.traverse) {
     if (traverseMyMoveSan === undefined)
       return Promise.resolve({
         ...traverseT,
@@ -105,7 +105,7 @@ export default function traverseF(
       );
   }
   return (
-    Brain.view === View.quizlet
+    Brain.view === View.traverse
       ? Promise.resolve(traverseMyMoveSan)
       : lichessF(state.fen, { username: Brain.lichessUsername })
           .then((moves) => ({

@@ -2,6 +2,7 @@ import React from "react";
 import Brain, { View } from "./Brain";
 
 export default function Controls() {
+  // TODO controls based on view
   const lichessRef = React.useRef<HTMLInputElement>(null);
   const noveltyRef = React.useRef<HTMLButtonElement>(null);
   return (
@@ -76,17 +77,12 @@ export default function Controls() {
           {Brain.view === undefined ? (
             <>
               <div>
-                <button onClick={Brain.memorizeWithQuizlet}>
-                  memorize with Quizlet
-                </button>
+                <button onClick={Brain.traverse}>traverse manually</button>
               </div>
               <div>
                 <div>
                   <span>lichess username: </span>
                   <input
-                    defaultValue={
-                      localStorage.getItem("lichess_username") || undefined
-                    }
                     ref={lichessRef}
                     style={{ width: "4em" }}
                     onKeyDown={(e) => e.stopPropagation()}
@@ -125,8 +121,8 @@ export default function Controls() {
                   <span>playing vs {Brain.lichessUsername}</span>
                 ) : Brain.view === View.lichess_mistakes ? (
                   <span>finding mistakes of {Brain.lichessUsername}</span>
-                ) : Brain.view === View.quizlet ? (
-                  <span>building Quizlet data</span>
+                ) : Brain.view === View.traverse ? (
+                  <span>traversing manually</span>
                 ) : null}
               </div>
             </>

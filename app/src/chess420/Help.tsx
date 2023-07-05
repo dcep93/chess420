@@ -37,7 +37,7 @@ export default function Help() {
       ],
     },
     {
-      title: "How do I memorize with Quizlet?",
+      title: "How do I memorize with traverse manually?",
       content: [
         "Try it out!",
         "chess420 will traverse all likely positions from both sides of the board.\nIf a position has less than 1% chance of being reached from your opponent's moves, that line will be marked as complete, and you will go to the next line.",

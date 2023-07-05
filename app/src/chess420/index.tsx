@@ -14,11 +14,14 @@ import Summary from "./Summary";
 import recorded_sha from "./recorded_sha";
 
 export default function App() {
+  // TODO router
   console.log(recorded_sha);
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
   switch (pathParts[1]) {
     case "lichess":
-      if (pathParts[3] === "mistakes") {
+      if (pathParts[3] === "latest") {
+        Brain.view = View.lichess_latest;
+      } else if (pathParts[3] === "mistakes") {
         Brain.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
         alert("invalid path");
@@ -33,8 +36,8 @@ export default function App() {
       }
       Brain.lichessUsername = username;
       break;
-    case "quizlet":
-      Brain.view = View.quizlet;
+    case "traverse":
+      Brain.view = View.traverse;
       if (pathParts.length > 2) {
         alert("invalid path");
         return null;
@@ -93,7 +96,12 @@ function Main() {
 }
 
 function SubMain(props: { fen: string }) {
-  if (settings.SHOULD_UPDATE_HASH && !Brain.getState().traverse)
+  // TODO mobile friendly
+  if (
+    settings.SHOULD_UPDATE_HASH &&
+    Brain.view !== View.lichess_mistakes &&
+    Brain.view !== View.traverse
+  )
     window.location.hash = Brain.hash(props.fen);
   return (
     <div

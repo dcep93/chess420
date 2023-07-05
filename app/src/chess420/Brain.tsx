@@ -20,7 +20,8 @@ type History = {
 export enum View {
   lichess_vs,
   lichess_mistakes,
-  quizlet,
+  lichess_latest,
+  traverse,
 }
 
 export default class Brain {
@@ -93,12 +94,40 @@ export default class Brain {
     Brain.setState(startingState);
     Promise.resolve()
       .then(Brain.fetchOpenings)
-      .then(
-        () =>
-          (Brain.view === View.lichess_mistakes ||
-            Brain.view === View.quizlet) &&
-          startTraverseF(startingState)
-      );
+      .then(() => {
+        if (
+          Brain.view === View.lichess_mistakes ||
+          Brain.view === View.traverse
+        ) {
+          startTraverseF(startingState);
+        } else if (Brain.view === View.lichess_latest) {
+          getLatestGame(Brain.lichessUsername!)
+            .then(({ sans, orientationIsWhite }) => {
+              const chess = Brain.getChess();
+              clearTimeout(Brain.timeout);
+              const logs: LogType[] = [];
+              return sans.map((san) => {
+                const fen = chess.fen();
+                chess.move(san);
+                logs.push({ fen, san });
+                return {
+                  fen: chess.fen(),
+                  orientationIsWhite,
+                  logs: logs.slice(),
+                };
+              });
+            })
+            .then((moveStates) => {
+              const states = moveStates
+                .reverse()
+                .concat(Brain.history.states.slice(Brain.history.index));
+              Brain.updateHistory({
+                index: states.length - 2,
+                states,
+              });
+            });
+        }
+      });
   }
 
   static fetchOpenings() {
@@ -176,7 +205,7 @@ export default class Brain {
   //
 
   static maybeReply(state: StateType) {
-    if (Brain.view === View.lichess_mistakes || Brain.view === View.quizlet)
+    if (Brain.view === View.lichess_mistakes || Brain.view === View.traverse)
       return;
     if (
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
@@ -281,8 +310,8 @@ export default class Brain {
 
   //
 
-  static memorizeWithQuizlet() {
-    window.location.href = `/quizlet#${Brain.hash(Brain.getState().fen)}`;
+  static traverse() {
+    window.location.href = `/traverse#${Brain.hash(Brain.getState().fen)}`;
   }
 
   static findMistakes(username: string) {
@@ -304,29 +333,7 @@ export default class Brain {
   static importLatestGame(username: string) {
     if (!username) return alert("no username provided");
 
-    localStorage.setItem("lichess_username", username);
-
-    getLatestGame(username)
-      .then(({ sans, orientationIsWhite }) => {
-        const chess = Brain.getChess();
-        clearTimeout(Brain.timeout);
-        const logs: LogType[] = [];
-        return sans.map((san) => {
-          const fen = chess.fen();
-          chess.move(san);
-          logs.push({ fen, san });
-          return { fen: chess.fen(), orientationIsWhite, logs: logs.slice() };
-        });
-      })
-      .then((moveStates) => {
-        const states = moveStates
-          .reverse()
-          .concat(Brain.history.states.slice(Brain.history.index));
-        Brain.updateHistory({
-          index: states.length - 2,
-          states,
-        });
-      });
+    window.location.href = `/lichess/${username}/latest`;
   }
 
   static home() {
