@@ -123,7 +123,7 @@ export function GetLog(props: { log: LogType | null }) {
           : undefined,
     }).then((moves) => update(moves));
   }
-  const parts = getParts(log.san, moves || []);
+  const parts = moves === null ? [log.san, "..."] : getParts(log.san, moves);
   return (
     <div
       title={moves === null ? undefined : getTitle(moves)}
