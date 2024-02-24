@@ -127,6 +127,7 @@ export function GetLog(props: { log: LogType | null }) {
   return (
     <div
       title={moves === null ? undefined : getTitle(moves)}
+      style={{ cursor: "pointer" }}
       onClick={() => {
         const fen = Brain.getFen(log.fen, log.san);
         window.open(`/#${Brain.hash(fen)}`);
