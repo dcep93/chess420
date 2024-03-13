@@ -74,7 +74,8 @@ export default function traverseF(
           .filter(
             (moveState) => moveState.odds >= settings.TRAVERSE_THRESHOLD_ODDS
           )
-          .sort((a, b) => a.odds - b.odds)
+          .map((o) => ({ ...o, sort: o.odds * Math.pow(Math.random(), 0.5) }))
+          .sort((a, b) => a.sort - b.sort)
       )
       .then((moveStates) =>
         moveStates.map((moveState) => ({
