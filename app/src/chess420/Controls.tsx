@@ -82,11 +82,21 @@ export default function Controls() {
               <div>
                 <div>
                   <span>lichess username: </span>
-                  <input
-                    ref={lichessRef}
-                    style={{ width: "4em" }}
-                    onKeyDown={(e) => e.stopPropagation()}
-                  />
+                  <form
+                    style={{ display: "inline" }}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      Brain.playVs(lichessRef.current!.value);
+                    }}
+                  >
+                    <input
+                      name={"lichessRef"}
+                      ref={lichessRef}
+                      style={{ width: "4em" }}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      autoComplete={"on"}
+                    />
+                  </form>
                 </div>
                 <div>
                   <button
