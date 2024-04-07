@@ -117,6 +117,7 @@ export default function lichessF(
                 ...options,
                 prepareNext: false,
                 attempt: options.attempt + 1,
+                username: undefined,
               });
             })
         );
@@ -126,23 +127,106 @@ export default function lichessF(
   return p;
 }
 
-async function helper(url: string, attempt: number): Promise<any[]> {
-  if (attempt > settings.MAX_LICHESS_ATTEMPTS) return [];
+function helper(url: string, attempt: number): Promise<LiMove[]> {
+  if (attempt > settings.MAX_LICHESS_ATTEMPTS) return Promise.resolve([]);
+
   const storedMoves = StorageW.get(url);
   if (storedMoves !== null) return Promise.resolve(storedMoves.moves);
 
-  console.log("fetching", attempt, url);
-  const response = await fetch(url);
-  if (!response.ok)
-    return new Promise((resolve) =>
-      setTimeout(
-        () => helper(url, attempt + 1).then((moves) => resolve(moves)),
-        1000
-      )
+  const params = new URLSearchParams(url.split("/player")[1]);
+  const username = params.get("player");
+  if (username?.startsWith(":")) {
+    return getChessDotComMoves(username.slice(1), params).then((moves) => {
+      StorageW.set(url, { moves });
+      return moves;
+    });
+  }
+
+  return Promise.resolve()
+    .then(() => console.log("fetching", attempt, url))
+    .then(() => fetch(url))
+    .then((response) =>
+      response.ok
+        ? response.text().then((text) => {
+            const json = JSON.parse(text.trim().split("\n").reverse()[0]);
+            const moves = json.moves;
+            StorageW.set(url, json);
+            return moves;
+          })
+        : new Promise((resolve) =>
+            setTimeout(
+              () => helper(url, attempt + 1).then((moves) => resolve(moves)),
+              1000
+            )
+          )
     );
-  const text = await response.text();
-  const json = JSON.parse(text.trim().split("\n").reverse()[0]);
-  const moves = json.moves;
-  StorageW.set(url, json);
-  return moves;
+}
+
+function getChessDotComMoves(
+  username: string,
+  params: URLSearchParams
+): Promise<LiMove[]> {
+  const nextFen = params.get("fen")!;
+  const color = params.get("color")!;
+  const halfMoves =
+    2 * parseInt(nextFen.split(" ").pop()!) + (color === "white" ? -2 : -1);
+  const dataRaw = {
+    gameSource: "other",
+    nextFen,
+    moveList: Array.from(new Array(halfMoves)).map((_, i) => ({
+      activeColor: i % 2 === 1 ? "w" : "b",
+    })),
+    gameType: "all",
+    color,
+    username,
+  };
+  console.log("fetching", "chess.com", dataRaw);
+  return proxy({
+    fetch: {
+      json: true,
+      noCache: true,
+      url: "https://www.chess.com/callback/explorer/move",
+      options: {
+        headers: {
+          "content-type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(dataRaw),
+      },
+    },
+  })
+    .then((resp) => resp.msg)
+    .then((json) =>
+      json.suggestedMoves.map((move: any) => ({
+        san: move.sanMove,
+        white: move.whiteWon,
+        black: move.blackWon,
+        draws: move.draw,
+        averageRating: move.eval,
+      }))
+    );
+}
+
+declare global {
+  interface Window {
+    chrome: any;
+  }
+}
+
+function proxy(data: any): Promise<any> {
+  const extension_id = "kmpbdkipjlpbckfnpbfbncddjaneeklc";
+  return new Promise((resolve, reject) =>
+    window.chrome.runtime.sendMessage(extension_id, data, (response: any) => {
+      if (window.chrome.runtime.lastError) {
+        return reject(
+          `chrome.runtime.lastError ${window.chrome.runtime.lastError}`
+        );
+      }
+      if (!response.ok) {
+        console.error(data, response);
+        return reject(`chrome: ${response.err}`);
+      }
+      resolve(response.data);
+    })
+  );
 }
