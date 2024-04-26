@@ -70,7 +70,7 @@ function SubBoard() {
   return (
     <div
       style={{
-        border: `100px ${isUncommon ? "#aaaaaa" : "black"} solid`,
+        border: `30px ${isUncommon ? "#aaaaaa" : "black"} solid`,
         width: "100%",
       }}
     >
