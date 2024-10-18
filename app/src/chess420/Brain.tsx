@@ -103,7 +103,6 @@ export default class Brain {
         } else if (Brain.view === View.lichess_latest) {
           getLatestGame(Brain.lichessUsername!)
             .then(({ sans, orientationIsWhite }) => {
-              console.log({ sans });
               const chess = Brain.getChess();
               clearTimeout(Brain.timeout);
               const logs: LogType[] = [];

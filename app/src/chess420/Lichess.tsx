@@ -27,6 +27,7 @@ export function getLatestGame(username: string) {
     .then((resp) => resp.text())
     .then((text) =>
       Promise.resolve()
+        .then(() => console.log(text))
         .then(() =>
           text
             .trim()
