@@ -13,4 +13,8 @@ jobs:
       - run: bash .github/workflows/build_chess_openings.sh
       - run: bash .github/workflows/record_sha.sh
       - run: bash .github/workflows/build_react.sh
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v2"
+        with:
+          version: ">= 471.0.0"
       - run: bash .github/workflows/deploy_to_firebase.sh '${{ secrets.SA_KEY }}'
