@@ -64,7 +64,7 @@ export default function lichessF(
         }`
       : `https://explorer.lichess.ovh/player?player=${options.username}&color=${
           chess.turn() === "w" ? "white" : "black"
-        }&recentGames=0&fen=${chess.fen()}&&${settings.LICHESS_PARAMS}`;
+        }&recentGames=0&fen=${chess.fen()}`;
   const key = JSON.stringify({
     url,
   });
