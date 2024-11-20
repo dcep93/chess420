@@ -150,6 +150,7 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
       response.ok
         ? response.text().then((text) => {
             const json = JSON.parse(text.trim().split("\n").reverse()[0]);
+            console.log({ json, text });
             const moves = json.moves;
             StorageW.set(url, json);
             return moves;
