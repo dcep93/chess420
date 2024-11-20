@@ -145,16 +145,11 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
 
   return Promise.resolve()
     .then(() => console.log("fetching", attempt, url))
-    .then(() => fetch(url))
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then(() => fetch(url, { headers: { Accept: "application/json" } }))
     .then((response) =>
       response.ok
         ? response.text().then((text) => {
             const json = JSON.parse(text.trim().split("\n").reverse()[0]);
-            console.log(json);
             const moves = json.moves;
             StorageW.set(url, json);
             return moves;
