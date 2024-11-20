@@ -146,6 +146,10 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
   return Promise.resolve()
     .then(() => console.log("fetching", attempt, url))
     .then(() => fetch(url))
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
     .then((response) =>
       response.ok
         ? response.text().then((text) => {
