@@ -43,6 +43,27 @@ export function getLatestGame(username: string) {
     );
 }
 
+export function getGameById(gameId: string) {
+  return fetch(`https://lichess.org/game/export/${gameId}`)
+    .then((resp) => resp.text())
+    .then((text) =>
+      Promise.resolve()
+        .then(() => console.log(text))
+        .then(() =>
+          text
+            .trim()
+            .split("\n")
+            .pop()!
+            .matchAll(/\. (.+?) /g)
+        )
+        .then((matches) => Array.from(matches).map((match) => match[1]))
+        .then((sans) => ({
+          sans,
+          orientationIsWhite: true,
+        }))
+    );
+}
+
 export default function lichessF(
   fen: string,
   _options: OptionsType = {}

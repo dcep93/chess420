@@ -21,13 +21,16 @@ export default function App() {
     case "lichess":
       if (pathParts[3] === "latest") {
         Brain.view = View.lichess_latest;
+      } else if (pathParts[3] === "vs") {
+        Brain.view = View.lichess_vs;
       } else if (pathParts[3] === "mistakes") {
         Brain.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
         alert("invalid path");
         return null;
       } else {
-        Brain.view = View.lichess_vs;
+        // username is game_id
+        Brain.view = View.lichess_id;
       }
       const username = pathParts[2];
       if (username === "") {

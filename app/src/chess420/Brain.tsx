@@ -1,5 +1,5 @@
 import Chess, { ChessInstance, Square } from "chess.js";
-import lichessF, { LiMove, getLatestGame } from "./Lichess";
+import lichessF, { LiMove, getGameById, getLatestGame } from "./Lichess";
 import { LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -21,6 +21,7 @@ export enum View {
   lichess_vs,
   lichess_mistakes,
   lichess_latest,
+  lichess_id,
   traverse,
 }
 
@@ -89,6 +90,34 @@ export default class Brain {
     };
   }
 
+  static loadMoves(o: { sans: string[]; orientationIsWhite: boolean }) {
+    return Promise.resolve(o)
+      .then(({ sans, orientationIsWhite }) => {
+        const chess = Brain.getChess();
+        clearTimeout(Brain.timeout);
+        const logs: LogType[] = [];
+        return sans.map((san) => {
+          const fen = chess.fen();
+          chess.move(san);
+          logs.push({ fen, san });
+          return {
+            fen: chess.fen(),
+            orientationIsWhite,
+            logs: logs.slice(),
+          };
+        });
+      })
+      .then((moveStates) => {
+        const states = moveStates
+          .reverse()
+          .concat(Brain.history.states.slice(Brain.history.index));
+        Brain.updateHistory({
+          index: states.length - 2,
+          states,
+        });
+      });
+  }
+
   static setInitialState() {
     const startingState = Brain.getInitialState();
     Brain.setState(startingState);
@@ -100,32 +129,10 @@ export default class Brain {
           Brain.view === View.traverse
         ) {
           startTraverseF(startingState);
+        } else if (Brain.view === View.lichess_id) {
+          getGameById(Brain.lichessUsername!).then(Brain.loadMoves);
         } else if (Brain.view === View.lichess_latest) {
-          getLatestGame(Brain.lichessUsername!)
-            .then(({ sans, orientationIsWhite }) => {
-              const chess = Brain.getChess();
-              clearTimeout(Brain.timeout);
-              const logs: LogType[] = [];
-              return sans.map((san) => {
-                const fen = chess.fen();
-                chess.move(san);
-                logs.push({ fen, san });
-                return {
-                  fen: chess.fen(),
-                  orientationIsWhite,
-                  logs: logs.slice(),
-                };
-              });
-            })
-            .then((moveStates) => {
-              const states = moveStates
-                .reverse()
-                .concat(Brain.history.states.slice(Brain.history.index));
-              Brain.updateHistory({
-                index: states.length - 2,
-                states,
-              });
-            });
+          getLatestGame(Brain.lichessUsername!).then(Brain.loadMoves);
         }
       });
   }
@@ -325,7 +332,7 @@ export default class Brain {
   static playVs(username: string) {
     if (!username) return alert("no username provided");
 
-    window.location.href = `/lichess/${username}#${Brain.hash(
+    window.location.href = `/lichess/${username}/vs#${Brain.hash(
       Brain.getState().fen
     )}`;
   }
