@@ -102,6 +102,7 @@ function SubMain(props: { fen: string }) {
   // TODO mobile friendly
   if (
     settings.SHOULD_UPDATE_HASH &&
+    Brain.view !== View.lichess_id &&
     Brain.view !== View.lichess_latest &&
     Brain.view !== View.lichess_mistakes &&
     Brain.view !== View.traverse
