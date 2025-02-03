@@ -212,7 +212,11 @@ export default class Brain {
   //
 
   static maybeReply(state: StateType) {
-    if (Brain.view === View.lichess_mistakes || Brain.view === View.traverse)
+    if (
+      Brain.view === View.lichess_mistakes ||
+      Brain.view === View.lichess_id ||
+      Brain.view === View.traverse
+    )
       return;
     if (
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
