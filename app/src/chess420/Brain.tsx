@@ -294,7 +294,7 @@ export default class Brain {
   }
 
   static playBest() {
-    this.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
+    Brain.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
   }
 
   static getBest(fen: string): Promise<string> {
