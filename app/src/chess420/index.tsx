@@ -13,9 +13,7 @@ import Log from "./Log";
 import Summary from "./Summary";
 import recorded_sha from "./recorded_sha";
 
-export default function App() {
-  // TODO router
-  console.log(recorded_sha);
+function AssignBrainIdkWhyIHaveToDoThis(): boolean {
   const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
   switch (pathParts[1]) {
     case "lichess":
@@ -26,47 +24,52 @@ export default function App() {
       } else if (pathParts[3] === "mistakes") {
         Brain.view = View.lichess_mistakes;
       } else if (pathParts.length > 3) {
-        alert("invalid path");
-        return null;
+        return false;
       } else {
         // username is game_id
         Brain.view = View.lichess_id;
       }
       const username = pathParts[2];
       if (username === "") {
-        alert("invalid path");
-        return null;
+        return false;
       }
       Brain.lichessUsername = username;
       break;
     case "speedrun":
       Brain.view = View.speedrun;
       if (pathParts.length > 2) {
-        alert("invalid path");
-        return null;
+        return false;
       }
       break;
     case "traverse":
       Brain.view = View.traverse;
       if (pathParts.length > 2) {
-        alert("invalid path");
-        return null;
+        return false;
       }
       break;
     case undefined:
       if (pathParts.length > 1) {
-        alert("invalid path");
-        return null;
+        return false;
       }
       break;
     default:
-      alert("invalid path");
-      return null;
+      return false;
+  }
+  return true;
+}
+
+export default function App() {
+  // TODO router
+  console.log(recorded_sha);
+  if (!AssignBrainIdkWhyIHaveToDoThis()) {
+    alert("invalid path");
+    return null;
   }
   return <Main />;
 }
 
 function Main() {
+  AssignBrainIdkWhyIHaveToDoThis();
   Brain.autoreplyRef = React.useRef<HTMLInputElement>(null);
   [Brain.history, Brain.updateHistory] = useState({
     index: 0,
