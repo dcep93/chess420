@@ -294,22 +294,24 @@ export default class Brain {
   }
 
   static playBest() {
-    const state = Brain.getState();
-    if (Brain.isMyTurn(state.fen)) {
-      const novelty = Brain.getNovelty();
-      if (novelty !== null) {
-        return Brain.playMove(novelty);
-      }
-    }
-    lichessF(Brain.getState().fen, { prepareNext: true })
-      .then((moves) => moves.sort((a, b) => b.score - a.score))
-      .then((moves) => moves[0]?.san)
-      .then((san) => Brain.playMove(san));
+    this.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
   }
 
-  static getNovelty(state?: StateType): string | null {
-    if (!state) state = Brain.getState();
-    return StorageW.get(state.fen);
+  static getBest(fen: string): Promise<string> {
+    if (Brain.isMyTurn(fen)) {
+      const novelty = Brain.getNovelty(fen);
+      if (novelty !== null) {
+        return Promise.resolve(novelty);
+      }
+    }
+    return lichessF(fen, { prepareNext: true })
+      .then((moves) => moves.sort((a, b) => b.score - a.score))
+      .then((moves) => moves[0]?.san);
+  }
+
+  static getNovelty(fen?: string): string | null {
+    if (!fen) fen = Brain.getFen();
+    return StorageW.get(fen);
   }
 
   static clearNovelty() {

@@ -140,7 +140,7 @@ export default function traverseF(
         });
       if (
         bestMove.san === myMove?.san ||
-        (myMoveSan !== undefined && Brain.getNovelty(state) === myMoveSan)
+        (myMoveSan !== undefined && Brain.getNovelty(state.fen) === myMoveSan)
       ) {
         return traverseF({
           ...traverseT,
