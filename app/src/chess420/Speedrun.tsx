@@ -26,6 +26,7 @@ export default function Speedrun() {
         <tr>
           <th>move</th>
           <th style={{ padding: "0 2em" }}>prob</th>
+          <th style={{ padding: "0 2em" }}>positions</th>
           <th>example</th>
         </tr>
       </thead>
@@ -35,6 +36,7 @@ export default function Speedrun() {
             ...ss.sort((a, b) => b.ratio - a.ratio)[0],
             san,
             ratio: ss.map((s) => s.ratio).reduce((a, b) => a + b, 0),
+            positions: ss.length,
           }))
           .sort((a, b) => b.ratio - a.ratio)
           .map((s, i) => (
@@ -45,6 +47,7 @@ export default function Speedrun() {
             >
               <td>{s.san}</td>
               <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
+              <td style={{ padding: "0 2em" }}>{s.positions}</td>
               <td>{s.sans.join(" ")}</td>
             </tr>
           ))}
