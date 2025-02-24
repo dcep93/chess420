@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Brain, { View } from "./Brain";
 import lichessF, { LiMove } from "./Lichess";
+import Speedrun from "./Speedrun";
 
 export type LogType = {
   fen: string;
@@ -59,7 +60,7 @@ export default function Log() {
 
 function SubLog() {
   if (Brain.view === View.speedrun) {
-    return <div>speedrun</div>; // TODO
+    return <Speedrun />;
   }
   const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length === 0) return <></>;
