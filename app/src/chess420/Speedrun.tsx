@@ -13,7 +13,7 @@ export default function Speedrun() {
   const [speedrun, updateSpeedrun] = useState<SpeedrunType | null>(null);
   useEffect(() => {
     updateSpeedrun(null);
-    getSpeedrun(Brain.getFen(), 1, []).then(updateSpeedrun);
+    getSpeedrun(Brain.getState().fen, 1, []).then(updateSpeedrun);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   if (speedrun === null) {
@@ -35,19 +35,21 @@ function getSpeedrun(
   ratio: number,
   sans: string[]
 ): Promise<SpeedrunType> {
-  if (sans.length > 3) {
-    console.log({ fen, ratio, sans });
-    throw new Error("depth");
-  }
-  if (ratio < settings.TRAVERSE_THRESHOLD_ODDS) return Promise.resolve([]);
+  if (sans.length >= 8 || ratio < settings.TRAVERSE_THRESHOLD_ODDS)
+    return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
     return Brain.getBest(fen).then((san) =>
-      getSpeedrun(Brain.getFen(fen, san), ratio, sans.concat(san)).then((sub) =>
-        sub.concat({ san, ratio, fen })
-      )
+      san === undefined
+        ? []
+        : getSpeedrun(Brain.getFen(fen, san), ratio, sans.concat(san)).then(
+            (sub) => sub.concat({ san, ratio, fen })
+          )
     );
   } else {
     return lichessF(fen)
+      .then((moves) =>
+        moves.filter((m) => m.total >= settings.UNCOMMON_THRESHOLD)
+      )
       .then((moves) =>
         ((total) =>
           moves.map((m) =>

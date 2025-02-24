@@ -63,7 +63,7 @@ function SubBoard() {
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
-      .then((total) => updateIsUncommon(total < 10000));
+      .then((total) => updateIsUncommon(total < settings.UNCOMMON_THRESHOLD));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.fen]);
   if (!fen) return null;

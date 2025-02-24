@@ -17,6 +17,7 @@ const settings = {
   WEIGHTED_POWER: 1.5,
   SHOULD_UPDATE_HASH: true,
   BOARD_REFRESH_PERIOD_MS: 750,
+  UNCOMMON_THRESHOLD: 10000,
 };
 
 export default settings;

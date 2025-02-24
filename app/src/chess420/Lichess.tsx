@@ -2,6 +2,7 @@ import Brain from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import { getRawScore } from "./getRawScore";
+import { getTicket, releaseTicket } from "./getTicket";
 
 export type LiMove = {
   san: string;
@@ -93,7 +94,8 @@ export default function lichessF(
   if (pp) {
     return pp;
   }
-  const p = helper(url, options.attempt)
+  const p = getTicket()
+    .then(() => helper(url, options.attempt))
     .then((moves) =>
       moves
         .map((move: LiMove) => ({
@@ -144,7 +146,8 @@ export default function lichessF(
             })
         );
       return moves;
-    });
+    })
+    .then(releaseTicket);
   promises[key] = p;
   return p;
 }
@@ -176,6 +179,8 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
             StorageW.set(url, json);
             return moves;
           })
+        : response.status === 429
+        ? Promise.resolve([])
         : new Promise((resolve) =>
             setTimeout(
               () => helper(url, attempt + 1).then((moves) => resolve(moves)),

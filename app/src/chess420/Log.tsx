@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Brain, { View } from "./Brain";
 import lichessF, { LiMove } from "./Lichess";
+import settings from "./Settings";
 import Speedrun from "./Speedrun";
 
 export type LogType = {
@@ -41,7 +42,11 @@ const titles = [
   },
   {
     f: (move: LiMove, moves: LiMove[]) =>
-      `t/${move.total < 10000 ? move.total : move.total.toExponential(2)}`,
+      `t/${
+        move.total < settings.UNCOMMON_THRESHOLD
+          ? move.total
+          : move.total.toExponential(2)
+      }`,
     text: "total games",
     title: "number of lichess games in this position",
     width: 5,
