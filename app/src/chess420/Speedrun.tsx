@@ -21,7 +21,7 @@ export default function Speedrun() {
     return <div>loading...</div>;
   }
   return (
-    <table>
+    <table style={{ margin: "2em" }}>
       <thead>
         <tr>
           <th>move</th>
