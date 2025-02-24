@@ -58,6 +58,9 @@ export default function Log() {
 }
 
 function SubLog() {
+  if (Brain.view === View.speedrun) {
+    return <div>speedrun</div>; // TODO
+  }
   const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length === 0) return <></>;
   if (Brain.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);

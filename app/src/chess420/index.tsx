@@ -39,6 +39,13 @@ export default function App() {
       }
       Brain.lichessUsername = username;
       break;
+    case "speedrun":
+      Brain.view = View.speedrun;
+      if (pathParts.length > 2) {
+        alert("invalid path");
+        return null;
+      }
+      break;
     case "traverse":
       Brain.view = View.traverse;
       if (pathParts.length > 2) {

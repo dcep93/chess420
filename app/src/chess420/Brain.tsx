@@ -23,6 +23,7 @@ export enum View {
   lichess_latest,
   lichess_id,
   traverse,
+  speedrun,
 }
 
 export default class Brain {
@@ -323,6 +324,10 @@ export default class Brain {
 
   static traverse() {
     window.location.href = `/traverse#${Brain.hash(Brain.getState().fen)}`;
+  }
+
+  static speedrun() {
+    window.location.href = `/speedrun#${Brain.hash(Brain.getState().fen)}`;
   }
 
   static findMistakes(username: string) {

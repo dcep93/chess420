@@ -37,6 +37,13 @@ export default function Help() {
       ],
     },
     {
+      title: "What is the speedrun button?",
+      content: [
+        "In speedrunning mode, you can see the distribution of moves the are determined to be best, along with how often it is the best move.",
+        "When just starting a new opening, it's a good idea to check these moves.",
+      ],
+    },
+    {
       title: "How do I memorize with traverse manually?",
       content: [
         "Try it out!",
