@@ -38,6 +38,7 @@ export default function Speedrun() {
             ratio: ss.map((s) => s.ratio).reduce((a, b) => a + b, 0),
             positions: ss.length,
           }))
+          .sort((a, b) => a.sans.length - b.sans.length)
           .sort((a, b) => b.ratio - a.ratio)
           .map((s, i) => (
             <tr
@@ -73,9 +74,7 @@ function getSpeedrun(
     );
   } else {
     return lichessF(fen)
-      .then((moves) =>
-        moves.filter((m) => m.total >= settings.UNCOMMON_THRESHOLD)
-      )
+      .then((moves) => moves.filter((m) => m.total >= 1000))
       .then((moves) =>
         ((total) =>
           moves.map((m) =>
