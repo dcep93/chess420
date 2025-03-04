@@ -43,7 +43,7 @@ export default class Brain {
 
   //
 
-  static view?: View;
+  static view: View;
   static lichessUsername?: string;
 
   //
@@ -213,12 +213,6 @@ export default class Brain {
   //
 
   static maybeReply(state: StateType) {
-    if (
-      Brain.view === View.lichess_mistakes ||
-      Brain.view === View.lichess_id ||
-      Brain.view === View.traverse
-    )
-      return;
     if (
       (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
       !Brain.isMyTurn(state.fen, state.orientationIsWhite)

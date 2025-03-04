@@ -49,7 +49,14 @@ export default function Controls() {
               <input
                 ref={Brain.autoreplyRef}
                 type={"checkbox"}
-                defaultChecked={true}
+                defaultChecked={
+                  ![
+                    View.lichess_mistakes,
+                    View.lichess_id,
+                    View.traverse,
+                    View.speedrun,
+                  ].includes(Brain.view)
+                }
               />
               &nbsp;
               <span>Auto Reply</span>
