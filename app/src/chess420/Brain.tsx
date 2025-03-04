@@ -214,7 +214,7 @@ export default class Brain {
 
   static maybeReply(state: StateType) {
     if (
-      (!Brain.autoreplyRef.current || Brain.autoreplyRef.current!.checked) &&
+      Brain.autoreplyRef.current?.checked &&
       !Brain.isMyTurn(state.fen, state.orientationIsWhite)
     ) {
       Brain.timeout = setTimeout(Brain.playWeighted, settings.REPLY_DELAY_MS);
