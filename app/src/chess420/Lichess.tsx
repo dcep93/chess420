@@ -23,6 +23,12 @@ type OptionsType = {
   username?: string;
 };
 
+export const stats = {
+  requests: 0,
+  success: 0,
+  failure: 0,
+};
+
 export function getLatestGame(username: string) {
   return fetch(`https://lichess.org/api/user/${username}/current-game`)
     .then((resp) => resp.text())
@@ -167,9 +173,14 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
     });
   }
 
+  stats.requests++;
   return Promise.resolve()
     .then(() => console.log("fetching", attempt, url))
     .then(() => fetch(url))
+    .then((response) => {
+      stats[response.ok ? "success" : "failure"]++;
+      return response;
+    })
     .then((response) =>
       response.ok
         ? response.text().then((text) => {
