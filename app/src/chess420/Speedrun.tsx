@@ -74,7 +74,6 @@ function getSpeedrun(
     );
   } else {
     return lichessF(fen)
-      .then((moves) => moves.filter((m) => m.total >= 1000))
       .then((moves) =>
         ((total) =>
           moves.map((m) =>
