@@ -161,14 +161,14 @@ export default function lichessF(
 function helper(url: string, attempt: number): Promise<LiMove[]> {
   if (attempt > settings.MAX_LICHESS_ATTEMPTS) return Promise.resolve([]);
 
-  const storedMoves = StorageW.get(url);
-  if (storedMoves !== null) return Promise.resolve(storedMoves.moves);
+  const storedMoves = StorageW.getLichess(url);
+  if (storedMoves !== null) return Promise.resolve(storedMoves);
 
   const params = new URLSearchParams(url.split("/player")[1]);
   const username = params.get("player");
   if (username?.startsWith(":")) {
     return getChessDotComMoves(username.slice(1), params).then((moves) => {
-      StorageW.set(url, { moves });
+      StorageW.setLichess(url, moves);
       return moves;
     });
   }
@@ -187,7 +187,7 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
             const json = JSON.parse(text.trim().split("\n").reverse()[0]);
             console.log({ url, attempt, json, text });
             const moves = json.moves;
-            StorageW.set(url, json);
+            StorageW.setLichess(url, moves);
             return moves;
           })
         : response.status === 429

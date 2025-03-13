@@ -305,11 +305,11 @@ export default class Brain {
 
   static getNovelty(fen?: string): string | null {
     if (!fen) fen = Brain.getFen();
-    return StorageW.get(fen);
+    return StorageW.getNovelty(fen);
   }
 
   static clearNovelty() {
-    StorageW.set(Brain.getState().fen, null);
+    StorageW.setNovelty(Brain.getState().fen, null);
   }
 
   static clearStorage() {
@@ -367,10 +367,10 @@ export default class Brain {
   }
 
   static setNovelty(fen: string, san: string) {
-    StorageW.set(fen, san);
+    StorageW.setNovelty(fen, san);
     return new Promise<void>((resolve) => {
       function helper() {
-        if (StorageW.get(fen) === san) return resolve();
+        if (StorageW.getNovelty(fen) === san) return resolve();
         setTimeout(helper, 100);
       }
       helper();
