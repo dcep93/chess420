@@ -304,7 +304,7 @@ export default class Brain {
   }
 
   static getNovelty(fen?: string): string | null {
-    if (!fen) fen = Brain.getFen();
+    if (!fen) fen = Brain.getState().fen;
     return StorageW.getNovelty(fen);
   }
 

@@ -38,7 +38,7 @@ export default class StorageW {
 
   static updateLru(fen: string) {
     const k = getLruKey();
-    const kk = to_md5_f(fen);
+    const kk = getLichessKey(fen);
     const stored = localStorage.getItem(k);
     if (!stored) {
       StorageW.clear();
@@ -56,6 +56,7 @@ export default class StorageW {
           { kk: "", timestamp: Number.POSITIVE_INFINITY }
         );
       delete lru[oldest.kk];
+      localStorage.removeItem(oldest.kk);
     }
     lru[kk] = Date.now();
     localStorage.setItem(k, JSON.stringify(lru));
@@ -63,15 +64,17 @@ export default class StorageW {
 }
 
 function getLruKey() {
-  return getKey("lru:v1");
+  return getKey("lru:v2");
 }
 
 function getLichessKey(key: string) {
-  return getKey(`lichess:${key}`);
+  const k = to_md5_f(key);
+  return getKey(`lichess:${k}`);
 }
 
 function getNoveltyKey(key: string) {
-  return getKey(`novelty:${key}`);
+  const k = to_md5_f(key);
+  return getKey(`novelty:${k}`);
 }
 
 function getKey(key: string) {
