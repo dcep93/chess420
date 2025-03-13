@@ -2,7 +2,7 @@ import to_md5_f from "md5";
 
 import settings from "./Settings";
 
-const MAX_LRU_SIZE = 1000;
+const MAX_LRU_SIZE = 10000;
 
 export default class StorageW {
   static clear() {
