@@ -16,8 +16,11 @@ export default function Speedrun() {
   const [speedrun, updateSpeedrun] = useState<SpeedrunType | null>(null);
   useEffect(() => {
     updateSpeedrun(null);
-    key = Date.now();
-    getSpeedrun(key, Brain.getState().fen, 1, []).then(updateSpeedrun);
+    const now = Date.now();
+    key = now;
+    getSpeedrun(key, Brain.getState().fen, 1, []).then(
+      (s) => key === now && updateSpeedrun(s)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   if (speedrun === null) {
