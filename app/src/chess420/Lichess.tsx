@@ -176,7 +176,7 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
   stats.requests++;
   return Promise.resolve()
     .then(() => console.log("fetching", attempt, url))
-    .then(() => fetch(url))
+    .then(() => abortableFetch(url))
     .then((response) => {
       stats[response.ok ? "success" : "failure"]++;
       return response;
@@ -277,4 +277,40 @@ function proxy(data: any): Promise<any> {
       resolve(response.data);
     })
   );
+}
+
+async function abortableFetch(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const response = await fetch(url, { signal });
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
+  let result = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    result += decoder.decode(value, { stream: true });
+
+    if (isJsonComplete(result)) {
+      controller.abort();
+
+      // Close the stream reader explicitly (this helps in some browsers)
+      reader.cancel().catch(() => {});
+
+      break;
+    }
+  }
+  return response;
+}
+
+// Function to check if JSON is complete
+function isJsonComplete(jsonString: string): boolean {
+  try {
+    JSON.parse(jsonString); // If parsing succeeds, it's complete
+    return true;
+  } catch {
+    return false; // Incomplete JSON (e.g., stream still in progress)
+  }
 }

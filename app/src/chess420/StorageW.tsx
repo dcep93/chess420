@@ -5,6 +5,17 @@ import settings from "./Settings";
 const MAX_LICHESS_STORED = 10000000;
 
 export default class StorageW {
+  static getSizes() {
+    const sizes = { lichess: 0, novelty: 0 };
+    Object.keys({ ...localStorage }).forEach(
+      (k) =>
+        sizes[
+          k.split("/").reverse()[0].split(":")[0] as "lichess" | "novelty"
+        ]++
+    );
+    return sizes;
+  }
+
   static clear(maxSize: number) {
     while (true) {
       const lichessStored = Object.entries({ ...localStorage })

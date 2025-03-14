@@ -1,5 +1,6 @@
 import React from "react";
 import Brain, { View } from "./Brain";
+import StorageW from "./StorageW";
 
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
@@ -64,7 +65,12 @@ export default function Controls() {
           </div>
           <div>
             <button onClick={Brain.help}>help</button>
-            <button onClick={Brain.clearStorage}>clear storage</button>
+            <button
+              title={JSON.stringify(StorageW.getSizes(), null, 2)}
+              onClick={Brain.clearStorage}
+            >
+              clear storage
+            </button>
           </div>
         </div>
         <div
