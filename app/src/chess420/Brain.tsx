@@ -313,7 +313,7 @@ export default class Brain {
   }
 
   static clearStorage() {
-    StorageW.clear();
+    StorageW.clear(0);
   }
 
   //

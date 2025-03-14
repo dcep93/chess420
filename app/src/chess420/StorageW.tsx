@@ -2,11 +2,26 @@ import to_md5_f from "md5";
 
 import settings from "./Settings";
 
-const MAX_LRU_SIZE = 10000;
+const MAX_LICHESS_STORED = 10000000;
 
 export default class StorageW {
-  static clear() {
-    localStorage.clear();
+  static clear(maxSize: number) {
+    while (true) {
+      const lichessStored = Object.entries({ ...localStorage })
+        .map(([kk, { timestamp }]) => ({
+          kk,
+          timestamp,
+        }))
+        .filter(({ timestamp }) => timestamp);
+      if (lichessStored.length <= maxSize) {
+        break;
+      }
+      const oldest = lichessStored.reduce(
+        (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
+        { kk: "", timestamp: Number.POSITIVE_INFINITY }
+      );
+      localStorage.removeItem(oldest.kk);
+    }
   }
 
   static getNovelty(key: string): any {
@@ -26,47 +41,15 @@ export default class StorageW {
     const k = getLichessKey(key);
     const raw = localStorage.getItem(k);
     if (raw === null) return null;
-    return JSON.parse(raw);
+    return JSON.parse(raw).content;
   }
 
   static setLichess(fen: string, content: any) {
-    StorageW.updateLru(fen);
+    StorageW.clear(MAX_LICHESS_STORED);
     const k = getLichessKey(fen);
-    const v = JSON.stringify(content);
+    const v = JSON.stringify({ content, timestamp: Date.now() });
     setTimeout(() => localStorage.setItem(k, v));
   }
-
-  static updateLru(fen: string) {
-    const k = getLruKey();
-    const kk = getLichessKey(fen);
-    const stored = localStorage.getItem(k);
-    if (!stored) {
-      StorageW.clear();
-    }
-    const lru: { [kk: string]: number } =
-      stored === null ? {} : JSON.parse(stored);
-    if (!lru[kk]) {
-      while (Object.keys(lru).length > MAX_LRU_SIZE) {
-        const oldest = Object.entries(lru)
-          .map(([kk, timestamp]) => ({
-            kk,
-            timestamp,
-          }))
-          .reduce(
-            (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
-            { kk: "", timestamp: Number.POSITIVE_INFINITY }
-          );
-        delete lru[oldest.kk];
-        localStorage.removeItem(oldest.kk);
-      }
-    }
-    lru[kk] = Date.now();
-    localStorage.setItem(k, JSON.stringify(lru));
-  }
-}
-
-function getLruKey() {
-  return getKey("lru:v2");
 }
 
 function getLichessKey(key: string) {
