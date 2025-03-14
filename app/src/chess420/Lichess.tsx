@@ -87,12 +87,12 @@ export default function lichessF(
   const chess = Brain.getChess(fen);
   const url =
     options.username === undefined
-      ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&${
+      ? `https://explorer.lichess.ovh/lichess?fen=${chess.fen()}&recentGames=0&${
           settings.LICHESS_PARAMS
         }`
       : `https://explorer.lichess.ovh/player?player=${options.username}&color=${
           chess.turn() === "w" ? "white" : "black"
-        }&recentGames=0&fen=${chess.fen()}`;
+        }&fen=${chess.fen()}`;
   const key = JSON.stringify({
     url,
   });
@@ -185,8 +185,17 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
       response.ok
         ? response.text().then((text) => {
             const json = JSON.parse(text.trim().split("\n").reverse()[0]);
-            console.log({ url, attempt, json, text });
-            const moves = json.moves;
+            const recentMoves =
+              json.recentGames?.length > 0
+                ? json.recentGames.map((g: { uci: string }) => g.uci)
+                : undefined;
+            const moves =
+              recentMoves === undefined
+                ? json.moves
+                : json.moves.filter((m: { uci: string }) =>
+                    recentMoves.includes(m.uci)
+                  );
+            console.log({ url, attempt, moves, recentMoves, json });
             StorageW.setLichess(url, moves);
             return moves;
           })
