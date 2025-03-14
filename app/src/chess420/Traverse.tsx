@@ -1,5 +1,5 @@
 import Brain, { StateType, View } from "./Brain";
-import lichessF, { LiMove } from "./Lichess";
+import lichessF from "./Lichess";
 import { getParts } from "./Log";
 import settings from "./Settings";
 
@@ -122,16 +122,14 @@ export default function traverseF(
       lichessF(state.fen).then((moves) => ({
         myMoveSan,
         myMove: moves.find((move) => move.san === myMoveSan),
-        bestMove: moves.sort((a, b) => b.score - a.score)[0] as
-          | LiMove
-          | undefined,
+        bestMove: moves.sort((a, b) => b.score - a.score)[0],
         moves,
       }))
     )
     .then(({ myMoveSan, myMove, bestMove, moves }) => {
       const novelty = Brain.getNovelty(state.fen);
       if (novelty !== null) {
-        bestMove = moves.find((move) => move.san === novelty);
+        bestMove = moves.find((move) => move.san === novelty)!;
       }
       if (bestMove === undefined)
         return traverseF({
