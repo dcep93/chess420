@@ -302,6 +302,7 @@ async function abortableFetch(url: string): Promise<Response> {
       break;
     }
   }
+  response.text = () => Promise.resolve(result);
   return response;
 }
 
