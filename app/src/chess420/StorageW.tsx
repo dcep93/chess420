@@ -45,18 +45,20 @@ export default class StorageW {
     }
     const lru: { [kk: string]: number } =
       stored === null ? {} : JSON.parse(stored);
-    if (!lru[kk] && Object.keys(lru).length > MAX_LRU_SIZE) {
-      const oldest = Object.entries(lru)
-        .map(([kk, timestamp]) => ({
-          kk,
-          timestamp,
-        }))
-        .reduce(
-          (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
-          { kk: "", timestamp: Number.POSITIVE_INFINITY }
-        );
-      delete lru[oldest.kk];
-      localStorage.removeItem(oldest.kk);
+    if (!lru[kk]) {
+      while (Object.keys(lru).length > MAX_LRU_SIZE) {
+        const oldest = Object.entries(lru)
+          .map(([kk, timestamp]) => ({
+            kk,
+            timestamp,
+          }))
+          .reduce(
+            (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
+            { kk: "", timestamp: Number.POSITIVE_INFINITY }
+          );
+        delete lru[oldest.kk];
+        localStorage.removeItem(oldest.kk);
+      }
     }
     lru[kk] = Date.now();
     localStorage.setItem(k, JSON.stringify(lru));
