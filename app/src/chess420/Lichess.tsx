@@ -162,7 +162,11 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
   if (attempt > settings.MAX_LICHESS_ATTEMPTS) return Promise.resolve([]);
 
   const storedMoves = StorageW.getLichess(url);
-  if (storedMoves !== null) return Promise.resolve(storedMoves);
+  if (storedMoves !== null) {
+    // refresh
+    StorageW.setLichess(url, storedMoves);
+    return Promise.resolve(storedMoves);
+  }
 
   const params = new URLSearchParams(url.split("/player")[1]);
   const username = params.get("player");
