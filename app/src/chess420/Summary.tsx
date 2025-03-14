@@ -133,9 +133,22 @@ function SubSummary() {
             <>
               {!state.traverse!.messages ? null : (
                 <div>
-                  <button onClick={() => traverseF(state.traverse!)}>
-                    continue
-                  </button>
+                  <div>
+                    <button onClick={() => traverseF(state.traverse!)}>
+                      continue
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() =>
+                        window.open(
+                          `/speedrun#${Brain.hash(Brain.getState().fen)}`
+                        )
+                      }
+                    >
+                      speedrun
+                    </button>
+                  </div>
                 </div>
               )}
               {state.traverse!.assignNovelty === undefined ? null : (
