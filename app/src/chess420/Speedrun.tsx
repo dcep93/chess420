@@ -46,7 +46,7 @@ export default function Speedrun() {
               ...ss.sort((a, b) => b.ratio - a.ratio)[0],
               san,
               ratio: ss.map((s) => s.ratio).reduce((a, b) => a + b, 0),
-              positions: ss.length,
+              ss,
             }))
             .sort((a, b) => a.sans.length - b.sans.length)
             .sort((a, b) => b.ratio - a.ratio)
@@ -55,10 +55,11 @@ export default function Speedrun() {
                 key={i}
                 onClick={() => window.open(`/#${Brain.hash(s.fen)}`)}
                 style={{ cursor: "pointer" }}
+                title={s.ss.map((sss) => sss.sans.join(" ")).join("\n")}
               >
                 <td>{s.san}</td>
                 <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
-                <td style={{ padding: "0 2em" }}>{s.positions}</td>
+                <td style={{ padding: "0 2em" }}>{s.ss.length}</td>
                 <td>{s.sans.join(" ")}</td>
               </tr>
             ))}
