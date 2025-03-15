@@ -43,24 +43,24 @@ export default function Speedrun() {
         <tbody>
           {Object.entries(groupByF(speedrun, (s) => s.san))
             .map(([san, ss]) => ({
-              ...ss.sort((a, b) => b.ratio - a.ratio)[0],
+              first: ss.sort((a, b) => b.ratio - a.ratio)[0],
               san,
               ratio: ss.map((s) => s.ratio).reduce((a, b) => a + b, 0),
               ss,
             }))
-            .sort((a, b) => a.sans.length - b.sans.length)
+            .sort((a, b) => a.first.sans.length - b.first.sans.length)
             .sort((a, b) => b.ratio - a.ratio)
             .map((s, i) => (
               <tr
                 key={i}
-                onClick={() => window.open(`/#${Brain.hash(s.fen)}`)}
+                onClick={() => window.open(`/#${Brain.hash(s.first.fen)}`)}
                 style={{ cursor: "pointer" }}
                 title={s.ss.map((sss) => sss.sans.join(" ")).join("\n")}
               >
                 <td>{s.san}</td>
                 <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
                 <td style={{ padding: "0 2em" }}>{s.ss.length}</td>
-                <td>{s.sans.join(" ")}</td>
+                <td>{s.first.sans.join(" ")}</td>
               </tr>
             ))}
         </tbody>
