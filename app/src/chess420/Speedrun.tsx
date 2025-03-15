@@ -55,7 +55,11 @@ export default function Speedrun() {
                 key={i}
                 onClick={() => window.open(`/#${Brain.hash(s.first.fen)}`)}
                 style={{ cursor: "pointer" }}
-                title={s.ss.map((sss) => sss.sans.join(" ")).join("\n")}
+                title={s.ss
+                  .map(
+                    (sss) => `${sss.ratio.toFixed(2)}: ${sss.sans.join(" ")}`
+                  )
+                  .join("\n")}
               >
                 <td>{s.san}</td>
                 <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
