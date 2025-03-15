@@ -2,11 +2,15 @@ import to_md5_f from "md5";
 
 import settings from "./Settings";
 
-const MAX_LICHESS_STORED = 10000000;
+const MAX_LICHESS_STORED = 10000;
 
 export default class StorageW {
   static getSizes() {
-    const sizes = { lichess: 0, novelty: 0 };
+    const sizes = {
+      lichess: 0,
+      novelty: 0,
+      json_length: JSON.stringify({ ...localStorage }).length,
+    };
     Object.keys({ ...localStorage }).forEach(
       (k) =>
         sizes[
