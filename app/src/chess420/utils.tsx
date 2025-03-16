@@ -11,7 +11,7 @@ export function DoOnce(key: string, f: () => void) {
   }, []);
 }
 
-export function log<T>(t: T): T {
+export function clog<T>(t: T): T {
   console.log(t);
   return t;
 }

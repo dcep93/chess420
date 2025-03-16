@@ -189,19 +189,9 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
       response.ok
         ? response.text().then((text) => {
             const json = JSON.parse(text.trim().split("\n").reverse()[0]);
-            const recentMoves =
-              json.recentGames?.length > 0
-                ? json.recentGames.map((g: { uci: string }) => g.uci)
-                : undefined;
-            const moves =
-              recentMoves === undefined
-                ? json.moves
-                : json.moves.filter((m: { uci: string }) =>
-                    recentMoves.includes(m.uci)
-                  );
-            console.log({ url, attempt, moves, recentMoves, json });
-            StorageW.setLichess(url, moves);
-            return moves;
+            console.log({ url, attempt, json });
+            StorageW.setLichess(url, json.moves);
+            return json.moves;
           })
         : response.status === 429
         ? Promise.resolve([])
