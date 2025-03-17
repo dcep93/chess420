@@ -80,72 +80,61 @@ export default function Controls() {
             justifyContent: "space-around",
           }}
         >
-          {Brain.view === undefined ? (
-            <>
+          <>
+            <div>
+              <button onClick={Brain.traverse}>traverse manually</button>
+              <button onClick={Brain.speedrun}>speedrun</button>
+            </div>
+            <div>
               <div>
-                <button onClick={Brain.traverse}>traverse manually</button>
-                <button onClick={Brain.speedrun}>speedrun</button>
+                <span>lichess username: </span>
+                <form
+                  style={{ display: "inline" }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    Brain.playVs(lichessRef.current!.value);
+                  }}
+                >
+                  <input
+                    name={"lichessRef"}
+                    ref={lichessRef}
+                    style={{ width: "4em" }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    autoComplete={"on"}
+                  />
+                </form>
               </div>
               <div>
-                <div>
-                  <span>lichess username: </span>
-                  <form
-                    style={{ display: "inline" }}
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      Brain.playVs(lichessRef.current!.value);
-                    }}
-                  >
-                    <input
-                      name={"lichessRef"}
-                      ref={lichessRef}
-                      style={{ width: "4em" }}
-                      onKeyDown={(e) => e.stopPropagation()}
-                      autoComplete={"on"}
-                    />
-                  </form>
-                </div>
-                <div>
-                  <button
-                    onClick={() => Brain.playVs(lichessRef.current!.value)}
-                  >
-                    play vs user
-                  </button>
-                  <button
-                    onClick={() =>
-                      Brain.findMistakes(lichessRef.current!.value)
-                    }
-                  >
-                    find mistakes
-                  </button>
-                  <button
-                    onClick={() =>
-                      Brain.importLatestGame(lichessRef.current!.value)
-                    }
-                  >
-                    import latest
-                  </button>
-                </div>
+                <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
+                  play vs user
+                </button>
+                <button
+                  onClick={() => Brain.findMistakes(lichessRef.current!.value)}
+                >
+                  find mistakes
+                </button>
+                <button
+                  onClick={() =>
+                    Brain.importLatestGame(lichessRef.current!.value)
+                  }
+                >
+                  import latest
+                </button>
               </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <button onClick={Brain.home}>home</button>
-              </div>
-              <div>
-                {Brain.view === View.lichess_vs ? (
-                  <span>playing vs {Brain.lichessUsername}</span>
-                ) : Brain.view === View.lichess_mistakes ? (
-                  <span>finding mistakes of {Brain.lichessUsername}</span>
-                ) : Brain.view === View.speedrun ? (
-                  <span>speedrunning common moves</span>
-                ) : Brain.view === View.traverse ? (
-                  <span>traversing manually</span>
-                ) : null}
-              </div>
-            </>
-          )}
+            </div>
+
+            <div>
+              {Brain.view === View.lichess_vs ? (
+                <span>playing vs {Brain.lichessUsername}</span>
+              ) : Brain.view === View.lichess_mistakes ? (
+                <span>finding mistakes of {Brain.lichessUsername}</span>
+              ) : Brain.view === View.speedrun ? (
+                <span>speedrunning common moves</span>
+              ) : Brain.view === View.traverse ? (
+                <span>traversing manually</span>
+              ) : null}
+            </div>
+          </>
         </div>
       </div>
     </div>
