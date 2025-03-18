@@ -62,9 +62,9 @@ function SpeedrunHelper(props: { speedrun: SpeedrunType[] }) {
       <table style={{ margin: "2em" }}>
         <thead>
           <tr>
-            <th>move</th>
-            <th style={{ padding: "0 2em" }}>prob</th>
-            <th style={{ padding: "0 2em" }}>positions</th>
+            <th style={{ paddingRight: "2em" }}>move</th>
+            <th style={{ paddingRight: "2em" }}>prob</th>
+            <th style={{ paddingRight: "2em" }}>positions</th>
             <th>example</th>
           </tr>
         </thead>
@@ -90,8 +90,8 @@ function SpeedrunHelper(props: { speedrun: SpeedrunType[] }) {
                   .join("\n")}
               >
                 <td>{s.san}</td>
-                <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
-                <td style={{ padding: "0 2em" }}>{s.ss.length}</td>
+                <td>{s.ratio.toFixed(2)}</td>
+                <td>{s.ss.length}</td>
                 <td>{s.first.sans.join(" ")}</td>
               </tr>
             ))}

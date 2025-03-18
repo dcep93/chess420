@@ -17,9 +17,10 @@ export default function Traps(props: { traps: TrapType[] }) {
       <table style={{ margin: "2em" }}>
         <thead>
           <tr>
-            <th>trap_score</th>
-            <th style={{ padding: "0 2em" }}>prob</th>
-            <th>sans</th>
+            <th style={{ paddingRight: "2em" }}>trap_score</th>
+            <th style={{ paddingRight: "2em" }}>prob</th>
+            <th style={{ paddingRight: "2em" }}>ww</th>
+            <th style={{ paddingRight: "6em" }}>sans</th>
             <th>mistake</th>
             <th>opening</th>
           </tr>
@@ -35,7 +36,8 @@ export default function Traps(props: { traps: TrapType[] }) {
                 title={`${s.ratio.toFixed(2)}: ${s.sans.join(" ")}`}
               >
                 <td>{s.score.toFixed(2)}</td>
-                <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
+                <td>{s.ratio.toFixed(2)}</td>
+                <td>{s.m.ww.toFixed(2)}</td>
                 <td>{s.sans.join(" ")}</td>
                 <td>
                   {s.m.san} {s.m.prob}
@@ -50,7 +52,8 @@ export default function Traps(props: { traps: TrapType[] }) {
 }
 
 function getOpening(trap: TrapType): string {
-  // TODO trap name?
+  const o = Brain.getOpening(Brain.getFen(trap.fen));
+  if (o) return o;
   const fens = trap.sans.concat("").reduce(
     (prev, curr) => ({
       fen: Brain.getFen(prev.fen, curr),
