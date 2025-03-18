@@ -99,7 +99,7 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   );
 }
 
-function getScore(ratio: number, m: LiMove, moves: LiMove[]): number {
+function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
   return Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww;
 }
 
@@ -135,7 +135,7 @@ function helper(
           .filter((m) => m.total >= 1000)
           .map((m) =>
             Promise.resolve()
-              .then(() => getScore(ratio, m, moves))
+              .then(() => getTrapScore(ratio, m, moves))
               .then((score) => ({
                 ratio,
                 fen,
