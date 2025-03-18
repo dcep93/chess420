@@ -13,14 +13,27 @@ type SpeedrunType = {
 var key = -1;
 
 export default function Speedrun() {
-  const [speedrun, updateSpeedrun] = useState<SpeedrunType | null>(null);
+  return (
+    <div style={{ display: "flex" }}>
+      <SpeedrunHelper />
+      <SpeedrunHelper />
+    </div>
+  );
+}
+
+function SpeedrunHelper() {
+  const pp = {
+    san: "loading",
+    ratio: Number.POSITIVE_INFINITY,
+    fen: "",
+    sans: [],
+  };
+  const [speedrun, updateSpeedrun] = useState<SpeedrunType>([]);
   useEffect(() => {
-    updateSpeedrun(null);
+    const p: SpeedrunType = [pp];
+    updateSpeedrun(p);
     const now = Date.now();
     key = now;
-    const p: SpeedrunType = [
-      { san: "loading", ratio: Number.POSITIVE_INFINITY, fen: "", sans: [] },
-    ];
     getSpeedrun(
       (sr) => {
         p.push(...sr);
@@ -33,9 +46,6 @@ export default function Speedrun() {
     ).then((s) => key === now && updateSpeedrun(s));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
-  if (speedrun === null) {
-    return <div>loading...</div>;
-  }
   return (
     <div>
       <div>
