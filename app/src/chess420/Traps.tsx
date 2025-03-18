@@ -24,7 +24,6 @@ export default function Traps(props: { traps: TrapsType }) {
           </tr>
         </thead>
         <tbody>
-          {/* TODO group by fen */}
           {props.traps
             .sort((a, b) => b.score - a.score)
             .map((s, i) => (
@@ -47,8 +46,22 @@ export default function Traps(props: { traps: TrapsType }) {
 }
 
 function getOpening(sans: string[]): string {
-  // TODO
-  return "";
+  const fens = sans.concat("").reduce(
+    (prev, curr) => ({
+      fen: Brain.getFen(prev.fen, curr),
+      fens: prev.fens.concat(prev.fen),
+    }),
+    ((fen: string) => ({
+      fen,
+      fens: [fen],
+    }))(Brain.getState().fen)
+  ).fens;
+  return (
+    fens
+      .reverse()
+      .map((fen) => Brain.getOpening(fen))
+      .find((o) => o) || "?"
+  );
 }
 
 var key = -1;
@@ -62,7 +75,12 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
     now,
     (ts) => {
       ts.map((t) => {
-        trapsCache.push(t);
+        const found = trapsCache.find((tt) => tt.fen === t.fen);
+        if (found) {
+          found.ratio += t.ratio;
+        } else {
+          trapsCache.push(t);
+        }
       });
       trapsCache.sort((a, b) => b.score - a.score).splice(numToKeep);
       updateTraps(trapsCache);
@@ -89,7 +107,7 @@ function helper(
   ratio: number,
   sans: string[]
 ): Promise<TrapsType> {
-  // TODO define
+  // TODO define TRAPS_THRESHOLD_ODDS
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
