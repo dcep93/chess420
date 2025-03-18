@@ -63,7 +63,8 @@ export default class Brain {
 
   //
 
-  static hash(fen: string): string {
+  static hash(fen?: string): string {
+    if (!fen) fen = Brain.getState().fen;
     if (Brain.getState().orientationIsWhite && Brain.getFen() === fen) {
       return "";
     }
@@ -319,27 +320,23 @@ export default class Brain {
   //
 
   static traverse() {
-    window.location.href = `/traverse#${Brain.hash(Brain.getState().fen)}`;
+    window.location.href = `/traverse#${Brain.hash()}`;
   }
 
   static speedrun() {
-    window.location.href = `/speedrun#${Brain.hash(Brain.getState().fen)}`;
+    window.location.href = `/speedrun#${Brain.hash()}`;
   }
 
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
-    window.location.href = `/lichess/${username}/mistakes#${Brain.hash(
-      Brain.getState().fen
-    )}`;
+    window.location.href = `/lichess/${username}/mistakes#${Brain.hash()}`;
   }
 
   static playVs(username: string) {
     if (!username) return alert("no username provided");
 
-    window.location.href = `/lichess/${username}/vs#${Brain.hash(
-      Brain.getState().fen
-    )}`;
+    window.location.href = `/lichess/${username}/vs#${Brain.hash()}`;
   }
 
   static importLatestGame(username: string) {
@@ -351,7 +348,7 @@ export default class Brain {
   static home() {
     if (Brain.showHelp) return Brain.updateShowHelp(false);
     setTimeout(() => {
-      window.location.assign("/#");
+      window.location.assign(`/#${Brain.hash()}`);
       if (Brain.view === undefined) window.location.reload();
     });
   }

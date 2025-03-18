@@ -138,11 +138,7 @@ function SubSummary() {
                   </div>
                   <div>
                     <button
-                      onClick={() =>
-                        window.open(
-                          `/speedrun#${Brain.hash(Brain.getState().fen)}`
-                        )
-                      }
+                      onClick={() => window.open(`/speedrun#${Brain.hash()}`)}
                     >
                       speedrun
                     </button>
