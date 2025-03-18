@@ -85,7 +85,7 @@ export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
       ts.forEach((t) => {
         const found = trapsCache.find((tt) => tt.fen === t.fen);
         if (found) {
-          found.ratio += t.ratio;
+          found.ratio = Math.max(t.ratio, found.ratio);
         } else {
           trapsCache.push(t);
         }
@@ -104,7 +104,12 @@ export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
 }
 
 function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
-  return Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww;
+  const best = moves.sort((a, b) => b.score - a.score)[0];
+  return [
+    // Math.pow(m.prob, 0.5),
+    // Brain.getState().orientationIsWhite ? best.ww : 1 - best.ww,
+    Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww,
+  ].reduce((a, b) => a * b, 1);
 }
 
 function helper(
