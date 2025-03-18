@@ -18,9 +18,19 @@ export default function Speedrun() {
     updateSpeedrun(null);
     const now = Date.now();
     key = now;
-    getSpeedrun(key, Brain.getState().fen, 1, []).then(
-      (s) => key === now && updateSpeedrun(s)
-    );
+    const p: SpeedrunType = [
+      { san: "loading", ratio: Number.POSITIVE_INFINITY, fen: "", sans: [] },
+    ];
+    getSpeedrun(
+      (sr) => {
+        p.push(...sr);
+        updateSpeedrun(p);
+      },
+      now,
+      Brain.getState().fen,
+      1,
+      []
+    ).then((s) => key === now && updateSpeedrun(s));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   if (speedrun === null) {
@@ -74,6 +84,7 @@ export default function Speedrun() {
 }
 
 function getSpeedrun(
+  updateSpeedrun: (s: SpeedrunType) => void,
   speedrunKey: number,
   fen: string,
   ratio: number,
@@ -89,12 +100,19 @@ function getSpeedrun(
     return Brain.getBest(fen).then((san) =>
       san === undefined
         ? []
-        : getSpeedrun(
-            speedrunKey,
-            Brain.getFen(fen, san),
-            ratio,
-            sans.concat(san)
-          ).then((sub) => sub.concat({ san, ratio, fen, sans }))
+        : Promise.resolve({ san, ratio, fen, sans }).then((s) =>
+            Promise.resolve()
+              .then(() => updateSpeedrun([s]))
+              .then(() =>
+                getSpeedrun(
+                  updateSpeedrun,
+                  speedrunKey,
+                  Brain.getFen(fen, san),
+                  ratio,
+                  sans.concat(san)
+                ).then((sub) => sub.concat(s))
+              )
+          )
     );
   } else {
     return lichessF(fen)
@@ -102,6 +120,7 @@ function getSpeedrun(
         ((total) =>
           moves.map((m) =>
             getSpeedrun(
+              updateSpeedrun,
               speedrunKey,
               Brain.getFen(fen, m.san),
               (ratio * m.total) / total,

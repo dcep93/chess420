@@ -23,9 +23,9 @@ export default class StorageW {
   static clear(maxSize: number) {
     while (true) {
       const lichessStored = Object.entries({ ...localStorage })
-        .map(([kk, { timestamp }]) => ({
+        .map(([kk, obj]) => ({
           kk,
-          timestamp,
+          timestamp: JSON.parse(obj).timestamp,
         }))
         .filter(({ timestamp }) => timestamp);
       if (lichessStored.length <= maxSize) {
