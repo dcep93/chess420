@@ -42,7 +42,7 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
 }
 
 function getScore(fen: string, ratio: number) {
-  return 0;
+  return ratio;
 }
 
 function helper(
@@ -51,21 +51,25 @@ function helper(
   fen: string,
   ratio: number
 ): Promise<TrapsType> {
-  if (now !== key || ratio < settings.TRAVERSE_THRESHOLD_ODDS)
+  if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
-    return Promise.resolve({ ratio, fen, score: getScore(fen, ratio) })
-      .then((t) => Promise.resolve().then(() => updateTraps([t])))
-      .then(() =>
-        lichessF(fen)
-          .then((moves) =>
-            moves.map((m) =>
-              helper(now, updateTraps, Brain.getFen(fen, m.san), ratio)
-            )
+    return Promise.resolve({ ratio, fen, score: getScore(fen, ratio) }).then(
+      (t) =>
+        Promise.resolve()
+          .then(() => updateTraps([t]))
+          .then(() =>
+            lichessF(fen)
+              .then((moves) =>
+                moves.map((m) =>
+                  helper(now, updateTraps, Brain.getFen(fen, m.san), ratio)
+                )
+              )
+              .then((ps) => Promise.all(ps))
+              .then((s) => s.flatMap((ss) => ss))
           )
-          .then((ps) => Promise.all(ps))
-          .then((s) => s.flatMap((ss) => ss))
-      );
+          .then((ts) => ts.concat(t))
+    );
   } else {
     return lichessF(fen)
       .then((moves) =>
