@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import Brain from "./Brain";
 import lichessF, { stats } from "./Lichess";
 import settings from "./Settings";
-import Traps, { fetchTraps, TrapsType } from "./Traps";
+import Traps, { fetchTraps, TrapType } from "./Traps";
 
 type SpeedrunType = {
   san: string;
   ratio: number;
   fen: string;
   sans: string[];
-}[];
+};
 
 var key = -1;
 
@@ -20,20 +20,19 @@ export default function Speedrun() {
     fen: "",
     sans: [],
   };
-  const [speedrun, updateSpeedrun] = useState<SpeedrunType>([]);
-  const [traps, updateTraps] = useState<TrapsType>([]);
+  const [speedrun, updateSpeedrun] = useState<SpeedrunType[]>([]);
+  const [traps, updateTraps] = useState<TrapType[]>([]);
   useEffect(() => {
-    const speedrunCache: SpeedrunType = [loadingSR];
+    const speedrunCache: SpeedrunType[] = [loadingSR];
     updateSpeedrun(speedrunCache);
     const now = Date.now();
     key = now;
     getSpeedrun(
       now,
-      (sr) =>
-        sr.forEach((s) => {
-          speedrunCache.push(s);
-          updateSpeedrun(speedrunCache);
-        }),
+      (sr) => {
+        speedrunCache.push(sr);
+        updateSpeedrun(speedrunCache);
+      },
       Brain.getState().fen,
       1,
       []
@@ -54,7 +53,7 @@ export default function Speedrun() {
   );
 }
 
-function SpeedrunHelper(props: { speedrun: SpeedrunType }) {
+function SpeedrunHelper(props: { speedrun: SpeedrunType[] }) {
   return (
     <div style={{ flexShrink: 0 }}>
       <div>
@@ -108,7 +107,7 @@ function getSpeedrun(
   fen: string,
   ratio: number,
   sans: string[]
-): Promise<SpeedrunType> {
+): Promise<SpeedrunType[]> {
   if (
     now !== key ||
     sans.length >= 8 ||
@@ -121,7 +120,7 @@ function getSpeedrun(
         ? []
         : Promise.resolve({ san, ratio, fen, sans }).then((s) =>
             Promise.resolve()
-              .then(() => updateSpeedrun([s]))
+              .then(() => updateSpeedrun(s))
               .then(() =>
                 getSpeedrun(
                   now,

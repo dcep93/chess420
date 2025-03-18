@@ -2,15 +2,15 @@ import Brain from "./Brain";
 import lichessF, { LiMove } from "./Lichess";
 import settings from "./Settings";
 
-export type TrapsType = {
+export type TrapType = {
   ratio: number;
   fen: string;
   score: number;
   sans: string[];
   m: LiMove;
-}[];
+};
 
-export default function Traps(props: { traps: TrapsType }) {
+export default function Traps(props: { traps: TrapType[] }) {
   return (
     <div style={{ flexShrink: 0 }}>
       <h1>traps</h1>
@@ -40,7 +40,7 @@ export default function Traps(props: { traps: TrapsType }) {
                 <td>
                   {s.m.san} {s.m.prob}
                 </td>
-                <td>{getOpening(s.sans)}</td>
+                <td>{getOpening(s)}</td>
               </tr>
             ))}
         </tbody>
@@ -49,8 +49,9 @@ export default function Traps(props: { traps: TrapsType }) {
   );
 }
 
-function getOpening(sans: string[]): string {
-  const fens = sans.concat("").reduce(
+function getOpening(trap: TrapType): string {
+  // TODO trap name?
+  const fens = trap.sans.concat("").reduce(
     (prev, curr) => ({
       fen: Brain.getFen(prev.fen, curr),
       fens: prev.fens.concat(prev.fen),
@@ -70,11 +71,11 @@ function getOpening(sans: string[]): string {
 
 var key = -1;
 
-export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
+export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
   const numToKeep = 25;
   const now = Date.now();
   key = now;
-  const trapsCache: TrapsType = [];
+  const trapsCache: TrapType[] = [];
   return helper(
     now,
     (ts) => {
@@ -105,11 +106,11 @@ function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
 
 function helper(
   now: number,
-  updateTraps: (traps: TrapsType) => void,
+  updateTraps: (traps: TrapType[]) => void,
   fen: string,
   ratio: number,
   sans: string[]
-): Promise<TrapsType> {
+): Promise<TrapType[]> {
   // TODO define TRAPS_THRESHOLD_ODDS
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
