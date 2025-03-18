@@ -12,16 +12,19 @@ export type TrapsType = {
 
 export default function Traps(props: { traps: TrapsType }) {
   return (
-    <div>
+    <div style={{ flexShrink: 0 }}>
+      <h1>traps</h1>
       <table style={{ margin: "2em" }}>
         <thead>
           <tr>
-            <th>score</th>
+            <th>trap_score</th>
             <th style={{ padding: "0 2em" }}>prob</th>
-            <th>example</th>
+            <th>sans</th>
+            <th>opening</th>
           </tr>
         </thead>
         <tbody>
+          {/* TODO group by fen */}
           {props.traps
             .sort((a, b) => b.score - a.score)
             .map((s, i) => (
@@ -34,12 +37,18 @@ export default function Traps(props: { traps: TrapsType }) {
                 <td>{s.score.toFixed(2)}</td>
                 <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
                 <td>{s.sans.join(" ")}</td>
+                <td>{getOpening(s.sans)}</td>
               </tr>
             ))}
         </tbody>
       </table>
     </div>
   );
+}
+
+function getOpening(sans: string[]): string {
+  // TODO
+  return "";
 }
 
 var key = -1;
@@ -68,8 +77,9 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   );
 }
 
-function getScore(fen: string, ratio: number) {
-  return ratio;
+function getScore(fen: string, ratio: number): Promise<number> {
+  // TODO
+  return Promise.resolve(ratio);
 }
 
 function helper(
@@ -79,35 +89,40 @@ function helper(
   ratio: number,
   sans: string[]
 ): Promise<TrapsType> {
+  // TODO define
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
-    return Promise.resolve({
-      ratio,
-      fen,
-      sans,
-      score: getScore(fen, ratio),
-    }).then((t) =>
-      Promise.resolve()
-        .then(() => updateTraps([t]))
-        .then(() =>
-          lichessF(fen)
-            .then((moves) =>
-              moves.map((m) =>
-                helper(
-                  now,
-                  updateTraps,
-                  Brain.getFen(fen, m.san),
-                  ratio,
-                  sans.concat(m.san)
-                )
+    return getScore(fen, ratio)
+      .then((score) => ({
+        ratio,
+        fen,
+        sans,
+        score,
+      }))
+      .then((t) =>
+        Promise.resolve()
+          .then(() => updateTraps([t]))
+          .then(() =>
+            lichessF(fen)
+              .then((moves) =>
+                moves
+                  .filter((m) => m.total >= 1000)
+                  .map((m) =>
+                    helper(
+                      now,
+                      updateTraps,
+                      Brain.getFen(fen, m.san),
+                      ratio,
+                      sans.concat(m.san)
+                    )
+                  )
               )
-            )
-            .then((ps) => Promise.all(ps))
-            .then((s) => s.flatMap((ss) => ss))
-        )
-        .then((ts) => ts.concat(t))
-    );
+              .then((ps) => Promise.all(ps))
+              .then((s) => s.flatMap((ss) => ss))
+          )
+          .then((ts) => ts.concat(t))
+      );
   } else {
     return lichessF(fen)
       .then((moves) =>

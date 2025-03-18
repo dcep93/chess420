@@ -42,7 +42,12 @@ export default function Speedrun() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
       <SpeedrunHelper speedrun={speedrun} />
       <Traps traps={traps} />
     </div>
@@ -51,7 +56,7 @@ export default function Speedrun() {
 
 function SpeedrunHelper(props: { speedrun: SpeedrunType }) {
   return (
-    <div>
+    <div style={{ flexShrink: 0 }}>
       <div>
         <pre>{JSON.stringify(stats, null, 2)}</pre>
       </div>
