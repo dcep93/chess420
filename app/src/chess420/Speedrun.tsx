@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Brain from "./Brain";
 import lichessF, { stats } from "./Lichess";
 import settings from "./Settings";
+import Traps, { TrapsType } from "./Traps";
 
 type SpeedrunType = {
   san: string;
@@ -13,39 +14,41 @@ type SpeedrunType = {
 var key = -1;
 
 export default function Speedrun() {
-  return (
-    <div style={{ display: "flex" }}>
-      <SpeedrunHelper />
-      <SpeedrunHelper />
-    </div>
-  );
-}
-
-function SpeedrunHelper() {
-  const pp = {
+  const loadingSR = {
     san: "loading",
     ratio: Number.POSITIVE_INFINITY,
     fen: "",
     sans: [],
   };
   const [speedrun, updateSpeedrun] = useState<SpeedrunType>([]);
+  const [traps, updateTraps] = useState<TrapsType>([]);
   useEffect(() => {
-    const p: SpeedrunType = [pp];
-    updateSpeedrun(p);
+    const speedrunCache: SpeedrunType = [loadingSR];
+    updateSpeedrun(speedrunCache);
     const now = Date.now();
     key = now;
     getSpeedrun(
-      (sr) => {
-        p.push(...sr);
-        updateSpeedrun(p);
-      },
       now,
+      (sr) =>
+        sr.map((s) => {
+          speedrunCache.push(s);
+          updateSpeedrun(speedrunCache);
+        }),
       Brain.getState().fen,
       1,
       []
     ).then((s) => key === now && updateSpeedrun(s));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <SpeedrunHelper speedrun={speedrun} />
+      <Traps traps={traps} />
+    </div>
+  );
+}
+
+function SpeedrunHelper(props: { speedrun: SpeedrunType }) {
   return (
     <div>
       <div>
@@ -61,7 +64,7 @@ function SpeedrunHelper() {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(groupByF(speedrun, (s) => s.san))
+          {Object.entries(groupByF(props.speedrun, (s) => s.san))
             .map(([san, ss]) => ({
               first: ss.sort((a, b) => b.ratio - a.ratio)[0],
               san,
@@ -94,14 +97,14 @@ function SpeedrunHelper() {
 }
 
 function getSpeedrun(
+  now: number,
   updateSpeedrun: (s: SpeedrunType) => void,
-  speedrunKey: number,
   fen: string,
   ratio: number,
   sans: string[]
 ): Promise<SpeedrunType> {
   if (
-    key !== speedrunKey ||
+    now !== key ||
     sans.length >= 8 ||
     ratio < settings.TRAVERSE_THRESHOLD_ODDS
   )
@@ -115,8 +118,8 @@ function getSpeedrun(
               .then(() => updateSpeedrun([s]))
               .then(() =>
                 getSpeedrun(
+                  now,
                   updateSpeedrun,
-                  speedrunKey,
                   Brain.getFen(fen, san),
                   ratio,
                   sans.concat(san)
@@ -130,8 +133,8 @@ function getSpeedrun(
         ((total) =>
           moves.map((m) =>
             getSpeedrun(
+              now,
               updateSpeedrun,
-              speedrunKey,
               Brain.getFen(fen, m.san),
               (ratio * m.total) / total,
               sans.concat(m.san)
