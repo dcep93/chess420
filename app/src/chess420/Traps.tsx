@@ -141,7 +141,7 @@ function helper(
     return lichessF(fen)
       .then((moves) =>
         moves
-          .filter((m) => m.total >= 1000)
+          .filter((m) => m.total >= 100)
           .map((m) =>
             Promise.resolve()
               .then(() => getTrapScore(ratio, m, moves))
