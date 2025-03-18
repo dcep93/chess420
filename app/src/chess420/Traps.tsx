@@ -5,7 +5,11 @@ import settings from "./Settings";
 export type TrapsType = {}[];
 
 export default function Traps(props: { traps: TrapsType }) {
-  return <div></div>;
+  return (
+    <div>
+      <pre>{JSON.stringify(props.traps)}</pre>
+    </div>
+  );
 }
 
 var key = -1;
@@ -13,9 +17,18 @@ var key = -1;
 export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   const now = Date.now();
   key = now;
-  return helper(now, updateTraps, Brain.getState().fen, 1, []).then(
-    (s) => key === now && updateTraps(s)
-  );
+  const trapsCache: TrapsType = [];
+  return helper(
+    now,
+    (sr) =>
+      sr.map((t) => {
+        trapsCache.push(t);
+        updateTraps(trapsCache);
+      }),
+    Brain.getState().fen,
+    1,
+    []
+  ).then((s) => key === now && updateTraps(s));
 }
 
 function helper(
