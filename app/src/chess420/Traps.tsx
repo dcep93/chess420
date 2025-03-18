@@ -1,13 +1,13 @@
 import Brain from "./Brain";
-import lichessF from "./Lichess";
+import lichessF, { LiMove } from "./Lichess";
 import settings from "./Settings";
-import { groupByF } from "./Speedrun";
 
 export type TrapsType = {
   ratio: number;
   fen: string;
   score: number;
   sans: string[];
+  m: LiMove;
 }[];
 
 export default function Traps(props: { traps: TrapsType }) {
@@ -74,7 +74,7 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   return helper(
     now,
     (ts) => {
-      ts.map((t) => {
+      ts.forEach((t) => {
         const found = trapsCache.find((tt) => tt.fen === t.fen);
         if (found) {
           found.ratio += t.ratio;
@@ -95,7 +95,7 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   );
 }
 
-function getScore(fen: string, ratio: number): Promise<number> {
+function getScore(fen: string, ratio: number, m: LiMove): Promise<number> {
   // TODO
   return Promise.resolve(ratio);
 }
@@ -111,49 +111,54 @@ function helper(
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
-    return getScore(fen, ratio)
-      .then((score) => ({
-        ratio,
-        fen,
-        sans,
-        score,
+    return lichessF(fen)
+      .then((moves) =>
+        moves.map((m) =>
+          helper(
+            now,
+            updateTraps,
+            Brain.getFen(fen, m.san),
+            ratio,
+            sans.concat(m.san)
+          )
+        )
+      )
+      .then((ps) => Promise.all(ps))
+      .then((s) => s.flatMap((ss) => ss));
+  } else {
+    return lichessF(fen)
+      .then((moves) => ({
+        moves,
+        total: moves.map((m) => m.total).reduce((a, b) => a + b, 0),
       }))
-      .then((t) =>
-        Promise.resolve()
-          .then(() => updateTraps([t]))
-          .then(() =>
-            lichessF(fen)
-              .then((moves) =>
-                moves
-                  .filter((m) => m.total >= 1000)
-                  .map((m) =>
+      .then(({ moves, total }) =>
+        moves
+          .filter((m) => m.total >= 1000)
+          .map((m) =>
+            Promise.resolve()
+              .then(() => getScore(fen, ratio, m))
+              .then((score) => ({
+                ratio,
+                fen,
+                sans,
+                score,
+                m,
+              }))
+              .then((ts) =>
+                Promise.resolve()
+                  .then(() => updateTraps([ts]))
+                  .then(() =>
                     helper(
                       now,
                       updateTraps,
                       Brain.getFen(fen, m.san),
-                      ratio,
+                      (ratio * m.total) / total,
                       sans.concat(m.san)
                     )
                   )
+                  .then((hts) => hts.concat(ts))
               )
-              .then((ps) => Promise.all(ps))
-              .then((s) => s.flatMap((ss) => ss))
           )
-          .then((ts) => ts.concat(t))
-      );
-  } else {
-    return lichessF(fen)
-      .then((moves) =>
-        ((total) =>
-          moves.map((m) =>
-            helper(
-              now,
-              updateTraps,
-              Brain.getFen(fen, m.san),
-              (ratio * m.total) / total,
-              sans.concat(m.san)
-            )
-          ))(moves.map((m) => m.total).reduce((a, b) => a + b, 0))
       )
       .then((ps) => Promise.all(ps))
       .then((s) => s.flatMap((ss) => ss));

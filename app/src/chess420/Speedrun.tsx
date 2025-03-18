@@ -30,7 +30,7 @@ export default function Speedrun() {
     getSpeedrun(
       now,
       (sr) =>
-        sr.map((s) => {
+        sr.forEach((s) => {
           speedrunCache.push(s);
           updateSpeedrun(speedrunCache);
         }),
