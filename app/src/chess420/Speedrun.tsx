@@ -147,7 +147,10 @@ function getSpeedrun(
   }
 }
 
-function groupByF<T>(ts: T[], f: (t: T) => string): { [key: string]: T[] } {
+export function groupByF<T>(
+  ts: T[],
+  f: (t: T) => string
+): { [key: string]: T[] } {
   return ts.reduce((prev, curr) => {
     const key = f(curr);
     if (!prev[key]) prev[key] = [];
