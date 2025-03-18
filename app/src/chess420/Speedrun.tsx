@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Brain from "./Brain";
 import lichessF, { stats } from "./Lichess";
 import settings from "./Settings";
-import Traps, { TrapsType } from "./Traps";
+import Traps, { fetchTraps, TrapsType } from "./Traps";
 
 type SpeedrunType = {
   san: string;
@@ -38,6 +38,7 @@ export default function Speedrun() {
       1,
       []
     ).then((s) => key === now && updateSpeedrun(s));
+    fetchTraps(updateTraps);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   return (
