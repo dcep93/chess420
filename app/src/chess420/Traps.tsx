@@ -2,7 +2,11 @@ import Brain from "./Brain";
 import lichessF from "./Lichess";
 import settings from "./Settings";
 
-export type TrapsType = {}[];
+export type TrapsType = {
+  ratio: number;
+  fen: string;
+  score: number;
+}[];
 
 export default function Traps(props: { traps: TrapsType }) {
   return (
@@ -15,53 +19,53 @@ export default function Traps(props: { traps: TrapsType }) {
 var key = -1;
 
 export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
+  const numToKeep = 25;
   const now = Date.now();
   key = now;
   const trapsCache: TrapsType = [];
   return helper(
     now,
-    (sr) =>
-      sr.map((t) => {
+    (ts) => {
+      ts.map((t) => {
         trapsCache.push(t);
-        updateTraps(trapsCache);
-      }),
+      });
+      trapsCache.sort((a, b) => b.score - a.score).splice(numToKeep);
+      updateTraps(trapsCache);
+    },
     Brain.getState().fen,
-    1,
-    []
-  ).then((s) => key === now && updateTraps(s));
+    1
+  ).then(
+    (ts) =>
+      key === now &&
+      updateTraps(ts.sort((a, b) => b.score - a.score).slice(0, numToKeep))
+  );
+}
+
+function getScore(fen: string, ratio: number) {
+  return 0;
 }
 
 function helper(
   now: number,
   updateTraps: (traps: TrapsType) => void,
   fen: string,
-  ratio: number,
-  sans: string[]
+  ratio: number
 ): Promise<TrapsType> {
-  if (
-    now !== key ||
-    sans.length >= 8 ||
-    ratio < settings.TRAVERSE_THRESHOLD_ODDS
-  )
+  if (now !== key || ratio < settings.TRAVERSE_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
-    return Brain.getBest(fen).then((san) =>
-      san === undefined
-        ? []
-        : Promise.resolve({}).then((t) =>
-            Promise.resolve()
-              .then(() => updateTraps([t]))
-              .then(() =>
-                helper(
-                  now,
-                  updateTraps,
-                  Brain.getFen(fen, san),
-                  ratio,
-                  sans.concat(san)
-                ).then((sub) => sub.concat(t))
-              )
+    return Promise.resolve({ ratio, fen, score: getScore(fen, ratio) })
+      .then((t) => Promise.resolve().then(() => updateTraps([t])))
+      .then(() =>
+        lichessF(fen)
+          .then((moves) =>
+            moves.map((m) =>
+              helper(now, updateTraps, Brain.getFen(fen, m.san), ratio)
+            )
           )
-    );
+          .then((ps) => Promise.all(ps))
+          .then((s) => s.flatMap((ss) => ss))
+      );
   } else {
     return lichessF(fen)
       .then((moves) =>
@@ -71,8 +75,7 @@ function helper(
               now,
               updateTraps,
               Brain.getFen(fen, m.san),
-              (ratio * m.total) / total,
-              sans.concat(m.san)
+              (ratio * m.total) / total
             )
           ))(moves.map((m) => m.total).reduce((a, b) => a + b, 0))
       )
