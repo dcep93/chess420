@@ -17,11 +17,10 @@ export default function Traps(props: { traps: TrapType[] }) {
       <table style={{ margin: "2em" }}>
         <thead>
           <tr>
-            <th style={{ paddingRight: "2em" }}>trap_score</th>
             <th style={{ paddingRight: "2em" }}>prob</th>
             <th style={{ paddingRight: "2em" }}>ww</th>
             <th style={{ paddingRight: "6em" }}>sans</th>
-            <th>mistake</th>
+            <th style={{ paddingRight: "4em" }}>mistake</th>
             <th>opening</th>
           </tr>
         </thead>
@@ -35,12 +34,11 @@ export default function Traps(props: { traps: TrapType[] }) {
                 style={{ cursor: "pointer" }}
                 title={`${s.ratio.toFixed(2)}: ${s.sans.join(" ")}`}
               >
-                <td>{s.score.toFixed(2)}</td>
                 <td>{s.ratio.toFixed(2)}</td>
                 <td>{s.m.ww.toFixed(2)}</td>
                 <td>{s.sans.join(" ")}</td>
                 <td>
-                  {s.m.san} {s.m.prob}
+                  {s.m.prob.toFixed(2)} {s.m.san}
                 </td>
                 <td>{getOpening(s)}</td>
               </tr>
@@ -106,9 +104,9 @@ export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
 function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
   const best = moves.sort((a, b) => b.score - a.score)[0];
   return [
-    // Math.pow(m.prob, 0.5),
-    // Brain.getState().orientationIsWhite ? best.ww : 1 - best.ww,
-    Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww,
+    Math.pow(m.prob * ratio, 0.2),
+    Math.pow(Brain.getState().orientationIsWhite ? best.ww : 1 - best.ww, 0.2),
+    Math.pow(2 * (Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww), 2),
   ].reduce((a, b) => a * b, 1);
 }
 
