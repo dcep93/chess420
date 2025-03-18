@@ -12,6 +12,7 @@ export type LiMove = {
   averageRating: number;
 
   ww: number;
+  prob: number;
   total: number;
   score: number;
 };
@@ -103,20 +104,28 @@ export default function lichessF(
   const p = getTicket()
     .then(() => helper(url, options.attempt))
     .then((moves) =>
-      moves
-        .map((move: LiMove) => ({
-          ...move,
-          ww: move.white / (move.black + move.white),
-          total: move.black + move.white + move.draws,
-        }))
-        .map((move: LiMove) =>
-          Promise.resolve()
-            .then(() => getRawScore(chess.turn() === "w", move))
-            .then((score) => ({
-              ...move,
-              score,
-            }))
-        )
+      moves.map((move: LiMove) => ({
+        ...move,
+        ww: move.white / (move.black + move.white),
+        total: move.black + move.white + move.draws,
+      }))
+    )
+    .then((moves) => ({
+      moves,
+      total: moves.map((m) => m.total).reduce((a, b) => a + b, 0),
+    }))
+    .then(({ moves, total }) =>
+      moves.map((m) => ({ ...m, prob: m.total / total }))
+    )
+    .then((moves) =>
+      moves.map((move: LiMove) =>
+        Promise.resolve()
+          .then(() => getRawScore(chess.turn() === "w", move))
+          .then((score) => ({
+            ...move,
+            score,
+          }))
+      )
     )
     .then((movePromises: Promise<LiMove>[]) => Promise.all(movePromises))
     .then((moves: LiMove[]) =>
@@ -131,16 +140,10 @@ export default function lichessF(
       }))
     )
     .then((moves: LiMove[]) => {
-      const total = moves
-        .map((move: LiMove) => move.total)
-        .reduce((a: number, b: number) => a + b, 0);
       if (options.prepareNext)
         setTimeout(() =>
           moves
-            .filter(
-              (move: LiMove) =>
-                move.total >= total * settings.PREPARE_NEXT_RATIO
-            )
+            .filter((move: LiMove) => move.prob >= settings.PREPARE_NEXT_RATIO)
             .forEach((move: LiMove) => {
               const subFen = Brain.getFen(fen, move.san);
               lichessF(subFen, {

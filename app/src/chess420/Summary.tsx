@@ -44,9 +44,7 @@ function SubSummary() {
                   ? Brain.lichessUsername
                   : undefined,
             }).then(
-              (moves) =>
-                (moves.find((move) => move.san === log.san)?.total || 0) /
-                moves.map((move) => move.total).reduce((a, b) => a + b, 0)
+              (moves) => moves.find((move) => move.san === log.san)?.prob || 0
             )
           )
       )

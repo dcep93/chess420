@@ -20,6 +20,7 @@ export default function Traps(props: { traps: TrapsType }) {
             <th>trap_score</th>
             <th style={{ padding: "0 2em" }}>prob</th>
             <th>sans</th>
+            <th>mistake</th>
             <th>opening</th>
           </tr>
         </thead>
@@ -36,6 +37,9 @@ export default function Traps(props: { traps: TrapsType }) {
                 <td>{s.score.toFixed(2)}</td>
                 <td style={{ padding: "0 2em" }}>{s.ratio.toFixed(2)}</td>
                 <td>{s.sans.join(" ")}</td>
+                <td>
+                  {s.m.san} {s.m.prob}
+                </td>
                 <td>{getOpening(s.sans)}</td>
               </tr>
             ))}
@@ -95,9 +99,8 @@ export function fetchTraps(updateTraps: (traps: TrapsType) => void) {
   );
 }
 
-function getScore(fen: string, ratio: number, m: LiMove): Promise<number> {
-  // TODO
-  return Promise.resolve(ratio);
+function getScore(ratio: number, m: LiMove, moves: LiMove[]): number {
+  return Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww;
 }
 
 function helper(
@@ -127,16 +130,12 @@ function helper(
       .then((s) => s.flatMap((ss) => ss));
   } else {
     return lichessF(fen)
-      .then((moves) => ({
-        moves,
-        total: moves.map((m) => m.total).reduce((a, b) => a + b, 0),
-      }))
-      .then(({ moves, total }) =>
+      .then((moves) =>
         moves
           .filter((m) => m.total >= 1000)
           .map((m) =>
             Promise.resolve()
-              .then(() => getScore(fen, ratio, m))
+              .then(() => getScore(ratio, m, moves))
               .then((score) => ({
                 ratio,
                 fen,
@@ -152,7 +151,7 @@ function helper(
                       now,
                       updateTraps,
                       Brain.getFen(fen, m.san),
-                      (ratio * m.total) / total,
+                      ratio * m.prob,
                       sans.concat(m.san)
                     )
                   )

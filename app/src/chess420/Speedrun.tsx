@@ -136,16 +136,15 @@ function getSpeedrun(
   } else {
     return lichessF(fen)
       .then((moves) =>
-        ((total) =>
-          moves.map((m) =>
-            getSpeedrun(
-              now,
-              updateSpeedrun,
-              Brain.getFen(fen, m.san),
-              (ratio * m.total) / total,
-              sans.concat(m.san)
-            )
-          ))(moves.map((m) => m.total).reduce((a, b) => a + b, 0))
+        moves.map((m) =>
+          getSpeedrun(
+            now,
+            updateSpeedrun,
+            Brain.getFen(fen, m.san),
+            ratio * m.prob,
+            sans.concat(m.san)
+          )
+        )
       )
       .then((ps) => Promise.all(ps))
       .then((s) => s.flatMap((ss) => ss));

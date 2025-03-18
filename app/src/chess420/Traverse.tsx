@@ -51,17 +51,13 @@ export default function traverseF(
   state.opening = Brain.getOpening(state.fen) || state.opening;
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
-      .then((moves) => ({
-        moves,
-        total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-      }))
-      .then(({ moves, total }) =>
+      .then((moves) =>
         moves
           .map((move) =>
             Brain.genState(
               {
                 ...state,
-                odds: (state.odds * move.total) / total,
+                odds: state.odds * move.prob,
               },
               move.san
             )
@@ -109,15 +105,9 @@ export default function traverseF(
   return (
     Brain.view === View.traverse
       ? Promise.resolve(traverseMyMoveSan)
-      : lichessF(state.fen, { username: Brain.lichessUsername })
-          .then((moves) => ({
-            moves,
-            total: moves.map((move) => move.total).reduce((a, b) => a + b, 0),
-          }))
-          .then(
-            ({ moves, total }) =>
-              moves.find((move) => move.total > total / 2)?.san
-          )
+      : lichessF(state.fen, { username: Brain.lichessUsername }).then(
+          (moves) => moves.find((move) => move.prob > 0.5)?.san
+        )
   )
     .then((myMoveSan) =>
       lichessF(state.fen).then((moves) => ({
