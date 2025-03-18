@@ -84,6 +84,7 @@ export default function Controls() {
             <div>
               <button onClick={Brain.traverse}>traverse manually</button>
               <button onClick={Brain.speedrun}>speedrun</button>
+              <button onClick={Brain.home}>home</button>
             </div>
             <div>
               <div>
