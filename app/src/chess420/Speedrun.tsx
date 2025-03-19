@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Brain from "./Brain";
 import lichessF, { stats } from "./Lichess";
 import settings from "./Settings";
-import Traps, { fetchTraps, TrapType } from "./Traps";
 
 type SpeedrunType = {
   san: string;
@@ -21,7 +20,7 @@ export default function Speedrun() {
     sans: [],
   };
   const [speedrun, updateSpeedrun] = useState<SpeedrunType[]>([]);
-  const [traps, updateTraps] = useState<TrapType[]>([]);
+  // const [traps, updateTraps] = useState<TrapType[]>([]);
   useEffect(() => {
     const speedrunCache: SpeedrunType[] = [loadingSR];
     updateSpeedrun(speedrunCache);
@@ -37,7 +36,7 @@ export default function Speedrun() {
       1,
       []
     ).then((s) => key === now && updateSpeedrun(s));
-    fetchTraps(updateTraps);
+    // fetchTraps(updateTraps);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Brain.history]);
   return (
@@ -48,7 +47,7 @@ export default function Speedrun() {
       }}
     >
       <SpeedrunHelper speedrun={speedrun} />
-      <Traps traps={traps} />
+      {/* <Traps traps={traps} /> */}
     </div>
   );
 }
