@@ -3,7 +3,7 @@
   font-family: "Helvetica";
 }
 
-@media (orientation: portrait) {
+/* @media (orientation: portrait) {
   .responsiveFlexDirection {
     flex-direction: column;
   }
@@ -16,4 +16,11 @@
   .responsiveHidden {
     display: none;
   }
+} */
+
+.responsiveFlexDirection {
+  flex-direction: row;
+}
+.responsiveHidden {
+  display: none;
 }
