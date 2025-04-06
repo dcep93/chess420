@@ -66,6 +66,7 @@ function SubSummary() {
         style={{
           paddingLeft: "2em",
           textIndent: "-2em",
+          minHeight: "8em",
         }}
       >
         <div>{(odds * 100).toFixed(2)}%</div>
