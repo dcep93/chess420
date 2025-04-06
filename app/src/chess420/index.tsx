@@ -134,6 +134,7 @@ function SubMain(props: { fen: string }) {
             display: "flex",
             flexDirection: "row",
             alignContent: "stretch",
+            overflow: "auto",
           }}
         >
           <div
