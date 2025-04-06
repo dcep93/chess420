@@ -148,7 +148,7 @@ function SubSummary() {
   );
 }
 
-function SummaryMove(props: { log: LogType; length: number }) {
+export function SummaryMove(props: { log: LogType; length: number }) {
   if (!props.log) return null;
   const chess = Brain.getChess(props.log.fen);
   const cell =
