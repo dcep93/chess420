@@ -3,9 +3,7 @@ import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
 import { GetLog, LogType } from "./Log";
 import quizletF from "./Quizlet";
-import settings from "./Settings";
 import traverseF, { Familiarity } from "./Traverse";
-import css from "./index.module.css";
 
 export default function Summary() {
   return (
@@ -64,14 +62,6 @@ function SubSummary() {
   }
   return (
     <div>
-      <div className={css.responsiveHidden}>
-        <h4>Recent Summary</h4>
-        {Array.from(new Array(settings.SUMMARY_LEN))
-          .map((_, i) => state.logs.length - i - 1)
-          .map((index) => (
-            <SummaryMove key={index} log={state.logs[index]} length={index} />
-          ))}
-      </div>
       <div
         style={{
           paddingLeft: "2em",
@@ -79,9 +69,7 @@ function SubSummary() {
         }}
       >
         <div>{(odds * 100).toFixed(2)}%</div>
-        <div style={{ height: "4em" }}>
-          {opening || (lastOpening === null ? "" : `* ${lastOpening}`)}
-        </div>
+        <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
       </div>
       {state.traverse === undefined ? null : (
         <div

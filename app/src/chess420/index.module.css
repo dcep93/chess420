@@ -2,25 +2,3 @@
   font-size: large;
   font-family: "Helvetica";
 }
-
-/* @media (orientation: portrait) {
-  .responsiveFlexDirection {
-    flex-direction: column;
-  }
-}
-
-@media (orientation: landscape) {
-  .responsiveFlexDirection {
-    flex-direction: row;
-  }
-  .responsiveHidden {
-    display: none;
-  }
-} */
-
-.responsiveFlexDirection {
-  flex-direction: row;
-}
-.responsiveHidden {
-  display: none;
-}

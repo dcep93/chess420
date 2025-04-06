@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Brain, { StateType, View } from "./Brain";
 import settings from "./Settings";
-import css from "./index.module.css";
 import { DoOnce } from "./utils";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,6 +10,7 @@ import Controls from "./Controls";
 import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
+import "./index.module.css";
 import recorded_sha from "./recorded_sha";
 
 function AssignBrainIdkWhyIHaveToDoThis(): boolean {
@@ -120,37 +120,39 @@ function SubMain(props: { fen: string }) {
     window.location.hash = Brain.hash(props.fen);
   return (
     <div
-      className={css.responsiveFlexDirection}
       style={{
         minHeight: "100vH",
-        width: "100vW",
-        display: "flex",
-        alignContent: "stretch",
+        minWidth: "100vW",
         backgroundColor: "#212529",
         color: "#f8f9fa",
       }}
       data-bs-theme="dark"
     >
-      <div
-        className={css.responsiveMinWidth}
-        style={{
-          minWidth: settings.CHESSBOARD_WIDTH,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Board />
-        <Summary />
-      </div>
-      <div style={{ flexGrow: 1, overflow: "auto" }}>
+      <div>
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            height: "100%",
+            flexDirection: "row",
+            alignContent: "stretch",
           }}
         >
-          <Controls />
+          <div
+            style={{
+              minWidth: settings.CHESSBOARD_WIDTH,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Board />
+            <Summary />
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            <div>
+              <Controls />
+            </div>
+          </div>
+        </div>
+        <div>
           <Log />
         </div>
       </div>

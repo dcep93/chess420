@@ -1,6 +1,6 @@
 const settings = {
   IS_DEV: !process.env.NODE_ENV || process.env.NODE_ENV === "development",
-  CHESSBOARD_WIDTH: "18em",
+  CHESSBOARD_WIDTH: "16em",
   REPLY_DELAY_MS: 500,
   LICHESS_PARAMS: `variant=standard&speeds=rapid,classical&ratings=${[
     2000, 2200, 2500,
