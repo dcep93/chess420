@@ -21,12 +21,24 @@ export default class StorageW {
   }
 
   static clear(maxSize: number) {
+    var errored = false;
     while (true) {
       const lichessStored = Object.entries({ ...localStorage })
-        .map(([kk, obj]) => ({
-          kk,
-          timestamp: JSON.parse(obj).timestamp,
-        }))
+        .map(([kk, obj]) => {
+          try {
+            return {
+              kk,
+              timestamp: JSON.parse(obj).timestamp,
+            };
+          } catch (e) {
+            if (!errored) {
+              alert("storage.error");
+              errored = true;
+            }
+            console.log({ e, obj });
+            return { kk: "", timestamp: null };
+          }
+        })
         .filter(({ timestamp }) => timestamp);
       if (lichessStored.length <= maxSize) {
         break;
