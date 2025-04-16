@@ -36,7 +36,7 @@ export default class StorageW {
               alert("storage.error");
               errored = true;
             }
-            console.log({ e, obj });
+            console.log({ e, kk, obj });
             return { kk, timestamp: null };
           }
         })
