@@ -24,6 +24,7 @@ export default class StorageW {
     var errored = false;
     while (true) {
       const lichessStored = Object.entries({ ...localStorage })
+        // @ts-ignore
         .map(([kk, obj]) => {
           try {
             return {
