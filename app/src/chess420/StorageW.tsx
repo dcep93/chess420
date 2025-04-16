@@ -37,7 +37,7 @@ export default class StorageW {
               errored = true;
             }
             console.log({ e, obj });
-            return { kk: "", timestamp: null };
+            return { kk, timestamp: null };
           }
         })
         .filter(({ timestamp }) => timestamp);
