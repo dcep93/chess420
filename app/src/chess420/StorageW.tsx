@@ -24,7 +24,7 @@ export default class StorageW {
     var errored = false;
     while (true) {
       const lichessStored = Object.entries({ ...localStorage })
-        // @ts-ignore
+        // eslint-disable-next-line
         .map(([kk, obj]) => {
           try {
             return {
