@@ -45,7 +45,7 @@ const vars = { release: Date.now(), last: 0 };
 
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
-  const [isUncommon, updateIsUncommon] = useState(false);
+  const [total, updateTotal] = useState(-1);
   const [fen, updateFen] = useState("");
   const state = Brain.getState();
   const now = Date.now();
@@ -63,14 +63,14 @@ function SubBoard() {
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
-      .then((total) => updateIsUncommon(total < settings.UNCOMMON_THRESHOLD));
+      .then((total) => updateTotal(total));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.fen]);
   if (!fen) return null;
   return (
     <div
       style={{
-        border: `1em ${isUncommon ? "#aaaaaa" : "black"} solid`,
+        border: `1em ${getBorderColor(total)} solid`,
         width: "100%",
       }}
     >
@@ -102,4 +102,18 @@ function SubBoard() {
       />
     </div>
   );
+}
+
+function getBorderColor(total: number): string {
+  const yellowFactor = Math.pow(
+    settings.UNCOMMON_THRESHOLD * settings.SCORE_FLUKE_DISCOUNT,
+    0.5
+  );
+  return total > settings.UNCOMMON_THRESHOLD
+    ? "black"
+    : total > yellowFactor
+    ? "#aaaaaa"
+    : total > settings.SCORE_FLUKE_DISCOUNT
+    ? "yellow"
+    : "red";
 }
