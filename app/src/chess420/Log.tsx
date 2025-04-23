@@ -63,8 +63,8 @@ function SubLog() {
     return <Speedrun />;
   }
   const logs: (LogType | null)[] = Brain.getState().logs.slice();
-  if (logs.length === 0) return <></>;
-  if (Brain.getChess(logs[0]!.fen).turn() === "b") logs.unshift(null);
+  if (logs.length > 0 && Brain.getChess(logs[0]!.fen).turn() === "b")
+    logs.unshift(null);
   return (
     <div
       style={{
