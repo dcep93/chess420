@@ -109,11 +109,11 @@ function getBorderColor(total: number): string {
     settings.UNCOMMON_THRESHOLD * settings.SCORE_FLUKE_DISCOUNT,
     0.5
   );
-  return total > settings.UNCOMMON_THRESHOLD
-    ? "black"
-    : total > yellowFactor
-    ? "#aaaaaa"
-    : total > settings.SCORE_FLUKE_DISCOUNT
+  return total <= settings.SCORE_FLUKE_DISCOUNT
+    ? "red"
+    : total <= yellowFactor
     ? "yellow"
-    : "red";
+    : total <= settings.UNCOMMON_THRESHOLD
+    ? "#aaaaaa"
+    : "black";
 }
