@@ -41,6 +41,12 @@ function AssignBrainIdkWhyIHaveToDoThis(): boolean {
         return false;
       }
       break;
+    case "traps":
+      Brain.view = View.traps;
+      if (pathParts.length > 2) {
+        return false;
+      }
+      break;
     case "traverse":
       Brain.view = View.traverse;
       if (pathParts.length > 2) {

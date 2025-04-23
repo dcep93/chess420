@@ -3,6 +3,7 @@ import Brain, { View } from "./Brain";
 import lichessF, { LiMove } from "./Lichess";
 import settings from "./Settings";
 import Speedrun from "./Speedrun";
+import Traps from "./Traps";
 
 export type LogType = {
   fen: string;
@@ -61,6 +62,9 @@ export default function Log() {
 function SubLog() {
   if (Brain.view === View.speedrun) {
     return <Speedrun />;
+  }
+  if (Brain.view === View.traps) {
+    return <Traps />;
   }
   const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length > 0 && Brain.getChess(logs[0]!.fen).turn() === "b")

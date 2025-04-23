@@ -84,6 +84,7 @@ export default function Controls() {
             <div>
               <button onClick={Brain.traverse}>traverse manually</button>
               <button onClick={Brain.speedrun}>speedrun</button>
+              <button onClick={Brain.traps}>traps</button>
               <button onClick={Brain.home}>home</button>
             </div>
             <div>
@@ -131,6 +132,8 @@ export default function Controls() {
                 <span>finding mistakes of {Brain.lichessUsername}</span>
               ) : Brain.view === View.speedrun ? (
                 <span>speedrunning common moves</span>
+              ) : Brain.view === View.traps ? (
+                <span>discovering potential traps</span>
               ) : Brain.view === View.traverse ? (
                 <span>traversing manually</span>
               ) : null}

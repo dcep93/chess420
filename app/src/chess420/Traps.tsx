@@ -1,8 +1,9 @@
+import { useState } from "react";
 import Brain from "./Brain";
 import lichessF, { LiMove } from "./Lichess";
 import settings from "./Settings";
 
-export type TrapType = {
+type TrapType = {
   ratio: number;
   fen: string;
   score: number;
@@ -10,7 +11,13 @@ export type TrapType = {
   m: LiMove;
 };
 
-export default function Traps(props: { traps: TrapType[] }) {
+export default function Traps() {
+  const [traps, updateTraps] = useState<TrapType[]>([]);
+  fetchTraps(updateTraps);
+  return <SubTraps traps={traps} />;
+}
+
+function SubTraps(props: { traps: TrapType[] }) {
   return (
     <div style={{ flexShrink: 0 }}>
       <h1>traps</h1>
