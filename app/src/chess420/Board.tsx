@@ -105,14 +105,8 @@ function SubBoard() {
 }
 
 function getBorderColor(total: number): string {
-  const yellowFactor = Math.pow(
-    settings.UNCOMMON_THRESHOLD * settings.SCORE_FLUKE_DISCOUNT,
-    0.5
-  );
   return total <= settings.SCORE_FLUKE_DISCOUNT
     ? "red"
-    : total <= yellowFactor
-    ? "yellow"
     : total <= settings.UNCOMMON_THRESHOLD
     ? "#aaaaaa"
     : "black";
