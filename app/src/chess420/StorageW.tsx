@@ -21,21 +21,27 @@ export default class StorageW {
   }
 
   static clear(maxSize: number) {
-    while (true) {
-      const lichessStored = Object.entries({ ...localStorage })
-        .map(([kk, obj]) => ({
-          kk,
-          timestamp: JSON.parse(obj)?.timestamp,
-        }))
-        .filter(({ timestamp }) => timestamp);
-      if (lichessStored.length <= maxSize) {
-        break;
+    try {
+      while (true) {
+        const lichessStored = Object.entries({ ...localStorage })
+          .map(([kk, obj]) => ({
+            kk,
+            timestamp: JSON.parse(obj)?.timestamp,
+          }))
+          .filter(({ timestamp }) => timestamp);
+
+        if (lichessStored.length <= maxSize) {
+          break;
+        }
+        const oldest = lichessStored.reduce(
+          (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
+          { kk: "", timestamp: Number.POSITIVE_INFINITY }
+        );
+        localStorage.removeItem(oldest.kk);
       }
-      const oldest = lichessStored.reduce(
-        (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
-        { kk: "", timestamp: Number.POSITIVE_INFINITY }
-      );
-      localStorage.removeItem(oldest.kk);
+    } catch {
+      localStorage.clear();
+      return;
     }
   }
 
