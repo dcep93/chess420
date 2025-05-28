@@ -16,6 +16,6 @@ export function clog<T>(t: T): T {
   return t;
 }
 
-export function sleep<T>(t: T, duration: number): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(t), duration));
+export function sleep<T>(t: T, durationMs: number): Promise<T> {
+  return new Promise((resolve) => setTimeout(() => resolve(t), durationMs));
 }
