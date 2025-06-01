@@ -49,7 +49,6 @@ export default function traverseF(
         })
       );
   Brain.setState(state);
-  state.opening = Brain.getOpening(state.fen) || state.opening;
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
       .then((moves) =>
@@ -74,7 +73,7 @@ export default function traverseF(
           )
           .map((o) => ({
             ...o,
-            opening: Brain.getOpening(o.fen),
+            opening: Brain.getOpening(o.fen) || o.opening,
             sort: o.odds * Math.pow(Math.random(), 0.5),
           }))
           .sort((a, b) => a.sort - b.sort)
