@@ -269,7 +269,12 @@ export default class Brain {
     if (!san) {
       return alert("no move to play");
     }
-    Brain.setState(Brain.genState(Brain.getState(), san));
+    const state = Brain.getState();
+    if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
+      traverseF(state.traverse, san);
+    } else {
+      Brain.setState(Brain.genState(Brain.getState(), san));
+    }
   }
 
   static playWeighted() {
@@ -390,14 +395,10 @@ export default class Brain {
     const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
-        traverseF(state.traverse, move.san);
-      } else {
-        Brain.setState(Brain.genState(Brain.getState(), move.san));
-        if (Brain.isMyTurn(state.fen)) {
-          Brain.setNovelty(state.fen, move.san);
-        }
+      if (Brain.isMyTurn(state.fen)) {
+        Brain.setNovelty(state.fen, move.san);
       }
+      Brain.playMove(move.san);
       return true;
     } else {
       return false;
