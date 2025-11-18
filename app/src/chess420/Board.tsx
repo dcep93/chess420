@@ -47,19 +47,25 @@ function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [total, updateTotal] = useState(-1);
   const [fen, updateFen] = useState("");
+  const [key, updateKey] = useState(0);
   const state = Brain.getState();
   const now = Date.now();
   useEffect(() => {
     if (vars.last === now) return;
     vars.last = now;
-    if (settings.IS_DEV) {
-      const delay = Math.max(1, vars.release - now);
-      vars.release = now + delay + settings.BOARD_REFRESH_PERIOD_MS;
-      setTimeout(() => updateFen(state.fen), delay);
+    const [oldFen, newFen] = state.fen.split(".oldFen.");
+    if (newFen) {
+      if (oldFen === fen) {
+        updateFen(newFen);
+      } else {
+        updateFen(oldFen);
+        updateKey(key + 1);
+        setTimeout(() => updateFen(newFen), settings.REPLY_DELAY_MS);
+      }
     } else {
-      updateFen(state.fen);
+      updateFen(oldFen);
     }
-    lichessF(state.fen)
+    lichessF(newFen || oldFen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
@@ -76,6 +82,7 @@ function SubBoard() {
     >
       <Chessboard
         boardOrientation={state.orientationIsWhite ? "white" : "black"}
+        key={key}
         position={fen}
         customSquareStyles={{
           [prevClicked || ""]: {

@@ -186,7 +186,10 @@ export default class Brain {
   static genState<T extends StateType>(startingState: T, san: string): T {
     return {
       ...startingState,
-      fen: Brain.getFen(startingState.fen, san),
+      fen: `${startingState.fen}.oldFen.${Brain.getFen(
+        startingState.fen,
+        san
+      )}`,
       logs: startingState.logs.concat({
         fen: startingState.fen,
         san,
