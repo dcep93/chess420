@@ -48,7 +48,6 @@ export default function traverseF(
           },
         })
       );
-  Brain.setState(state);
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
     return lichessF(state.fen)
       .then((moves) =>
