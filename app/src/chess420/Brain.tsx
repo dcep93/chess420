@@ -7,7 +7,7 @@ import traverseF, { TraverseType, startTraverseF } from "./Traverse";
 
 export type StateType = {
   fen: string;
-  startingFen: string;
+  startingFen: string | undefined;
   orientationIsWhite: boolean;
   logs: LogType[];
   traverse?: TraverseType;
@@ -89,6 +89,7 @@ export default class Brain {
     }
     return {
       fen,
+      startingFen: undefined,
       orientationIsWhite,
       logs: [] as LogType[],
     };
@@ -106,6 +107,7 @@ export default class Brain {
           logs.push({ fen, san });
           return {
             fen: chess.fen(),
+            startingFen: fen as string | undefined,
             orientationIsWhite,
             logs: logs.slice(),
           };
@@ -235,6 +237,7 @@ export default class Brain {
   static newGame() {
     Brain.setState({
       fen: Brain.getFen(),
+      startingFen: undefined,
       orientationIsWhite: !Brain.getState().orientationIsWhite,
       logs: [],
     });

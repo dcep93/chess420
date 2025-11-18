@@ -53,7 +53,7 @@ function SubBoard() {
   useEffect(() => {
     if (vars.last === now) return;
     vars.last = now;
-    if (state.startingFen === fen) {
+    if (!state.startingFen || state.startingFen === fen) {
       updateFen(state.fen);
     } else {
       updateFen(state.startingFen);
