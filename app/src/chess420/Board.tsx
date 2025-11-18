@@ -53,25 +53,20 @@ function SubBoard() {
   useEffect(() => {
     if (vars.last === now) return;
     vars.last = now;
-    const [oldFen, newFen] = state.fen.split(".oldFen.");
-    if (newFen) {
-      if (oldFen === fen) {
-        updateFen(newFen);
-      } else {
-        updateFen(oldFen);
-        updateKey(key + 1);
-        setTimeout(() => updateFen(newFen), settings.REPLY_DELAY_MS);
-      }
+    if (state.startingFen === fen) {
+      updateFen(state.fen);
     } else {
-      updateFen(oldFen);
+      updateFen(state.startingFen);
+      updateKey(key + 1);
+      setTimeout(() => updateFen(state.fen), settings.REPLY_DELAY_MS);
     }
-    lichessF(newFen || oldFen)
+    lichessF(state.fen)
       .then((moves) =>
         moves.map((move) => move.total).reduce((a, b) => a + b, 0)
       )
       .then((total) => updateTotal(total));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.fen]);
+  }, [state.fen, state.startingFen]);
   if (!fen) return null;
   return (
     <div

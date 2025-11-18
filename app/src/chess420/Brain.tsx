@@ -7,6 +7,7 @@ import traverseF, { TraverseType, startTraverseF } from "./Traverse";
 
 export type StateType = {
   fen: string;
+  startingFen: string;
   orientationIsWhite: boolean;
   logs: LogType[];
   traverse?: TraverseType;
@@ -186,10 +187,8 @@ export default class Brain {
   static genState<T extends StateType>(startingState: T, san: string): T {
     return {
       ...startingState,
-      fen: `${startingState.fen}.oldFen.${Brain.getFen(
-        startingState.fen,
-        san
-      )}`,
+      fen: Brain.getFen(startingState.fen, san),
+      startingFen: startingState.fen,
       logs: startingState.logs.concat({
         fen: startingState.fen,
         san,
