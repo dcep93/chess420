@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# npx create-react-app app --template typescript
+# npm create vite@latest app -- --template react-ts
 
 cd app
 npm install
