@@ -1,9 +1,9 @@
-import Chess, { ChessInstance, Square } from "chess.js";
-import lichessF, { LiMove, getGameById, getLatestGame } from "./Lichess";
-import { LogType } from "./Log";
+import { Chess, ChessInstance, Square } from "chess.js";
+import lichessF, { type LiMove, getGameById, getLatestGame } from "./Lichess";
+import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
-import traverseF, { TraverseType, startTraverseF } from "./Traverse";
+import traverseF, { type TraverseType, startTraverseF } from "./Traverse";
 
 export type StateType = {
   fen: string;
@@ -29,7 +29,7 @@ export enum View {
 }
 
 export default class Brain {
-  static autoreplyRef: React.RefObject<HTMLInputElement>;
+  static autoreplyRef: React.RefObject<HTMLInputElement | null>;
   static history: History;
   static updateHistory: (history: History) => void;
   static showHelp: boolean;
@@ -146,7 +146,7 @@ export default class Brain {
   static fetchOpenings() {
     return Promise.all(
       ["a.tsv", "b.tsv", "c.tsv", "d.tsv", "e.tsv"].map((f) =>
-        fetch(`${process.env.PUBLIC_URL}/eco/dist/${f}`)
+        fetch(`/eco/dist/${f}`)
           .then((response) => response.text())
           .then((text) =>
             text

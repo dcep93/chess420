@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Brain, { StateType, View } from "./Brain";
+import Brain, { type StateType, View } from "./Brain";
 import settings from "./Settings";
 import { DoOnce } from "./utils";
 

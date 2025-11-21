@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
-import { GetLog, LogType } from "./Log";
+import { GetLog, type LogType } from "./Log";
 import quizletF from "./Quizlet";
 import traverseF, { Familiarity } from "./Traverse";
 

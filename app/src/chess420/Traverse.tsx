@@ -1,4 +1,4 @@
-import Brain, { StateType, View } from "./Brain";
+import Brain, { type StateType, View } from "./Brain";
 import lichessF from "./Lichess";
 import { getParts } from "./Log";
 import settings from "./Settings";

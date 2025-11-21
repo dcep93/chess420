@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Brain, { View } from "./Brain";
-import lichessF, { LiMove } from "./Lichess";
+import lichessF, { type LiMove } from "./Lichess";
 import settings from "./Settings";
 import Speedrun from "./Speedrun";
 import Traps from "./Traps";

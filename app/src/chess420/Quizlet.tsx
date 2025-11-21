@@ -1,5 +1,5 @@
 import Brain from "./Brain";
-import { Familiarity, TraverseType } from "./Traverse";
+import { Familiarity, type TraverseType } from "./Traverse";
 
 export default function quizletF(t: TraverseType) {
   console.log(t);
