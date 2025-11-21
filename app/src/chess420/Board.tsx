@@ -78,6 +78,7 @@ function SubBoard() {
       <Chessboard
         key={key}
         options={{
+          showNotation: false,
           boardOrientation: state.orientationIsWhite ? "white" : "black",
           position: fen,
           squareStyles: {
