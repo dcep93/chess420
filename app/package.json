@@ -12,6 +12,7 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "chess.js": "^1.4.0",
+    "md5": "^2.3.0",
     "react": "^19.2.0",
     "react-chessboard": "^5.8.4",
     "react-dom": "^19.2.0"
