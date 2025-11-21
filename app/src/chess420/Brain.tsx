@@ -1,4 +1,4 @@
-import { Chess, ChessInstance, Square } from "chess.js";
+import { Chess, type Square } from "chess.js";
 import lichessF, { type LiMove, getGameById, getLatestGame } from "./Lichess";
 import { type LogType } from "./Log";
 import settings from "./Settings";
@@ -41,7 +41,7 @@ export default class Brain {
   } | null;
   static updateOpenings: (openings: { [fen: string]: string }) => void;
 
-  static timeout: NodeJS.Timeout;
+  static timeout: ReturnType<typeof setTimeout>;
 
   //
 
@@ -56,7 +56,7 @@ export default class Brain {
     return chess.fen();
   }
 
-  static getChess(fen?: string): ChessInstance {
+  static getChess(fen?: string): Chess {
     // @ts-ignore
     const chess = new Chess();
     if (fen !== undefined) chess.load(fen);
