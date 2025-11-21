@@ -26,7 +26,7 @@ project_id="$(cat $GOOGLE_APPLICATION_CREDENTIALS | jq -r .project_id)"
 cat <<EOF > firebase.json
 {
     "hosting": {
-        "public": "build",
+        "public": "dist",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
         "rewrites": [{
             "source": "**",
