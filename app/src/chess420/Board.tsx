@@ -76,30 +76,33 @@ function SubBoard() {
       }}
     >
       <Chessboard
-        boardOrientation={state.orientationIsWhite ? "white" : "black"}
         key={key}
-        position={fen}
-        customSquareStyles={{
-          [prevClicked || ""]: {
-            background: "rgba(255, 255, 0)",
+        options={{
+          boardOrientation: state.orientationIsWhite ? "white" : "black",
+          position: fen,
+          squareStyles: {
+            [prevClicked || ""]: {
+              background: "rgba(255, 255, 0)",
+            },
           },
-        }}
-        onPieceDrop={(from, to) => {
-          updateClicked(null);
-          return Brain.moveFromTo(from, to);
-        }}
-        onSquareClick={(clicked: string) => {
-          if (prevClicked === null) {
-            updateClicked(clicked);
-          } else if (prevClicked === clicked) {
+          onPieceDrop: ({ sourceSquare, targetSquare }) => {
+            if (!targetSquare) return false;
             updateClicked(null);
-          } else {
-            if (Brain.moveFromTo(prevClicked, clicked)) {
+            return Brain.moveFromTo(sourceSquare, targetSquare);
+          },
+          onSquareClick: ({ square }) => {
+            if (prevClicked === null) {
+              updateClicked(square);
+            } else if (prevClicked === square) {
               updateClicked(null);
             } else {
-              updateClicked(clicked);
+              if (Brain.moveFromTo(prevClicked, square)) {
+                updateClicked(null);
+              } else {
+                updateClicked(square);
+              }
             }
-          }
+          },
         }}
       />
     </div>
