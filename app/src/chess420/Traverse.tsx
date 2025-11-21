@@ -48,7 +48,7 @@ export default function traverseF(
           },
         })
       );
-  if (!Brain.isMyTurn(state.fen, state.orientationIsWhite))
+  if (!Brain.isMyTurn(state.fen, state.orientationIsWhite)) {
     return lichessF(state.fen)
       .then((moves) =>
         moves
@@ -83,15 +83,29 @@ export default function traverseF(
           progressPoints: state.progressPoints / moveStates.length,
         }))
       )
-      .then((moveStates) => ({
-        ...traverseT,
-        progress:
-          moveStates.length > 0
-            ? traverseT.progress
-            : traverseT.progress + state.progressPoints,
-        states: states.concat(moveStates),
-      }))
-      .then(traverseF);
+      .then((moveStates) =>
+        moveStates.length > 0
+          ? traverseF({
+              ...traverseT,
+              progress: traverseT.progress,
+              states: states.concat(moveStates),
+            })
+          : Promise.resolve()
+              .then(() => Brain.updateIsTraversing(false))
+              .then(() =>
+                Brain.setState({
+                  ...state,
+                  traverse: {
+                    ...traverseT,
+                    progress: traverseT.progress + state.progressPoints,
+                    states,
+                    messages: ["end of the line"],
+                    assignNovelty: undefined,
+                  },
+                })
+              )
+      );
+  }
   if (Brain.view === View.traverse) {
     if (traverseMyMoveSan === undefined)
       return Promise.resolve({

@@ -107,7 +107,9 @@ function SubBoard() {
 }
 
 function getBorderColor(total: number): string {
-  return total <= settings.SCORE_FLUKE_DISCOUNT
+  return Brain.isTraversing
+    ? "blue"
+    : total <= settings.SCORE_FLUKE_DISCOUNT
     ? "red"
     : total <= settings.UNCOMMON_THRESHOLD
     ? "#aaaaaa"
