@@ -154,7 +154,7 @@ export default class Brain {
               .slice(1)
               .filter((l) => l)
               .map((l) => l.split("\t"))
-              .map(([eco, name, epd]) => [
+              .map(([eco, name, _pgn, _uci, epd]) => [
                 Brain.normalizeFenForOpening(epd),
                 `${eco} ${name}`,
               ])
