@@ -225,6 +225,7 @@ export default class Brain {
 
   static maybeReply(state: StateType) {
     if (
+      Brain.view !== View.lichess_latest &&
       Brain.autoreplyRef.current?.checked &&
       !Brain.isMyTurn(state.fen, state.orientationIsWhite)
     ) {
