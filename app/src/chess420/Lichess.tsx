@@ -1,4 +1,4 @@
-import Brain from "./Brain";
+import Brain, { type StateType } from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import { getRawScore } from "./getRawScore";
@@ -30,6 +30,16 @@ export const stats = {
   failure: 0,
 };
 
+export const latestGameCache: {
+  sans: string[];
+  orientationIsWhite: boolean;
+  baseHistory: StateType[];
+} = {
+  sans: [],
+  orientationIsWhite: true,
+  baseHistory: [],
+};
+
 export function getLatestGame(username: string) {
   return fetch(`https://lichess.org/api/user/${username}/current-game`)
     .then((resp) => resp.text())
@@ -44,10 +54,15 @@ export function getLatestGame(username: string) {
             .matchAll(/\. (.+?) /g)
         )
         .then((matches) => Array.from(matches).map((match) => match[1]))
-        .then((sans) => ({
-          sans,
-          orientationIsWhite: text.match(/White "(.*?)"/)![1] === username,
-        }))
+        .then((sans) => {
+          latestGameCache.sans = sans;
+          latestGameCache.orientationIsWhite =
+            text.match(/White "(.*?)"/)![1] === username;
+          latestGameCache.baseHistory = Brain.history.states.slice(
+            Brain.history.index
+          );
+          return latestGameCache;
+        })
     );
 }
 

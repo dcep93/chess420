@@ -1,5 +1,10 @@
 import { Chess, type Square } from "chess.js";
-import lichessF, { type LiMove, getGameById, getLatestGame } from "./Lichess";
+import lichessF, {
+  type LiMove,
+  getGameById,
+  getLatestGame,
+  latestGameCache,
+} from "./Lichess";
 import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -235,6 +240,12 @@ export default class Brain {
   }
 
   static newGame() {
+    if (Brain.view === View.lichess_latest) {
+      if (latestGameCache.sans.length > 0) {
+        Brain.setState(latestGameCache.baseHistory[0]);
+        return;
+      }
+    }
     Brain.setState({
       fen: Brain.getFen(),
       startingFen: undefined,
@@ -254,6 +265,19 @@ export default class Brain {
   }
 
   static redo() {
+    if (Brain.view === View.lichess_latest) {
+      if (latestGameCache.sans.length > 0) {
+        const logs = Brain.getState().logs;
+        const onLine = logs.every(
+          (log, i) => log.san === latestGameCache.sans[i]
+        );
+        if (onLine && logs.length < latestGameCache.sans.length) {
+          const nextSan = latestGameCache.sans[logs.length];
+          Brain.playMove(nextSan);
+          return;
+        }
+      }
+    }
     if (Brain.history.index <= 0) {
       return alert("no redo available");
     }
