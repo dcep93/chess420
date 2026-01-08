@@ -243,6 +243,7 @@ export default class Brain {
   static newGame() {
     if (Brain.view === View.lichess_latest) {
       if (latestGameCache.sans.length > 0) {
+        console.log(latestGameCache);
         Brain.setState(latestGameCache.baseHistory[0]);
         return;
       }
