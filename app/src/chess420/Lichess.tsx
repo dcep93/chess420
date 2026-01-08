@@ -1,4 +1,4 @@
-import Brain, { type StateType } from "./Brain";
+import Brain from "./Brain";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import { getRawScore } from "./getRawScore";
@@ -30,14 +30,12 @@ export const stats = {
   failure: 0,
 };
 
-export const latestGameCache: {
+export var latestGameCache: {
   sans: string[];
   orientationIsWhite: boolean;
-  baseHistory: StateType[];
 } = {
   sans: [],
   orientationIsWhite: true,
-  baseHistory: [],
 };
 
 export function getLatestGame(username: string) {
@@ -54,13 +52,12 @@ export function getLatestGame(username: string) {
             .matchAll(/\. (.+?) /g)
         )
         .then((matches) => Array.from(matches).map((match) => match[1]))
-        .then((sans) => {
-          latestGameCache.sans = sans;
-          latestGameCache.orientationIsWhite =
-            text.match(/White "(.*?)"/)![1] === username;
-          latestGameCache.baseHistory = Brain.history.states.slice(
-            Brain.history.index
-          );
+        .then((sans) => ({
+          sans,
+          orientationIsWhite: text.match(/White "(.*?)"/)![1] === username,
+        }))
+        .then((_latestGameCache) => {
+          latestGameCache = _latestGameCache;
           return latestGameCache;
         })
     );

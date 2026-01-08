@@ -243,8 +243,12 @@ export default class Brain {
   static newGame() {
     if (Brain.view === View.lichess_latest) {
       if (latestGameCache.sans.length > 0) {
-        console.log(latestGameCache);
-        Brain.setState(latestGameCache.baseHistory[0]);
+        Brain.setState({
+          fen: Brain.getFen(),
+          startingFen: undefined,
+          orientationIsWhite: latestGameCache.orientationIsWhite,
+          logs: [],
+        });
         return;
       }
     }
