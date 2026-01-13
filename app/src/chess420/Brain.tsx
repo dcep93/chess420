@@ -425,7 +425,7 @@ export default class Brain {
     const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      if (Brain.isMyTurn(state.fen)) {
+      if (Brain.isMyTurn(state.fen) && Brain.view !== View.traverse) {
         Brain.setNovelty(state.fen, move.san);
       }
       Brain.playMove(move.san);

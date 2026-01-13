@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
 import Brain from "./Brain";
@@ -48,16 +48,21 @@ function SubBoard() {
   const [total, updateTotal] = useState(-1);
   const [fen, updateFen] = useState("");
   const [key, updateKey] = useState(0);
+  const lastLogCount = useRef<number | null>(null);
   const state = Brain.getState();
   const now = Date.now();
   useEffect(() => {
     if (vars.last === now) return;
     vars.last = now;
-    if (!state.startingFen || state.startingFen === fen) {
+    const isUndo =
+      lastLogCount.current !== null &&
+      state.logs.length < lastLogCount.current;
+    lastLogCount.current = state.logs.length;
+    if (isUndo || !state.startingFen || state.startingFen === fen) {
       updateFen(state.fen);
     } else {
       updateFen(state.startingFen);
-      updateKey(key + 1);
+      updateKey((prevKey) => prevKey + 1);
       setTimeout(() => updateFen(state.fen), settings.REPLY_DELAY_MS);
     }
     lichessF(state.fen)
@@ -66,7 +71,7 @@ function SubBoard() {
       )
       .then((total) => updateTotal(total));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.fen, state.startingFen]);
+  }, [state.fen, state.startingFen, state.logs.length]);
   if (!fen) return null;
   return (
     <div
