@@ -58,7 +58,15 @@ function SubBoard() {
       lastLogCount.current !== null &&
       state.logs.length < lastLogCount.current;
     lastLogCount.current = state.logs.length;
-    if (isUndo || !state.startingFen || state.startingFen === fen) {
+    const wasMyTurn =
+      state.startingFen !== undefined &&
+      Brain.isMyTurn(state.startingFen, state.orientationIsWhite);
+    if (
+      isUndo ||
+      !state.startingFen ||
+      state.startingFen === fen ||
+      wasMyTurn
+    ) {
       updateFen(state.fen);
     } else {
       updateFen(state.startingFen);
