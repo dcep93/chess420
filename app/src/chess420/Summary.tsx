@@ -30,6 +30,21 @@ function SubSummary() {
   const state = Brain.getState();
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
+  const continueWithoutSaving = () => {
+    const traverse = state.traverse!;
+    const results = traverse.results || [];
+    let trimmedResults = results;
+    for (let i = results.length - 1; i >= 0; i -= 1) {
+      if (results[i].fen === state.fen) {
+        trimmedResults = results.slice(0, i).concat(results.slice(i + 1));
+        break;
+      }
+    }
+    traverseF({
+      ...traverse,
+      results: trimmedResults,
+    });
+  };
   useEffect(() => {
     Promise.resolve()
       .then(() =>
@@ -115,7 +130,10 @@ function SubSummary() {
             </button>
           </div>
           {Brain.isTraversing ? (
-            <div>traversing...</div>
+            <div>
+              <button onClick={continueWithoutSaving}>i dont care</button>
+              <div>traversing...</div>
+            </div>
           ) : (
             <>
               {!state.traverse!.messages ? null : (
