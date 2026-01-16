@@ -30,6 +30,11 @@ function SubSummary() {
   const state = Brain.getState();
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
+  const progressPoints =
+    "progressPoints" in state &&
+    typeof (state as { progressPoints: number }).progressPoints === "number"
+      ? (state as { progressPoints: number }).progressPoints
+      : 0;
   const continueWithoutSaving = () => {
     const traverse = state.traverse!;
     const results = traverse.results || [];
@@ -50,7 +55,7 @@ function SubSummary() {
     }
     traverseF({
       ...traverse,
-      progress: traverse.progress + state.progressPoints,
+      progress: traverse.progress + progressPoints,
       results: trimmedResults,
       states: trimmedStates,
     });
