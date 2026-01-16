@@ -50,7 +50,9 @@ function SubSummary() {
     let trimmedStates = traverseStates;
     for (let i = traverseStates.length - 1; i >= 0; i -= 1) {
       if (traverseStates[i].fen === state.fen) {
-        trimmedStates = traverseStates.slice(0, i).concat(traverseStates.slice(i + 1));
+        trimmedStates = traverseStates
+          .slice(0, i)
+          .concat(traverseStates.slice(i + 1));
         break;
       }
     }
@@ -179,10 +181,10 @@ function SubSummary() {
                   "I don't care",
                   winOdds === null
                     ? null
-                    : `(${(winOdds * 100).toFixed(2)}% chance to win)`,
+                    : `(${(winOdds * 100).toFixed(2)}% win)`,
                   Number.isNaN(odds)
                     ? null
-                    : `(${(odds * 100).toFixed(2)}% chance to see this position)`,
+                    : `(${(odds * 100).toFixed(2)}% see)`,
                 ]
                   .filter(Boolean)
                   .join(" ")}
