@@ -154,6 +154,14 @@ function SubSummary() {
         >
           <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
           <div>positions visited: {(state.traverse!.results || []).length}</div>
+          <div>
+            {[
+              winOdds === null ? null : `(${(winOdds * 100).toFixed(2)}% win)`,
+              Number.isNaN(odds) ? null : `(${(odds * 100).toFixed(2)}% see)`,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          </div>
           {state.traverse!.messages ? (
             <div style={{ height: "5.5em" }}>
               {state.traverse!.messages!.map((m, i) => (
@@ -187,19 +195,7 @@ function SubSummary() {
           </div>
           {Brain.isTraversing ? (
             <div>
-              <button onClick={continueWithoutSaving}>
-                {[
-                  "I don't care",
-                  winOdds === null
-                    ? null
-                    : `(${(winOdds * 100).toFixed(2)}% win)`,
-                  Number.isNaN(odds)
-                    ? null
-                    : `(${(odds * 100).toFixed(2)}% see)`,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              </button>
+              <button onClick={continueWithoutSaving}>I don't care</button>
               <div>traversing...</div>
             </div>
           ) : (
