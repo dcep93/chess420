@@ -31,6 +31,8 @@ function SubSummary() {
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
   const [winOdds, updateWinOdds] = useState<number | null>(null);
+  const latestLog =
+    state.logs.length > 0 ? state.logs[state.logs.length - 1] : null;
   const progressPoints =
     "progressPoints" in state &&
     typeof (state as { progressPoints: number }).progressPoints === "number"
@@ -154,14 +156,11 @@ function SubSummary() {
         >
           <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
           <div>positions visited: {(state.traverse!.results || []).length}</div>
-          <div>
-            {[
-              winOdds === null ? null : `(${(winOdds * 100).toFixed(2)}% win)`,
-              Number.isNaN(odds) ? null : `(${(odds * 100).toFixed(2)}% see)`,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          </div>
+          {latestLog ? (
+            <div>
+              <GetLog log={latestLog} />
+            </div>
+          ) : null}
           {state.traverse!.messages ? (
             <div style={{ height: "5.5em" }}>
               {state.traverse!.messages!.map((m, i) => (
