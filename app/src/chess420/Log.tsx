@@ -32,7 +32,7 @@ const titles = [
   },
   {
     f: (move: LiMove, moves: LiMove[]) =>
-      `p/${(100 * move.prob).toFixed(1)}%/${getProbRank(move, moves)}`,
+      `p${getProbRank(move, moves)}/${(100 * move.prob).toFixed(1)}%`,
     text: "prob",
     title: "probability this move is played",
     width: 5,
