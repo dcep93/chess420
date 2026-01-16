@@ -40,9 +40,19 @@ function SubSummary() {
         break;
       }
     }
+    const traverseStates = traverse.states || [];
+    let trimmedStates = traverseStates;
+    for (let i = traverseStates.length - 1; i >= 0; i -= 1) {
+      if (traverseStates[i].fen === state.fen) {
+        trimmedStates = traverseStates.slice(0, i).concat(traverseStates.slice(i + 1));
+        break;
+      }
+    }
     traverseF({
       ...traverse,
+      progress: traverse.progress + state.progressPoints,
       results: trimmedResults,
+      states: trimmedStates,
     });
   };
   useEffect(() => {
