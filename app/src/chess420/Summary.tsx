@@ -120,6 +120,14 @@ function SubSummary() {
     const stateLastOpening: string = state.opening;
     if (stateLastOpening !== lastOpening) updateLastOpening(stateLastOpening);
   }
+  const traverseBorderColor =
+    Brain.isTraversing && winOdds !== null
+      ? winOdds > 0.875
+        ? "pink"
+        : winOdds > 0.75
+          ? "gold"
+          : undefined
+      : undefined;
   return (
     <div>
       <div
@@ -139,6 +147,9 @@ function SubSummary() {
             padding: "0.5em",
             backgroundColor: "rgba(255, 255, 256, 0.2)",
             borderRadius: "1em",
+            border: traverseBorderColor
+              ? `2px solid ${traverseBorderColor}`
+              : undefined,
           }}
         >
           <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
