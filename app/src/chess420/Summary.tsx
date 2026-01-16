@@ -30,6 +30,7 @@ function SubSummary() {
   const state = Brain.getState();
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
+  const [winOdds, updateWinOdds] = useState<number | null>(null);
   const progressPoints =
     "progressPoints" in state &&
     typeof (state as { progressPoints: number }).progressPoints === "number"
@@ -82,6 +83,33 @@ function SubSummary() {
       )
       .then(updateOdds);
   }, [state.logs]);
+  useEffect(() => {
+    let cancelled = false;
+    updateWinOdds(null);
+    lichessF(state.fen)
+      .then((moves) => {
+        if (cancelled) return null;
+        const totals = moves.reduce(
+          (acc, move) => ({
+            white: acc.white + move.white,
+            black: acc.black + move.black,
+          }),
+          { white: 0, black: 0 }
+        );
+        const totalDecisive = totals.white + totals.black;
+        if (totalDecisive === 0) return null;
+        return state.orientationIsWhite
+          ? totals.white / totalDecisive
+          : totals.black / totalDecisive;
+      })
+      .then((value) => {
+        if (cancelled) return;
+        updateWinOdds(value);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [state.fen, state.orientationIsWhite]);
   const opening = Brain.getOpening(state.fen);
   if (opening && lastOpening !== opening) {
     updateLastOpening(opening);
@@ -146,7 +174,19 @@ function SubSummary() {
           </div>
           {Brain.isTraversing ? (
             <div>
-              <button onClick={continueWithoutSaving}>i dont care</button>
+              <button onClick={continueWithoutSaving}>
+                {[
+                  "I don't care",
+                  winOdds === null
+                    ? null
+                    : `(${(winOdds * 100).toFixed(2)}% chance to win)`,
+                  Number.isNaN(odds)
+                    ? null
+                    : `(${(odds * 100).toFixed(2)}% chance to see this position)`,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              </button>
               <div>traversing...</div>
             </div>
           ) : (

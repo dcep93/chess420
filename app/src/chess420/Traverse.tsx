@@ -60,6 +60,9 @@ export default function traverseF(
   if (!Brain.isMyTurn(state.fen, state.orientationIsWhite)) {
     return lichessF(state.fen)
       .then((moves) =>
+        moves.filter((m) => m.total > settings.TRAVERSE_THRESHOLD_COUNT)
+      )
+      .then((moves) =>
         moves
           .map((move) =>
             Brain.genState(
