@@ -46,6 +46,7 @@ const vars = { release: Date.now(), last: 0 };
 function SubBoard() {
   const [prevClicked, updateClicked] = useState<string | null>(null);
   const [total, updateTotal] = useState(-1);
+  const [winOdds, updateWinOdds] = useState<number | null>(null);
   const [fen, updateFen] = useState("");
   const [key, updateKey] = useState(0);
   const lastLogCount = useRef<number | null>(null);
@@ -74,17 +75,40 @@ function SubBoard() {
       setTimeout(() => updateFen(state.fen), settings.REPLY_DELAY_MS);
     }
     lichessF(state.fen)
-      .then((moves) =>
-        moves.map((move) => move.total).reduce((a, b) => a + b, 0)
-      )
-      .then((total) => updateTotal(total));
+      .then((moves) => {
+        const total = moves
+          .map((move) => move.total)
+          .reduce((a, b) => a + b, 0);
+        updateTotal(total);
+        const totals = moves.reduce(
+          (acc, move) => ({
+            white: acc.white + move.white,
+            black: acc.black + move.black,
+          }),
+          { white: 0, black: 0 }
+        );
+        const totalDecisive = totals.white + totals.black;
+        if (totalDecisive === 0) {
+          updateWinOdds(null);
+        } else {
+          updateWinOdds(
+            state.orientationIsWhite
+              ? totals.white / totalDecisive
+              : totals.black / totalDecisive
+          );
+        }
+      })
+      .catch(() => {
+        updateTotal(-1);
+        updateWinOdds(null);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.fen, state.startingFen, state.logs.length]);
+  }, [state.fen, state.startingFen, state.logs.length, state.orientationIsWhite]);
   if (!fen) return null;
   return (
     <div
       style={{
-        border: `1em ${getBorderColor(total)} solid`,
+        border: `1em ${getBorderColor(total, winOdds)} solid`,
         width: "100%",
       }}
     >
@@ -123,10 +147,12 @@ function SubBoard() {
   );
 }
 
-function getBorderColor(total: number): string {
-  return Brain.isTraversing
-    ? "blue"
-    : total <= settings.SCORE_FLUKE_DISCOUNT
+function getBorderColor(total: number, winOdds: number | null): string {
+  if (Brain.isTraversing && winOdds !== null) {
+    if (winOdds > 0.875) return "pink";
+    if (winOdds > 0.75) return "gold";
+  }
+  return total <= settings.SCORE_FLUKE_DISCOUNT
     ? "red"
     : total <= settings.UNCOMMON_THRESHOLD
     ? "#aaaaaa"
