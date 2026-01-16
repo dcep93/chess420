@@ -1,5 +1,5 @@
 import Brain, { type StateType, View } from "./Brain";
-import lichessF from "./Lichess";
+import lichessF, { type LiMove } from "./Lichess";
 import { getParts } from "./Log";
 import settings from "./Settings";
 
@@ -25,6 +25,15 @@ export enum Familiarity {
   ok,
   bad,
   personalNew,
+}
+
+function prefetchLikelyDescendants(state: StateType, moves: LiMove[]) {
+  moves
+    .filter((move) => move.prob > 0.1)
+    .forEach((move) => {
+      const nextFen = Brain.genState(state, move.san).fen;
+      void lichessF(nextFen);
+    });
 }
 
 export default function traverseF(
@@ -108,16 +117,20 @@ export default function traverseF(
   }
   if (Brain.view === View.traverse) {
     if (traverseMyMoveSan === undefined)
-      return Promise.resolve({
-        ...traverseT,
-        messages: ["make a move"],
-        assignNovelty: undefined,
-      }).then((traverse) =>
-        Brain.setState({
-          ...state,
-          traverse,
-        })
-      );
+      return Promise.resolve()
+        .then(() => lichessF(state.fen))
+        .then((moves) => prefetchLikelyDescendants(state, moves))
+        .then(() => ({
+          ...traverseT,
+          messages: ["make a move"],
+          assignNovelty: undefined,
+        }))
+        .then((traverse) =>
+          Brain.setState({
+            ...state,
+            traverse,
+          })
+        );
   }
   return (
     Brain.view === View.traverse
@@ -127,12 +140,15 @@ export default function traverseF(
         )
   )
     .then((myMoveSan) =>
-      lichessF(state.fen).then((moves) => ({
-        myMoveSan,
-        myMove: moves.find((move) => move.san === myMoveSan),
-        bestMove: moves.sort((a, b) => b.score - a.score)[0],
-        moves,
-      }))
+      lichessF(state.fen).then((moves) => {
+        prefetchLikelyDescendants(state, moves);
+        return {
+          myMoveSan,
+          myMove: moves.find((move) => move.san === myMoveSan),
+          bestMove: moves.sort((a, b) => b.score - a.score)[0],
+          moves,
+        };
+      })
     )
     .then(({ myMoveSan, myMove, bestMove, moves }) => {
       const novelty = Brain.getNovelty(state.fen);

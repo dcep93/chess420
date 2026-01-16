@@ -31,7 +31,8 @@ const titles = [
     width: 6,
   },
   {
-    f: (move: LiMove) => `p/${(100 * move.prob).toFixed(1)}%`,
+    f: (move: LiMove, moves: LiMove[]) =>
+      `p/${(100 * move.prob).toFixed(1)}%/${getProbRank(move, moves)}`,
     text: "prob",
     title: "probability this move is played",
     width: 5,
@@ -171,5 +172,11 @@ export function getParts(san: string, moves: LiMove[]) {
   if (move === undefined) {
     return [san];
   }
-  return titles.map((t) => t.f(move));
+  return titles.map((t) => t.f(move, moves));
+}
+
+function getProbRank(move: LiMove, moves: LiMove[]) {
+  const sorted = moves.slice().sort((a, b) => b.prob - a.prob);
+  const rank = sorted.findIndex((m) => m.san === move.san);
+  return rank === -1 ? sorted.length : rank + 1;
 }
