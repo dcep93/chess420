@@ -140,7 +140,8 @@ function SubMain(props: { fen: string }) {
             display: "flex",
             flexDirection: "row",
             alignContent: "stretch",
-            overflow: "auto",
+            flexWrap: "wrap",
+            alignItems: "flex-start",
           }}
         >
           <div
@@ -148,19 +149,27 @@ function SubMain(props: { fen: string }) {
               minWidth: settings.CHESSBOARD_WIDTH,
               display: "flex",
               flexDirection: "column",
+              flexShrink: 0,
             }}
           >
             <Board />
             <Summary />
           </div>
-          <div style={{ flexGrow: 1 }}>
+          <div
+            style={{
+              flexGrow: 1,
+              flexBasis: 480,
+              minWidth: 0,
+              overflowX: "auto",
+            }}
+          >
             <div>
               <Controls />
             </div>
+            <div>
+              <Log />
+            </div>
           </div>
-        </div>
-        <div>
-          <Log />
         </div>
       </div>
     </div>
