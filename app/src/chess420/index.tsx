@@ -10,7 +10,7 @@ import Controls from "./Controls";
 import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
-import "./index.module.css";
+import styles from "./index.module.css";
 import recorded_sha from "./recorded_sha";
 
 function AssignBrainIdkWhyIHaveToDoThis(): boolean {
@@ -126,40 +126,18 @@ function SubMain(props: { fen: string }) {
     window.location.hash = Brain.hash(props.fen);
   return (
     <div
-      style={{
-        minHeight: "100vH",
-        minWidth: "100vW",
-        backgroundColor: "#212529",
-        color: "#f8f9fa",
-      }}
+      className={styles.page}
       data-bs-theme="dark"
     >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "stretch",
-            overflow: "auto",
-          }}
-        >
-          <div
-            style={{
-              minWidth: settings.CHESSBOARD_WIDTH,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Board />
-            <Summary />
-          </div>
-          <div style={{ flexGrow: 1 }}>
-            <div>
-              <Controls />
-            </div>
-          </div>
+      <div className={styles.layout}>
+        <div className={styles.boardColumn}>
+          <Board />
+          <Summary />
         </div>
-        <div>
+        <div className={styles.controlsColumn}>
+          <Controls />
+        </div>
+        <div className={styles.logColumn}>
           <Log />
         </div>
       </div>
