@@ -2,12 +2,34 @@ import { useState } from "react";
 import Brain from "./Brain";
 
 export default function Help() {
+  const bishopsGambitMoves = ["e4", "e5", "f4", "exf4", "Bc4"];
+  const benkoGambitMoves = ["d4", "Nf6", "c4", "c5", "d5", "b5"];
+  const openOpening = (sans: string[]) => {
+    const fen = sans.reduce((currentFen, san) => Brain.getFen(currentFen, san), Brain.getFen());
+    const hash = `w//${encodeURI(fen.replaceAll(" ", "_"))}`;
+    Brain.updateShowHelp(false);
+    window.location.assign(`/#${hash}`);
+  };
   const topics = [
     {
       title: "What is chess420?",
       content: [
         "Traditional opening trainers often use a combination of engine analysis and human-curated descriptions to guide their users.\nchess420 uses neither, and intends to supplement other study methods, often by suggesting new lines or adding confidence to your existing repetoire.",
-        "The primary appeal of chess420 is that outcomes of real lichess games are used to determine the strength of a move, not stockfish analysis or a human's opinion.\nFor example, of non-drawn games above 2000 ELO, the Bishop's Gambit line of the King's Gambit wins 55.7% of the time for white, despite stockfish evaluating at -0.9. Perhaps that opening isn't so bad!",
+        <>
+          The primary appeal of chess420 is that outcomes of real lichess games
+          are used to determine the strength of a move, not stockfish analysis
+          or a human&apos;s opinion.
+          {"\n"}For example, of non-drawn games above 2000 ELO, the{" "}
+          <button
+            className="help-link"
+            onClick={() => openOpening(bishopsGambitMoves)}
+          >
+            Bishop&apos;s Gambit
+          </button>{" "}
+          line of the King&apos;s Gambit wins 55.7% of the time for white,
+          despite stockfish evaluating at -0.9. Perhaps that opening isn&apos;t
+          so bad!
+        </>,
         "Lichess offers similar tools, but chess420 intends to provide value through quizzing the user, remembering your personal repetoire, and a custom scoring strategy independent of stockfish.",
       ],
     },
@@ -16,7 +38,22 @@ export default function Help() {
       content: [
         "chess420 is a bit nicer on desktop, but should still be useful on mobile.",
         'You can always make a move on the board or click "play best". If you manually play a move, chess420 will remember this as a novelty, whether or not it\'s the best move in a position.\nThen, chess420 will report statistics about your move and automatically play a weighted move for the opponent, preferring to play more common moves.',
-        "Personally, I like to idly click \"play best\" over and over again to watch a game play out, and I'll quiz myself in my head along the way.\nIf the best move is different to what I would have played, I'll either undo and manually play my preferred move as a novelty, or I'll look into that opening - perhaps I want to make a change to my repetoire!\nRecently this introduced me to the Benko Gambit as black, which performs quite well!",
+        <>
+          Personally, I like to idly click &quot;play best&quot; over and over
+          again to watch a game play out, and I&apos;ll quiz myself in my head
+          along the way.
+          {"\n"}If the best move is different to what I would have played,
+          I&apos;ll either undo and manually play my preferred move as a
+          novelty, or I&apos;ll look into that opening - perhaps I want to make
+          a change to my repetoire!{"\n"}Recently this introduced me to the{" "}
+          <button
+            className="help-link"
+            onClick={() => openOpening(benkoGambitMoves)}
+          >
+            Benko Gambit
+          </button>{" "}
+          as black, which performs quite well!
+        </>,
         "Additionally, I'll always import my latest Lichess game after finishing so that I can find out where I went wrong!",
         "By the way, you can also play out a game to get to a position you want to practice (perhaps with turning off auto reply). Then refresh the page and watch the best moves repeatedly and press enter to start over against different opponent variations. It's a good way to drill a particular opening.",
       ],
@@ -26,7 +63,18 @@ export default function Help() {
       content: [
         "chess420 gives every move a raw score based on how often it wins decisive games and how often it's played. More commonly played moves are rewarded, and very uncommon moves are severely punished.",
         "After a raw score is calculated, we provide a final score equal to the ratio of the next-best move's raw score, with a cap at 420.",
-        "You can check out the code here!\nhttps://github.com/dcep93/chess420/blob/main/app/src/chess420/getRawScore.tsx",
+        <>
+          You can check out the code here!
+          {"\n"}
+          <a
+            className="help-link"
+            href="https://github.com/dcep93/chess420/blob/main/app/src/chess420/getRawScore.tsx"
+            target="_blank"
+            rel="noreferrer"
+          >
+            https://github.com/dcep93/chess420/blob/main/app/src/chess420/getRawScore.tsx
+          </a>
+        </>,
       ],
     },
     {

@@ -414,6 +414,22 @@
   color: rgba(241, 231, 216, 0.9);
 }
 
+.help-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: #b9d4c4;
+  text-decoration: underline;
+  text-decoration-color: rgba(185, 212, 196, 0.4);
+  text-underline-offset: 0.16em;
+}
+
+.help-link:hover {
+  color: #d6eadf;
+  text-decoration-color: rgba(214, 234, 223, 0.7);
+}
+
 .log-wrap { overflow-x: auto; overflow-y: auto; height: 100%; }
 .log-content { min-height: 100%; min-width: 100%; width: max-content; }
 .log-table { padding: 0.75rem; display: flex; white-space: nowrap; width: max-content; min-width: 100%; }
