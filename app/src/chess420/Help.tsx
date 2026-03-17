@@ -1,14 +1,28 @@
 import { useState } from "react";
 import Brain from "./Brain";
+import { type LogType } from "./Log";
 
 export default function Help() {
   const bishopsGambitMoves = ["e4", "e5", "f4", "exf4", "Bc4"];
   const benkoGambitMoves = ["d4", "Nf6", "c4", "c5", "d5", "b5"];
-  const openOpening = (sans: string[]) => {
-    const fen = sans.reduce((currentFen, san) => Brain.getFen(currentFen, san), Brain.getFen());
-    const hash = `w//${encodeURI(fen.replaceAll(" ", "_"))}`;
+  const openOpening = (sans: string[], orientationIsWhite = true) => {
+    const chess = Brain.getChess();
+    const logs: LogType[] = [];
+    sans.forEach((san) => {
+      const fen = chess.fen();
+      chess.move(san);
+      logs.push({ fen, san });
+    });
+    const fen = chess.fen();
+
     Brain.updateShowHelp(false);
-    window.location.assign(`/#${hash}`);
+    Brain.setState({
+      fen,
+      startingFen: undefined,
+      orientationIsWhite,
+      logs,
+    });
+    window.location.hash = Brain.hash(fen);
   };
   const topics = [
     {
@@ -22,7 +36,7 @@ export default function Help() {
           {"\n"}For example, of non-drawn games above 2000 ELO, the{" "}
           <button
             className="help-link"
-            onClick={() => openOpening(bishopsGambitMoves)}
+            onClick={() => openOpening(bishopsGambitMoves, true)}
           >
             Bishop&apos;s Gambit
           </button>{" "}
@@ -48,7 +62,7 @@ export default function Help() {
           a change to my repetoire!{"\n"}Recently this introduced me to the{" "}
           <button
             className="help-link"
-            onClick={() => openOpening(benkoGambitMoves)}
+            onClick={() => openOpening(benkoGambitMoves, false)}
           >
             Benko Gambit
           </button>{" "}

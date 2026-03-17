@@ -5,7 +5,7 @@ import StorageW from "./StorageW";
 function Header() {
   return (
     <div className="controls__header">
-      <h1>♟ chess420</h1>
+      <h1>♟ chess420 ♟</h1>
       <span className="controls__subtitle">opening trainer</span>
     </div>
   );
