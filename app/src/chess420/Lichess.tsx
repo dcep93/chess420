@@ -38,8 +38,10 @@ export var latestGameCache: {
   orientationIsWhite: true,
 };
 
-const LICHESS_PERSONAL_ACCESS_TOKEN =
-  import.meta.env.VITE_LICHESS_PERSONAL_ACCESS_TOKEN;
+const LICHESS_PERSONAL_ACCESS_TOKEN = import.meta.env
+  .VITE_LICHESS_PERSONAL_ACCESS_TOKEN;
+
+console.log({ LICHESS_PERSONAL_ACCESS_TOKEN });
 
 export function getLatestGame(username: string) {
   return fetch(`https://lichess.org/api/user/${username}/current-game`)
