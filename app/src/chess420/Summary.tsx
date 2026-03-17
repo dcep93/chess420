@@ -7,8 +7,19 @@ import traverseF, { Familiarity } from "./Traverse";
 
 export default function Summary() {
   return (
-    <div className="summary-wrap">
-      <div className="summary-content">
+    <div
+      style={{
+        display: "flex",
+      }}
+    >
+      <div
+        style={{
+          flexGrow: 1,
+          width: 0,
+          margin: "1em",
+          overflow: "scroll",
+        }}
+      >
         <SubSummary />
       </div>
     </div>
@@ -121,14 +132,27 @@ function SubSummary() {
       : undefined;
   return (
     <div>
-      <div className="summary-top">
+      <div
+        style={{
+          paddingLeft: "2em",
+          textIndent: "-2em",
+          minHeight: "8em",
+        }}
+      >
         <div>{(odds * 100).toFixed(2)}%</div>
         <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
       </div>
       {state.traverse === undefined ? null : (
         <div
-          className="summary-traverse"
-          style={{ border: traverseBorderColor ? `2px solid ${traverseBorderColor}` : undefined }}
+          style={{
+            marginTop: "1em",
+            padding: "0.5em",
+            backgroundColor: "rgba(255, 255, 256, 0.2)",
+            borderRadius: "1em",
+            border: traverseBorderColor
+              ? `2px solid ${traverseBorderColor}`
+              : undefined,
+          }}
         >
           <div>progress: {(state.traverse!.progress * 100).toFixed(2)}%</div>
           <div>positions visited: {(state.traverse!.results || []).length}</div>
@@ -138,7 +162,7 @@ function SubSummary() {
             </div>
           ) : null}
           {state.traverse!.messages ? (
-            <div className="summary-messages">
+            <div style={{ height: "5.5em" }}>
               {state.traverse!.messages!.map((m, i) => (
                 <div key={i}>{m}</div>
               ))}
@@ -146,7 +170,7 @@ function SubSummary() {
           ) : (
             <div>
               <div>traverse summary:</div>
-              <div className="summary-indent">
+              <div style={{ textIndent: "1em" }}>
                 {(
                   Object.values(Familiarity).filter(
                     (v: any) => typeof v === "number"
@@ -212,7 +236,7 @@ export function SummaryMove(props: { log: LogType; length: number }) {
   const cell =
     chess.turn() === "w" ? `${Math.ceil(props.length / 2) + 1}.` : "...";
   return (
-    <div className="summary-move">
+    <div style={{ display: "flex" }}>
       <div>{cell}</div>
       <GetLog log={props.log} key={JSON.stringify(props.log)} />
     </div>

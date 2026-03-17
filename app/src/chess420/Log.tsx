@@ -52,8 +52,8 @@ const titles = [
 
 export default function Log() {
   return (
-    <div className="log-wrap">
-      <div className="log-content">
+    <div style={{ overflow: "scroll", flexGrow: 1 }}>
+      <div style={{ height: "100%" }}>
         <SubLog />
       </div>
     </div>
@@ -71,8 +71,14 @@ function SubLog() {
   if (logs.length > 0 && Brain.getChess(logs[0]!.fen).turn() === "b")
     logs.unshift(null);
   return (
-    <div className="log-table">
-      <div className="log-move-index">
+    <div
+      style={{
+        padding: "1em",
+        display: "flex",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <div style={{ width: "1em", marginRight: "-1em" }}>
         <div>&nbsp;</div>
         {logs
           .filter((_, i) => i % 2 === 0)
@@ -81,14 +87,17 @@ function SubLog() {
           ))}
       </div>
       {[0, 1].map((index) => (
-        <div key={index} className="log-column">
+        <div key={index} style={{ paddingLeft: "3em" }}>
           <div>
             {titles.map((t, i) => (
               <div
                 key={i}
                 title={t.title}
-                className="log-header-cell"
-                style={{ width: `${t.width}em` }}
+                style={{
+                  opacity: 0.5,
+                  display: "inline-block",
+                  width: `${t.width}em`,
+                }}
               >
                 {t.text}
               </div>
@@ -127,7 +136,7 @@ export function GetLog(props: { log: LogType | null }) {
   return (
     <div
       title={moves === null ? undefined : getTitle(moves)}
-      className="log-row"
+      style={{ cursor: "pointer" }}
       onClick={() => {
         const fen = Brain.getFen(log.fen, log.san);
         window.open(`/#${Brain.hash(fen)}`);
@@ -136,8 +145,8 @@ export function GetLog(props: { log: LogType | null }) {
       {titles.map((titlePart, i) => (
         <div
           key={i}
-          className="log-cell"
           style={{
+            display: "inline-block",
             fontWeight: i === 0 ? "bold" : "initial",
             width: `${titlePart.width}em`,
           }}
