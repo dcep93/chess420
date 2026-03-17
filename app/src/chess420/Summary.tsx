@@ -3,6 +3,7 @@ import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
 import { GetLog, type LogType } from "./Log";
 import quizletF from "./Quizlet";
+import settings from "./Settings";
 import traverseF, { Familiarity } from "./Traverse";
 
 export default function Summary() {
@@ -20,6 +21,7 @@ function SubSummary() {
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
   const [winOdds, updateWinOdds] = useState<number | null>(null);
+  const [borderReason, updateBorderReason] = useState<string | null>(null);
   const latestLog =
     state.logs.length > 0 ? state.logs[state.logs.length - 1] : null;
   const progressPoints =
@@ -79,9 +81,11 @@ function SubSummary() {
   useEffect(() => {
     let cancelled = false;
     updateWinOdds(null);
+    updateBorderReason(null);
     lichessF(state.fen)
       .then((moves) => {
         if (cancelled) return null;
+        const total = moves.reduce((acc, move) => acc + move.total, 0);
         const totals = moves.reduce(
           (acc, move) => ({
             white: acc.white + move.white,
@@ -90,10 +94,14 @@ function SubSummary() {
           { white: 0, black: 0 }
         );
         const totalDecisive = totals.white + totals.black;
-        if (totalDecisive === 0) return null;
-        return state.orientationIsWhite
+        const nextWinOdds =
+          totalDecisive === 0
+            ? null
+            : state.orientationIsWhite
           ? totals.white / totalDecisive
           : totals.black / totalDecisive;
+        updateBorderReason(getBorderReason(total, nextWinOdds));
+        return nextWinOdds;
       })
       .then((value) => {
         if (cancelled) return;
@@ -124,6 +132,9 @@ function SubSummary() {
       <div className="summary-top">
         <div>{(odds * 100).toFixed(2)}%</div>
         <div>{opening || (lastOpening === null ? "" : `* ${lastOpening}`)}</div>
+        {borderReason ? (
+          <div className="summary-border-reason">{borderReason}</div>
+        ) : null}
       </div>
       {state.traverse === undefined ? null : (
         <div
@@ -204,6 +215,20 @@ function SubSummary() {
       )}
     </div>
   );
+}
+
+function getBorderReason(total: number, winOdds: number | null) {
+  if (Brain.isTraversing && winOdds !== null) {
+    if (winOdds > 0.875) return "hot line: strong winning chances here";
+    if (winOdds > 0.75) return "promising line: this position is going your way";
+  }
+  if (total <= settings.SCORE_FLUKE_DISCOUNT) {
+    return `rare line: only ${total} recorded games in this position`;
+  }
+  if (total <= settings.UNCOMMON_THRESHOLD) {
+    return `uncommon line: only ${total} recorded games in this position`;
+  }
+  return null;
 }
 
 export function SummaryMove(props: { log: LogType; length: number }) {

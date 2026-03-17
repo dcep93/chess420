@@ -13,7 +13,7 @@ export type LogType = {
 const titles = [
   {
     f: (move: LiMove) => move.san,
-    text: "",
+    text: "move",
     title: "",
     width: 3.5,
   },
@@ -50,6 +50,8 @@ const titles = [
   },
 ];
 
+const logGridTemplate = titles.map((t) => `${t.width}em`).join(" ");
+
 export default function Log() {
   return (
     <div className="log-wrap">
@@ -82,13 +84,12 @@ function SubLog() {
       </div>
       {[0, 1].map((index) => (
         <div key={index} className="log-column">
-          <div>
+          <div className="log-header-row" style={{ gridTemplateColumns: logGridTemplate }}>
             {titles.map((t, i) => (
               <div
                 key={i}
                 title={t.title}
                 className="log-header-cell"
-                style={{ width: `${t.width}em` }}
               >
                 {t.text}
               </div>
@@ -128,18 +129,19 @@ export function GetLog(props: { log: LogType | null }) {
     <div
       title={moves === null ? undefined : getTitle(moves)}
       className="log-row"
+      style={{ gridTemplateColumns: logGridTemplate }}
       onClick={() => {
         const fen = Brain.getFen(log.fen, log.san);
         window.open(`/#${Brain.hash(fen)}`);
       }}
     >
-      {titles.map((titlePart, i) => (
+      {titles.map((_, i) => (
         <div
           key={i}
           className="log-cell"
+          title={i === 1 ? titles[i].title : undefined}
           style={{
             fontWeight: i === 0 ? "bold" : "initial",
-            width: `${titlePart.width}em`,
           }}
         >
           {parts[i] || null}

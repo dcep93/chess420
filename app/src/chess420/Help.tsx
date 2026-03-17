@@ -68,50 +68,54 @@ export default function Help() {
     },
   ];
   const [selected, update] = useState(0);
+  const activeTopic = topics[selected] ?? topics[0];
   return (
-    <div
-      style={{
-        backgroundColor: "#212529",
-        color: "#f8f9fa",
-        height: "100vH",
-        width: "100vW",
-        padding: "2em",
-        whiteSpace: "pre-wrap",
-        overflow: "scroll",
-      }}
-    >
-      <div>
-        <h1>welcome to chess420 - help page</h1>
-        <button onClick={() => Brain.updateShowHelp(false)}>
-          close help screen
-        </button>
-        <div style={{ height: "3em" }}></div>
-      </div>
-      {topics.map((topic, i) => (
-        <div key={i}>
-          <div
-            style={{
-              cursor: "pointer",
-              backgroundColor: "black",
-              margin: "1em",
-              padding: "1em",
-              borderRadius: "1em",
-            }}
-            onClick={() => update(selected === i ? -1 : i)}
-          >
-            {topic.title}
+    <div className="help-screen">
+      <div className="help-shell">
+        <section className="help-hero">
+          <div className="help-hero__copy">
+            <span className="help-kicker">Guide</span>
+            <h1>welcome to chess420</h1>
+            <p>
+              Learn the philosophy behind the trainer, how the scoring works,
+              and the best ways to use it for opening study.
+            </p>
           </div>
-          {selected !== i ? null : (
-            <div>
-              {topic.content.map((text, j) => (
-                <p key={j} style={{ paddingLeft: "5em", maxWidth: "60em" }}>
-                  {text}
-                </p>
+          <button
+            className="help-close-button"
+            onClick={() => Brain.updateShowHelp(false)}
+          >
+            close help
+          </button>
+        </section>
+
+        <div className="help-layout">
+          <nav className="help-nav" aria-label="Help topics">
+            {topics.map((topic, i) => (
+              <button
+                key={topic.title}
+                className={`help-topic ${selected === i ? "help-topic--active" : ""}`}
+                onClick={() => update(i)}
+              >
+                <span className="help-topic__index">{String(i + 1).padStart(2, "0")}</span>
+                <span className="help-topic__title">{topic.title}</span>
+              </button>
+            ))}
+          </nav>
+
+          <article className="help-article">
+            <div className="help-article__header">
+              <span className="help-article__eyebrow">Topic</span>
+              <h2>{activeTopic.title}</h2>
+            </div>
+            <div className="help-article__body">
+              {activeTopic.content.map((text, i) => (
+                <p key={i}>{text}</p>
               ))}
             </div>
-          )}
+          </article>
         </div>
-      ))}
+      </div>
     </div>
   );
 }

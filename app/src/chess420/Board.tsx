@@ -121,12 +121,12 @@ function SubBoard() {
 
 function getBorderColor(total: number, winOdds: number | null): string {
   if (Brain.isTraversing && winOdds !== null) {
-    if (winOdds > 0.875) return "pink";
-    if (winOdds > 0.75) return "gold";
+    if (winOdds > 0.875) return "#d99191";
+    if (winOdds > 0.75) return "#c7a35a";
   }
   return total <= settings.SCORE_FLUKE_DISCOUNT
-    ? "red"
+    ? "#b56f5e"
     : total <= settings.UNCOMMON_THRESHOLD
-    ? "#aaaaaa"
-    : "black";
+    ? "#8f8a7c"
+    : "#4f6d5d";
 }
