@@ -88,6 +88,7 @@ export default function Controls() {
                 id="lichess-username"
                 name={"lichessRef"}
                 ref={lichessRef}
+                defaultValue={Brain.lichessUsername || ""}
                 onKeyDown={(e) => e.stopPropagation()}
                 autoComplete={"on"}
                 placeholder="username"
