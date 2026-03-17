@@ -1,0 +1,150 @@
+:root {
+  font-family: "Inter", "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.chess420-app {
+  height: 100dvh;
+  width: 100%;
+  color: #f8f9fa;
+  background: radial-gradient(circle at top, #2f3542 0%, #14171d 45%, #0c0f14 100%);
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.chess420-shell {
+  display: grid;
+  grid-template-columns: minmax(340px, 34rem) minmax(22rem, 1fr);
+  gap: 0.75rem;
+  align-items: stretch;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.chess420-board-column,
+.chess420-info-column {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chess420-info-column {
+  overflow: hidden;
+}
+
+.chess420-board-card,
+.chess420-summary-card,
+.chess420-controls-card,
+.chess420-log-card {
+  border-radius: 16px;
+  background: rgba(20, 24, 32, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+}
+
+.chess420-summary-card {
+  flex: 1;
+  min-height: 0;
+}
+
+.chess420-log-card {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.board-wrap { opacity: 0.94; padding: 0.75rem; }
+.board-ratio-frame { position: relative; display: flex; width: 100%; }
+.board-ratio-spacer { margin-top: 100%; }
+.board-absolute-layer { position: absolute; inset: 0; display: flex; }
+.board-shell {
+  width: 100%;
+  border: 0.65rem solid;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.controls { padding: 0.9rem; display: grid; gap: 0.85rem; }
+.controls__header h1 { margin: 0; font-size: clamp(1.2rem, 2vw, 1.7rem); }
+.controls__subtitle { opacity: 0.75; }
+.controls__status {
+  margin-top: 0.5rem;
+  display: inline-block;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  background: rgba(124, 201, 255, 0.15);
+  border: 1px solid rgba(124, 201, 255, 0.4);
+}
+.controls__grid { display: grid; gap: 0.65rem; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); }
+.controls__section {
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 0.65rem;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.controls__section h2 { font-size: 0.95rem; margin: 0 0 0.5rem; }
+.controls__buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.controls button,
+.summary-content button {
+  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(180deg, #2b3445, #232b3a);
+  color: #eaf4ff;
+  border-radius: 8px;
+  padding: 0.34rem 0.55rem;
+  font-size: 0.85rem;
+}
+.controls input {
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(5,8,12,0.6);
+  color: #fff;
+  padding: 0.3rem 0.5rem;
+}
+.controls__checkbox { display: flex; gap: 0.45rem; margin-top: 0.5rem; align-items: center; }
+.controls__field-group { display: grid; gap: 0.25rem; margin-bottom: 0.5rem; }
+
+.summary-wrap { display: flex; height: 100%; }
+.summary-content { margin: 0.4rem 0.8rem 0.8rem; width: 100%; overflow: auto; }
+.summary-top { padding-left: 1.8em; text-indent: -1.8em; min-height: 4.8em; }
+.summary-traverse {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+.summary-messages { min-height: 5.5em; }
+.summary-indent { text-indent: 1em; }
+.summary-move { display: flex; gap: 0.6rem; }
+
+.log-wrap { overflow: auto; height: 100%; }
+.log-content { height: 100%; }
+.log-table { padding: 0.75rem; display: flex; white-space: nowrap; }
+.log-move-index { width: 1em; margin-right: -1em; opacity: 0.7; }
+.log-column { padding-left: 1.7rem; }
+.log-header-cell { opacity: 0.55; display: inline-block; }
+.log-row { cursor: pointer; border-radius: 8px; padding: 0.1rem 0.2rem; }
+.log-row:hover { background: rgba(255,255,255,0.08); }
+.log-cell { display: inline-block; }
+
+@media (max-width: 980px) {
+  .chess420-app { overflow: auto; height: 100dvh; min-height: 100dvh; }
+  .chess420-shell { grid-template-columns: 1fr; height: auto; }
+  .chess420-board-column { width: min(100%, 30rem); margin: 0 auto; }
+  .chess420-info-column { overflow: visible; }
+  .chess420-log-card { min-height: 14rem; }
+}
+
+@media (max-width: 520px) {
+  .chess420-app { padding: 0.4rem; }
+  .board-wrap { padding: 0.45rem; }
+  .controls, .log-table { padding: 0.6rem; }
+  .controls__grid { grid-template-columns: 1fr; }
+  .log-column { padding-left: 0.85rem; }
+}
