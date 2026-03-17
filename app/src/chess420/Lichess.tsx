@@ -38,6 +38,8 @@ export var latestGameCache: {
   orientationIsWhite: true,
 };
 
+const LICHESS_PERSONAL_ACCESS_TOKEN = "lip_3mkaEVPvCx27cmb27FsQ";
+
 export function getLatestGame(username: string) {
   return fetch(`https://lichess.org/api/user/${username}/current-game`)
     .then((resp) => resp.text())
@@ -291,7 +293,12 @@ function proxy(data: any): Promise<any> {
 async function abortableFetch(url: string): Promise<Response> {
   const controller = new AbortController();
   const signal = controller.signal;
-  const response = await fetch(url, { signal });
+  const response = await fetch(url, {
+    signal,
+    headers: {
+      Authorization: `Bearer ${LICHESS_PERSONAL_ACCESS_TOKEN}`,
+    },
+  });
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
   let result = "";
