@@ -143,7 +143,6 @@ export function GetLog(props: { log: LogType | null }) {
         <div
           key={i}
           className="log-cell"
-          title={i === 1 ? titles[i].title : undefined}
           style={{
             fontWeight: i === 0 ? "bold" : "initial",
           }}
