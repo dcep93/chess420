@@ -7,34 +7,11 @@ import settings from "./Settings";
 
 export default function Board() {
   return (
-    <div style={{ opacity: 0.75 }}>
-      <div
-        style={{
-          margin: "auto",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              marginTop: "100%",
-            }}
-          ></div>
-          <div
-            style={{
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-              display: "flex",
-            }}
-          >
-            <SubBoard />
-          </div>
+    <div className="board-wrap">
+      <div className="board-ratio-frame">
+        <div className="board-ratio-spacer"></div>
+        <div className="board-absolute-layer">
+          <SubBoard />
         </div>
       </div>
     </div>
@@ -106,12 +83,7 @@ function SubBoard() {
   }, [state.fen, state.startingFen, state.logs.length, state.orientationIsWhite]);
   if (!fen) return null;
   return (
-    <div
-      style={{
-        border: `1em ${getBorderColor(total, winOdds)} solid`,
-        width: "100%",
-      }}
-    >
+    <div className="board-shell" style={{ borderColor: getBorderColor(total, winOdds) }}>
       <Chessboard
         key={key}
         options={{

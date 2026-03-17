@@ -10,7 +10,7 @@ import Controls from "./Controls";
 import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
-import "./index.module.css";
+import "./index.css";
 import recorded_sha from "./recorded_sha";
 
 function AssignBrainIdkWhyIHaveToDoThis(): boolean {
@@ -115,7 +115,6 @@ function Main() {
 }
 
 function SubMain(props: { fen: string }) {
-  // TODO mobile friendly
   if (
     settings.SHOULD_UPDATE_HASH &&
     Brain.view !== View.lichess_id &&
@@ -125,52 +124,24 @@ function SubMain(props: { fen: string }) {
   )
     window.location.hash = Brain.hash(props.fen);
   return (
-    <div
-      style={{
-        minHeight: "100vH",
-        minWidth: "100vW",
-        backgroundColor: "#212529",
-        color: "#f8f9fa",
-      }}
-      data-bs-theme="dark"
-    >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "stretch",
-            flexWrap: "wrap",
-            alignItems: "flex-start",
-          }}
-        >
-          <div
-            style={{
-              minWidth: settings.CHESSBOARD_WIDTH,
-              display: "flex",
-              flexDirection: "column",
-              flexShrink: 0,
-            }}
-          >
+    <div className="chess420-app" data-bs-theme="dark">
+      <div className="chess420-shell">
+        <section className="chess420-board-column">
+          <div className="chess420-board-card">
             <Board />
+          </div>
+          <div className="chess420-summary-card">
             <Summary />
           </div>
-          <div
-            style={{
-              flexGrow: 1,
-              flexBasis: 480,
-              minWidth: 0,
-              overflowX: "auto",
-            }}
-          >
-            <div>
-              <Controls />
-            </div>
-            <div>
-              <Log />
-            </div>
+        </section>
+        <section className="chess420-info-column">
+          <div className="chess420-controls-card">
+            <Controls />
           </div>
-        </div>
+          <div className="chess420-log-card">
+            <Log />
+          </div>
+        </section>
       </div>
     </div>
   );
