@@ -2,20 +2,6 @@ import React from "react";
 import Brain, { View } from "./Brain";
 import StorageW from "./StorageW";
 
-function getViewLabel() {
-  return Brain.view === View.lichess_vs
-    ? `playing vs ${Brain.lichessUsername}`
-    : Brain.view === View.lichess_mistakes
-      ? `finding mistakes of ${Brain.lichessUsername}`
-      : Brain.view === View.speedrun
-        ? "speedrunning common moves"
-        : Brain.view === View.traps
-          ? "discovering potential traps"
-          : Brain.view === View.traverse
-            ? "traversing manually"
-            : null;
-}
-
 function Header() {
   return (
     <div className="controls__header">
@@ -113,7 +99,9 @@ export default function Controls() {
             <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
               play vs user
             </button>
-            <button onClick={() => Brain.findMistakes(lichessRef.current!.value)}>
+            <button
+              onClick={() => Brain.findMistakes(lichessRef.current!.value)}
+            >
               find mistakes
             </button>
             <button
@@ -129,7 +117,6 @@ export default function Controls() {
             </button>
           </div>
         </section>
-
       </div>
     </div>
   );
