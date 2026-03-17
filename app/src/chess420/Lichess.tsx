@@ -38,6 +38,7 @@ export var latestGameCache: {
   orientationIsWhite: true,
 };
 
+// https://github.com/dcep93/chess420/security/secret-scanning/unblock-secret/3B3d2HpOBTcSoMG0ZDaCi6lFxwb
 const LICHESS_PERSONAL_ACCESS_TOKEN = "lip_3mkaEVPvCx27cmb27FsQ";
 
 export function getLatestGame(username: string) {
@@ -51,7 +52,7 @@ export function getLatestGame(username: string) {
             .trim()
             .split("\n")
             .pop()!
-            .matchAll(/\. (.+?) /g)
+            .matchAll(/\. (.+?) /g),
         )
         .then((matches) => Array.from(matches).map((match) => match[1]))
         .then((sans) => ({
@@ -61,7 +62,7 @@ export function getLatestGame(username: string) {
         .then((_latestGameCache) => {
           latestGameCache = _latestGameCache;
           return latestGameCache;
-        })
+        }),
     );
 }
 
@@ -76,19 +77,19 @@ export function getGameById(gameId: string) {
             .trim()
             .split("\n")
             .pop()!
-            .matchAll(/\. (.+?) /g)
+            .matchAll(/\. (.+?) /g),
         )
         .then((matches) => Array.from(matches).map((match) => match[1]))
         .then((sans) => ({
           sans,
           orientationIsWhite: true,
-        }))
+        })),
     );
 }
 
 export default function lichessF(
   fen: string,
-  _options: OptionsType = {}
+  _options: OptionsType = {},
 ): Promise<LiMove[]> {
   const options = Object.assign(
     {
@@ -96,7 +97,7 @@ export default function lichessF(
       attempt: 0,
       username: undefined,
     },
-    _options
+    _options,
   );
 
   const chess = Brain.getChess(fen);
@@ -122,14 +123,14 @@ export default function lichessF(
         ...move,
         ww: move.white / (move.black + move.white),
         total: move.black + move.white + move.draws,
-      }))
+      })),
     )
     .then((moves) => ({
       moves,
       total: moves.map((m) => m.total).reduce((a, b) => a + b, 0),
     }))
     .then(({ moves, total }) =>
-      moves.map((m) => ({ ...m, prob: m.total / total }))
+      moves.map((m) => ({ ...m, prob: m.total / total })),
     )
     .then((moves) =>
       moves.map((move: LiMove) =>
@@ -138,8 +139,8 @@ export default function lichessF(
           .then((score) => ({
             ...move,
             score,
-          }))
-      )
+          })),
+      ),
     )
     .then((movePromises: Promise<LiMove>[]) => Promise.all(movePromises))
     .then((moves: LiMove[]) =>
@@ -151,7 +152,7 @@ export default function lichessF(
             .filter((m) => m.san !== move.san)
             .map((m) => m.score)
             .sort((a, b) => b - a)[0],
-      }))
+      })),
     )
     .then((moves: LiMove[]) => {
       if (options.prepareNext)
@@ -166,7 +167,7 @@ export default function lichessF(
                 attempt: options.attempt + 1,
                 username: undefined,
               });
-            })
+            }),
         );
       return moves;
     })
@@ -211,19 +212,19 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
             return json.moves;
           })
         : response.status === 429
-        ? Promise.resolve([])
-        : new Promise((resolve) =>
-            setTimeout(
-              () => helper(url, attempt + 1).then((moves) => resolve(moves)),
-              1000
-            )
-          )
+          ? Promise.resolve([])
+          : new Promise((resolve) =>
+              setTimeout(
+                () => helper(url, attempt + 1).then((moves) => resolve(moves)),
+                1000,
+              ),
+            ),
     );
 }
 
 function getChessDotComMoves(
   username: string,
-  params: URLSearchParams
+  params: URLSearchParams,
 ): Promise<LiMove[]> {
   const nextFen = params.get("fen")!;
   const color = params.get("color")!;
@@ -262,7 +263,7 @@ function getChessDotComMoves(
         black: move.blackWon,
         draws: move.draw,
         averageRating: move.eval,
-      }))
+      })),
     );
 }
 
@@ -278,7 +279,7 @@ function proxy(data: any): Promise<any> {
     window.chrome.runtime.sendMessage(extension_id, data, (response: any) => {
       if (window.chrome.runtime.lastError) {
         return reject(
-          `chrome.runtime.lastError ${window.chrome.runtime.lastError}`
+          `chrome.runtime.lastError ${window.chrome.runtime.lastError}`,
         );
       }
       if (!response.ok) {
@@ -286,7 +287,7 @@ function proxy(data: any): Promise<any> {
         return reject(`chrome: ${response.err}`);
       }
       resolve(response.data);
-    })
+    }),
   );
 }
 
