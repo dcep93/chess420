@@ -1,28 +1,38 @@
 import { useState } from "react";
-import Brain from "./Brain";
+import Brain, { type StateType } from "./Brain";
 import { type LogType } from "./Log";
 
 export default function Help() {
   const bishopsGambitMoves = ["e4", "e5", "f4", "exf4", "Bc4"];
   const benkoGambitMoves = ["d4", "Nf6", "c4", "c5", "d5", "b5"];
   const openOpening = (sans: string[], orientationIsWhite = true) => {
-    const chess = Brain.getChess();
-    const logs: LogType[] = [];
-    sans.forEach((san) => {
-      const fen = chess.fen();
-      chess.move(san);
-      logs.push({ fen, san });
-    });
-    const fen = chess.fen();
-
-    Brain.updateShowHelp(false);
-    Brain.setState({
-      fen,
+    const initialState: StateType = {
+      fen: Brain.getFen(),
       startingFen: undefined,
       orientationIsWhite,
-      logs,
+      logs: [] as LogType[],
+    };
+    const states = sans.reduce(
+      (acc, san) => acc.concat(Brain.genState(acc[acc.length - 1], san)),
+      [initialState],
+    );
+    const currentState = states[states.length - 1];
+    const hash = ["w", currentState.fen.replaceAll(" ", "_")].join("//");
+
+    window.history.pushState({}, "", `/#${hash}`);
+    Brain.lichessUsername = undefined;
+    // root route is the "home" app state
+    Brain.view = undefined as never;
+    Brain.updateShowHelp(false);
+    clearTimeout(Brain.timeout);
+    Brain.updateHistory({
+      index: 0,
+      states: states
+        .slice()
+        .reverse()
+        .concat(Brain.history.states.slice(Brain.history.index)),
     });
-    window.location.hash = Brain.hash(fen);
+    Brain.maybeReply(currentState);
   };
   const topics = [
     {
