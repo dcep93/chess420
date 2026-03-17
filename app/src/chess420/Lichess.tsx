@@ -38,8 +38,8 @@ export var latestGameCache: {
   orientationIsWhite: true,
 };
 
-// https://github.com/dcep93/chess420/security/secret-scanning/unblock-secret/3B3d2HpOBTcSoMG0ZDaCi6lFxwb
-const LICHESS_PERSONAL_ACCESS_TOKEN = "lip_3mkaEVPvCx27cmb27FsQ";
+const LICHESS_PERSONAL_ACCESS_TOKEN =
+  import.meta.env.VITE_LICHESS_PERSONAL_ACCESS_TOKEN;
 
 export function getLatestGame(username: string) {
   return fetch(`https://lichess.org/api/user/${username}/current-game`)
@@ -294,11 +294,13 @@ function proxy(data: any): Promise<any> {
 async function abortableFetch(url: string): Promise<Response> {
   const controller = new AbortController();
   const signal = controller.signal;
+  const headers: HeadersInit = {};
+  if (LICHESS_PERSONAL_ACCESS_TOKEN) {
+    headers.Authorization = `Bearer ${LICHESS_PERSONAL_ACCESS_TOKEN}`;
+  }
   const response = await fetch(url, {
     signal,
-    headers: {
-      Authorization: `Bearer ${LICHESS_PERSONAL_ACCESS_TOKEN}`,
-    },
+    headers,
   });
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
