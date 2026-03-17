@@ -417,13 +417,24 @@
 .log-wrap { overflow-x: auto; overflow-y: auto; height: 100%; }
 .log-content { min-height: 100%; min-width: 100%; width: max-content; }
 .log-table { padding: 0.75rem; display: flex; white-space: nowrap; width: max-content; min-width: 100%; }
-.log-move-index { width: 1em; margin-right: -1em; opacity: 0.52; color: var(--text-muted); }
+.log-move-index {
+  width: 1em;
+  margin-right: -1em;
+  opacity: 0.52;
+  color: var(--text-muted);
+}
+.log-move-index > div {
+  min-height: 1.9rem;
+  display: flex;
+  align-items: baseline;
+}
 .log-column { padding-left: 1.7rem; }
 .log-header-row,
 .log-row {
   display: grid;
   align-items: baseline;
   column-gap: 0;
+  min-height: 1.9rem;
 }
 .log-header-cell {
   opacity: 0.72;
@@ -439,6 +450,10 @@
   padding: 0.16rem 0.28rem;
   font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
   font-variant-numeric: tabular-nums;
+  transition: background-color 140ms ease;
+}
+.log-row--placeholder {
+  background: transparent;
 }
 .log-row:hover { background: var(--row-hover); }
 .log-cell { min-width: 0; }

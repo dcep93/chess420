@@ -111,8 +111,8 @@ export function GetLog(props: { log: LogType | null }) {
   const log = props.log;
   if (log === null)
     return (
-      <div>
-        <div>...</div>
+      <div className="log-row log-row--placeholder" style={{ gridTemplateColumns: logGridTemplate }}>
+        <div className="log-cell">...</div>
       </div>
     );
   if (moves === null) {
@@ -125,11 +125,15 @@ export function GetLog(props: { log: LogType | null }) {
     }).then((moves) => update(moves));
   }
   const parts = moves === null ? [log.san, "..."] : getParts(log.san, moves);
+  const move = moves?.find((candidate) => candidate.san === log.san) ?? null;
   return (
     <div
       title={moves === null ? undefined : getTitle(moves)}
       className="log-row"
-      style={{ gridTemplateColumns: logGridTemplate }}
+      style={{
+        gridTemplateColumns: logGridTemplate,
+        backgroundColor: getScoreBackground(move?.score),
+      }}
       onClick={() => {
         const fen = Brain.getFen(log.fen, log.san);
         window.open(`/#${Brain.hash(fen)}`);
@@ -172,4 +176,11 @@ function getProbRank(move: LiMove, moves: LiMove[]) {
   const sorted = moves.slice().sort((a, b) => b.prob - a.prob);
   const rank = sorted.findIndex((m) => m.san === move.san);
   return rank === -1 ? sorted.length : rank + 1;
+}
+
+function getScoreBackground(score?: number) {
+  if (score === undefined || score >= 100) return undefined;
+  const intensity = Math.max(0, Math.min(1, (100 - score) / 100));
+  const alpha = 0.06 + intensity * 0.22;
+  return `rgba(181, 111, 94, ${alpha.toFixed(3)})`;
 }
