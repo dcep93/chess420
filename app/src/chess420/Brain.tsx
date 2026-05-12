@@ -1967,14 +1967,82 @@ export default class Brain {
         Brain.compareEndgamePositionScores(a.score, b.score) || a.index - b.index
     );
     const best = scoredMoves[0];
+    const idealMoves = scoredMoves
+      .filter(
+        (move) => Brain.compareEndgamePositionScores(move.score, best.score) === 0
+      )
+      .map((move) => move.san);
     return {
       moves,
-      idealMoves: scoredMoves
-        .filter(
-          (move) => Brain.compareEndgamePositionScores(move.score, best.score) === 0
-        )
-        .map((move) => move.san),
+      idealMoves:
+        Brain.getRookCutAxisPreservingOpponentMoves(chess, moves, idealMoves) ??
+        idealMoves,
     };
+  }
+
+  static getRookCutAxisPreservingOpponentMoves(
+    chess: Chess,
+    moves: string[],
+    idealMoves: string[]
+  ): string[] | null {
+    if (
+      Brain.endgameId !== "rook" ||
+      chess.turn() !== "b" ||
+      Brain.getMajorEndgamePhase(chess.fen(), "r") !== 2
+    ) {
+      return null;
+    }
+    const whiteRook = Brain.findPiece(chess.fen(), "w", "r");
+    const whiteKing = Brain.findPiece(chess.fen(), "w", "k");
+    const blackKing = Brain.findPiece(chess.fen(), "b", "k");
+    if (!whiteRook || !whiteKing || !blackKing) {
+      return null;
+    }
+    const rookCutAxis = Brain.getRookCutAxis(whiteRook, whiteKing, blackKing);
+    if (!rookCutAxis) {
+      return null;
+    }
+    const blackKingAxisValue = Brain.squareCoords(blackKing.square)[rookCutAxis];
+    const preservesRookCutAxis = (san: string) => {
+      const nextChess = Brain.getChess(chess.fen());
+      const move = nextChess.move(san);
+      const nextBlackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+      return (
+        move?.piece === "k" &&
+        nextBlackKing != null &&
+        Brain.squareCoords(nextBlackKing.square)[rookCutAxis] ===
+          blackKingAxisValue
+      );
+    };
+    if (idealMoves.some(preservesRookCutAxis)) {
+      return null;
+    }
+    const blackKingRookDistanceAfter = (san: string) => {
+      const nextChess = Brain.getChess(chess.fen());
+      nextChess.move(san);
+      const nextWhiteRook = Brain.findPiece(nextChess.fen(), "w", "r");
+      const nextBlackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+      return nextWhiteRook && nextBlackKing
+        ? Brain.manhattanDistance(nextWhiteRook.square, nextBlackKing.square)
+        : 99;
+    };
+    const bestIdealRookDistance = Math.min(
+      ...idealMoves.map(blackKingRookDistanceAfter)
+    );
+    const axisPreservingMoves = moves
+      .filter(preservesRookCutAxis)
+      .filter((san) => blackKingRookDistanceAfter(san) <= bestIdealRookDistance);
+    const hasStableAxisPreservingMove = axisPreservingMoves.some((san) => {
+      const nextChess = Brain.getChess(chess.fen());
+      nextChess.move(san);
+      const score = Brain.getEndgamePositionScore(nextChess.fen());
+      return (
+        score.kind === "major" &&
+        score.endgameId === "rook" &&
+        score.rookBlackAllowsOpposition === 0
+      );
+    });
+    return hasStableAxisPreservingMove ? axisPreservingMoves : null;
   }
 
   static getKnightAndBishopOpponentCandidates(

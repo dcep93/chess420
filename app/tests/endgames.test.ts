@@ -531,6 +531,28 @@ test("rook defense stays close to the rook to resist box reduction", () => {
   ]);
 });
 
+test("rook defense preserves the cut axis after Re1", () => {
+  setEndgame("rook");
+  const chess = Brain.getChess("8/8/8/4R3/3k4/8/5K2/8 w - - 4 3");
+  chess.move("Re1");
+
+  const candidates = Brain.getEndgameOpponentCandidates(chess);
+
+  assert.equal(candidates.moves.length, 5);
+  assert.deepEqual(candidates.idealMoves, ["Kd5", "Kd3"]);
+});
+
+test("rook defense approaches the rook after Kc4", () => {
+  setEndgame("rook");
+  const chess = Brain.getChess("3k4/8/4R3/1K6/8/8/8/8 w - - 10 6");
+  chess.move("Kc4");
+
+  const candidates = Brain.getEndgameOpponentCandidates(chess);
+
+  assert.equal(candidates.moves.length, 3);
+  assert.deepEqual(candidates.idealMoves, ["Kd7"]);
+});
+
 test("rook defense proximity to the rook works when rotated or mirrored", () => {
   setEndgame("rook");
   const fileCut = Brain.getChess("8/7R/8/8/2K5/6k1/8/8 w - - 0 1");
