@@ -489,7 +489,7 @@
 .endgame-log-table {
   padding: 0.75rem;
   display: grid;
-  grid-template-columns: max-content max-content max-content max-content max-content;
+  grid-template-columns: max-content max-content max-content max-content max-content max-content;
   column-gap: 1rem;
   row-gap: 0.15rem;
   width: max-content;
@@ -509,6 +509,20 @@
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.07em;
+}
+.endgame-log-choice-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.endgame-log-choice-button:hover {
+  text-decoration: underline;
+}
+.endgame-log-correctness {
+  filter: grayscale(1);
+  opacity: 0.72;
 }
 
 @media (max-width: 980px) {

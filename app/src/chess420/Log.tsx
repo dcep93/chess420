@@ -9,6 +9,7 @@ export type LogType = {
   fen: string;
   san: string;
   opponent_san?: string;
+  ideal_choices?: number;
   num_choices?: number;
   created_at_ms?: number;
   duration_ms?: number;
@@ -175,7 +176,6 @@ export function GetLog(props: { log: LogType | null }) {
 
 function EndgameLog() {
   const logs = Brain.getState().logs;
-  const phase = Brain.getEndgamePhase(Brain.getState().fen);
   return (
     <div className="endgame-log-table">
       <div className="endgame-log-row endgame-log-row--header">
@@ -183,6 +183,7 @@ function EndgameLog() {
         <div>my move</div>
         <div>opponent move</div>
         <div>num_choices</div>
+        <div>correctness</div>
         <div>duration</div>
       </div>
       {logs.map((log, index) => (
@@ -190,14 +191,22 @@ function EndgameLog() {
           className="endgame-log-row"
           key={`${index}-${log.san}-${log.opponent_san}`}
         >
-          <div>{phase}</div>
+          <div>{Brain.getEndgamePhase(Brain.getLogResultFen(log))}</div>
           <div>{log.san}</div>
           <div>{log.opponent_san || ""}</div>
           <div>
             {log.num_choices === undefined || log.num_choices === 0
               ? ""
-              : `${log.num_choices}/${log.num_choices}`}
+              : (
+                <button
+                  className="endgame-log-choice-button"
+                  onClick={() => Brain.forceDifferentIdealEndgameMove(index)}
+                >
+                  {log.ideal_choices ?? log.num_choices}/{log.num_choices}
+                </button>
+              )}
           </div>
+          <div className="endgame-log-correctness">👍</div>
           <div>{formatDuration(log.duration_ms)}</div>
         </div>
       ))}

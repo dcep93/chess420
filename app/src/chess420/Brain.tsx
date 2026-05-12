@@ -93,6 +93,15 @@ export default class Brain {
     return `${Brain.getMajorEndgamePhase(fen, majorPiece)}/2`;
   }
 
+  static getLogResultFen(log: LogType): string {
+    const chess = Brain.getChess(log.fen);
+    chess.move(log.san);
+    if (log.opponent_san) {
+      chess.move(log.opponent_san);
+    }
+    return chess.fen();
+  }
+
   static getMajorEndgamePieceType(): "r" | "q" | null {
     if (Brain.endgameId === "rook") return "r";
     if (Brain.endgameId === "queen") return "q";
@@ -575,9 +584,11 @@ export default class Brain {
       return;
     }
     const shouldReply = Brain.autoreplyRef.current?.checked;
-    const blackReplies = shouldReply ? chess.moves() : [];
+    const blackReplyCandidates = shouldReply
+      ? Brain.getEndgameOpponentCandidates(chess)
+      : { moves: [], idealMoves: [] };
     const opponentSan = shouldReply
-      ? Brain.chooseEndgameOpponentMove(chess)
+      ? Brain.chooseEndgameOpponentMove(blackReplyCandidates.idealMoves)
       : undefined;
     if (opponentSan) {
       chess.move(opponentSan);
@@ -593,7 +604,10 @@ export default class Brain {
         fen: state.fen,
         san: whiteMove.san,
         opponent_san: opponentSan,
-        num_choices: shouldReply ? blackReplies.length : undefined,
+        ideal_choices: shouldReply
+          ? blackReplyCandidates.idealMoves.length
+          : undefined,
+        num_choices: shouldReply ? blackReplyCandidates.moves.length : undefined,
         created_at_ms: now,
         duration_ms:
           previousLog?.created_at_ms === undefined
@@ -603,33 +617,82 @@ export default class Brain {
     });
   }
 
-  static chooseEndgameOpponentMove(chess: Chess): string | undefined {
+  static chooseEndgameOpponentMove(idealMoves: string[]): string | undefined {
+    if (idealMoves.length === 0) {
+      return undefined;
+    }
+    return idealMoves[Math.floor(Math.random() * idealMoves.length)];
+  }
+
+  static getEndgameOpponentCandidates(chess: Chess): {
+    moves: string[];
+    idealMoves: string[];
+  } {
     const moves = chess.moves();
     if (moves.length === 0) {
-      return undefined;
+      return { moves, idealMoves: [] };
     }
     const majorPiece = Brain.getMajorEndgamePieceType();
     if (!majorPiece) {
-      return moves[Math.floor(Math.random() * moves.length)];
+      return { moves, idealMoves: moves };
     }
+    const currentWhiteKing = Brain.findPiece(chess.fen(), "w", "k");
+    const currentBlackKing = Brain.findPiece(chess.fen(), "b", "k");
+    const blackKingStartsOnDiagonal =
+      currentWhiteKing != null &&
+      currentBlackKing != null &&
+      Brain.diagonalDistance(
+        currentWhiteKing.square,
+        currentBlackKing.square
+      ) === 0;
     const scoredMoves = moves.map((san, index) => {
       const nextChess = Brain.getChess(chess.fen());
       nextChess.move(san);
+      const nextBlackKing = Brain.findPiece(nextChess.fen(), "b", "k");
       return {
         san,
         index,
+        diagonalMovePenalty:
+          blackKingStartsOnDiagonal && currentBlackKing && nextBlackKing
+            ? Brain.isDiagonalKingMove(
+                currentBlackKing.square,
+                nextBlackKing.square
+              )
+              ? 1
+              : 0
+            : 0,
         ...Brain.scoreMajorPieceOpponentPosition(nextChess.fen(), majorPiece),
       };
     });
+    const canCaptureMajorPiece = scoredMoves.some(
+      (move) => move.capturePenalty === 0
+    );
     scoredMoves.sort(
       (a, b) =>
         a.capturePenalty - b.capturePenalty ||
+        (canCaptureMajorPiece
+          ? 0
+          : a.diagonalMovePenalty - b.diagonalMovePenalty) ||
         a.diagonalDistance - b.diagonalDistance ||
         a.whiteKingDistance - b.whiteKingDistance ||
         a.whiteMajorPieceDistance - b.whiteMajorPieceDistance ||
         a.index - b.index
     );
-    return scoredMoves[0]?.san;
+    const best = scoredMoves[0];
+    return {
+      moves,
+      idealMoves: scoredMoves
+        .filter(
+          (move) =>
+            move.capturePenalty === best.capturePenalty &&
+            (canCaptureMajorPiece ||
+              move.diagonalMovePenalty === best.diagonalMovePenalty) &&
+            move.diagonalDistance === best.diagonalDistance &&
+            move.whiteKingDistance === best.whiteKingDistance &&
+            move.whiteMajorPieceDistance === best.whiteMajorPieceDistance
+        )
+        .map((move) => move.san),
+    };
   }
 
   static scoreMajorPieceOpponentPosition(fen: string, pieceType: "r" | "q") {
@@ -663,6 +726,15 @@ export default class Brain {
     );
   }
 
+  static isDiagonalKingMove(a: Square, b: Square): boolean {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    return (
+      Math.abs(first.file - second.file) === 1 &&
+      Math.abs(first.rank - second.rank) === 1
+    );
+  }
+
   static kingDistance(a: Square, b: Square): number {
     const first = Brain.squareCoords(a);
     const second = Brain.squareCoords(b);
@@ -681,7 +753,7 @@ export default class Brain {
   }
 
   static playEndgameOpponentMove(san: string, state: StateType, chess: Chess) {
-    const blackReplies = chess.moves();
+    const blackReplyCandidates = Brain.getEndgameOpponentCandidates(chess);
     const blackMove = chess.move(san);
     if (blackMove === null) {
       return;
@@ -692,7 +764,8 @@ export default class Brain {
       logs[logs.length - 1] = {
         ...latestLog,
         opponent_san: blackMove.san,
-        num_choices: blackReplies.length,
+        ideal_choices: blackReplyCandidates.idealMoves.length,
+        num_choices: blackReplyCandidates.moves.length,
       };
     }
     Brain.setState({
@@ -700,6 +773,43 @@ export default class Brain {
       fen: chess.fen(),
       startingFen: state.fen,
       orientationIsWhite: true,
+      logs,
+    });
+  }
+
+  static forceDifferentIdealEndgameMove(logIndex: number) {
+    const state = Brain.getState();
+    const log = state.logs[logIndex];
+    if (!log) {
+      return;
+    }
+    const chess = Brain.getChess(log.fen);
+    const whiteMove = chess.move(log.san);
+    if (whiteMove === null) {
+      return;
+    }
+    const candidates = Brain.getEndgameOpponentCandidates(chess);
+    if (candidates.idealMoves.length <= 1) {
+      return;
+    }
+    const currentIndex = candidates.idealMoves.indexOf(log.opponent_san || "");
+    const nextSan =
+      candidates.idealMoves[(currentIndex + 1) % candidates.idealMoves.length];
+    const blackMove = chess.move(nextSan);
+    if (blackMove === null) {
+      return;
+    }
+    const logs = state.logs.slice(0, logIndex + 1);
+    logs[logIndex] = {
+      ...log,
+      opponent_san: blackMove.san,
+      ideal_choices: candidates.idealMoves.length,
+      num_choices: candidates.moves.length,
+    };
+    Brain.setState({
+      ...state,
+      fen: chess.fen(),
+      startingFen: log.fen,
       logs,
     });
   }
