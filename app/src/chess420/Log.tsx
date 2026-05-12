@@ -8,6 +8,9 @@ import Traps from "./Traps";
 export type LogType = {
   fen: string;
   san: string;
+  moves_to_mate?: number;
+  opponent_san?: string;
+  num_choices?: number;
 };
 
 const titles = [
@@ -69,6 +72,9 @@ function SubLog() {
   if (Brain.view === View.traps) {
     return <Traps />;
   }
+  if (Brain.view === View.endgame) {
+    return <EndgameLog />;
+  }
   const logs: (LogType | null)[] = Brain.getState().logs.slice();
   if (logs.length > 0 && Brain.getChess(logs[0]!.fen).turn() === "b")
     logs.unshift(null);
@@ -116,6 +122,18 @@ export function GetLog(props: { log: LogType | null }) {
       </div>
     );
   if (moves === null) {
+    if (Brain.view === View.endgame) {
+      return (
+        <div
+          className="log-row"
+          style={{ gridTemplateColumns: logGridTemplate }}
+        >
+          <div className="log-cell" style={{ fontWeight: "bold" }}>
+            {log.san}
+          </div>
+        </div>
+      );
+    }
     lichessF(log.fen, {
       username:
         (Brain.isMyTurn(log.fen) && Brain.view === View.lichess_mistakes) ||
@@ -148,6 +166,31 @@ export function GetLog(props: { log: LogType | null }) {
           }}
         >
           {parts[i] || null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EndgameLog() {
+  const logs = Brain.getState().logs;
+  return (
+    <div className="endgame-log-table">
+      <div className="endgame-log-row endgame-log-row--header">
+        <div>my move</div>
+        <div>moves_to_mate</div>
+        <div>opponent move</div>
+        <div>num_choices</div>
+      </div>
+      {logs.map((log, index) => (
+        <div
+          className="endgame-log-row"
+          key={`${index}-${log.san}-${log.opponent_san}`}
+        >
+          <div>{log.san}</div>
+          <div>{log.moves_to_mate ?? -1}</div>
+          <div>{log.opponent_san || ""}</div>
+          <div>{log.num_choices ?? 0}</div>
         </div>
       ))}
     </div>

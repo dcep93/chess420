@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Brain, { View } from "./Brain";
+import { getEndgame } from "./Endgames";
 import lichessF from "./Lichess";
 import { GetLog, type LogType } from "./Log";
 import quizletF from "./Quizlet";
@@ -17,6 +18,13 @@ export default function Summary() {
 }
 
 function SubSummary() {
+  if (Brain.view === View.endgame) {
+    return <EndgameSummary />;
+  }
+  return <OpeningSummary />;
+}
+
+function OpeningSummary() {
   const state = Brain.getState();
   const [lastOpening, updateLastOpening] = useState<string | null>(null);
   const [odds, updateOdds] = useState(NaN);
@@ -213,6 +221,26 @@ function SubSummary() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function EndgameSummary() {
+  const state = Brain.getState();
+  const endgame = getEndgame(Brain.endgameId);
+  const chess = Brain.getChess(state.fen);
+  const status = chess.isCheckmate()
+    ? "checkmate"
+    : chess.isStalemate()
+      ? "stalemate"
+      : chess.turn() === "w"
+        ? "White to move"
+        : "complete";
+  return (
+    <div className="summary-top summary-top--endgame">
+      <div>{endgame.label}</div>
+      <div>{status}</div>
+      <div>{state.logs.length} moves logged</div>
     </div>
   );
 }

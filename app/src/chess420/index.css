@@ -124,6 +124,10 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+.controls__endgame-select {
+  width: 100%;
+  margin-top: 0.15rem;
+}
 .controls__status {
   margin-top: 0.35rem;
   display: inline-block;
@@ -185,7 +189,7 @@
   gap: 0.4rem;
   align-items: start;
 }
-.controls__buttons--modes button:last-child {
+.controls__button--wide {
   grid-column: 1 / -1;
   justify-self: start;
 }
@@ -199,7 +203,8 @@
   font-size: 0.78rem;
   box-shadow: 0 2px 8px rgba(95, 72, 44, 0.08);
 }
-.controls input {
+.controls input,
+.controls select {
   border-radius: 10px;
   border: 1px solid var(--field-border);
   background: var(--field-bg);
@@ -233,6 +238,13 @@
   text-indent: -1.8em;
   min-height: 4.8em;
   color: var(--text-muted);
+}
+.summary-top--endgame {
+  padding-left: 0;
+  text-indent: 0;
+  min-height: 0;
+  display: grid;
+  gap: 0.2rem;
 }
 .summary-border-reason {
   margin-top: 0.45rem;
@@ -473,6 +485,30 @@
 }
 .log-row:hover { background: var(--row-hover); }
 .log-cell { min-width: 0; }
+.endgame-log-table {
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: max-content max-content max-content max-content;
+  column-gap: 1rem;
+  row-gap: 0.15rem;
+  width: max-content;
+  min-width: 100%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.endgame-log-row {
+  display: contents;
+}
+.endgame-log-row > div {
+  min-height: 1.8rem;
+}
+.endgame-log-row--header > div {
+  opacity: 0.72;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+}
 
 @media (max-width: 980px) {
   .chess420-app { overflow: auto; min-height: 100dvh; }

@@ -5,6 +5,7 @@ import lichessF, {
   getLatestGame,
   latestGameCache,
 } from "./Lichess";
+import { DEFAULT_ENDGAME_ID, getEndgame, type EndgameId } from "./Endgames";
 import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -31,6 +32,7 @@ export enum View {
   traverse,
   speedrun,
   traps,
+  endgame,
 }
 
 export default class Brain {
@@ -52,6 +54,7 @@ export default class Brain {
 
   static view: View;
   static lichessUsername?: string;
+  static endgameId: EndgameId = DEFAULT_ENDGAME_ID;
 
   //
 
@@ -82,6 +85,14 @@ export default class Brain {
   }
 
   static getInitialState(): StateType {
+    if (Brain.view === View.endgame) {
+      return {
+        fen: getEndgame(Brain.endgameId).fen,
+        startingFen: undefined,
+        orientationIsWhite: true,
+        logs: [],
+      };
+    }
     var fen = Brain.getFen();
     var orientationIsWhite = true;
     const hash = window.location.hash.split("#")[1];
@@ -133,7 +144,9 @@ export default class Brain {
     const startingState = Brain.getInitialState();
     Brain.setState(startingState);
     Promise.resolve()
-      .then(Brain.fetchOpenings)
+      .then(() =>
+        Brain.view === View.endgame ? undefined : Brain.fetchOpenings()
+      )
       .then(() => {
         if (
           Brain.view === View.lichess_mistakes ||
@@ -225,6 +238,7 @@ export default class Brain {
 
   static maybeReply(state: StateType) {
     if (
+      Brain.view !== View.endgame &&
       Brain.view !== View.lichess_latest &&
       Brain.autoreplyRef.current?.checked &&
       !Brain.isMyTurn(state.fen, state.orientationIsWhite)
@@ -241,6 +255,10 @@ export default class Brain {
   }
 
   static newGame() {
+    if (Brain.view === View.endgame) {
+      Brain.setState(Brain.getInitialState());
+      return;
+    }
     if (Brain.view === View.lichess_latest) {
       if (latestGameCache.sans.length > 0) {
         Brain.setState({
@@ -299,6 +317,10 @@ export default class Brain {
     if (!san) {
       return alert("no move to play");
     }
+    if (Brain.view === View.endgame) {
+      Brain.playEndgameMove(san);
+      return;
+    }
     const state = Brain.getState();
     if (state.traverse?.states?.slice(-1)[0].fen === state.fen) {
       traverseF(state.traverse, san);
@@ -308,6 +330,9 @@ export default class Brain {
   }
 
   static playWeighted() {
+    if (Brain.view === View.endgame) {
+      return alert("play weighted is not available in endgame mode");
+    }
     const fen = Brain.getState().fen;
     lichessF(fen, {
       username:
@@ -330,10 +355,16 @@ export default class Brain {
   }
 
   static playBest() {
+    if (Brain.view === View.endgame) {
+      return alert("play best is not available in endgame mode");
+    }
     Brain.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
   }
 
   static getBest(fen: string): Promise<string> {
+    if (Brain.view === View.endgame) {
+      return Promise.resolve("");
+    }
     if (Brain.isMyTurn(fen)) {
       const novelty = Brain.getNovelty(fen);
       if (novelty !== null) {
@@ -372,6 +403,10 @@ export default class Brain {
     window.location.href = `/traps#${Brain.hash()}`;
   }
 
+  static selectEndgame(id: EndgameId) {
+    window.location.href = `/endgames/${id}`;
+  }
+
   static findMistakes(username: string) {
     if (!username) return alert("no username provided");
 
@@ -392,6 +427,10 @@ export default class Brain {
 
   static home() {
     if (Brain.showHelp) return Brain.updateShowHelp(false);
+    if (Brain.view === View.endgame) {
+      window.location.assign("/");
+      return;
+    }
     setTimeout(() => {
       window.location.assign(`/#${Brain.hash()}`);
       if (Brain.view === undefined) window.location.reload();
@@ -422,10 +461,20 @@ export default class Brain {
   // board
   static moveFromTo(from: string, to: string) {
     const state = Brain.getState();
+    if (
+      Brain.view === View.endgame &&
+      Brain.getChess(state.fen).turn() !== "w"
+    ) {
+      return false;
+    }
     const chess = Brain.getChess(state.fen);
     const move = chess.move({ from: from as Square, to: to as Square });
     if (move !== null) {
-      if (Brain.isMyTurn(state.fen) && Brain.view !== View.traverse) {
+      if (
+        Brain.isMyTurn(state.fen) &&
+        Brain.view !== View.traverse &&
+        Brain.view !== View.endgame
+      ) {
         Brain.setNovelty(state.fen, move.san);
       }
       Brain.playMove(move.san);
@@ -433,5 +482,38 @@ export default class Brain {
     } else {
       return false;
     }
+  }
+
+  static playEndgameMove(san: string) {
+    const state = Brain.getState();
+    const chess = Brain.getChess(state.fen);
+    if (chess.turn() !== "w") {
+      return;
+    }
+    const whiteMove = chess.move(san);
+    if (whiteMove === null) {
+      return;
+    }
+    const blackReplies = chess.moves();
+    const opponentSan =
+      blackReplies.length === 0
+        ? undefined
+        : blackReplies[Math.floor(Math.random() * blackReplies.length)];
+    if (opponentSan) {
+      chess.move(opponentSan);
+    }
+    Brain.setState({
+      ...state,
+      fen: chess.fen(),
+      startingFen: state.fen,
+      orientationIsWhite: true,
+      logs: state.logs.concat({
+        fen: state.fen,
+        san: whiteMove.san,
+        moves_to_mate: -1,
+        opponent_san: opponentSan,
+        num_choices: blackReplies.length,
+      }),
+    });
   }
 }

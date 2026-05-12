@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Board from "./Board";
 import Controls from "./Controls";
+import { isEndgameId } from "./Endgames";
 import Help from "./Help";
 import Log from "./Log";
 import Summary from "./Summary";
@@ -53,6 +54,21 @@ function AssignBrainIdkWhyIHaveToDoThis(): boolean {
         return false;
       }
       break;
+    case "endgames": {
+      if (pathParts.length === 2) {
+        window.location.replace("/");
+        return true;
+      }
+      Brain.view = View.endgame;
+      if (pathParts.length > 3) {
+        return false;
+      }
+      if (pathParts[2] !== undefined && !isEndgameId(pathParts[2])) {
+        return false;
+      }
+      Brain.endgameId = pathParts[2];
+      break;
+    }
     case undefined:
       if (pathParts.length > 1) {
         return false;
@@ -120,7 +136,8 @@ function SubMain(props: { fen: string }) {
     Brain.view !== View.lichess_id &&
     Brain.view !== View.lichess_latest &&
     Brain.view !== View.lichess_mistakes &&
-    Brain.view !== View.traverse
+    Brain.view !== View.traverse &&
+    Brain.view !== View.endgame
   )
     window.location.hash = Brain.hash(props.fen);
   return (

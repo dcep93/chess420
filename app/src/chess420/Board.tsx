@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
-import Brain from "./Brain";
+import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
 import settings from "./Settings";
 
@@ -50,6 +50,11 @@ function SubBoard() {
       updateFen(state.startingFen);
       updateKey((prevKey) => prevKey + 1);
       setTimeout(() => updateFen(state.fen), settings.REPLY_DELAY_MS);
+    }
+    if (Brain.view === View.endgame) {
+      updateTotal(-1);
+      updateWinOdds(null);
+      return;
     }
     lichessF(state.fen)
       .then((moves) => {
@@ -120,6 +125,7 @@ function SubBoard() {
 }
 
 function getBorderColor(total: number, winOdds: number | null): string {
+  if (Brain.view === View.endgame) return "#6f7882";
   if (Brain.isTraversing && winOdds !== null) {
     if (winOdds > 0.875) return "#d99191";
     if (winOdds > 0.75) return "#c7a35a";

@@ -1,5 +1,6 @@
 import React from "react";
 import Brain, { View } from "./Brain";
+import { ENDGAMES } from "./Endgames";
 import StorageW from "./StorageW";
 
 function Header() {
@@ -7,6 +8,26 @@ function Header() {
     <div className="controls__header">
       <h1>♟ chess420 ♟</h1>
       <span className="controls__subtitle">opening trainer</span>
+      <select
+        className="controls__endgame-select"
+        value={Brain.view === View.endgame ? Brain.endgameId : ""}
+        onChange={(e) => {
+          if (e.target.value === "") {
+            Brain.home();
+          } else {
+            Brain.selectEndgame(e.target.value as typeof Brain.endgameId);
+          }
+        }}
+      >
+        <option value="">
+          {Brain.view === View.endgame ? "home" : "select endgame"}
+        </option>
+        {ENDGAMES.map((endgame) => (
+          <option key={endgame.id} value={endgame.id}>
+            {endgame.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -30,7 +51,9 @@ export default function Controls() {
             <button onClick={Brain.home}>home</button>
             <button onClick={Brain.speedrun}>cram</button>
             <button onClick={Brain.traps}>traps</button>
-            <button onClick={Brain.traverse}>traverse manually</button>
+            <button className="controls__button--wide" onClick={Brain.traverse}>
+              traverse manually
+            </button>
           </div>
         </section>
 
@@ -47,6 +70,7 @@ export default function Controls() {
                     View.lichess_id,
                     View.traverse,
                     View.speedrun,
+                    View.endgame,
                   ].includes(Brain.view)
                 }
               />
