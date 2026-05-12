@@ -1942,7 +1942,7 @@ export default class Brain {
           nextState,
           Brain.getChess(nextState.fen)
         );
-      }, settings.REPLY_DELAY_MS);
+      }, settings.ENDGAME_REPLY_DELAY_MS);
     }
   }
 

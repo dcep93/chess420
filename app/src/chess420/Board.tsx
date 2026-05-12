@@ -29,6 +29,13 @@ function SubBoard() {
   const lastLogCount = useRef<number | null>(null);
   const state = Brain.getState();
   const now = Date.now();
+  const isEndgame = Brain.view === View.endgame;
+  const animationDurationInMs = isEndgame
+    ? settings.ENDGAME_BOARD_ANIMATION_DURATION_MS
+    : settings.BOARD_ANIMATION_DURATION_MS;
+  const replyDelayMs = isEndgame
+    ? settings.ENDGAME_REPLY_DELAY_MS
+    : settings.REPLY_DELAY_MS;
   useEffect(() => {
     if (vars.last === now) return;
     vars.last = now;
@@ -49,9 +56,9 @@ function SubBoard() {
     } else {
       updateFen(state.startingFen);
       updateKey((prevKey) => prevKey + 1);
-      setTimeout(() => updateFen(state.fen), settings.REPLY_DELAY_MS);
+      setTimeout(() => updateFen(state.fen), replyDelayMs);
     }
-    if (Brain.view === View.endgame) {
+    if (isEndgame) {
       updateTotal(-1);
       updateWinOdds(null);
       return;
@@ -85,7 +92,14 @@ function SubBoard() {
         updateWinOdds(null);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.fen, state.startingFen, state.logs.length, state.orientationIsWhite]);
+  }, [
+    isEndgame,
+    replyDelayMs,
+    state.fen,
+    state.startingFen,
+    state.logs.length,
+    state.orientationIsWhite,
+  ]);
   if (!fen) return null;
   const position =
     Brain.view === View.endgame && !Brain.hasSelectedEndgame() ? {} : fen;
@@ -95,6 +109,7 @@ function SubBoard() {
         key={key}
         options={{
           showNotation: false,
+          animationDurationInMs,
           boardOrientation: state.orientationIsWhite ? "white" : "black",
           position,
           squareStyles: {

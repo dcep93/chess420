@@ -1,7 +1,10 @@
 const settings = {
   IS_DEV: import.meta.env.DEV,
   CHESSBOARD_WIDTH: "16em",
+  BOARD_ANIMATION_DURATION_MS: 300,
+  ENDGAME_BOARD_ANIMATION_DURATION_MS: 30,
   REPLY_DELAY_MS: 500,
+  ENDGAME_REPLY_DELAY_MS: 50,
   LICHESS_PARAMS: `variant=standard&speeds=rapid,classical&ratings=${[
     2000, 2200, 2500,
   ].join(",")}`,
