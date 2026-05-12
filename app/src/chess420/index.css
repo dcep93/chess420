@@ -125,9 +125,24 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.controls__endgame-select {
+.controls .controls__endgame-select {
   width: 100%;
+  min-width: min(100%, 13.5rem);
   margin-top: 0.15rem;
+  height: 2.35rem;
+  padding: 0 2.05rem 0 0.85rem;
+  font: inherit;
+  font-size: 0.98rem;
+  line-height: 1;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-main) 50%),
+    linear-gradient(135deg, var(--text-main) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1rem) 50%,
+    calc(100% - 0.65rem) 50%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
 }
 .controls__status {
   margin-top: 0.35rem;

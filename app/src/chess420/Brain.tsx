@@ -36,6 +36,16 @@ type EndgamePiece = {
 
 type EndgamePositionScore =
   | {
+      kind: "generic";
+      mate: number;
+      noStalemate: number;
+      whiteMaterial: number;
+      whitePiecesSafe: number;
+      blackConfinement: number;
+      blackMobility: number;
+      whiteKingProximity: number;
+    }
+  | {
       kind: "major";
       endgameId: "rook" | "queen";
       mate: number;
@@ -90,6 +100,51 @@ type EndgamePositionScore =
       blackMobility: number;
       whiteKingProximity: number;
     };
+
+type RookWhiteMoveScore = {
+  matePenalty: number;
+  rookCapturePenalty: number;
+  stalematePenalty: number;
+  boxSize: number;
+  edgeTrapPenalty: number;
+  ownLinePenalty: number;
+  saveRookDistanceScore: number;
+  edgeKingWalkPenalty: number;
+  kingEdgePenalty: number;
+  kingOppositionPenalty: number;
+  kingDistance: number;
+  waitingPenalty: number;
+  waitingRookDistanceScore: number;
+  index: number;
+};
+
+type RookBlackMoveScore = {
+  captureRookPenalty: number;
+  oppositionPenalty: number;
+  kingDistanceToRook: number;
+  manhattanDistanceToRook: number;
+  centerDistance: number;
+  index: number;
+};
+
+type QueenWhiteMoveScore = {
+  matePenalty: number;
+  queenCapturePenalty: number;
+  stalematePenalty: number;
+  boxArea: number;
+  cagePenalty: number;
+  cageQueenMovePenalty: number;
+  queenKnightMovePenalty: number;
+  cageKingApproach: number;
+  moveDistance: number;
+  index: number;
+};
+
+type QueenBlackMoveScore = {
+  captureQueenPenalty: number;
+  edgeDistanceScore: number;
+  index: number;
+};
 
 export enum View {
   lichess_vs,
@@ -316,6 +371,12 @@ export default class Brain {
     if (chess.turn() !== "w" || moves.length === 0) {
       return moves;
     }
+    if (Brain.endgameId === "rook") {
+      return Brain.getIdealRookWhiteMoves(fen);
+    }
+    if (Brain.endgameId === "queen") {
+      return Brain.getIdealQueenWhiteMoves(fen);
+    }
     const scoredMoves = Brain.getEndgameMoveScores(fen, moves);
     scoredMoves.sort(
       (a, b) =>
@@ -332,24 +393,12 @@ export default class Brain {
   static getEndgameMoveScores(fen: string, moves: string[]) {
     return moves.map((san, index) => {
       const nextChess = Brain.getChess(fen);
-      const move = nextChess.move(san);
+      nextChess.move(san);
       const score = Brain.getEndgamePositionScore(nextChess.fen());
       return {
         san,
         index,
-        score:
-          score.kind === "major" && score.endgameId === "rook"
-            ? {
-                ...score,
-                rookOpposition: Brain.whiteKingTakesDirectRookOpposition(
-                  fen,
-                  nextChess.fen(),
-                  move?.piece
-                )
-                  ? 1
-                  : 0,
-              }
-            : score,
+        score,
       };
     });
   }
@@ -358,14 +407,7 @@ export default class Brain {
     if (!Brain.hasSelectedEndgame()) {
       throw new Error("no endgame selected");
     }
-    const endgameId = Brain.endgameId!;
-    if (endgameId === "rook" || endgameId === "queen") {
-      return Brain.getMajorEndgamePositionScore(fen, endgameId);
-    }
-    if (endgameId === "knightAndBishop") {
-      return Brain.getKnightAndBishopPositionScore(fen);
-    }
-    return Brain.getBasicEndgamePositionScore(fen, endgameId);
+    return Brain.getGenericEndgamePositionScore(fen);
   }
 
   static compareEndgamePositionScores(
@@ -384,6 +426,17 @@ export default class Brain {
   }
 
   static getEndgameScoreVector(score: EndgamePositionScore): number[] {
+    if (score.kind === "generic") {
+      return [
+        score.mate,
+        score.noStalemate,
+        score.whiteMaterial,
+        score.whitePiecesSafe,
+        score.blackConfinement,
+        score.blackMobility,
+        score.whiteKingProximity,
+      ];
+    }
     if (score.kind === "major") {
       return [
         score.mate,
@@ -437,6 +490,37 @@ export default class Brain {
       score.blackMobility,
       score.whiteKingProximity,
     ];
+  }
+
+  static getGenericEndgamePositionScore(fen: string): EndgamePositionScore {
+    const chess = Brain.getChess(fen);
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const whitePieceTypes = Brain.hasSelectedEndgame()
+      ? Array.from(
+          new Set(
+            Brain.getEndgamePieces(getEndgame(Brain.endgameId).fen)
+              .filter((piece) => piece.color === "w" && piece.type !== "k")
+              .map((piece) => piece.type)
+          )
+        )
+      : [];
+    return {
+      kind: "generic",
+      mate: chess.isCheckmate() ? 1 : 0,
+      noStalemate: chess.isStalemate() ? 0 : 1,
+      whiteMaterial:
+        Brain.hasSelectedEndgame() && Brain.endgamePieceCountMatchesStart(fen)
+          ? 1
+          : 0,
+      whitePiecesSafe: Brain.blackCanTakeWhitePieces(fen, whitePieceTypes) ? 0 : 1,
+      blackConfinement: blackKing ? 3 - Brain.edgeDistance(blackKing.square) : 0,
+      blackMobility: -Brain.getLegalMoveCount(fen),
+      whiteKingProximity:
+        whiteKing && blackKing
+          ? 14 - Brain.manhattanDistance(whiteKing.square, blackKing.square)
+          : 0,
+    };
   }
 
   static getMajorEndgamePositionScore(
@@ -777,150 +861,128 @@ export default class Brain {
     if (chess.turn() !== "w" || moves.length === 0) {
       return moves;
     }
-    const scoredMoves = moves.map((san, index) => ({
-      san,
-      index,
-      ...Brain.scoreRookWhiteMove(fen, san),
-    }));
-    const candidateMoves = scoredMoves.filter(
-      (move) => move.rookOnWhiteKingRankScore === 0
-    );
-    const eligibleMoves =
-      candidateMoves.length === 0 ? scoredMoves : candidateMoves;
-    eligibleMoves.sort((a, b) => Brain.compareRookWhiteScores(a, b));
-    const best = eligibleMoves[0];
-    const idealMoves = eligibleMoves
-      .filter((move) => Brain.compareRookWhiteScores(move, best) === 0)
+    const scoredMoves = moves
+      .map((san, index) => ({
+        san,
+        score: Brain.scoreRookWhiteMove(fen, san, index),
+      }))
+      .sort((a, b) => Brain.compareRookWhiteScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.compareRookWhiteScores(move.score, best) === 0)
       .map((move) => move.san);
-    eligibleMoves
-      .filter(
-        (move) =>
-          move.rookWaitingScore === 0 &&
-          move.rookSafetyScore === 0 &&
-          move.rookBetweenKingsScore === 0 &&
-          move.rookRankDistance === best.rookRankDistance
-      )
-      .forEach((move) => {
-        if (!idealMoves.includes(move.san)) {
-          idealMoves.push(move.san);
-        }
-      });
-    return idealMoves;
   }
 
-  static scoreRookWhiteMove(fen: string, san: string) {
+  static scoreRookWhiteMove(
+    fen: string,
+    san: string,
+    index: number
+  ): RookWhiteMoveScore {
     const beforeRook = Brain.findPiece(fen, "w", "r");
     const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
     const beforeBlackKing = Brain.findPiece(fen, "b", "k");
-    const blackKingBetweenWhitePieces =
-      beforeRook && beforeWhiteKing && beforeBlackKing
-        ? Brain.isMajorPieceBetweenKings(beforeBlackKing, beforeRook, beforeWhiteKing)
-        : false;
-    const kingsSameColor =
+    const kingsAreKnightMove =
       beforeWhiteKing && beforeBlackKing
-        ? Brain.sameSquareColor(beforeWhiteKing.square, beforeBlackKing.square)
+        ? Brain.isKnightMove(beforeWhiteKing.square, beforeBlackKing.square)
         : false;
+    const rookStartsAttacked = Brain.blackKingAttacksWhiteMajorPiece(fen, "r");
     const chess = Brain.getChess(fen);
     const move = chess.move(san);
     const resultFen = chess.fen();
     const whiteRook = Brain.findPiece(resultFen, "w", "r");
     const whiteKing = Brain.findPiece(resultFen, "w", "k");
     const blackKing = Brain.findPiece(resultFen, "b", "k");
-    const rookAdjacentToBlackKing =
-      whiteRook && blackKing
-        ? Brain.kingDistance(whiteRook.square, blackKing.square) <= 1
+    const blackKingBetweenWhitePiecesAfter =
+      whiteRook && whiteKing && blackKing
+        ? Brain.isMajorPieceBetweenKings(blackKing, whiteRook, whiteKing)
         : false;
     const rookMoveDistance =
       beforeRook && whiteRook
         ? Brain.manhattanDistance(beforeRook.square, whiteRook.square)
         : 0;
-    const checkScore = chess.isCheckmate()
-      ? 0
-      : chess.isCheck() &&
-          !rookAdjacentToBlackKing &&
-          !Brain.whiteKingIsAdjacentToRook(resultFen) &&
-          Brain.blackMustMoveAwayFromWhiteKing(resultFen)
-        ? 1
-        : 2;
-    const rookSafetyScore = Brain.blackCanTakeWhiteMajorPiece(resultFen, "r")
-      ? 1
-      : 0;
-    const rookBetweenKingsScore =
-      whiteRook && whiteKing && blackKing
-        ? Brain.isMajorPieceBetweenKings(whiteRook, whiteKing, blackKing)
-          ? 0
-          : 1
-        : 1;
-    const blackKingBetweenWhitePiecesAfter =
-      whiteRook && whiteKing && blackKing
-        ? Brain.isMajorPieceBetweenKings(blackKing, whiteRook, whiteKing)
-        : false;
-    const rookOnWhiteKingRankScore =
-      whiteRook && whiteKing && move?.piece === "r"
-        ? (() => {
-            const rookCoords = Brain.squareCoords(whiteRook.square);
-            const kingCoords = Brain.squareCoords(whiteKing.square);
-            return Brain.getMajorEndgamePhase(fen, "r") === 2 &&
-              (rookCoords.rank === kingCoords.rank ||
-                rookCoords.file === kingCoords.file)
-              ? 1
-              : 0;
-          })()
-        : 0;
-    const isOppositionWaitingMove =
-      !kingsSameColor &&
+    const rookIsSafe = !Brain.blackCanTakeWhiteMajorPiece(resultFen, "r");
+    const isSavingRook = rookStartsAttacked && rookIsSafe && move?.piece === "r";
+    const isWaitingMove =
+      kingsAreKnightMove &&
       move?.piece === "r" &&
       !chess.isCheck() &&
-      rookSafetyScore === 0 &&
-      rookBetweenKingsScore === 0 &&
-      rookOnWhiteKingRankScore === 0 &&
       !blackKingBetweenWhitePiecesAfter;
+    const hasAdjacentEdgeLock =
+      blackKing &&
+      whiteRook &&
+      Brain.edgeDistance(blackKing.square) === 0 &&
+      Brain.isMajorPieceOnAdjacentEdgeLine(whiteRook.square, blackKing.square);
+    const shouldLiftRookOnCorner =
+      hasAdjacentEdgeLock &&
+      whiteKing &&
+      blackKing &&
+      Brain.isCorner(blackKing.square) &&
+      Brain.kingDistance(whiteKing.square, blackKing.square) > 2;
+    const shouldWalkKingOnEdge =
+      hasAdjacentEdgeLock &&
+      whiteKing &&
+      blackKing &&
+      (!Brain.isCorner(blackKing.square) ||
+        Brain.kingDistance(whiteKing.square, blackKing.square) <= 2);
     return {
-      checkScore,
-      rookSafetyScore,
-      rookBetweenKingsScore,
-      rookOnWhiteKingRankScore,
-      rookRankDistance:
+      matePenalty: chess.isCheckmate() ? 0 : 1,
+      rookCapturePenalty: rookIsSafe ? 0 : 1,
+      stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
+      boxSize:
         whiteRook && blackKing
-          ? Math.abs(
-              Brain.squareCoords(whiteRook.square).rank -
-                Brain.squareCoords(blackKing.square).rank
-            )
+          ? Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square)
           : 99,
-      rookWaitingScore: isOppositionWaitingMove ? 0 : 1,
-      rookFarScore:
-        blackKingBetweenWhitePieces && !isOppositionWaitingMove
-          ? -rookMoveDistance
+      edgeTrapPenalty:
+        shouldLiftRookOnCorner
+          ? move?.piece === "r"
+            ? 0
+            : 1
           : 0,
-      kingWalkScore:
-        kingsSameColor && whiteKing && blackKing
-          ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
+      ownLinePenalty:
+        whiteRook && whiteKing && Brain.sharesRankOrFile(whiteRook.square, whiteKing.square)
+          ? 1
           : 0,
-      blackMobilityScore: isOppositionWaitingMove
-        ? 0
-        : Brain.getLegalMoveCount(resultFen),
-      rookOneSquareScore:
-        move?.piece === "r" && !isOppositionWaitingMove
-          ? Math.abs(rookMoveDistance - 1)
+      saveRookDistanceScore: isSavingRook ? -rookMoveDistance : 0,
+      edgeKingWalkPenalty:
+        shouldWalkKingOnEdge
+          ? move?.piece === "k"
+            ? 0
+            : 1
           : 0,
+      waitingPenalty: kingsAreKnightMove ? (isWaitingMove ? 0 : 1) : 0,
+      waitingRookDistanceScore:
+        isWaitingMove && whiteRook && blackKing
+          ? -Brain.manhattanDistance(whiteRook.square, blackKing.square)
+          : 0,
+      kingEdgePenalty: whiteKing && Brain.edgeDistance(whiteKing.square) === 0 ? 1 : 0,
+      kingOppositionPenalty:
+        whiteKing && blackKing && Brain.hasDirectKingOpposition(whiteKing.square, blackKing.square)
+          ? 0
+          : 1,
+      kingDistance:
+        whiteKing && blackKing ? Brain.kingDistance(whiteKing.square, blackKing.square) : 99,
+      index,
     };
   }
 
   static compareRookWhiteScores(
-    a: ReturnType<typeof Brain.scoreRookWhiteMove> & { index: number },
-    b: ReturnType<typeof Brain.scoreRookWhiteMove> & { index: number }
+    a: RookWhiteMoveScore,
+    b: RookWhiteMoveScore
   ): number {
     return (
-      a.checkScore - b.checkScore ||
-      a.rookSafetyScore - b.rookSafetyScore ||
-      a.rookBetweenKingsScore - b.rookBetweenKingsScore ||
-      a.rookOnWhiteKingRankScore - b.rookOnWhiteKingRankScore ||
-      a.rookRankDistance - b.rookRankDistance ||
-      a.kingWalkScore - b.kingWalkScore ||
-      a.rookWaitingScore - b.rookWaitingScore ||
-      a.blackMobilityScore - b.blackMobilityScore ||
-      a.rookFarScore - b.rookFarScore ||
-      a.rookOneSquareScore - b.rookOneSquareScore ||
+      a.matePenalty - b.matePenalty ||
+      a.rookCapturePenalty - b.rookCapturePenalty ||
+      a.stalematePenalty - b.stalematePenalty ||
+      a.boxSize - b.boxSize ||
+      a.edgeTrapPenalty - b.edgeTrapPenalty ||
+      a.ownLinePenalty - b.ownLinePenalty ||
+      a.saveRookDistanceScore - b.saveRookDistanceScore ||
+      a.edgeKingWalkPenalty - b.edgeKingWalkPenalty ||
+      a.waitingPenalty - b.waitingPenalty ||
+      a.kingEdgePenalty - b.kingEdgePenalty ||
+      a.kingOppositionPenalty - b.kingOppositionPenalty ||
+      a.kingDistance - b.kingDistance ||
+      a.waitingRookDistanceScore - b.waitingRookDistanceScore ||
       a.index - b.index
     );
   }
@@ -931,224 +993,103 @@ export default class Brain {
     if (chess.turn() !== "w" || moves.length === 0) {
       return moves;
     }
-    const scoredMoves = moves.map((san, index) => ({
-      san,
-      index,
-      ...Brain.scoreQueenWhiteMove(fen, san),
-    }));
-    scoredMoves.sort((a, b) => Brain.compareQueenWhiteScores(a, b));
-    const best = scoredMoves[0];
-    const idealMoves = scoredMoves
-      .filter((move) => Brain.compareQueenWhiteScores(move, best) === 0)
+    const scoredMoves = moves
+      .map((san, index) => ({
+        san,
+        score: Brain.scoreQueenWhiteMove(fen, san, index),
+      }))
+      .sort((a, b) => Brain.compareQueenWhiteScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.queenWhiteScoresTie(move.score, best))
       .map((move) => move.san);
-    if (
-      best.queenCornerKingApproachScore > 0 &&
-      best.queenCornerKingApproachScore <= 3
-    ) {
-      scoredMoves
-        .filter(
-          (move) =>
-            move.queenCornerKingApproachScore ===
-              best.queenCornerKingApproachScore &&
-            move.queenCornerKingEdgeScore === best.queenCornerKingEdgeScore &&
-            move.queenSafetyScore === best.queenSafetyScore &&
-            move.stalemateScore === best.stalemateScore
-        )
-        .forEach((move) => {
-          if (!idealMoves.includes(move.san)) {
-            idealMoves.push(move.san);
-          }
-        });
-    }
-    return idealMoves;
   }
 
-  static scoreQueenWhiteMove(fen: string, san: string) {
+  static scoreQueenWhiteMove(
+    fen: string,
+    san: string,
+    index: number
+  ): QueenWhiteMoveScore {
     const beforeQueen = Brain.findPiece(fen, "w", "q");
-    const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
-    const beforeBlackKing = Brain.findPiece(fen, "b", "k");
-    const kingsSameColor =
-      beforeWhiteKing && beforeBlackKing
-        ? Brain.sameSquareColor(beforeWhiteKing.square, beforeBlackKing.square)
-        : false;
-    const needsQueenEdgeLock =
-      beforeQueen && beforeBlackKing
-        ? Brain.edgeDistance(beforeBlackKing.square) === 0 &&
-          !Brain.isMajorPieceOnAdjacentEdgeLine(
-            beforeQueen.square,
-            beforeBlackKing.square
-          )
-        : false;
+    const startingCage = Brain.getQueenTwoSquareCage(fen, "b");
+    const shouldWalkCageKing = startingCage != null;
     const chess = Brain.getChess(fen);
     const move = chess.move(san);
     const resultFen = chess.fen();
     const whiteQueen = Brain.findPiece(resultFen, "w", "q");
     const whiteKing = Brain.findPiece(resultFen, "w", "k");
     const blackKing = Brain.findPiece(resultFen, "b", "k");
-    const queenMoveDistance =
-      beforeQueen && whiteQueen
-        ? Brain.manhattanDistance(beforeQueen.square, whiteQueen.square)
-        : 0;
-    const queenBetweenKings =
-      whiteQueen && whiteKing && blackKing
-        ? Brain.isMajorPieceBetweenKings(whiteQueen, whiteKing, blackKing)
-        : false;
-    const queenBoxDistance =
-      whiteQueen && blackKing
-        ? Brain.majorPieceBoxDistance(whiteQueen.square, blackKing.square)
-        : 99;
-    const queenCutScore =
-      Brain.getMajorEndgamePhase(fen, "q") === 1 &&
-      move?.piece === "q" &&
-      !chess.isCheck() &&
-      !Brain.blackCanMoveTowardWhiteKing(resultFen)
-        ? 0
-        : 1;
-    const queenEdgeLockScore =
-      needsQueenEdgeLock &&
-      whiteQueen &&
-      blackKing &&
-      move?.piece === "q" &&
-      !chess.isCheck() &&
-      Brain.isMajorPieceOnAdjacentEdgeLine(whiteQueen.square, blackKing.square) &&
-      Brain.blackKingStaysOnEdge(resultFen)
-        ? 0
-        : needsQueenEdgeLock
-          ? 1
-          : 0;
-    const queenEdgeEscapeScore =
-      beforeBlackKing &&
-      Brain.edgeDistance(beforeBlackKing.square) <= 1 &&
-      move?.piece === "q" &&
-      !chess.isCheck()
-        ? Brain.maxBlackKingEdgeDistanceAfterReplies(resultFen) -
-          Brain.edgeDistance(beforeBlackKing.square)
-        : 0;
-    const quietCornerSqueezeScore =
-      beforeBlackKing &&
-      beforeWhiteKing &&
-      Brain.isCorner(beforeBlackKing.square) &&
-      Brain.edgeDistance(beforeWhiteKing.square) === 0 &&
-      move?.piece === "q" &&
-      !chess.isCheck() &&
-      Brain.blackKingStaysOnEdge(resultFen) &&
-      Brain.getLegalMoveCount(resultFen) === 1
-        ? 0
-        : 1;
-    const shouldQueenKingWalkHandoff =
-      beforeQueen &&
-      beforeWhiteKing &&
-      beforeBlackKing &&
-      Brain.edgeDistance(beforeBlackKing.square) === 0 &&
-      Brain.getMajorEndgamePhase(fen, "q") === 2 &&
-      Brain.isMajorPieceOnAdjacentEdgeLine(
-        beforeQueen.square,
-        beforeBlackKing.square
-      ) &&
-      Brain.kingDistance(beforeWhiteKing.square, beforeBlackKing.square) > 1;
-    const queenKingWalkHandoffScore =
-      shouldQueenKingWalkHandoff
-        ? move?.piece === "k"
-          ? 0
-          : 1
-        : 0;
-    const queenCornerKingApproachScore =
-      beforeQueen &&
-      beforeBlackKing &&
-      Brain.isCorner(beforeBlackKing.square) &&
-      Brain.isMajorPieceOnAdjacentEdgeLine(
-        beforeQueen.square,
-        beforeBlackKing.square
-      )
-        ? move?.piece === "k" && whiteKing && blackKing
-          ? Brain.kingDistance(whiteKing.square, blackKing.square)
-          : 99
-        : 0;
+    const resultCage = Brain.getQueenTwoSquareCage(resultFen);
     return {
-      mateScore: chess.isCheckmate() ? 0 : 1,
-      stalemateScore:
-        !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
-      queenSafetyScore: Brain.blackCanTakeWhiteMajorPiece(resultFen, "q") ? 1 : 0,
-      queenCutScore,
-      queenEdgeLockScore,
-      queenEdgeEscapeScore,
-      quietCornerSqueezeScore,
-      queenKingWalkHandoffScore,
-      queenKingPreservesCageScore:
-        shouldQueenKingWalkHandoff &&
-        move?.piece === "k" &&
+      matePenalty: chess.isCheckmate() ? 0 : 1,
+      queenCapturePenalty: Brain.blackCanTakeWhiteMajorPiece(resultFen, "q")
+        ? 1
+        : 0,
+      stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
+      boxArea:
+        whiteQueen && blackKing
+          ? Brain.getQueenBoxArea(whiteQueen.square, blackKing.square)
+          : 99,
+      cagePenalty: resultCage ? 0 : 1,
+      cageQueenMovePenalty:
+        !shouldWalkCageKing && resultCage ? (move?.piece === "q" ? 0 : 1) : 0,
+      queenKnightMovePenalty:
         whiteQueen &&
-        whiteKing &&
-        blackKing
-          ? Brain.isMajorPieceBetweenKings(whiteQueen, whiteKing, blackKing)
-            ? 0
-            : 1
-          : 0,
-      queenCornerKingApproachScore,
-      queenCornerKingEdgeScore:
-        queenCornerKingApproachScore > 0 && move?.piece === "k" && whiteKing
-          ? Brain.edgeDistance(whiteKing.square) === 0
-            ? 1
-            : 0
-          : 0,
-      usefulCheckScore:
-        chess.isCheck() && Brain.blackMustMoveAwayFromWhiteKing(resultFen)
+        blackKing &&
+        Brain.isKnightMove(whiteQueen.square, blackKing.square)
           ? 0
           : 1,
-      queenBetweenKingsScore: queenBetweenKings ? 0 : 1,
-      queenBoxDistance,
-      blackMobilityScore: Brain.getLegalMoveCount(resultFen),
-      edgeDistance: blackKing ? Brain.edgeDistance(blackKing.square) : 99,
-      queenDistance:
-        whiteQueen && blackKing
-          ? Brain.kingDistance(whiteQueen.square, blackKing.square)
-          : 99,
-      queenCornerKingLineScore:
-        beforeBlackKing &&
-        Brain.isCorner(beforeBlackKing.square) &&
-        move?.piece === "k" &&
-        whiteQueen &&
-        whiteKing
-          ? Brain.sharesRankOrFile(whiteQueen.square, whiteKing.square)
-            ? 1
-            : 0
+      cageKingApproach:
+        shouldWalkCageKing && resultCage && whiteKing && whiteQueen
+          ? move?.piece === "k"
+            ? Brain.getQueenCageKingApproachDistance(
+                whiteKing.square,
+                whiteQueen.square,
+                startingCage.corner
+              )
+            : 99
           : 0,
-      kingWalkScore:
-        (queenBetweenKings || queenBoxDistance <= 1 || kingsSameColor) &&
-              whiteKing &&
-              blackKing
-            ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
-            : 0,
-      queenOneSquareScore: move?.piece === "q" ? Math.abs(queenMoveDistance - 1) : 99,
+      moveDistance: Brain.getQueenMoveDistance(
+        beforeQueen?.square,
+        whiteQueen?.square,
+        move?.piece
+      ),
+      index,
     };
   }
 
   static compareQueenWhiteScores(
-    a: ReturnType<typeof Brain.scoreQueenWhiteMove> & { index: number },
-    b: ReturnType<typeof Brain.scoreQueenWhiteMove> & { index: number }
+    a: QueenWhiteMoveScore,
+    b: QueenWhiteMoveScore
   ): number {
     return (
-      a.mateScore - b.mateScore ||
-      a.stalemateScore - b.stalemateScore ||
-      a.queenSafetyScore - b.queenSafetyScore ||
-      a.queenEdgeEscapeScore - b.queenEdgeEscapeScore ||
-      a.queenCutScore - b.queenCutScore ||
-      a.queenEdgeLockScore - b.queenEdgeLockScore ||
-      a.quietCornerSqueezeScore - b.quietCornerSqueezeScore ||
-      a.queenKingWalkHandoffScore - b.queenKingWalkHandoffScore ||
-      a.queenKingPreservesCageScore - b.queenKingPreservesCageScore ||
-      a.blackMobilityScore - b.blackMobilityScore ||
-      a.edgeDistance - b.edgeDistance ||
-      a.queenCornerKingApproachScore - b.queenCornerKingApproachScore ||
-      a.queenCornerKingEdgeScore - b.queenCornerKingEdgeScore ||
-      a.queenCornerKingLineScore - b.queenCornerKingLineScore ||
-      a.kingWalkScore - b.kingWalkScore ||
-      a.queenBetweenKingsScore - b.queenBetweenKingsScore ||
-      a.queenBoxDistance - b.queenBoxDistance ||
-      a.usefulCheckScore - b.usefulCheckScore ||
-      a.queenDistance - b.queenDistance ||
-      a.queenOneSquareScore - b.queenOneSquareScore ||
+      a.matePenalty - b.matePenalty ||
+      a.queenCapturePenalty - b.queenCapturePenalty ||
+      a.stalematePenalty - b.stalematePenalty ||
+      a.cagePenalty - b.cagePenalty ||
+      a.cageQueenMovePenalty - b.cageQueenMovePenalty ||
+      a.cageKingApproach - b.cageKingApproach ||
+      a.boxArea - b.boxArea ||
+      a.queenKnightMovePenalty - b.queenKnightMovePenalty ||
+      a.moveDistance - b.moveDistance ||
       a.index - b.index
+    );
+  }
+
+  static queenWhiteScoresTie(
+    a: QueenWhiteMoveScore,
+    b: QueenWhiteMoveScore
+  ): boolean {
+    return (
+      a.matePenalty === b.matePenalty &&
+      a.queenCapturePenalty === b.queenCapturePenalty &&
+      a.stalematePenalty === b.stalematePenalty &&
+      a.cagePenalty === b.cagePenalty &&
+      a.cageQueenMovePenalty === b.cageQueenMovePenalty &&
+      a.cageKingApproach === b.cageKingApproach &&
+      a.boxArea === b.boxArea &&
+      a.queenKnightMovePenalty === b.queenKnightMovePenalty &&
+      a.moveDistance === b.moveDistance
     );
   }
 
@@ -1974,6 +1915,18 @@ export default class Brain {
     if (moves.length === 0) {
       return { moves, idealMoves: [] };
     }
+    if (Brain.endgameId === "rook") {
+      return {
+        moves,
+        idealMoves: Brain.getIdealRookBlackMoves(chess, moves),
+      };
+    }
+    if (Brain.endgameId === "queen") {
+      return {
+        moves,
+        idealMoves: Brain.getIdealQueenBlackMoves(chess, moves),
+      };
+    }
     const scoredMoves = Brain.getEndgameMoveScores(chess.fen(), moves);
     scoredMoves.sort(
       (a, b) =>
@@ -1987,10 +1940,124 @@ export default class Brain {
       .map((move) => move.san);
     return {
       moves,
-      idealMoves:
-        Brain.getRookCutAxisPreservingOpponentMoves(chess, moves, idealMoves) ??
-        idealMoves,
+      idealMoves,
     };
+  }
+
+  static getIdealRookBlackMoves(chess: Chess, moves: string[]): string[] {
+    const scoredMoves = moves
+      .map((san, index) => ({
+        san,
+        score: Brain.scoreRookBlackMove(chess.fen(), san, index),
+      }))
+      .sort((a, b) => Brain.compareRookBlackScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.compareRookBlackScores(move.score, best) === 0)
+      .map((move) => move.san);
+  }
+
+  static scoreRookBlackMove(
+    fen: string,
+    san: string,
+    index: number
+  ): RookBlackMoveScore {
+    const startingBlackKing = Brain.findPiece(fen, "b", "k");
+    const startingWhiteRook = Brain.findPiece(fen, "w", "r");
+    const shouldAvoidOpposition =
+      startingBlackKing != null &&
+      startingWhiteRook != null &&
+      Brain.edgeDistance(startingBlackKing.square) <= 1 &&
+      Brain.manhattanDistance(startingBlackKing.square, startingWhiteRook.square) > 3;
+    const chess = Brain.getChess(fen);
+    const move = chess.move(san);
+    const whiteRook = Brain.findPiece(chess.fen(), "w", "r");
+    const whiteKing = Brain.findPiece(chess.fen(), "w", "k");
+    const blackKing = Brain.findPiece(chess.fen(), "b", "k");
+    return {
+      captureRookPenalty: move?.captured === "r" ? 0 : 1,
+      oppositionPenalty:
+        shouldAvoidOpposition &&
+        whiteKing &&
+        blackKing &&
+        (Brain.hasDirectKingOpposition(whiteKing.square, blackKing.square) ||
+          Brain.whiteCanTakeDirectKingOpposition(chess.fen()))
+          ? 1
+          : 0,
+      kingDistanceToRook:
+        whiteRook && blackKing
+          ? Brain.kingDistance(blackKing.square, whiteRook.square)
+          : 0,
+      manhattanDistanceToRook:
+        whiteRook && blackKing
+          ? Brain.manhattanDistance(blackKing.square, whiteRook.square)
+          : 0,
+      centerDistance: blackKing ? Brain.centerDistance(blackKing.square) : 0,
+      index,
+    };
+  }
+
+  static compareRookBlackScores(
+    a: RookBlackMoveScore,
+    b: RookBlackMoveScore
+  ): number {
+    return (
+      a.captureRookPenalty - b.captureRookPenalty ||
+      a.oppositionPenalty - b.oppositionPenalty ||
+      a.kingDistanceToRook - b.kingDistanceToRook ||
+      a.manhattanDistanceToRook - b.manhattanDistanceToRook ||
+      a.centerDistance - b.centerDistance ||
+      a.index - b.index
+    );
+  }
+
+  static getIdealQueenBlackMoves(chess: Chess, moves: string[]): string[] {
+    const scoredMoves = moves
+      .map((san, index) => ({
+        san,
+        score: Brain.scoreQueenBlackMove(chess.fen(), san, index),
+      }))
+      .sort((a, b) => Brain.compareQueenBlackScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.queenBlackScoresTie(move.score, best))
+      .map((move) => move.san);
+  }
+
+  static scoreQueenBlackMove(
+    fen: string,
+    san: string,
+    index: number
+  ): QueenBlackMoveScore {
+    const chess = Brain.getChess(fen);
+    const move = chess.move(san);
+    const blackKing = Brain.findPiece(chess.fen(), "b", "k");
+    return {
+      captureQueenPenalty: move?.captured === "q" ? 0 : 1,
+      edgeDistanceScore: blackKing ? -Brain.edgeDistance(blackKing.square) : 0,
+      index,
+    };
+  }
+
+  static compareQueenBlackScores(
+    a: QueenBlackMoveScore,
+    b: QueenBlackMoveScore
+  ): number {
+    return (
+      a.captureQueenPenalty - b.captureQueenPenalty ||
+      a.edgeDistanceScore - b.edgeDistanceScore ||
+      a.index - b.index
+    );
+  }
+
+  static queenBlackScoresTie(
+    a: QueenBlackMoveScore,
+    b: QueenBlackMoveScore
+  ): boolean {
+    return (
+      a.captureQueenPenalty === b.captureQueenPenalty &&
+      a.edgeDistanceScore === b.edgeDistanceScore
+    );
   }
 
   static getRookCutAxisPreservingOpponentMoves(
@@ -2154,6 +2221,17 @@ export default class Brain {
     );
   }
 
+  static isKnightMove(a: Square, b: Square): boolean {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    const fileDistance = Math.abs(first.file - second.file);
+    const rankDistance = Math.abs(first.rank - second.rank);
+    return (
+      (fileDistance === 1 && rankDistance === 2) ||
+      (fileDistance === 2 && rankDistance === 1)
+    );
+  }
+
   static sameSquareColor(a: Square, b: Square): boolean {
     const first = Brain.squareCoords(a);
     const second = Brain.squareCoords(b);
@@ -2226,6 +2304,130 @@ export default class Brain {
     );
   }
 
+  static getQueenBoxArea(
+    whiteQueenSquare: Square,
+    blackKingSquare: Square
+  ): number {
+    const queen = Brain.squareCoords(whiteQueenSquare);
+    const black = Brain.squareCoords(blackKingSquare);
+    const width =
+      queen.file === black.file
+        ? 8
+        : black.file > queen.file
+          ? 7 - queen.file
+          : queen.file;
+    const height =
+      queen.rank === black.rank
+        ? 8
+        : black.rank > queen.rank
+          ? 7 - queen.rank
+          : queen.rank;
+    return width * height;
+  }
+
+  static getQueenMoveDistance(
+    beforeQueenSquare: Square | undefined,
+    afterQueenSquare: Square | undefined,
+    piece: string | undefined
+  ): number {
+    if (piece === "q" && beforeQueenSquare && afterQueenSquare) {
+      return Brain.manhattanDistance(beforeQueenSquare, afterQueenSquare);
+    }
+    return piece ? 1 : 99;
+  }
+
+  static getQueenTwoSquareCage(
+    fen: string,
+    turnOverride?: "w" | "b"
+  ): { corner: Square; pair: [Square, Square] } | null {
+    const cageFen = turnOverride ? Brain.withFenTurn(fen, turnOverride) : fen;
+    let chess: Chess;
+    try {
+      chess = Brain.getChess(cageFen);
+    } catch {
+      return null;
+    }
+    const blackKing = Brain.findPiece(cageFen, "b", "k");
+    const moves = chess.moves();
+    if (!blackKing || moves.length === 0) {
+      return null;
+    }
+    for (const { corner, pair } of Brain.getQueenTwoSquareCagePairs()) {
+      if (!pair.includes(blackKing.square)) {
+        continue;
+      }
+      const blackKingStaysInPair = moves.every((san) => {
+        const nextChess = Brain.getChess(cageFen);
+        nextChess.move(san);
+        const nextBlackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+        return nextBlackKing != null && pair.includes(nextBlackKing.square);
+      });
+      if (blackKingStaysInPair) {
+        return { corner, pair };
+      }
+    }
+    return null;
+  }
+
+  static getQueenTwoSquareCagePairs(): Array<{
+    corner: Square;
+    pair: [Square, Square];
+  }> {
+    return Brain.corners().flatMap((corner) => {
+      const coords = Brain.squareCoords(corner);
+      return [
+        Brain.squareFromCoords(coords.file + 1, coords.rank),
+        Brain.squareFromCoords(coords.file - 1, coords.rank),
+        Brain.squareFromCoords(coords.file, coords.rank + 1),
+        Brain.squareFromCoords(coords.file, coords.rank - 1),
+      ]
+        .filter((square): square is Square => square != null)
+        .map((edgeSquare) => ({ corner, pair: [corner, edgeSquare] }));
+    });
+  }
+
+  static getQueenCageKingApproachDistance(
+    whiteKingSquare: Square,
+    whiteQueenSquare: Square,
+    corner: Square
+  ): number {
+    const targetDistances = Brain.boardSquares()
+      .filter(
+        (square) =>
+          Brain.isKnightMove(square, corner) &&
+          Brain.isKnightMove(square, whiteQueenSquare)
+      )
+      .map((square) => Brain.kingDistance(whiteKingSquare, square));
+    return targetDistances.length === 0 ? 99 : Math.min(...targetDistances);
+  }
+
+  static withFenTurn(fen: string, turn: "w" | "b"): string {
+    const fields = fen.split(" ");
+    fields[1] = turn;
+    return fields.join(" ");
+  }
+
+  static boardSquares(): Square[] {
+    const squares: Square[] = [];
+    for (let rank = 0; rank < 8; rank += 1) {
+      for (let file = 0; file < 8; file += 1) {
+        const square = Brain.squareFromCoords(file, rank);
+        if (square) {
+          squares.push(square);
+        }
+      }
+    }
+    return squares;
+  }
+
+  static squareFromCoords(file: number, rank: number): Square | null {
+    if (file < 0 || file > 7 || rank < 0 || rank > 7) {
+      return null;
+    }
+    const fileName = String.fromCharCode("a".charCodeAt(0) + file);
+    return `${fileName}${rank + 1}` as Square;
+  }
+
   static getRookCutAxis(
     whiteRook: { square: Square },
     whiteKing: { square: Square },
@@ -2246,8 +2448,29 @@ export default class Brain {
   static getRookOneDimensionalBoxSize(
     whiteRookSquare: Square,
     blackKingSquare: Square,
-    axis: "rank" | "file"
+    axis?: "rank" | "file"
   ): number {
+    if (!axis) {
+      const rook = Brain.squareCoords(whiteRookSquare);
+      const black = Brain.squareCoords(blackKingSquare);
+      const rankSize =
+        rook.rank === black.rank
+          ? 99
+          : Brain.getRookOneDimensionalBoxSize(
+              whiteRookSquare,
+              blackKingSquare,
+              "rank"
+            );
+      const fileSize =
+        rook.file === black.file
+          ? 99
+          : Brain.getRookOneDimensionalBoxSize(
+              whiteRookSquare,
+              blackKingSquare,
+              "file"
+            );
+      return Math.min(rankSize, fileSize);
+    }
     const rook = Brain.squareCoords(whiteRookSquare);
     const black = Brain.squareCoords(blackKingSquare);
     if (axis === "rank") {
@@ -2337,7 +2560,10 @@ export default class Brain {
       .some((san) => {
         const nextChess = Brain.getChess(fen);
         nextChess.move(san);
-        return Brain.findPiece(nextChess.fen(), "w", pieceType) == null;
+        return !nextChess
+          .board()
+          .flat()
+          .some((piece) => piece?.color === "w" && piece.type === pieceType);
       });
   }
 
