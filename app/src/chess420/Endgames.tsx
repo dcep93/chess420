@@ -15,7 +15,7 @@ export const ENDGAMES: EndgameType[] = [
   {
     id: "knightAndBishop",
     label: "Knight and Bishop",
-    fen: "4k3/8/8/8/8/8/8/1NB1K3 w - - 0 1",
+    fen: "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
   },
   {
     id: "twoBishops",

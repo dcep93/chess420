@@ -136,8 +136,7 @@ function SubMain(props: { fen: string }) {
     Brain.view !== View.lichess_id &&
     Brain.view !== View.lichess_latest &&
     Brain.view !== View.lichess_mistakes &&
-    Brain.view !== View.traverse &&
-    Brain.view !== View.endgame
+    Brain.view !== View.traverse
   )
     window.location.hash = Brain.hash(props.fen);
   return (

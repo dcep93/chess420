@@ -13,6 +13,9 @@ export type LogType = {
   num_choices?: number;
   created_at_ms?: number;
   duration_ms?: number;
+  endgame_phase?: string;
+  endgame_is_correct?: boolean;
+  endgame_correct_choices?: number;
 };
 
 const titles = [
@@ -177,29 +180,40 @@ export function GetLog(props: { log: LogType | null }) {
 function EndgameLog() {
   const logs = Brain.getState().logs;
   return (
-    <div className="endgame-log-table">
-      <div className="endgame-log-row endgame-log-row--header">
-        <div>phase</div>
-        <div>my move</div>
-        <div>opponent move</div>
-        <div>num_choices</div>
-        <div>correctness</div>
-        <div>duration</div>
+    <>
+      <div className="endgame-starting-fen">
+        starting fen: {Brain.getEndgameStartingFen()}
       </div>
-      {logs.map((log, index) => (
-        <EndgameLogRow log={log} index={index} key={`${index}-${log.san}-${log.opponent_san}`} />
-      ))}
-    </div>
+      <div className="endgame-log-table">
+        <div className="endgame-log-row endgame-log-row--header">
+          <div>#</div>
+          <div>phase</div>
+          <div>my move</div>
+          <div>opponent move</div>
+          <div>num_choices</div>
+          <div>correctness</div>
+          <div>duration</div>
+        </div>
+        {logs.map((log, index) => (
+          <EndgameLogRow log={log} index={index} key={`${index}-${log.san}-${log.opponent_san}`} />
+        ))}
+      </div>
+    </>
   );
 }
 
 function EndgameLogRow(props: { log: LogType; index: number }) {
   const { log, index } = props;
-  const isCorrect = Brain.isEndgameLogCorrect(log);
-  const correctMoves = Brain.getIdealEndgameWhiteMoves(log.fen);
+  const phase =
+    log.endgame_phase ?? Brain.getEndgamePhase(Brain.getLogResultFen(log));
+  const isCorrect =
+    log.endgame_is_correct ?? Brain.isEndgameLogCorrect(log);
+  const correctChoices =
+    log.endgame_correct_choices ?? Brain.getIdealEndgameWhiteMoves(log.fen).length;
   return (
     <div className="endgame-log-row">
-      <div>{Brain.getEndgamePhase(Brain.getLogResultFen(log))}</div>
+      <div>{index + 1}</div>
+      <div>{phase}</div>
       <div>{log.san}</div>
       <div>{log.opponent_san || ""}</div>
       <div>
@@ -216,7 +230,7 @@ function EndgameLogRow(props: { log: LogType; index: number }) {
       </div>
       <div className="endgame-log-correctness">
         {isCorrect ? "👍" : "👎"}
-        {correctMoves.length ? `/${correctMoves.length}` : ""}
+        {correctChoices ? `/${correctChoices}` : ""}
       </div>
       <div>{formatDuration(log.duration_ms)}</div>
     </div>
@@ -225,10 +239,13 @@ function EndgameLogRow(props: { log: LogType; index: number }) {
 
 export function formatDuration(ms?: number): string {
   if (ms === undefined) return "";
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const safeMs = Math.max(0, Math.floor(ms));
+  const minutes = Math.floor(safeMs / 60000);
+  const seconds = Math.floor((safeMs % 60000) / 1000);
+  const milliseconds = safeMs % 1000;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}.${milliseconds
+    .toString()
+    .padStart(3, "0")}`;
 }
 
 function getTitle(moves: LiMove[]) {

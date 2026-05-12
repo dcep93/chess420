@@ -25,24 +25,63 @@ function SubSummary() {
 
 function EndgameSummary() {
   const [now, updateNow] = useState(Date.now());
-  const logs = Brain.getState().logs;
+  const [shareStatus, updateShareStatus] = useState("");
+  const state = Brain.getState();
+  const terminalOutcome = Brain.getEndgameTerminalOutcome(state.fen);
+  const elapsedMs = Brain.getEndgameElapsedMs(state, now);
   useEffect(() => {
-    const interval = setInterval(() => updateNow(Date.now()), 1000);
+    const interval = setInterval(() => updateNow(Date.now()), 31);
     return () => clearInterval(interval);
   }, []);
-  const completedDuration = logs.reduce(
-    (total, log) => total + (log.duration_ms || 0),
-    0
-  );
-  const latestLog = logs[logs.length - 1];
-  const activeDuration =
-    latestLog?.created_at_ms === undefined ? 0 : now - latestLog.created_at_ms;
+  useEffect(() => {
+    updateShareStatus("");
+  }, [state.fen]);
+  const shareEndgame = () => {
+    if (!terminalOutcome) return;
+    const message = [
+      `${Brain.getEndgameOutcomeText(terminalOutcome)} in ${formatDuration(
+        elapsedMs
+      )}`,
+      Brain.getEndgameStartingUrl(),
+    ].join("\n");
+    copyToClipboard(message)
+      .then(() => updateShareStatus("copied"))
+      .catch(() => updateShareStatus("copy failed"));
+  };
   return (
     <div className="summary-top summary-top--endgame">
       <button onClick={Brain.startOver}>start over</button>
-      <div>{formatDuration(completedDuration + activeDuration)}</div>
+      <div className="summary-endgame-timer">{formatDuration(elapsedMs)}</div>
+      {terminalOutcome ? (
+        <>
+          <button onClick={shareEndgame}>
+            share {Brain.getEndgameOutcomeText(terminalOutcome)}
+          </button>
+          {shareStatus ? (
+            <div className="summary-share-status">{shareStatus}</div>
+          ) : null}
+        </>
+      ) : null}
     </div>
   );
+}
+
+function copyToClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  const copied = document.execCommand("copy");
+  document.body.removeChild(textarea);
+  return copied
+    ? Promise.resolve()
+    : Promise.reject(new Error("copy command failed"));
 }
 
 function OpeningSummary() {
