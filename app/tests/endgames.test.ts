@@ -456,6 +456,15 @@ test("rook box reduction beats king walking when it removes a full row or file",
   );
 });
 
+test("rook edge trap beats king walking when it limits the black king", () => {
+  setEndgame("rook");
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("5K2/3R4/8/8/8/k7/8/8 w - - 0 1"),
+    ["Rb7"],
+  );
+});
+
 test("rook phase 2 rejects rook moves onto the white king line", () => {
   setEndgame("rook");
   const fen = "8/8/8/3k4/7R/2K5/8/8 w - - 14 8";

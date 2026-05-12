@@ -45,6 +45,7 @@ type EndgamePositionScore =
       rookUsefulCheck: number;
       quiet: number;
       phase: number;
+      rookEdgeTrap: number;
       rookBoxProgress: number;
       majorBetweenKings: number;
       rookBlackAllowsOpposition: number;
@@ -393,6 +394,7 @@ export default class Brain {
         score.quiet,
         score.edgeEscape,
         score.phase,
+        score.rookEdgeTrap,
         score.rookBoxProgress,
         score.majorBetweenKings,
         score.rookBlackAllowsOpposition,
@@ -514,6 +516,16 @@ export default class Brain {
             rookCutAxis
           )
         : 0;
+    const rookEdgeTrap =
+      endgameId === "rook" &&
+      whiteMajorPiece &&
+      blackKing &&
+      Brain.edgeDistance(blackKing.square) === 0 &&
+      Brain.isMajorPieceOnAdjacentEdgeLine(whiteMajorPiece.square, blackKing.square)
+        ? Brain.getLegalMoveCount(fen) <= 2
+          ? 1
+          : 0
+        : 0;
     const rookBlackAllowsOpposition =
       endgameId === "rook" &&
       chess.turn() === "w" &&
@@ -597,6 +609,7 @@ export default class Brain {
       rookUsefulCheck,
       quiet: chess.isCheck() && !chess.isCheckmate() ? 0 : 1,
       phase,
+      rookEdgeTrap,
       rookBoxProgress,
       majorBetweenKings,
       rookBlackAllowsOpposition,
