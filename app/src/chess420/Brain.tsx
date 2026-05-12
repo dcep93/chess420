@@ -71,6 +71,81 @@ export default class Brain {
     return chess;
   }
 
+  static getPieceCount(fen: string): number {
+    return Brain.getChess(fen)
+      .board()
+      .flat()
+      .filter((piece) => piece !== null).length;
+  }
+
+  static endgamePieceCountMatchesStart(fen: string): boolean {
+    return (
+      Brain.getPieceCount(fen) ===
+      Brain.getPieceCount(getEndgame(Brain.endgameId).fen)
+    );
+  }
+
+  static getEndgamePhase(fen: string): string {
+    const majorPiece = Brain.getMajorEndgamePieceType();
+    if (!majorPiece) {
+      return "1/2";
+    }
+    return `${Brain.getMajorEndgamePhase(fen, majorPiece)}/2`;
+  }
+
+  static getMajorEndgamePieceType(): "r" | "q" | null {
+    if (Brain.endgameId === "rook") return "r";
+    if (Brain.endgameId === "queen") return "q";
+    return null;
+  }
+
+  static getMajorEndgamePhase(fen: string, pieceType: "r" | "q"): number {
+    const whiteMajorPiece = Brain.findPiece(fen, "w", pieceType);
+    if (!whiteMajorPiece) {
+      return 0;
+    }
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    if (!whiteKing || !blackKing) {
+      return 1;
+    }
+    return Brain.isMajorPieceBetweenKings(whiteMajorPiece, whiteKing, blackKing)
+      ? 2
+      : 1;
+  }
+
+  static findPiece(fen: string, color: "w" | "b", type: string) {
+    return Brain.getChess(fen)
+      .board()
+      .flat()
+      .find((piece) => piece?.color === color && piece.type === type);
+  }
+
+  static isMajorPieceBetweenKings(
+    majorPiece: { square: Square },
+    whiteKing: { square: Square },
+    blackKing: { square: Square }
+  ): boolean {
+    const p = Brain.squareCoords(majorPiece.square);
+    const w = Brain.squareCoords(whiteKing.square);
+    const b = Brain.squareCoords(blackKing.square);
+    return (
+      Brain.isStrictlyBetween(p.rank, w.rank, b.rank) ||
+      Brain.isStrictlyBetween(p.file, w.file, b.file)
+    );
+  }
+
+  static isStrictlyBetween(value: number, a: number, b: number): boolean {
+    return value > Math.min(a, b) && value < Math.max(a, b);
+  }
+
+  static squareCoords(square: Square) {
+    return {
+      file: square.charCodeAt(0) - "a".charCodeAt(0),
+      rank: Number(square[1]) - 1,
+    };
+  }
+
   //
 
   static hash(fen?: string): string {
@@ -463,7 +538,7 @@ export default class Brain {
     const state = Brain.getState();
     if (
       Brain.view === View.endgame &&
-      Brain.getChess(state.fen).turn() !== "w"
+      !Brain.endgamePieceCountMatchesStart(state.fen)
     ) {
       return false;
     }
@@ -487,21 +562,28 @@ export default class Brain {
   static playEndgameMove(san: string) {
     const state = Brain.getState();
     const chess = Brain.getChess(state.fen);
-    if (chess.turn() !== "w") {
+    if (!Brain.endgamePieceCountMatchesStart(state.fen)) {
       return;
     }
+    if (chess.turn() === "b") {
+      Brain.playEndgameOpponentMove(san, state, chess);
+      return;
+    }
+    if (chess.turn() !== "w") return;
     const whiteMove = chess.move(san);
     if (whiteMove === null) {
       return;
     }
-    const blackReplies = chess.moves();
-    const opponentSan =
-      blackReplies.length === 0
-        ? undefined
-        : blackReplies[Math.floor(Math.random() * blackReplies.length)];
+    const shouldReply = Brain.autoreplyRef.current?.checked;
+    const blackReplies = shouldReply ? chess.moves() : [];
+    const opponentSan = shouldReply
+      ? Brain.chooseEndgameOpponentMove(chess)
+      : undefined;
     if (opponentSan) {
       chess.move(opponentSan);
     }
+    const now = Date.now();
+    const previousLog = state.logs[state.logs.length - 1];
     Brain.setState({
       ...state,
       fen: chess.fen(),
@@ -510,10 +592,115 @@ export default class Brain {
       logs: state.logs.concat({
         fen: state.fen,
         san: whiteMove.san,
-        moves_to_mate: -1,
         opponent_san: opponentSan,
-        num_choices: blackReplies.length,
+        num_choices: shouldReply ? blackReplies.length : undefined,
+        created_at_ms: now,
+        duration_ms:
+          previousLog?.created_at_ms === undefined
+            ? undefined
+            : now - previousLog.created_at_ms,
       }),
+    });
+  }
+
+  static chooseEndgameOpponentMove(chess: Chess): string | undefined {
+    const moves = chess.moves();
+    if (moves.length === 0) {
+      return undefined;
+    }
+    const majorPiece = Brain.getMajorEndgamePieceType();
+    if (!majorPiece) {
+      return moves[Math.floor(Math.random() * moves.length)];
+    }
+    const scoredMoves = moves.map((san, index) => {
+      const nextChess = Brain.getChess(chess.fen());
+      nextChess.move(san);
+      return {
+        san,
+        index,
+        ...Brain.scoreMajorPieceOpponentPosition(nextChess.fen(), majorPiece),
+      };
+    });
+    scoredMoves.sort(
+      (a, b) =>
+        a.capturePenalty - b.capturePenalty ||
+        a.diagonalDistance - b.diagonalDistance ||
+        a.whiteKingDistance - b.whiteKingDistance ||
+        a.whiteMajorPieceDistance - b.whiteMajorPieceDistance ||
+        a.index - b.index
+    );
+    return scoredMoves[0]?.san;
+  }
+
+  static scoreMajorPieceOpponentPosition(fen: string, pieceType: "r" | "q") {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const whiteMajorPiece = Brain.findPiece(fen, "w", pieceType);
+    const majorPieceDistance =
+      whiteMajorPiece && blackKing
+        ? Brain.manhattanDistance(whiteMajorPiece.square, blackKing.square)
+        : 0;
+    return {
+      capturePenalty: whiteMajorPiece ? 1 : 0,
+      diagonalDistance:
+        whiteKing && blackKing
+          ? Brain.diagonalDistance(whiteKing.square, blackKing.square)
+          : 0,
+      whiteKingDistance:
+        whiteKing && blackKing
+          ? Brain.kingDistance(whiteKing.square, blackKing.square)
+          : 0,
+      whiteMajorPieceDistance:
+        pieceType === "q" ? -majorPieceDistance : majorPieceDistance,
+    };
+  }
+
+  static diagonalDistance(a: Square, b: Square): number {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    return Math.abs(
+      Math.abs(first.file - second.file) - Math.abs(first.rank - second.rank)
+    );
+  }
+
+  static kingDistance(a: Square, b: Square): number {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    return Math.max(
+      Math.abs(first.file - second.file),
+      Math.abs(first.rank - second.rank)
+    );
+  }
+
+  static manhattanDistance(a: Square, b: Square): number {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    return (
+      Math.abs(first.file - second.file) + Math.abs(first.rank - second.rank)
+    );
+  }
+
+  static playEndgameOpponentMove(san: string, state: StateType, chess: Chess) {
+    const blackReplies = chess.moves();
+    const blackMove = chess.move(san);
+    if (blackMove === null) {
+      return;
+    }
+    const logs = state.logs.slice();
+    const latestLog = logs[logs.length - 1];
+    if (latestLog) {
+      logs[logs.length - 1] = {
+        ...latestLog,
+        opponent_san: blackMove.san,
+        num_choices: blackReplies.length,
+      };
+    }
+    Brain.setState({
+      ...state,
+      fen: chess.fen(),
+      startingFen: state.fen,
+      orientationIsWhite: true,
+      logs,
     });
   }
 }

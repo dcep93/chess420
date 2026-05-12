@@ -8,9 +8,10 @@ import Traps from "./Traps";
 export type LogType = {
   fen: string;
   san: string;
-  moves_to_mate?: number;
   opponent_san?: string;
   num_choices?: number;
+  created_at_ms?: number;
+  duration_ms?: number;
 };
 
 const titles = [
@@ -174,27 +175,42 @@ export function GetLog(props: { log: LogType | null }) {
 
 function EndgameLog() {
   const logs = Brain.getState().logs;
+  const phase = Brain.getEndgamePhase(Brain.getState().fen);
   return (
     <div className="endgame-log-table">
       <div className="endgame-log-row endgame-log-row--header">
+        <div>phase</div>
         <div>my move</div>
-        <div>moves_to_mate</div>
         <div>opponent move</div>
         <div>num_choices</div>
+        <div>duration</div>
       </div>
       {logs.map((log, index) => (
         <div
           className="endgame-log-row"
           key={`${index}-${log.san}-${log.opponent_san}`}
         >
+          <div>{phase}</div>
           <div>{log.san}</div>
-          <div>{log.moves_to_mate ?? -1}</div>
           <div>{log.opponent_san || ""}</div>
-          <div>{log.num_choices ?? 0}</div>
+          <div>
+            {log.num_choices === undefined || log.num_choices === 0
+              ? ""
+              : `${log.num_choices}/${log.num_choices}`}
+          </div>
+          <div>{formatDuration(log.duration_ms)}</div>
         </div>
       ))}
     </div>
   );
+}
+
+export function formatDuration(ms?: number): string {
+  if (ms === undefined) return "";
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function getTitle(moves: LiMove[]) {

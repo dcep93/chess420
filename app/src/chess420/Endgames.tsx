@@ -30,12 +30,12 @@ export const ENDGAMES: EndgameType[] = [
   {
     id: "rook",
     label: "Rook",
-    fen: "4k3/8/8/8/8/8/8/R3K3 w - - 0 1",
+    fen: "8/8/8/8/4k3/8/8/R3K3 w - - 0 1",
   },
   {
     id: "queen",
     label: "Queen",
-    fen: "4k3/8/8/8/8/8/8/3QK3 w - - 0 1",
+    fen: "8/8/8/8/4k3/8/8/3QK3 w - - 0 1",
   },
 ];
 

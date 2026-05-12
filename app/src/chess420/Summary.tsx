@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Brain, { View } from "./Brain";
-import { getEndgame } from "./Endgames";
 import lichessF from "./Lichess";
-import { GetLog, type LogType } from "./Log";
+import { formatDuration, GetLog, type LogType } from "./Log";
 import quizletF from "./Quizlet";
 import settings from "./Settings";
 import traverseF, { Familiarity } from "./Traverse";
@@ -22,6 +21,28 @@ function SubSummary() {
     return <EndgameSummary />;
   }
   return <OpeningSummary />;
+}
+
+function EndgameSummary() {
+  const [now, updateNow] = useState(Date.now());
+  const logs = Brain.getState().logs;
+  useEffect(() => {
+    const interval = setInterval(() => updateNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const completedDuration = logs.reduce(
+    (total, log) => total + (log.duration_ms || 0),
+    0
+  );
+  const latestLog = logs[logs.length - 1];
+  const activeDuration =
+    latestLog?.created_at_ms === undefined ? 0 : now - latestLog.created_at_ms;
+  return (
+    <div className="summary-top summary-top--endgame">
+      <button onClick={Brain.startOver}>start over</button>
+      <div>{formatDuration(completedDuration + activeDuration)}</div>
+    </div>
+  );
 }
 
 function OpeningSummary() {
@@ -221,26 +242,6 @@ function OpeningSummary() {
           )}
         </div>
       )}
-    </div>
-  );
-}
-
-function EndgameSummary() {
-  const state = Brain.getState();
-  const endgame = getEndgame(Brain.endgameId);
-  const chess = Brain.getChess(state.fen);
-  const status = chess.isCheckmate()
-    ? "checkmate"
-    : chess.isStalemate()
-      ? "stalemate"
-      : chess.turn() === "w"
-        ? "White to move"
-        : "complete";
-  return (
-    <div className="summary-top summary-top--endgame">
-      <div>{endgame.label}</div>
-      <div>{status}</div>
-      <div>{state.logs.length} moves logged</div>
     </div>
   );
 }

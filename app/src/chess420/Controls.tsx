@@ -70,7 +70,6 @@ export default function Controls() {
                     View.lichess_id,
                     View.traverse,
                     View.speedrun,
-                    View.endgame,
                   ].includes(Brain.view)
                 }
               />
