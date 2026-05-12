@@ -178,6 +178,9 @@ export function GetLog(props: { log: LogType | null }) {
 }
 
 function EndgameLog() {
+  if (!Brain.hasSelectedEndgame()) {
+    return null;
+  }
   const logs = Brain.getState().logs;
   return (
     <>

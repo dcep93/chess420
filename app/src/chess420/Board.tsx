@@ -87,6 +87,8 @@ function SubBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.fen, state.startingFen, state.logs.length, state.orientationIsWhite]);
   if (!fen) return null;
+  const position =
+    Brain.view === View.endgame && !Brain.hasSelectedEndgame() ? {} : fen;
   return (
     <div className="board-shell" style={{ borderColor: getBorderColor(total, winOdds) }}>
       <Chessboard
@@ -94,7 +96,7 @@ function SubBoard() {
         options={{
           showNotation: false,
           boardOrientation: state.orientationIsWhite ? "white" : "black",
-          position: fen,
+          position,
           squareStyles: {
             [prevClicked || ""]: {
               background: "rgba(255, 255, 0)",

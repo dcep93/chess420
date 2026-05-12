@@ -5,7 +5,7 @@ import lichessF, {
   getLatestGame,
   latestGameCache,
 } from "./Lichess";
-import { DEFAULT_ENDGAME_ID, getEndgame, type EndgameId } from "./Endgames";
+import { getEndgame, type EndgameId } from "./Endgames";
 import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -117,7 +117,8 @@ export default class Brain {
 
   static view: View;
   static lichessUsername?: string;
-  static endgameId: EndgameId = DEFAULT_ENDGAME_ID;
+  static endgameId: EndgameId | undefined = undefined;
+  static readonly ENDGAME_PICKER_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
 
   //
 
@@ -142,10 +143,17 @@ export default class Brain {
   }
 
   static endgamePieceCountMatchesStart(fen: string): boolean {
+    if (!Brain.hasSelectedEndgame()) {
+      return false;
+    }
     return (
       Brain.getPieceCount(fen) ===
       Brain.getPieceCount(getEndgame(Brain.endgameId).fen)
     );
+  }
+
+  static hasSelectedEndgame(): boolean {
+    return Brain.endgameId !== undefined;
   }
 
   static getEndgameTerminalOutcome(
@@ -178,8 +186,7 @@ export default class Brain {
     state: StateType = Brain.getState(),
     now = Date.now()
   ): number {
-    const startedAt =
-      state.endgame_started_at_ms ?? state.logs[0]?.created_at_ms;
+    const startedAt = state.logs[0]?.created_at_ms;
     if (startedAt !== undefined) {
       const terminalOutcome = Brain.getEndgameTerminalOutcome(state.fen);
       const finishedAt =
@@ -193,6 +200,9 @@ export default class Brain {
       (total, log) => total + (log.duration_ms || 0),
       0
     );
+    if (state.logs.length === 0) {
+      return 0;
+    }
     if (Brain.getEndgameTerminalOutcome(state.fen)) {
       return completedDuration;
     }
@@ -205,6 +215,7 @@ export default class Brain {
 
   static getEndgameStartingUrl(): string {
     const url = new URL(window.location.href);
+    if (!Brain.hasSelectedEndgame()) return url.toString();
     url.pathname = `/endgames/${Brain.endgameId}`;
     url.search = "";
     url.hash = ["w", Brain.getEndgameStartingFen().replaceAll(" ", "_")].join(
@@ -214,6 +225,9 @@ export default class Brain {
   }
 
   static getEndgamePhase(fen: string): string {
+    if (!Brain.hasSelectedEndgame()) {
+      return "";
+    }
     if (Brain.endgameId === "knightAndBishop") {
       return `${Brain.getKnightAndBishopPhase(fen)}/3`;
     }
@@ -324,13 +338,17 @@ export default class Brain {
   }
 
   static getEndgamePositionScore(fen: string): EndgamePositionScore {
-    if (Brain.endgameId === "rook" || Brain.endgameId === "queen") {
-      return Brain.getMajorEndgamePositionScore(fen, Brain.endgameId);
+    if (!Brain.hasSelectedEndgame()) {
+      throw new Error("no endgame selected");
     }
-    if (Brain.endgameId === "knightAndBishop") {
+    const endgameId = Brain.endgameId!;
+    if (endgameId === "rook" || endgameId === "queen") {
+      return Brain.getMajorEndgamePositionScore(fen, endgameId);
+    }
+    if (endgameId === "knightAndBishop") {
       return Brain.getKnightAndBishopPositionScore(fen);
     }
-    return Brain.getBasicEndgamePositionScore(fen, Brain.endgameId);
+    return Brain.getBasicEndgamePositionScore(fen, endgameId);
   }
 
   static compareEndgamePositionScores(
@@ -1195,6 +1213,14 @@ export default class Brain {
   static getInitialState(): StateType {
     const hashFen = Brain.getFenFromHash();
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) {
+        return {
+          fen: Brain.ENDGAME_PICKER_FEN,
+          startingFen: undefined,
+          orientationIsWhite: true,
+          logs: [],
+        };
+      }
       return hashFen
         ? {
             fen: hashFen,
@@ -1216,8 +1242,16 @@ export default class Brain {
   }
 
   static getRandomEndgameState(): StateType {
+    if (!Brain.hasSelectedEndgame()) {
+      return {
+        fen: Brain.ENDGAME_PICKER_FEN,
+        startingFen: undefined,
+        orientationIsWhite: true,
+        logs: [],
+      };
+    }
     return {
-      fen: Brain.getRandomEndgameFen(Brain.endgameId),
+      fen: Brain.getRandomEndgameFen(Brain.endgameId!),
       startingFen: undefined,
       orientationIsWhite: true,
       logs: [],
@@ -1471,6 +1505,7 @@ export default class Brain {
 
   static startOver() {
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) return;
       Brain.resetState(Brain.getRandomEndgameState());
       return;
     }
@@ -1480,6 +1515,7 @@ export default class Brain {
 
   static newGame() {
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) return;
       Brain.resetState(Brain.getRandomEndgameState());
       return;
     }
@@ -1542,6 +1578,9 @@ export default class Brain {
       return alert("no move to play");
     }
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) {
+        return;
+      }
       Brain.playEndgameMove(san);
       return;
     }
@@ -1580,6 +1619,7 @@ export default class Brain {
 
   static playBest() {
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) return;
       const moves = Brain.getIdealEndgameWhiteMoves(Brain.getState().fen);
       return Brain.playMove(moves[Math.floor(Math.random() * moves.length)]);
     }
@@ -1588,6 +1628,9 @@ export default class Brain {
 
   static getBest(fen: string): Promise<string> {
     if (Brain.view === View.endgame) {
+      if (!Brain.hasSelectedEndgame()) {
+        return Promise.resolve("");
+      }
       const moves = Brain.getIdealEndgameWhiteMoves(fen);
       return Promise.resolve(moves[Math.floor(Math.random() * moves.length)]);
     }
@@ -1627,6 +1670,10 @@ export default class Brain {
 
   static traps() {
     window.location.href = `/traps#${Brain.hash()}`;
+  }
+
+  static endgames() {
+    window.location.href = "/endgames";
   }
 
   static selectEndgame(id: EndgameId) {
@@ -1687,6 +1734,9 @@ export default class Brain {
   // board
   static moveFromTo(from: string, to: string) {
     const state = Brain.getState();
+    if (Brain.view === View.endgame && !Brain.hasSelectedEndgame()) {
+      return false;
+    }
     if (
       Brain.view === View.endgame &&
       Brain.getEndgameTerminalOutcome(state.fen)
@@ -1711,6 +1761,9 @@ export default class Brain {
   }
 
   static playEndgameMove(san: string) {
+    if (!Brain.hasSelectedEndgame()) {
+      return;
+    }
     const state = Brain.getState();
     const chess = Brain.getChess(state.fen);
     if (Brain.getEndgameTerminalOutcome(state.fen)) {
@@ -1732,9 +1785,6 @@ export default class Brain {
     const opponentSan = shouldReply
       ? Brain.chooseEndgameOpponentMove(blackReplyCandidates.idealMoves)
       : undefined;
-    if (opponentSan) {
-      chess.move(opponentSan);
-    }
     const now = Date.now();
     const previousLog = state.logs[state.logs.length - 1];
     const previousMoveAt =
@@ -1745,7 +1795,7 @@ export default class Brain {
       chess.fen()
     );
     const terminalOutcome = Brain.getEndgameTerminalOutcome(chess.fen());
-    Brain.setState({
+    const nextState = {
       ...state,
       fen: chess.fen(),
       startingFen: state.fen,
@@ -1754,7 +1804,6 @@ export default class Brain {
       logs: state.logs.concat({
         fen: state.fen,
         san: whiteMove.san,
-        opponent_san: opponentSan,
         ideal_choices: shouldReply
           ? blackReplyCandidates.idealMoves.length
           : undefined,
@@ -1766,7 +1815,20 @@ export default class Brain {
             : now - previousMoveAt,
         ...endgameLogFields,
       }),
-    });
+    };
+    Brain.setState(nextState);
+    if (opponentSan && !terminalOutcome) {
+      Brain.timeout = setTimeout(() => {
+        if (Brain.getState().fen !== nextState.fen) {
+          return;
+        }
+        Brain.playEndgameOpponentMove(
+          opponentSan,
+          nextState,
+          Brain.getChess(nextState.fen)
+        );
+      }, settings.REPLY_DELAY_MS);
+    }
   }
 
   static chooseEndgameOpponentMove(idealMoves: string[]): string | undefined {

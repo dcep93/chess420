@@ -7,77 +7,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Board from "./Board";
 import Controls from "./Controls";
-import { isEndgameId } from "./Endgames";
 import Help from "./Help";
 import Log from "./Log";
+import { assignBrainRoute } from "./Routing";
 import Summary from "./Summary";
 import "./index.css";
 import recorded_sha from "./recorded_sha";
 
-function AssignBrainIdkWhyIHaveToDoThis(): boolean {
-  const pathParts = window.location.pathname.replace(/\/$/, "").split("/");
-  switch (pathParts[1]) {
-    case "lichess":
-      if (pathParts[3] === "latest") {
-        Brain.view = View.lichess_latest;
-      } else if (pathParts[3] === "vs") {
-        Brain.view = View.lichess_vs;
-      } else if (pathParts[3] === "mistakes") {
-        Brain.view = View.lichess_mistakes;
-      } else if (pathParts.length > 3) {
-        return false;
-      } else {
-        // username is game_id
-        Brain.view = View.lichess_id;
-      }
-      const username = pathParts[2];
-      if (username === "") {
-        return false;
-      }
-      Brain.lichessUsername = username;
-      break;
-    case "speedrun":
-      Brain.view = View.speedrun;
-      if (pathParts.length > 2) {
-        return false;
-      }
-      break;
-    case "traps":
-      Brain.view = View.traps;
-      if (pathParts.length > 2) {
-        return false;
-      }
-      break;
-    case "traverse":
-      Brain.view = View.traverse;
-      if (pathParts.length > 2) {
-        return false;
-      }
-      break;
-    case "endgames": {
-      if (pathParts.length === 2) {
-        window.location.replace("/");
-        return true;
-      }
-      Brain.view = View.endgame;
-      if (pathParts.length > 3) {
-        return false;
-      }
-      if (pathParts[2] !== undefined && !isEndgameId(pathParts[2])) {
-        return false;
-      }
-      Brain.endgameId = pathParts[2];
-      break;
-    }
-    case undefined:
-      if (pathParts.length > 1) {
-        return false;
-      }
-      break;
-    default:
-      return false;
-  }
-  return true;
+export function AssignBrainIdkWhyIHaveToDoThis(): boolean {
+  return assignBrainRoute(window.location.pathname);
 }
 
 export default function App() {
@@ -136,7 +74,8 @@ function SubMain(props: { fen: string }) {
     Brain.view !== View.lichess_id &&
     Brain.view !== View.lichess_latest &&
     Brain.view !== View.lichess_mistakes &&
-    Brain.view !== View.traverse
+    Brain.view !== View.traverse &&
+    (Brain.view !== View.endgame || Brain.hasSelectedEndgame())
   )
     window.location.hash = Brain.hash(props.fen);
   return (

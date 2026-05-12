@@ -24,6 +24,13 @@ function SubSummary() {
 }
 
 function EndgameSummary() {
+  if (!Brain.hasSelectedEndgame()) {
+    return null;
+  }
+  return <SelectedEndgameSummary />;
+}
+
+function SelectedEndgameSummary() {
   const [now, updateNow] = useState(Date.now());
   const [shareStatus, updateShareStatus] = useState("");
   const state = Brain.getState();

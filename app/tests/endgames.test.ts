@@ -2,11 +2,60 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import Brain, { View } from "../src/chess420/Brain";
+import { Header } from "../src/chess420/Controls";
 import { ENDGAMES, getEndgame } from "../src/chess420/Endgames";
+import { assignBrainRoute } from "../src/chess420/Routing";
+import settings from "../src/chess420/Settings";
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function setEndgame(id: typeof Brain.endgameId) {
   Brain.view = View.endgame;
   Brain.endgameId = id;
+}
+
+type TestElement = {
+  type?: unknown;
+  props?: {
+    children?: unknown;
+  };
+};
+
+function isTestElement(node: unknown): node is TestElement {
+  return typeof node === "object" && node !== null;
+}
+
+function getChildren(node: unknown): unknown[] {
+  if (!isTestElement(node) || !node.props) return [];
+  const children = node.props.children;
+  if (children === undefined || children === null) return [];
+  return Array.isArray(children) ? children.flatMap(getChildrenValue) : [children];
+}
+
+function getChildrenValue(node: unknown): unknown[] {
+  return Array.isArray(node) ? node.flatMap(getChildrenValue) : [node];
+}
+
+function hasElementType(node: unknown, type: string): boolean {
+  if (!isTestElement(node)) return false;
+  return node.type === type || getChildren(node).some((child) => hasElementType(child, type));
+}
+
+function textContent(node: unknown): string {
+  if (node === undefined || node === null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (!isTestElement(node)) return "";
+  return getChildren(node).map(textContent).join("");
+}
+
+function setTestHash(hash = "") {
+  (
+    globalThis as typeof globalThis & {
+      window: { location: { hash: string } };
+    }
+  ).window = { location: { hash } };
 }
 
 function assertFiniteScore(fen: string) {
@@ -56,6 +105,47 @@ test("endgame registry uses expected training starts", () => {
   );
   assert.equal(getEndgame("rook").fen, "8/8/8/8/4k3/8/8/R3K3 w - - 0 1");
   assert.equal(getEndgame("queen").fen, "8/8/8/8/4k3/8/8/3QK3 w - - 0 1");
+});
+
+test("raw endgames route opens the endgame picker", () => {
+  setTestHash();
+  Brain.endgameId = "rook";
+
+  assert.equal(assignBrainRoute("/endgames"), true);
+  assert.equal(Brain.view, View.endgame);
+  assert.equal(Brain.endgameId, undefined);
+
+  const state = Brain.getInitialState();
+  assert.equal(state.fen, Brain.ENDGAME_PICKER_FEN);
+  assert.equal(Brain.hasSelectedEndgame(), false);
+});
+
+test("selected and invalid endgame routes are handled", () => {
+  setTestHash();
+  assert.equal(assignBrainRoute("/endgames/rook"), true);
+  assert.equal(Brain.view, View.endgame);
+  assert.equal(Brain.endgameId, "rook");
+  assert.equal(Brain.isLegalEndgameStart(Brain.getInitialState().fen), true);
+
+  assert.equal(assignBrainRoute("/endgames/nope"), false);
+});
+
+test("endgame dropdown is only shown in endgame mode", () => {
+  Brain.view = View.speedrun;
+  Brain.endgameId = undefined;
+  assert.equal(hasElementType(Header(), "select"), false);
+
+  Brain.view = View.endgame;
+  let header = Header();
+  assert.equal(hasElementType(header, "select"), true);
+  assert.match(textContent(header), /select endgame/);
+  assert.doesNotMatch(textContent(header), /home/);
+
+  Brain.endgameId = "rook";
+  header = Header();
+  assert.equal(hasElementType(header, "select"), true);
+  assert.match(textContent(header), /select endgame/);
+  assert.doesNotMatch(textContent(header), /home/);
 });
 
 test("piece-count guard detects impossible endgame positions", () => {
@@ -146,6 +236,54 @@ test("endgame start over resets to a fresh random legal position", () => {
       .map((piece) => `${piece.color}${piece.type}`)
       .sort(),
   );
+});
+
+test("endgame autoreply waits until after the white move is committed", async () => {
+  setEndgame("rook");
+  Brain.autoreplyRef = { current: { checked: true } } as typeof Brain.autoreplyRef;
+  const startedAt = Date.now() - 1000;
+  Brain.history = {
+    index: 0,
+    states: [
+      {
+        fen: "1R6/5k2/8/8/8/4K3/8/8 w - - 0 1",
+        startingFen: undefined,
+        orientationIsWhite: true,
+        logs: [],
+        endgame_started_at_ms: startedAt,
+      },
+    ],
+  };
+  Brain.updateHistory = (history) => {
+    Brain.history = history;
+  };
+
+  Brain.playEndgameMove("Rb6");
+
+  assert.equal(
+    Brain.getState().fen,
+    "8/5k2/1R6/8/8/4K3/8/8 b - - 1 1",
+  );
+  assert.equal(Brain.getState().logs[0].san, "Rb6");
+  assert.equal(Brain.getState().logs[0].opponent_san, undefined);
+  assert.equal(typeof Brain.getState().logs[0].duration_ms, "number");
+  assert.ok(Brain.getState().logs[0].duration_ms! >= 1000);
+  const firstMoveAt = Brain.getState().logs[0].created_at_ms!;
+  assert.equal(Brain.getEndgameElapsedMs(Brain.getState(), firstMoveAt), 0);
+  assert.equal(Brain.getEndgameElapsedMs(Brain.getState(), firstMoveAt + 500), 500);
+
+  await wait(settings.REPLY_DELAY_MS + 25);
+
+  assert.equal(
+    Brain.getState().fen,
+    "8/4k3/1R6/8/8/4K3/8/8 w - - 2 2",
+  );
+  assert.equal(Brain.getState().logs[0].opponent_san, "Ke7");
+
+  Brain.autoreplyRef = { current: { checked: false } } as typeof Brain.autoreplyRef;
+  Brain.playEndgameMove("Rb7");
+  assert.equal(Brain.getState().logs[1].san, "Rb7+");
+  assert.equal(typeof Brain.getState().logs[1].duration_ms, "number");
 });
 
 test("rook phase is calculated from the row or file cut", () => {
