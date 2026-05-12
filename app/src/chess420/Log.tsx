@@ -47,10 +47,9 @@ const titles = [
   },
   {
     f: (move: LiMove) =>
-      `t/${
-        move.total < settings.UNCOMMON_THRESHOLD
-          ? move.total
-          : move.total.toExponential(2)
+      `t/${move.total < settings.UNCOMMON_THRESHOLD
+        ? move.total
+        : move.total.toExponential(2)
       }`,
     text: "total games",
     title: "number of lichess games in this position",
@@ -142,7 +141,7 @@ export function GetLog(props: { log: LogType | null }) {
     lichessF(log.fen, {
       username:
         (Brain.isMyTurn(log.fen) && Brain.view === View.lichess_mistakes) ||
-        (!Brain.isMyTurn(log.fen) && Brain.view === View.lichess_vs)
+          (!Brain.isMyTurn(log.fen) && Brain.view === View.lichess_vs)
           ? Brain.lichessUsername
           : undefined,
     }).then((moves) => update(moves));
@@ -193,7 +192,7 @@ function EndgameLog() {
           <div>phase</div>
           <div>my move</div>
           <div>opponent move</div>
-          <div>num_choices</div>
+          <div>num choices</div>
           <div>correctness</div>
           <div>duration</div>
         </div>

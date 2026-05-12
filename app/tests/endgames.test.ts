@@ -3,7 +3,7 @@ import test from "node:test";
 
 import Brain, { View } from "../src/chess420/Brain";
 import { Header } from "../src/chess420/Controls";
-import { ENDGAMES, getEndgame } from "../src/chess420/Endgames";
+import { ENDGAMES, getEndgame, type EndgameId } from "../src/chess420/Endgames";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 
@@ -96,6 +96,42 @@ function assertBlackMinimizesScore(fen: string) {
     assert.ok(comparison >= 0);
     assert.equal(candidates.idealMoves.includes(move.san), comparison === 0);
   });
+}
+
+type ExpectedEndgameBestMoves = string | string[];
+
+function asExpectedMoves(expected: ExpectedEndgameBestMoves): string[] {
+  return Array.isArray(expected) ? expected : [expected];
+}
+
+function assertBestEndgameLineToMate(
+  id: EndgameId,
+  startingFen: string,
+  expectedLine: ExpectedEndgameBestMoves[],
+) {
+  setEndgame(id);
+  const chess = Brain.getChess(startingFen);
+
+  expectedLine.forEach((expectedBestMoves, index) => {
+    assert.equal(chess.isCheckmate(), false);
+    const actualBestMoves =
+      chess.turn() === "w"
+        ? Brain.getIdealEndgameWhiteMoves(chess.fen())
+        : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+    const expectedMoves = asExpectedMoves(expectedBestMoves);
+    const moveNumber = Math.floor(index / 2) + 1;
+    const side = chess.turn() === "w" ? "white" : "black";
+
+    assert.deepEqual(
+      actualBestMoves,
+      expectedMoves,
+      `${id} ${side} move ${moveNumber} from ${chess.fen()}`,
+    );
+    chess.move(expectedMoves[0]);
+  });
+
+  assert.equal(chess.isCheckmate(), true);
+  assert.equal(Brain.getEndgameTerminalOutcome(chess.fen()), "checkmate");
 }
 
 test("endgame registry uses expected training starts", () => {
@@ -203,6 +239,76 @@ test("black opponent replies minimize the resulting position score", () => {
     chess.move(Brain.getIdealEndgameWhiteMoves(endgame.fen)[0]);
     assertBlackMinimizesScore(chess.fen());
   }
+});
+
+test("queen best-move lines are calculated one ply at a time through mate", () => {
+  assertBestEndgameLineToMate(
+    "queen",
+    "4Q3/8/8/6k1/8/8/8/5K2 w - - 0 1",
+    [
+      "Qf7",
+      "Kg4",
+      "Ke2",
+      "Kg5",
+      "Kf3",
+      "Kh6",
+      "Qg8",
+      "Kh5",
+      "Kf4",
+      "Kh6",
+      "Kf5",
+      "Kh5",
+      "Qg5#",
+    ],
+  );
+  assertBestEndgameLineToMate(
+    "queen",
+    "6Q1/8/8/7k/8/5K2/8/8 w - - 8 5",
+    ["Kf4", "Kh6", "Kf5", "Kh5", "Qg5#"],
+  );
+});
+
+test("rook best-move lines are calculated one ply at a time through mate", () => {
+  assertBestEndgameLineToMate(
+    "rook",
+    "8/8/5K1k/R7/8/8/8/8 w - - 0 1",
+    [
+      "Rg5",
+      "Kh7",
+      ["Rg4", "Rg3", "Rg2", "Rg1"],
+      "Kh8",
+      "Kf7",
+      "Kh7",
+      "Rh4#",
+    ],
+  );
+  assertBestEndgameLineToMate(
+    "rook",
+    "1R6/5k2/8/8/8/4K3/8/8 w - - 0 1",
+    [
+      "Rb6",
+      "Ke7",
+      "Ke4",
+      "Kd8",
+      "Rb7",
+      "Kc8",
+      ["Rf7", "Rg7", "Rh7"],
+      "Kd8",
+      "Kd5",
+      "Ke8",
+      "Ke6",
+      "Kd8",
+      ["Rg7", "Rh7"],
+      "Kc8",
+      "Kd6",
+      "Kb8",
+      "Kc6",
+      "Ka8",
+      "Kb6",
+      "Kb8",
+      "Rg8#",
+    ],
+  );
 });
 
 test("endgame start over resets to a fresh random legal position", () => {
@@ -378,6 +484,34 @@ test("rook checks cannot move the rook next to the black king", () => {
   assert.equal(ideal.includes("Rd6+"), false);
 });
 
+test("rook useful check is the only correct move when it forces the king away", () => {
+  setEndgame("rook");
+  const fen = "8/8/4K3/7R/4k3/8/8/8 w - - 8 5";
+  const chess = Brain.getChess(fen);
+  chess.move("Kf6");
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Rh4+"]);
+  assert.deepEqual(Brain.getEndgameLogFields(fen, "Kf6", chess.fen()), {
+    endgame_phase: "2/2",
+    endgame_is_correct: false,
+    endgame_correct_choices: 1,
+  });
+});
+
+test("rook king walk takes direct opposition when available", () => {
+  setEndgame("rook");
+  const fen = "2R5/8/8/8/1k6/4K3/8/8 w - - 14 8";
+  const chess = Brain.getChess(fen);
+  chess.move("Kd3");
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kd4"]);
+  assert.deepEqual(Brain.getEndgameLogFields(fen, "Kd3", chess.fen()), {
+    endgame_phase: "2/2",
+    endgame_is_correct: false,
+    endgame_correct_choices: 1,
+  });
+});
+
 test("rook defense captures a hanging rook", () => {
   setEndgame("rook");
   const fen = "8/8/8/8/3kR3/8/8/4K3 b - - 0 1";
@@ -409,6 +543,16 @@ test("rook defense proximity to the rook works when rotated or mirrored", () => 
   ]);
   assert.deepEqual(Brain.getEndgameOpponentCandidates(mirrored).idealMoves, [
     "Kd7",
+  ]);
+});
+
+test("rook defense avoids giving opposition unless attacking the rook", () => {
+  setEndgame("rook");
+  const chess = Brain.getChess("8/3R4/8/8/4k3/2K5/8/8 w - - 6 4");
+  chess.move("Rd1");
+
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(chess).idealMoves, [
+    "Ke5",
   ]);
 });
 

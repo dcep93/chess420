@@ -42,12 +42,15 @@ type EndgamePositionScore =
       noStalemate: number;
       whiteMaterial: number;
       whiteMajorSafe: number;
+      rookUsefulCheck: number;
       quiet: number;
       phase: number;
       rookBoxProgress: number;
       majorBetweenKings: number;
+      rookBlackAllowsOpposition: number;
       rookBlackKingRookDistance: number;
       rookKingCutApproach: number;
+      rookTempo: number;
       rookKingSideApproach: number;
       blackBetweenWhitePieces: number;
       ownKingLine: number;
@@ -328,11 +331,24 @@ export default class Brain {
   static getEndgameMoveScores(fen: string, moves: string[]) {
     return moves.map((san, index) => {
       const nextChess = Brain.getChess(fen);
-      nextChess.move(san);
+      const move = nextChess.move(san);
+      const score = Brain.getEndgamePositionScore(nextChess.fen());
       return {
         san,
         index,
-        score: Brain.getEndgamePositionScore(nextChess.fen()),
+        score:
+          score.kind === "major" && score.endgameId === "rook"
+            ? {
+                ...score,
+                rookOpposition: Brain.whiteKingTakesDirectRookOpposition(
+                  fen,
+                  nextChess.fen(),
+                  move?.piece
+                )
+                  ? 1
+                  : 0,
+              }
+            : score,
       };
     });
   }
@@ -373,14 +389,17 @@ export default class Brain {
         score.noStalemate,
         score.whiteMaterial,
         score.whiteMajorSafe,
+        score.rookUsefulCheck,
         score.quiet,
         score.edgeEscape,
         score.phase,
         score.rookBoxProgress,
         score.majorBetweenKings,
+        score.rookBlackAllowsOpposition,
         score.rookBlackKingRookDistance,
         score.rookKingCutApproach,
         score.rookOpposition,
+        score.rookTempo,
         score.rookKingSideApproach,
         score.blackBetweenWhitePieces,
         score.ownKingLine,
@@ -480,7 +499,8 @@ export default class Brain {
           ? 0
           : 1
         : 1;
-    const rookOpposition =
+    const rookOpposition = 0;
+    const rookTempo =
       endgameId === "rook" && whiteKing && blackKing
         ? Brain.sameSquareColor(whiteKing.square, blackKing.square)
           ? 0
@@ -493,6 +513,17 @@ export default class Brain {
             blackKing.square,
             rookCutAxis
           )
+        : 0;
+    const rookBlackAllowsOpposition =
+      endgameId === "rook" &&
+      chess.turn() === "w" &&
+      whiteMajorPiece &&
+      whiteKing &&
+      blackKing &&
+      !Brain.blackKingAttacksWhiteMajorPiece(fen, "r") &&
+      (Brain.hasDirectKingOpposition(whiteKing.square, blackKing.square) ||
+        Brain.whiteCanTakeDirectKingOpposition(fen))
+        ? 1
         : 0;
     const rookBlackKingRookDistance =
       endgameId === "rook" && chess.turn() === "w" && whiteMajorPiece && blackKing
@@ -539,6 +570,19 @@ export default class Brain {
       whiteMajorPiece && blackKing
         ? 7 - Brain.majorPieceBoxDistance(whiteMajorPiece.square, blackKing.square)
         : 0;
+    const rookAdjacentToBlackKing =
+      endgameId === "rook" && whiteMajorPiece && blackKing
+        ? Brain.kingDistance(whiteMajorPiece.square, blackKing.square) <= 1
+        : false;
+    const rookUsefulCheck =
+      endgameId === "rook" &&
+      chess.isCheck() &&
+      !chess.isCheckmate() &&
+      !rookAdjacentToBlackKing &&
+      !Brain.whiteKingIsAdjacentToRook(fen) &&
+      Brain.blackMustMoveAwayFromWhiteKing(fen)
+        ? 1
+        : 0;
     const whiteKingProximity =
       whiteKing && blackKing
         ? 14 - Brain.manhattanDistance(whiteKing.square, blackKing.square)
@@ -550,12 +594,15 @@ export default class Brain {
       noStalemate: chess.isStalemate() ? 0 : 1,
       whiteMaterial: whiteMajorPiece ? 1 : 0,
       whiteMajorSafe: Brain.blackCanTakeWhitePieces(fen, [pieceType]) ? 0 : 1,
+      rookUsefulCheck,
       quiet: chess.isCheck() && !chess.isCheckmate() ? 0 : 1,
       phase,
       rookBoxProgress,
       majorBetweenKings,
+      rookBlackAllowsOpposition,
       rookBlackKingRookDistance,
       rookKingCutApproach,
+      rookTempo,
       rookKingSideApproach,
       blackBetweenWhitePieces,
       ownKingLine,
@@ -1158,6 +1205,74 @@ export default class Brain {
 
   static isStrictlyBetween(value: number, a: number, b: number): boolean {
     return value > Math.min(a, b) && value < Math.max(a, b);
+  }
+
+  static whiteKingTakesDirectRookOpposition(
+    startFen: string,
+    resultFen: string,
+    movePiece?: string
+  ): boolean {
+    if (movePiece !== "k") {
+      return false;
+    }
+    const startWhiteKing = Brain.findPiece(startFen, "w", "k");
+    const startBlackKing = Brain.findPiece(startFen, "b", "k");
+    const resultWhiteKing = Brain.findPiece(resultFen, "w", "k");
+    const resultBlackKing = Brain.findPiece(resultFen, "b", "k");
+    return (
+      Brain.getChess(resultFen).turn() === "b" &&
+      startWhiteKing != null &&
+      startBlackKing != null &&
+      resultWhiteKing != null &&
+      resultBlackKing != null &&
+      Brain.sameSquareColor(startWhiteKing.square, startBlackKing.square) &&
+      Brain.hasDirectKingOpposition(
+        resultWhiteKing.square,
+        resultBlackKing.square
+      )
+    );
+  }
+
+  static whiteCanTakeDirectKingOpposition(fen: string): boolean {
+    if (Brain.getChess(fen).turn() !== "w") {
+      return false;
+    }
+    return Brain.getChess(fen)
+      .moves()
+      .some((san) => {
+        const nextChess = Brain.getChess(fen);
+        const move = nextChess.move(san);
+        const whiteKing = Brain.findPiece(nextChess.fen(), "w", "k");
+        const blackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+        return (
+          move?.piece === "k" &&
+          whiteKing != null &&
+          blackKing != null &&
+          Brain.hasDirectKingOpposition(whiteKing.square, blackKing.square)
+        );
+      });
+  }
+
+  static blackKingAttacksWhiteMajorPiece(
+    fen: string,
+    pieceType: "r" | "q"
+  ): boolean {
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const whiteMajorPiece = Brain.findPiece(fen, "w", pieceType);
+    return (
+      blackKing != null &&
+      whiteMajorPiece != null &&
+      Brain.kingDistance(blackKing.square, whiteMajorPiece.square) <= 1
+    );
+  }
+
+  static hasDirectKingOpposition(a: Square, b: Square): boolean {
+    const first = Brain.squareCoords(a);
+    const second = Brain.squareCoords(b);
+    return (
+      (first.rank === second.rank && Math.abs(first.file - second.file) === 2) ||
+      (first.file === second.file && Math.abs(first.rank - second.rank) === 2)
+    );
   }
 
   static squareCoords(square: Square) {
