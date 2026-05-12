@@ -249,6 +249,31 @@ test("rook defense captures a hanging rook", () => {
   ]);
 });
 
+test("rook defense stays close to the rook to resist box reduction", () => {
+  setEndgame("rook");
+  const chess = Brain.getChess("1R6/5k2/8/8/8/4K3/8/8 w - - 0 1");
+  chess.move("Rb6");
+
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(chess).idealMoves, [
+    "Ke7",
+  ]);
+});
+
+test("rook defense proximity to the rook works when rotated or mirrored", () => {
+  setEndgame("rook");
+  const fileCut = Brain.getChess("8/7R/8/8/2K5/6k1/8/8 w - - 0 1");
+  fileCut.move("Rf7");
+  const mirrored = Brain.getChess("6R1/2k5/8/8/8/3K4/8/8 w - - 0 1");
+  mirrored.move("Rg6");
+
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(fileCut).idealMoves, [
+    "Kg4",
+  ]);
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(mirrored).idealMoves, [
+    "Kd7",
+  ]);
+});
+
 test("queen correctness avoids checking loops and prefers progress", () => {
   setEndgame("queen");
   const fen = "8/8/8/8/7k/8/6Q1/4K3 w - - 6 4";

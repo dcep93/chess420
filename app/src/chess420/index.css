@@ -17,6 +17,7 @@
   --field-border: rgba(205, 186, 157, 0.16);
   --section-bg: rgba(255, 248, 236, 0.04);
   --section-border: rgba(214, 194, 163, 0.08);
+  --control-height: 1.86rem;
   --row-hover: rgba(128, 162, 144, 0.12);
   --section-top-border: rgba(220, 200, 171, 0.09);
   --section-top-bg: linear-gradient(180deg, rgba(255, 248, 236, 0.06), rgba(255, 248, 236, 0.01));
@@ -193,6 +194,15 @@
   grid-column: 1 / -1;
   justify-self: start;
 }
+.controls__buttons--lichess {
+  grid-auto-rows: var(--control-height);
+}
+.controls__lichess-form {
+  grid-column: 1 / -1;
+}
+.controls__lichess-form input {
+  width: 100%;
+}
 .controls button,
 .summary-content button {
   border: 1px solid var(--button-border);
@@ -203,13 +213,21 @@
   font-size: 0.78rem;
   box-shadow: 0 2px 8px rgba(95, 72, 44, 0.08);
 }
-.controls input,
+.controls button {
+  height: var(--control-height);
+  line-height: 1;
+}
+.controls input:not([type="checkbox"]),
 .controls select {
+  height: var(--control-height);
   border-radius: 10px;
   border: 1px solid var(--field-border);
   background: var(--field-bg);
   color: var(--text-main);
   padding: 0.35rem 0.52rem;
+}
+.controls input[type="checkbox"] {
+  margin: 0;
 }
 .controls__checkbox {
   display: flex;
@@ -220,6 +238,8 @@
   font-size: 0.8rem;
 }
 .controls__checkbox--header {
+  font-size: 0.72rem;
+  line-height: 1.2;
   margin-top: 0;
   white-space: nowrap;
 }

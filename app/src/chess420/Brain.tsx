@@ -46,6 +46,7 @@ type EndgamePositionScore =
       phase: number;
       rookBoxProgress: number;
       majorBetweenKings: number;
+      rookBlackKingRookDistance: number;
       rookKingCutApproach: number;
       rookKingSideApproach: number;
       blackBetweenWhitePieces: number;
@@ -359,6 +360,7 @@ export default class Brain {
         score.phase,
         score.rookBoxProgress,
         score.majorBetweenKings,
+        score.rookBlackKingRookDistance,
         score.rookKingCutApproach,
         score.rookOpposition,
         score.rookKingSideApproach,
@@ -474,6 +476,10 @@ export default class Brain {
             rookCutAxis
           )
         : 0;
+    const rookBlackKingRookDistance =
+      endgameId === "rook" && chess.turn() === "w" && whiteMajorPiece && blackKing
+        ? Brain.manhattanDistance(whiteMajorPiece.square, blackKing.square)
+        : 0;
     const rookKingCutApproach =
       endgameId === "rook" && rookCutAxis && whiteKing && blackKing
         ? 7 - Brain.getAxisDistance(whiteKing.square, blackKing.square, rookCutAxis)
@@ -530,6 +536,7 @@ export default class Brain {
       phase,
       rookBoxProgress,
       majorBetweenKings,
+      rookBlackKingRookDistance,
       rookKingCutApproach,
       rookKingSideApproach,
       blackBetweenWhitePieces,

@@ -100,8 +100,9 @@ export default function Controls() {
           <div className="controls__section-top">
             <h2>Lichess</h2>
           </div>
-          <div className="controls__field-group">
+          <div className="controls__buttons controls__buttons--lichess">
             <form
+              className="controls__lichess-form"
               onSubmit={(e) => {
                 e.preventDefault();
                 Brain.playVs(lichessRef.current!.value);
@@ -118,8 +119,6 @@ export default function Controls() {
                 title="username"
               />
             </form>
-          </div>
-          <div className="controls__buttons">
             <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
               play vs user
             </button>
