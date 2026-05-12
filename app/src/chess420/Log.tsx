@@ -187,29 +187,38 @@ function EndgameLog() {
         <div>duration</div>
       </div>
       {logs.map((log, index) => (
-        <div
-          className="endgame-log-row"
-          key={`${index}-${log.san}-${log.opponent_san}`}
-        >
-          <div>{Brain.getEndgamePhase(Brain.getLogResultFen(log))}</div>
-          <div>{log.san}</div>
-          <div>{log.opponent_san || ""}</div>
-          <div>
-            {log.num_choices === undefined || log.num_choices === 0
-              ? ""
-              : (
-                <button
-                  className="endgame-log-choice-button"
-                  onClick={() => Brain.forceDifferentIdealEndgameMove(index)}
-                >
-                  {log.ideal_choices ?? log.num_choices}/{log.num_choices}
-                </button>
-              )}
-          </div>
-          <div className="endgame-log-correctness">👍</div>
-          <div>{formatDuration(log.duration_ms)}</div>
-        </div>
+        <EndgameLogRow log={log} index={index} key={`${index}-${log.san}-${log.opponent_san}`} />
       ))}
+    </div>
+  );
+}
+
+function EndgameLogRow(props: { log: LogType; index: number }) {
+  const { log, index } = props;
+  const isCorrect = Brain.isEndgameLogCorrect(log);
+  const correctMoves = Brain.getIdealEndgameWhiteMoves(log.fen);
+  return (
+    <div className="endgame-log-row">
+      <div>{Brain.getEndgamePhase(Brain.getLogResultFen(log))}</div>
+      <div>{log.san}</div>
+      <div>{log.opponent_san || ""}</div>
+      <div>
+        {log.num_choices === undefined || log.num_choices === 0 ? (
+          ""
+        ) : (
+          <button
+            className="endgame-log-choice-button"
+            onClick={() => Brain.forceDifferentIdealEndgameMove(index)}
+          >
+            {log.ideal_choices ?? log.num_choices}/{log.num_choices}
+          </button>
+        )}
+      </div>
+      <div className="endgame-log-correctness">
+        {isCorrect ? "👍" : "👎"}
+        {correctMoves.length ? `/${correctMoves.length}` : ""}
+      </div>
+      <div>{formatDuration(log.duration_ms)}</div>
     </div>
   );
 }
