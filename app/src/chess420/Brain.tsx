@@ -908,12 +908,6 @@ export default class Brain {
       whiteRook &&
       Brain.edgeDistance(blackKing.square) === 0 &&
       Brain.isMajorPieceOnAdjacentEdgeLine(whiteRook.square, blackKing.square);
-    const shouldLiftRookOnCorner =
-      hasAdjacentEdgeLock &&
-      whiteKing &&
-      blackKing &&
-      Brain.isCorner(blackKing.square) &&
-      Brain.kingDistance(whiteKing.square, blackKing.square) > 2;
     const shouldWalkKingOnEdge =
       hasAdjacentEdgeLock &&
       whiteKing &&
@@ -935,12 +929,7 @@ export default class Brain {
         whiteRook && blackKing
           ? Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square)
           : 99,
-      edgeTrapPenalty:
-        shouldLiftRookOnCorner
-          ? move?.piece === "r"
-            ? 0
-            : 1
-          : 0,
+      edgeTrapPenalty: 0,
       ownLinePenalty:
         whiteRook && whiteKing && Brain.sharesRankOrFile(whiteRook.square, whiteKing.square)
           ? 1
