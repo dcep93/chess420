@@ -243,6 +243,10 @@ test("queen white rules choose explicit best moves", () => {
     Brain.getIdealEndgameWhiteMoves("8/8/4K3/2Q5/8/1k6/8/8 w - - 2 2"),
     ["Kd5"],
   );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("7k/4Q3/4K3/8/8/8/8/8 w - - 18 10"),
+    ["Kf6"],
+  );
 });
 
 test("queen white rules avoid queen loss and stalemate", () => {
@@ -363,6 +367,18 @@ test("rook white rules choose explicit best moves", () => {
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("5R2/8/8/8/8/4K3/8/6k1 w - - 8 5"),
     ["Ke2"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/1k6/7R/1K6/8/8/8/8 w - - 8 5"),
+    ["Rh7+"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("5k2/8/3K4/8/8/8/8/4R3 w - - 8 5"),
+    ["Kd7"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("4k3/8/8/6R1/8/8/6K1/8 w - - 0 1"),
+    ["Rg7"],
   );
 });
 
