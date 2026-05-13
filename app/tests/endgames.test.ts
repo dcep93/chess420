@@ -89,6 +89,40 @@ function assertLegalSans(fen: string, sans: string[]) {
   sans.forEach((san) => assert.ok(legalMoves.includes(san), san));
 }
 
+function fullSortBestMoves<T>(
+  moves: string[],
+  scoreMove: (san: string, index: number) => T,
+  compareScores: (a: T, b: T) => number,
+): string[] {
+  const scoredMoves = moves
+    .map((san, index) => ({ san, index, score: scoreMove(san, index) }))
+    .sort((a, b) => compareScores(a.score, b.score));
+  const best = scoredMoves[0].score;
+  return scoredMoves
+    .filter((move) => compareScores(move.score, best) === 0)
+    .map((move) => move.san);
+}
+
+function fullSortBestPositionMoves(
+  fen: string,
+  moves: string[],
+  maximize: boolean,
+): string[] {
+  const scoredMoves = Brain.getEndgameMoveScores(fen, moves);
+  scoredMoves.sort((a, b) => {
+    const diff = maximize
+      ? Brain.compareEndgamePositionScores(b.score, a.score)
+      : Brain.compareEndgamePositionScores(a.score, b.score);
+    return diff || a.index - b.index;
+  });
+  const best = scoredMoves[0];
+  return scoredMoves
+    .filter(
+      (move) => Brain.compareEndgamePositionScores(move.score, best.score) === 0,
+    )
+    .map((move) => move.san);
+}
+
 function lookupEntryFen(key: string): string {
   return `${key.split(" ")[0]} w - - 0 1`;
 }
@@ -126,6 +160,88 @@ function transformedFenSets(fens: string[]): Set<string> {
   return new Set(fens.flatMap((fen) => [...transformedFenSet(fen)]));
 }
 
+function seededRandom(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 2 ** 32;
+  };
+}
+
+function boardTurnKey(fen: string): string {
+  const [board, turn] = fen.split(" ");
+  return `${board} ${turn}`;
+}
+
+function playKnightAndBishopSelfPlay(
+  fen: string,
+  limit = 100,
+  seed = 1,
+): {
+  result: "mate" | "loop-before-phase2" | "limit" | "no-move";
+  plies: number;
+  phaseTwoReached: boolean;
+  finalFen: string;
+  moves: string[];
+} {
+  setEndgame("knightAndBishop");
+  const random = seededRandom(seed);
+  const chess = Brain.getChess(fen);
+  const seen = new Set<string>();
+  const moves: string[] = [];
+  let phaseTwoReached = false;
+
+  for (let ply = 0; ply < limit; ply += 1) {
+    phaseTwoReached ||= Brain.getEndgamePhase(chess.fen()) === "2/2";
+    if (chess.isCheckmate()) {
+      return {
+        result: "mate",
+        plies: ply,
+        phaseTwoReached,
+        finalFen: chess.fen(),
+        moves,
+      };
+    }
+
+    const key = boardTurnKey(chess.fen());
+    if (!phaseTwoReached && seen.has(key)) {
+      return {
+        result: "loop-before-phase2",
+        plies: ply,
+        phaseTwoReached,
+        finalFen: chess.fen(),
+        moves,
+      };
+    }
+    seen.add(key);
+
+    const choices =
+      chess.turn() === "w"
+        ? Brain.getIdealEndgameWhiteMoves(chess.fen())
+        : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+    const move = choices[Math.floor(random() * choices.length)];
+    if (!move) {
+      return {
+        result: "no-move",
+        plies: ply,
+        phaseTwoReached,
+        finalFen: chess.fen(),
+        moves,
+      };
+    }
+    moves.push(move);
+    chess.move(move);
+  }
+
+  return {
+    result: "limit",
+    plies: limit,
+    phaseTwoReached,
+    finalFen: chess.fen(),
+    moves,
+  };
+}
+
 type ExpectedEndgameBestMoves = string | string[];
 
 function expectedMovesArray(expected: ExpectedEndgameBestMoves): string[] {
@@ -161,6 +277,57 @@ function assertBestEndgameLineToMate(
   assert.equal(chess.isCheckmate(), true);
   assert.equal(Brain.getEndgameTerminalOutcome(chess.fen()), "checkmate");
 }
+
+type HardcodedEndgameLineFixture = {
+  id: EndgameId;
+  startingFen: string;
+  seed: number;
+  expectedLine: string[][];
+};
+
+function assertSeededBestEndgameFixture(fixture: HardcodedEndgameLineFixture) {
+  setEndgame(fixture.id);
+  const random = seededRandom(fixture.seed);
+  const chess = Brain.getChess(fixture.startingFen);
+
+  fixture.expectedLine.forEach((expectedMoves, index) => {
+    assert.equal(chess.isCheckmate(), false);
+    const actualBestMoves =
+      chess.turn() === "w"
+        ? Brain.getIdealEndgameWhiteMoves(chess.fen())
+        : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+    const moveNumber = Math.floor(index / 2) + 1;
+    const side = chess.turn() === "w" ? "white" : "black";
+
+    assert.deepEqual(
+      actualBestMoves,
+      expectedMoves,
+      `${fixture.id} fixture from ${fixture.startingFen}: ${side} move ${moveNumber} at ${chess.fen()}`,
+    );
+    assertLegalSans(chess.fen(), expectedMoves);
+    chess.move(expectedMoves[Math.floor(random() * expectedMoves.length)]);
+  });
+
+  assert.equal(chess.isCheckmate(), true, fixture.startingFen);
+  assert.equal(Brain.getEndgameTerminalOutcome(chess.fen()), "checkmate");
+}
+
+const HARDCODED_ENDGAME_LINE_FIXTURES = JSON.parse(`[{"id":"knightAndBishop","startingFen":"8/8/8/2N1k3/8/3B4/K7/8 w - - 0 1","seed":73000,"expectedLine":[["Nb3"],["Kd5"],["Ka3"],["Ke5"],["Kb4"],["Kd5"],["Nc5"],["Ke5"],["Kc4"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kg4"],["Ke4"],["Kg5"],["Nd7"],["Kg6"],["Kf4+"],["Kf7"],["Bf5"],["Ke7"],["Ke5"],["Kd8"],["Kd6"],["Ke8","Kc8"],["Bg6+"],["Kd8"],["Nc5"],["Kc8"],["Bf7"],["Kd8","Kb8"],["Be6"],["Ka7","Ka8"],["Kc7"],["Ka8"],["Kb6"],["Kb8"],["Na6+"],["Ka8"],["Bd5#"]]},{"id":"knightAndBishop","startingFen":"2N5/8/8/8/8/2KB4/7k/8 w - - 0 1","seed":73038,"expectedLine":[["Be4"],["Kg3"],["Kd3"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kh6"],["Kf6"],["Kh5"],["Bf3+"],["Kh4"],["Be2"],["Kg3"],["Bd1"],["Kf2"],["Bh5"],["Kg3"],["Kg5"],["Kf2"],["Kf4"],["Kg2"],["Nd6"],["Kh3"],["Bg4+"],["Kh4"],["Nf5#"]]},{"id":"knightAndBishop","startingFen":"5B1N/8/8/4k3/8/5K2/8/8 w - - 0 1","seed":73076,"expectedLine":[["Ke3"],["Kf6"],["Ke4"],["Ke6"],["Bc5"],["Kd7"],["Kd5"],["Ke8"],["Ke6"],["Kd8"],["Bb6+"],["Ke8"],["Nf7"],["Kf8"],["Bc5+"],["Ke8"],["Nd6+"],["Kd8"],["Bb6#"]]},{"id":"knightAndBishop","startingFen":"1k4B1/8/8/4K3/8/3N4/8/8 w - - 0 1","seed":73114,"expectedLine":[["Kd6"],["Kc8"],["Be6+"],["Kd8"],["Ne5"],["Ke8"],["Nd7"],["Kd8"],["Bf7"],["Kc8"],["Nc5"],["Kd8","Kb8"],["Nb7+"],["Kc8"],["Kc6"],["Kb8"],["Kb6"],["Kc8","Ka8"],["Be6"],["Kb8"],["Nc5"],["Ka8"],["Bd7"],["Kb8"],["Na6+"],["Ka8"],["Bc6#"]]},{"id":"knightAndBishop","startingFen":"8/8/8/8/3N3k/1K6/8/B7 w - - 0 1","seed":73152,"expectedLine":[["Ne6"],["Kg4"],["Nd4"],["Kf4"],["Kc4"],["Ke3"],["Kd5"],["Kd2"],["Ke4"],["Kc1"],["Bc3"],["Kd1"],["Kd3"],["Kc1"],["Ne2+"],["Kd1"],["Bd4"],["Ke1"],["Bc3+"],["Kf2"],["Nd4"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg3"],["Kf5"],["Kf2"],["Kf4"],["Kf1"],["Kf3"],["Kg1"],["Ne2+"],["Kf1"],["Ng3+"],["Kg1"],["Bd4+"],["Kh2"],["Bf2"],["Kh3"],["Bg1"],["Kh4"],["Ne4"],["Kh5","Kh3"],["Ng5+"],["Kh4"],["Kf4"],["Kh5"],["Kf5"],["Kh6","Kh4"],["Bf2+"],["Kh5"],["Ne6"],["Kh6"],["Bg3"],["Kh7","Kh5"],["Ng7+"],["Kh6"],["Kf6"],["Kh7"],["Kf7"],["Kh8","Kh6"],["Bf4"],["Kh7"],["Ne6"],["Kh8"],["Bg5"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"3K4/7k/5B2/8/8/8/4N3/8 w - - 0 1","seed":73190,"expectedLine":[["Nf4"],["Kh6"],["Ke7"],["Kh7"],["Kf8"],["Kh6"],["Kf7"],["Kh7"],["Bg5"],["Kh8"],["Ne6"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"2K5/8/4k3/5N2/8/8/8/6B1 w - - 0 1","seed":73228,"expectedLine":[["Ne3"],["Ke5"],["Kd7"],["Kf4"],["Ke6"],["Kg3"],["Kf5"],["Kf3"],["Ke5"],["Kg3"],["Ke4"],["Kh3"],["Bf2"],["Kh2"],["Kf3"],["Kh3"],["Be1"],["Kh2"],["Ng4+"],["Kg1"],["Bf2+"],["Kf1"],["Nh2#","Ne3#"]]},{"id":"knightAndBishop","startingFen":"8/4B3/4k3/8/N7/8/2K5/8 w - - 0 1","seed":73266,"expectedLine":[["Bc5"],["Kd5"],["Kd3"],["Kc6"],["Kc4"],["Kb7"],["Kb5"],["Kc7"],["Nb6"],["Kd8"],["Kc6"],["Ke8"],["Kd6"],["Kf7"],["Nd5"],["Kg6"],["Ba7"],["Kf7","Kg7","Kh7","Kh6","Kh5","Kg5","Kf5"],["Ne7+"],["Kf6","Kg5","Kg4","Kf4","Ke4"],["Ke5"],["Kg5"],["Kd6"],["Kf6","Kh6","Kh5","Kh4","Kg4","Kf4"],["Be3"],["Kf7","Kg7"],["Ke6"],["Kf8","Kh8","Kh7"],["Bd4"],["Ke8"],["Bc5"],["Kf8","Kd8"],["Nf5+"],["Kg8","Ke8"],["Kf6"],["Kh8","Kh7"],["Bd6"],["Kg8","Kh8"],["Kg6"],["Kg8"],["Nh6+"],["Kh8"],["Be5#"]]},{"id":"twoBishops","startingFen":"8/8/B7/8/8/2B2K2/8/7k w - - 0 1","seed":73296,"expectedLine":[["Bd3"],["Kh2","Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"4k2B/8/8/3B1K2/8/8/8/8 w - - 0 1","seed":73334,"expectedLine":[["Bc6+"],["Ke7"],["Be5"],["Kd8"],["Bd5"],["Ke8","Ke7","Kd7","Kc8"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/B7/K7/8/8/k7/4B3/8 w - - 0 1","seed":73372,"expectedLine":[["Bc5+"],["Ka4","Kb3"],["Bd1#"]]},{"id":"twoBishops","startingFen":"7k/7B/3B4/8/6K1/8/8/8 w - - 0 1","seed":73410,"expectedLine":[["Be4"],["Kg7"],["Be5+"],["Kf7"],["Bd5+"],["Ke7"],["Kg5"],["Kd7"],["Kf5"],["Kc8","Kd8","Ke8","Ke7"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/8/8/8/1BB1K3/8/8/k7 w - - 0 1","seed":73448,"expectedLine":[["Bc3+"],["Kb1"],["Bd3+"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bc3+","Ke3"],["Kf1"],["Bd3+"],["Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/6B1/8/8/4K3/3B4/8/3k4 w - - 0 1","seed":73486,"expectedLine":[["Bc3"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bd3"],["Kh2","Kh1"],["Kg3"],["Kg1"],["Bd4+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/8/6B1/4B3/5K2/8/8/4k3 w - - 0 1","seed":73524,"expectedLine":[["Bc3+"],["Ke2"],["Be4"],["Kd1"],["Bd4"],["Kd2","Ke2","Ke1","Kc1"],["Kg3"],["Kf1","Ke1","Kd1","Kd2"],["Kf2"],["Kd1","Kc1"],["Ke3"],["Ke1","Kc1"],["Kd3"],["Kd1","Kb1"],["Bf2"],["Kc1"],["Kc3"],["Kd1"],["Bf3+"],["Kc1"],["Be3+"],["Kb1"],["Kb3"],["Ka1"],["Be2"],["Kb1"],["Bd3+"],["Ka1"],["Bd4#"]]},{"id":"twoBishops","startingFen":"8/4K3/8/1k6/8/7B/8/6B1 w - - 0 1","seed":73562,"expectedLine":[["Be3"],["Kc4"],["Bf5"],["Kd5"],["Kf6","Bd3","Bf4"],["Kd4"],["Kd6"],["Kc4"],["Be5"],["Kb5","Kb4"],["Be4"],["Kc4"],["Ke6"],["Kb5","Kc5","Kb3","Kb4"],["Bd5"],["Kb6","Kb4","Kb5"],["Bd4"],["Kb5"],["Kd7"],["Kb4"],["Kd6"],["Ka5","Kb5","Ka3","Ka4"],["Kc7"],["Ka6","Kb4","Ka4","Ka5"],["Kb6"],["Ka3","Ka4"],["Kc5"],["Ka5","Ka3"],["Bb3"],["Ka6"],["Kc6"],["Ka5"],["Bc3+"],["Ka6"],["Bc4+"],["Ka7"],["Kc7"],["Ka8"],["Bb4"],["Ka7"],["Bc5+"],["Ka8"],["Bd5#"]]},{"id":"rook","startingFen":"8/5k2/8/5K2/8/8/8/6R1 w - - 0 1","seed":73592,"expectedLine":[["Rh1","Re1","Rd1","Rc1","Rb1","Ra1"],["Ke7"],["Rb6"],["Kd7"],["Ke5"],["Kc7"],["Rh6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/2k5/8/6R1/3K4/8/8/8 w - - 0 1","seed":73630,"expectedLine":[["Rg6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Ra6"],["Kg7"],["Kf5"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/K7/7R/8/8/8/8 w - - 0 1","seed":73668,"expectedLine":[["Re5"],["Kf6"],["Re1"],["Kf5"],["Kb5"],["Kf4"],["Kc4"],["Kf3"],["Kd3"],["Kf2"],["Re8"],["Kf1"],["Kd2"],["Kf2"],["Rf8+"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg5"],["Ke5"],["Kg6"],["Ke6"],["Kg7"],["Rf1"],["Kg8"],["Ke7"],["Kg7"],["Rg1+"],["Kh6"],["Kf6"],["Kh5"],["Kf5"],["Kh4"],["Kf4"],["Kh3"],["Kf3"],["Kh2"],["Rg8"],["Kh1"],["Kf2"],["Kh2"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/R5K1/8 w - - 0 1","seed":73706,"expectedLine":[["Ra6"],["Ke7"],["Kf3"],["Kd7"],["Ke4"],["Kc7"],["Kd5"],["Kb7"],["Rh6"],["Kc7"],["Kc5"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/1R6/8/8/8/8/1K6 w - - 0 1","seed":73744,"expectedLine":[["Kc2"],["Ke7"],["Kd3"],["Kd7"],["Kd4"],["Kc7"],["Rh6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/8/8/8/1K6/4k3/1R6/8 w - - 0 1","seed":73782,"expectedLine":[["Rc2"],["Kd3"],["Rc8"],["Kd2"],["Kb3"],["Kd1"],["Kb2"],["Kd2"],["Rd8+"],["Ke3"],["Kc3"],["Ke4"],["Kc4"],["Ke5"],["Kc5"],["Ke6"],["Kc6"],["Ke7"],["Rd1"],["Ke8"],["Kc7"],["Ke7"],["Re1+"],["Kf6"],["Kd6"],["Kf5"],["Kd5"],["Kf4"],["Kd4"],["Kf3"],["Kd3"],["Kf2"],["Re8"],["Kf1"],["Kd2"],["Kf2"],["Rf8+"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg5"],["Ke5"],["Kg6"],["Ke6"],["Kg7"],["Rf1"],["Kg8"],["Ke7"],["Kg7"],["Rg1+"],["Kh6"],["Kf6"],["Kh5"],["Kf5"],["Kh4"],["Kf4"],["Kh3"],["Kf3"],["Kh2"],["Rg8"],["Kh1"],["Kf2"],["Kh2"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/8/3RK3 w - - 0 1","seed":73820,"expectedLine":[["Rd6"],["Ke7"],["Ra6"],["Kd7"],["Kd2"],["Kc7"],["Kc3"],["Kb7"],["Rh6"],["Kc7"],["Kc4"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/8/8/6k1/8/4R3/6K1/8 w - - 0 1","seed":73858,"expectedLine":[["Re4"],["Kf5"],["Ra4"],["Ke5"],["Kf3"],["Kd5"],["Ke3"],["Kc5"],["Kd3"],["Kb5"],["Rh4"],["Kc5"],["Kc3"],["Kd5"],["Kd3"],["Ke5"],["Ke3"],["Kf5"],["Kf3"],["Kg5"],["Ra4"],["Kh5"],["Kg3"],["Kg5"],["Ra5+"],["Kf6"],["Kf4"],["Ke6"],["Ke4"],["Kd6"],["Kd4"],["Kc6"],["Kc4"],["Kb6"],["Rh5"],["Ka6"],["Kb4"],["Kb6"],["Rh6+"],["Kc7"],["Kc5"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"queen","startingFen":"8/5k2/8/4Q3/8/8/8/7K w - - 0 1","seed":73888,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qf6"],["Kg8"],["Qe7"],["Kh8"],["Kg2"],["Kg8"],["Kg3"],["Kh8"],["Kg4"],["Kg8"],["Kg5"],["Kh8"],["Kg6"],["Kg8"],["Qg7#"]]},{"id":"queen","startingFen":"8/4Q3/8/3K4/8/8/3k4/8 w - - 0 1","seed":73926,"expectedLine":[["Qe4"],["Kc3"],["Ke5"],["Kd2","Kb2","Kb3"],["Qf3"],["Kc2"],["Qe3"],["Kb2"],["Qd3"],["Kc1","Ka1","Ka2"],["Qd2"],["Kb1"],["Kd4"],["Ka1"],["Kc3"],["Kb1"],["Qb2#"]]},{"id":"queen","startingFen":"1K6/5k2/8/8/8/8/8/6Q1 w - - 0 1","seed":73964,"expectedLine":[["Qg5"],["Ke6"],["Qc5"],["Kf6"],["Qd5"],["Ke7","Kg7","Kg6"],["Qc6"],["Kf7"],["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qd7"],["Kg8"],["Qe7"],["Kh8"],["Kc7"],["Kg8"],["Kd6"],["Kh8"],["Ke6"],["Kg8"],["Kf6"],["Kh8"],["Qg7#"]]},{"id":"queen","startingFen":"8/8/1Q6/6K1/4k3/8/8/8 w - - 0 1","seed":74002,"expectedLine":[["Qd6","Qc5"],["Kf3","Kd3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qd3","Qc4"],["Kc1","Ka1","Ka2"],["Qc3"],["Kb1"],["Qd2"],["Ka1"],["Kf4"],["Kb1"],["Ke3"],["Ka1"],["Kd3"],["Kb1"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/3K4/7Q/4k3/8/8/8/8 w - - 0 1","seed":74040,"expectedLine":[["Qc6"],["Kd4"],["Qe6"],["Kc5","Kd3","Kc3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qc6"],["Kb3"],["Qc5"],["Kb2"],["Qc4"],["Ka3","Kb1","Ka1"],["Qb5"],["Ka2"],["Qb4"],["Ka1"],["Kc6"],["Ka2"],["Kc5"],["Ka1"],["Kc4"],["Ka2"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/5k2/8/8/2K5/8/Q7/8 w - - 0 1","seed":74078,"expectedLine":[["Qe2"],["Kf6"],["Qe4"],["Kf7","Kg7","Kg5"],["Qf3"],["Kg6"],["Qf4"],["Kg7"],["Qf5"],["Kg8","Kh8","Kh6"],["Qf6"],["Kh7"],["Qg5"],["Kh8"],["Kd5"],["Kh7"],["Ke6"],["Kh8"],["Kf7"],["Kh7"],["Qg7#"]]},{"id":"queen","startingFen":"Q6K/5k2/8/8/8/8/8/8 w - - 0 1","seed":74116,"expectedLine":[["Qc6"],["Ke7"],["Kg7"],["Kd8"],["Qb7"],["Ke8"],["Qf7+"],["Kd8"],["Kf6"],["Kc8"],["Qe7"],["Kb8"],["Qd7"],["Ka8"],["Ke6"],["Kb8"],["Kd6"],["Ka8"],["Kc6"],["Kb8"],["Qb7#"]]},{"id":"queen","startingFen":"8/5k2/1Q6/8/8/5K2/8/8 w - - 0 1","seed":74154,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qe7"],["Kg8"],["Kg4"],["Kh8"],["Kg5"],["Kg8"],["Kg6"],["Kh8"],["Qg7#"]]}]`) as HardcodedEndgameLineFixture[];
+
+test("hardcoded endgame priority lines mate from random starts", () => {
+  const counts = new Map<EndgameId, number>();
+
+  HARDCODED_ENDGAME_LINE_FIXTURES.forEach((fixture) => {
+    counts.set(fixture.id, (counts.get(fixture.id) ?? 0) + 1);
+    assertSeededBestEndgameFixture(fixture);
+  });
+
+  (["knightAndBishop", "twoBishops", "rook", "queen"] as EndgameId[]).forEach(
+    (id) => {
+      assert.equal(counts.get(id), 8, id);
+    },
+  );
+});
 
 test("endgame registry uses expected training starts", () => {
   assert.equal(
@@ -371,6 +538,337 @@ test("non-rook and non-queen endgames choose legal deterministic moves", () => {
       Brain.getEndgameOpponentCandidates(Brain.getChess(chess.fen())).idealMoves,
     );
   }
+});
+
+test("short-circuit endgame selectors match full-sort semantics", () => {
+  const whiteCases: Array<{
+    id: EndgameId;
+    fen: string;
+    expected: () => string[];
+  }> = [
+    {
+      id: "rook",
+      fen: "8/8/8/2k5/8/R7/3K4/8 w - - 0 1",
+      expected: () => {
+        const fen = "8/8/8/2k5/8/R7/3K4/8 w - - 0 1";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreRookWhiteMove(fen, san),
+          Brain.compareRookWhiteScores,
+        );
+      },
+    },
+    {
+      id: "queen",
+      fen: "8/8/8/8/4k3/8/8/3QK3 w - - 0 1",
+      expected: () => {
+        const fen = "8/8/8/8/4k3/8/8/3QK3 w - - 0 1";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreQueenWhiteMove(fen, san),
+          Brain.compareQueenWhiteScores,
+        );
+      },
+    },
+    {
+      id: "twoBishops",
+      fen: "8/8/3BB3/8/5K2/3k4/8/8 w - - 10 6",
+      expected: () => {
+        const fen = "8/8/3BB3/8/5K2/3k4/8/8 w - - 10 6";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreTwoBishopsWhiteMove(fen, san),
+          Brain.compareTwoBishopsWhiteScores,
+        );
+      },
+    },
+    {
+      id: "knightAndBishop",
+      fen: "8/8/8/3NK3/2k5/2B5/8/8 w - - 72 37",
+      expected: () => {
+        const fen = "8/8/8/3NK3/2k5/2B5/8/8 w - - 72 37";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san, index) => ({
+            index,
+            ...Brain.scoreKnightAndBishopWhiteMove(fen, san),
+          }),
+          Brain.compareKnightAndBishopWhiteScores,
+        );
+      },
+    },
+    {
+      id: "twoKnightsVsPawn",
+      fen: getEndgame("twoKnightsVsPawn").fen,
+      expected: () => {
+        const fen = getEndgame("twoKnightsVsPawn").fen;
+        return fullSortBestPositionMoves(fen, Brain.getChess(fen).moves(), true);
+      },
+    },
+  ];
+
+  whiteCases.forEach(({ id, fen, expected }) => {
+    setEndgame(id);
+    assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), expected(), fen);
+  });
+
+  const knightBishopBlackCompare = (
+    a: ReturnType<typeof Brain.scoreKnightAndBishopOpponentPosition>,
+    b: ReturnType<typeof Brain.scoreKnightAndBishopOpponentPosition>,
+  ) =>
+    a.captureMinorPenalty - b.captureMinorPenalty ||
+    a.unprotectedMinorDistance - b.unprotectedMinorDistance ||
+    a.centerDistance - b.centerDistance ||
+    a.mobilityScore - b.mobilityScore ||
+    a.whiteKingDistanceScore - b.whiteKingDistanceScore ||
+    a.matingCornerManhattanScore - b.matingCornerManhattanScore;
+
+  const blackCases: Array<{
+    id: EndgameId;
+    fen: string;
+    expected: () => string[];
+  }> = [
+    {
+      id: "rook",
+      fen: "8/8/8/8/3kR3/8/8/4K3 b - - 0 1",
+      expected: () => {
+        const fen = "8/8/8/8/3kR3/8/8/4K3 b - - 0 1";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreRookBlackMove(fen, san),
+          Brain.compareRookBlackScores,
+        );
+      },
+    },
+    {
+      id: "queen",
+      fen: "8/8/8/8/3k4/8/8/3QK3 b - - 0 1",
+      expected: () => {
+        const fen = "8/8/8/8/3k4/8/8/3QK3 b - - 0 1";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreQueenBlackMove(fen, san),
+          Brain.compareQueenBlackScores,
+        );
+      },
+    },
+    {
+      id: "twoBishops",
+      fen: getEndgame("twoBishops").fen.replace(" w ", " b "),
+      expected: () => {
+        const fen = getEndgame("twoBishops").fen.replace(" w ", " b ");
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => Brain.scoreTwoBishopsBlackMove(fen, san),
+          Brain.compareTwoBishopsBlackScores,
+        );
+      },
+    },
+    {
+      id: "knightAndBishop",
+      fen: "4N3/8/3B4/4K3/8/5k2/8/8 b - - 11 6",
+      expected: () => {
+        const fen = "4N3/8/3B4/4K3/8/5k2/8/8 b - - 11 6";
+        return fullSortBestMoves(
+          Brain.getChess(fen).moves(),
+          (san) => {
+            const chess = Brain.getChess(fen);
+            chess.move(san);
+            return Brain.scoreKnightAndBishopOpponentPosition(chess.fen());
+          },
+          knightBishopBlackCompare,
+        );
+      },
+    },
+    {
+      id: "twoKnightsVsPawn",
+      fen: getEndgame("twoKnightsVsPawn").fen.replace(" w ", " b "),
+      expected: () => {
+        const fen = getEndgame("twoKnightsVsPawn").fen.replace(" w ", " b ");
+        return fullSortBestPositionMoves(fen, Brain.getChess(fen).moves(), false);
+      },
+    },
+  ];
+
+  blackCases.forEach(({ id, fen, expected }) => {
+    setEndgame(id);
+    assert.deepEqual(
+      Brain.getEndgameOpponentCandidates(Brain.getChess(fen)).idealMoves,
+      expected(),
+      fen,
+    );
+  });
+});
+
+test("knight-bishop priorities avoid allowing attacks on unprotected minors", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/8/1N6/2k1B3/7K/8/8/8 w - - 2 2";
+
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nc8").unprotectedMinorAttackScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bd4+").unprotectedMinorAttackScore,
+    0,
+  );
+  assert.ok(!Brain.getIdealEndgameWhiteMoves(fen).includes("Nc8"));
+});
+
+test("knight-bishop black priorities approach unprotected minors", () => {
+  setEndgame("knightAndBishop");
+  const chess = Brain.getChess(
+    "8/8/5k2/8/3K2B1/8/6N1/8 b - - 0 1",
+  );
+
+  assert.deepEqual(
+    Brain.getKnightAndBishopOpponentCandidates(chess, ["Kf7", "Kg6"])
+      .idealMoves,
+    ["Kg6"],
+  );
+});
+
+test("knight-bishop black prioritizes centralization before mating-corner distance", () => {
+  setEndgame("knightAndBishop");
+  const chess = Brain.getChess(
+    "4N3/8/3B4/4K3/8/5k2/8/8 b - - 11 6",
+  );
+
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(chess).idealMoves, [
+    "Ke3",
+  ]);
+});
+
+test("knight-bishop phase-one priorities follow the study plan", () => {
+  setEndgame("knightAndBishop");
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(
+      "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+    ),
+    ["Kd2"],
+  );
+
+  const shutDoorFen = "8/6k1/6N1/5B2/4K3/8/8/8 w - - 0 1";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(shutDoorFen, "Ke5")
+      .blackInwardEscapeCount,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(shutDoorFen, "Kf4")
+      .blackInwardEscapeCount,
+    1,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(shutDoorFen), ["Ke5"]);
+
+  const wManeuverFen = "7k/8/5KB1/6N1/8/8/8/8 w - - 0 1";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(wManeuverFen, "Be4")
+      .wManeuverSetupDistance,
+    0,
+  );
+  assert.ok(
+    Brain.scoreKnightAndBishopWhiteMove(wManeuverFen, "Nh7")
+      .wManeuverSetupDistance > 0,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(wManeuverFen), ["Be4"]);
+});
+
+test("knight-bishop phase-one immediately hands off to lookup", () => {
+  setEndgame("knightAndBishop");
+  const fen = "6k1/8/5KB1/6N1/8/8/8/8 w - - 0 1";
+
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nf7").phaseTwoEntryScore,
+    0,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Be4"]);
+});
+
+test("knight-bishop phase-one centralizes minors to avoid reversible loops", () => {
+  setEndgame("knightAndBishop");
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(
+      "8/8/8/3NK3/2k5/2B5/8/8 w - - 72 37",
+    ),
+    ["Bd4"],
+  );
+
+  const result = playKnightAndBishopSelfPlay(
+    "8/8/8/3NK3/1B6/3k4/8/8 w - - 70 36",
+  );
+  assert.notEqual(result.result, "loop-before-phase2", result.moves.join(" "));
+  assert.equal(result.phaseTwoReached, true);
+});
+
+test("knight-bishop phase-one kicks the king from the edge", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/8/5K2/5B1k/4N3/8/8/8 w - - 22 12";
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bg6+"]);
+  assert.equal(Brain.getEndgameReason(fen), "kick from edge");
+});
+
+test("knight-bishop phase-one reasons are defined", () => {
+  setEndgame("knightAndBishop");
+
+  assert.equal(
+    Brain.getEndgameReason(
+      "8/8/8/3NK3/1B6/3k4/8/8 w - - 70 36",
+    ),
+    "centralize pieces",
+  );
+  assert.equal(
+    Brain.getEndgameReason(
+      "8/8/8/3NK3/2k5/2B5/8/8 w - - 72 37",
+    ),
+    "centralize pieces",
+  );
+  assert.equal(
+    Brain.getEndgameReason(
+      "8/6k1/6N1/5B2/4K3/8/8/8 w - - 0 1",
+    ),
+    "shut the door",
+  );
+});
+
+test("knight-bishop phase-one reaches the guide handoff from edge cages", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/8/8/8/2KN4/k1B5/8/8 w - - 58 30";
+
+  const result = playKnightAndBishopSelfPlay(fen);
+  assert.notEqual(result.result, "loop-before-phase2", result.moves.join(" "));
+  assert.equal(result.phaseTwoReached, true);
+});
+
+test("knight-bishop phase uses the pre-move position and strict w-maneuver handoff", () => {
+  setEndgame("knightAndBishop");
+  const nonWManeuverNet = "8/8/8/3B4/N7/2K5/8/1k6 w - - 20 11";
+  assert.equal(Brain.getEndgamePhase(nonWManeuverNet), "1/2");
+
+  const wManeuver = "7k/8/5K2/4N3/4B3/8/8/8 b - - 27 14";
+  assert.equal(Brain.getEndgamePhase(wManeuver), "2/2");
+
+  const preMoveFen = "6k1/8/5KB1/6N1/8/8/8/8 w - - 0 1";
+  const chess = Brain.getChess(preMoveFen);
+  chess.move("Nf7");
+  assert.equal(Brain.getEndgamePhase(preMoveFen), "1/2");
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+  assert.equal(
+    Brain.getEndgameLogFields(preMoveFen, "Nf7", chess.fen()).endgame_phase,
+    "1/2",
+  );
+});
+
+test("knight-bishop phase-one smoke line reaches phase two", () => {
+  const fen = "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1";
+  const result = playKnightAndBishopSelfPlay(fen);
+
+  assert.equal(result.result, "mate", result.moves.join(" "));
+  assert.equal(result.phaseTwoReached, true);
+  assert.ok(result.plies <= 100, `${result.plies} plies from ${fen}`);
 });
 
 test("knight-bishop lookup chooses mating net moves", () => {

@@ -22,6 +22,7 @@
   --section-top-border: rgba(220, 200, 171, 0.09);
   --section-top-bg: linear-gradient(180deg, rgba(255, 248, 236, 0.06), rgba(255, 248, 236, 0.01));
   --section-inset: rgba(9, 12, 18, 0.18);
+  --board-phase-two-border: #7fc09a;
 }
 
 * {
@@ -94,10 +95,17 @@
 .board-absolute-layer { position: absolute; inset: 0; display: flex; }
 .board-shell {
   width: 100%;
-  border: 0.65rem solid;
+  height: 100%;
+  border: 0.9rem solid;
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 16px 36px rgba(67, 51, 25, 0.18);
+}
+
+.board-shell--phase-two {
+  box-shadow:
+    0 0 0 1px rgba(216, 242, 225, 0.18),
+    0 18px 38px rgba(63, 117, 85, 0.24);
 }
 
 .controls {
@@ -636,7 +644,7 @@
 @media (max-width: 360px) {
   .chess420-app { padding: 0.25rem; }
   .board-wrap { padding: 0.3rem; }
-  .board-shell { border-width: 0.45rem; }
+  .board-shell { border-width: 0.65rem; }
   .controls { padding: 0.65rem; }
   .summary-content { margin: 0.35rem 0.5rem 0.5rem; }
   .log-table { padding: 0.5rem; }
