@@ -113,6 +113,12 @@ test("endgame registry uses expected training starts", () => {
     getEndgame("knightAndBishop").fen,
     "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
   );
+  assert.deepEqual(getEndgame("knightAndBishop").study, {
+    id: "Swsb2uYm",
+    name: "Knight +  Bishop mate - Easy Guide",
+    source: "./studies/knight-and-bishop-mate-easy-guide.json",
+    initialFen: "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+  });
   assert.equal(getEndgame("rook").fen, "8/8/8/8/4k3/8/8/R3K3 w - - 0 1");
   assert.equal(getEndgame("queen").fen, "8/8/8/8/4k3/8/8/3QK3 w - - 0 1");
 });
@@ -233,6 +239,10 @@ test("queen white rules choose explicit best moves", () => {
     Brain.getIdealEndgameWhiteMoves("7k/8/8/6Q1/8/5K2/8/8 w - - 0 1"),
     ["Ke4", "Kf4", "Kg4"],
   );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/8/4K3/2Q5/8/1k6/8/8 w - - 2 2"),
+    ["Kd5"],
+  );
 });
 
 test("queen white rules avoid queen loss and stalemate", () => {
@@ -290,6 +300,14 @@ test("queen white rules keep walking the king once a two-square cage exists", ()
   );
 });
 
+test("queen cage detection requires both cage squares to be stable", () => {
+  setEndgame("queen");
+  const chess = Brain.getChess("1k6/3K4/8/2Q5/8/8/8/8 w - - 2 2");
+  chess.move("Qc7+");
+
+  assert.equal(Brain.getQueenTwoSquareCage(chess.fen()), null);
+});
+
 test("queen black rules choose explicit defensive moves", () => {
   setEndgame("queen");
 
@@ -311,7 +329,7 @@ test("queen best-move line from two-square cage walks to mate", () => {
   assertBestEndgameLineToMate(
     "queen",
     "8/8/8/8/8/3K4/3Q4/1k6 w - - 34 18",
-    [["Kc4", "Kc3"], "Ka1", "Kb3", "Kb1", "Qb2#"],
+    ["Kc3", "Ka1", "Qb2#"],
   );
 });
 
@@ -337,6 +355,14 @@ test("rook white rules choose explicit best moves", () => {
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/2k5/1R6/8/6K1/8/8 w - - 2 2"),
     ["Rh5"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/4k3/R7/8/2K5/8/8/8 w - - 12 7"),
+    ["Kd5"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("5R2/8/8/8/8/4K3/8/6k1 w - - 8 5"),
+    ["Ke2"],
   );
 });
 
@@ -405,11 +431,18 @@ test("rook black rules choose explicit defensive moves", () => {
 
   const re1 = Brain.getChess("8/8/8/4R3/3k4/8/5K2/8 w - - 4 3");
   re1.move("Re1");
-  assert.deepEqual(Brain.getEndgameOpponentCandidates(re1).idealMoves, ["Kd3"]);
+  assert.deepEqual(Brain.getEndgameOpponentCandidates(re1).idealMoves, ["Kd5", "Kd3"]);
 
   const kc4 = Brain.getChess("3k4/8/4R3/1K6/8/8/8/8 w - - 10 6");
   kc4.move("Kc4");
   assert.deepEqual(Brain.getEndgameOpponentCandidates(kc4).idealMoves, ["Kd7"]);
+
+  const kc5 = Brain.getChess("8/4k3/R7/8/2K5/8/8/8 w - - 12 7");
+  kc5.move("Kc5");
+  assert.deepEqual(
+    Brain.getEndgameOpponentCandidates(kc5).idealMoves.slice().sort(),
+    ["Kd7", "Kf7"],
+  );
 });
 
 test("rook black rules approach the rook before the center", () => {
@@ -417,7 +450,7 @@ test("rook black rules approach the rook before the center", () => {
   const chess = Brain.getChess("8/8/8/8/8/3k4/5R2/4K3 b - - 0 1");
   const candidates = Brain.getEndgameOpponentCandidates(chess);
 
-  assert.deepEqual(candidates.idealMoves, ["Ke3"]);
+  assert.deepEqual(candidates.idealMoves, ["Ke3", "Kc3"]);
 });
 
 test("rook best-move line from phase 2 waiting move reaches mate", () => {
@@ -431,15 +464,23 @@ test("rook best-move line from phase 2 waiting move reaches mate", () => {
       "Kb2",
       "Kc4",
       "Ka2",
-      "Rb3",
-      "Ka1",
-      "Rb5",
-      "Ka2",
+      "Kb4",
+      ["Kb1", "Ka1"],
+      "Rg2",
+      "Kc1",
       "Kc3",
-      "Ka1",
-      "Kc2",
-      "Ka2",
-      "Ra5#",
+      "Kd1",
+      "Kd3",
+      "Ke1",
+      "Ke3",
+      "Kf1",
+      "Ra2",
+      "Kg1",
+      "Kf3",
+      "Kh1",
+      "Kg3",
+      "Kg1",
+      "Ra1#",
     ],
   );
 });
@@ -513,11 +554,13 @@ test("endgame autoreply waits until after the white move is committed", async ()
 
   await wait(settings.REPLY_DELAY_MS + 25);
 
-  assert.equal(
-    Brain.getState().fen,
-    "8/4k3/1R6/8/8/4K3/8/8 w - - 2 2",
+  assert.ok(
+    [
+      "8/4k3/1R6/8/8/4K3/8/8 w - - 2 2",
+      "8/6k1/1R6/8/8/4K3/8/8 w - - 2 2",
+    ].includes(Brain.getState().fen),
   );
-  assert.equal(Brain.getState().logs[0].opponent_san, "Ke7");
+  assert.ok(["Ke7", "Kg7"].includes(Brain.getState().logs[0].opponent_san ?? ""));
 
   Brain.autoreplyRef = { current: { checked: false } } as typeof Brain.autoreplyRef;
   Brain.playEndgameMove("Rb7");

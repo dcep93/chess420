@@ -1,0 +1,2635 @@
+{
+  "study": {
+    "id": "Swsb2uYm",
+    "name": "Knight +  Bishop mate - Easy Guide",
+    "members": {
+      "adrianonunesfx": {
+        "user": {
+          "name": "AdrianoNunesFX",
+          "title": "CM",
+          "flair": "travel-places.wooden-ship",
+          "patron": true,
+          "patronColor": 10,
+          "id": "adrianonunesfx"
+        },
+        "role": "w"
+      }
+    },
+    "position": {
+      "chapterId": "CLwKB2AS",
+      "path": ""
+    },
+    "ownerId": "adrianonunesfx",
+    "settings": {
+      "computer": "everyone",
+      "explorer": "everyone",
+      "cloneable": "owner",
+      "shareable": "everyone",
+      "chat": "everyone",
+      "sticky": true,
+      "description": false
+    },
+    "visibility": "public",
+    "createdAt": 1579348636972,
+    "secondsSinceUpdate": 4028515,
+    "from": "scratch",
+    "likes": 253,
+    "flair": "objects.books",
+    "liked": false,
+    "features": {
+      "cloneable": false,
+      "shareable": true,
+      "chat": true,
+      "sticky": true
+    },
+    "topics": [],
+    "chapter": {
+      "id": "u8KybPFp",
+      "name": "Pushing the king away from the center",
+      "ownerId": "adrianonunesfx",
+      "setup": {
+        "variant": {
+          "key": "standard",
+          "name": "Standard"
+        },
+        "orientation": "white",
+        "fromFen": true
+      },
+      "tags": [],
+      "features": {
+        "computer": true,
+        "explorer": true
+      }
+    },
+    "chapters": [
+      {
+        "id": "CLwKB2AS",
+        "name": "Introduction",
+        "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1"
+      },
+      {
+        "id": "Y1b3B83P",
+        "name": "How to follow this study",
+        "fen": "8/8/8/8/3k4/8/8/4KBN1 w - - 0 1"
+      },
+      {
+        "id": "Op02N3vm",
+        "name": "Just the basics",
+        "fen": "3k4/8/8/3BK3/8/5N2/8/8 w - - 0 1"
+      },
+      {
+        "id": "Ciw4JtFH",
+        "name": "Checkmate pattern 1",
+        "fen": "1k6/1B6/1KN5/8/8/8/8/8 b - - 0 1"
+      },
+      {
+        "id": "mxXcxI7W",
+        "name": "Checkmate pattern 2",
+        "fen": "k7/8/NKB5/8/8/8/8/8 b - - 0 1"
+      },
+      {
+        "id": "yKLGvHjO",
+        "name": "Not forced checkmate 1",
+        "fen": "k7/2B5/KN6/8/8/8/8/8 b - - 0 1"
+      },
+      {
+        "id": "D0nu95V1",
+        "name": "Not forced checkmate 2",
+        "fen": "3k4/3B4/3KN3/8/8/8/8/8 b - - 0 1"
+      },
+      {
+        "id": "vLEU5EIZ",
+        "name": "Delétang's Triangles",
+        "fen": "7k/8/8/8/8/2N5/1B6/K7 w - - 0 1"
+      },
+      {
+        "id": "UPO0Hvx2",
+        "name": "Key position",
+        "fen": "5k2/5N2/5K2/5B2/8/8/8/8 w - - 0 1"
+      },
+      {
+        "id": "QYqUKWXt",
+        "name": "The \"W-maneuver\" aka THE MOST IMPORTANT CHAPTER",
+        "fen": "5k2/5N1B/5K2/8/8/8/8/8 b - - 0 1"
+      },
+      {
+        "id": "u8KybPFp",
+        "name": "Pushing the king away from the center",
+        "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1"
+      },
+      {
+        "id": "lHY48vs7",
+        "name": "Now with the dark squared bishop!",
+        "fen": "8/8/8/3k4/8/8/8/2B1KN2 w - - 0 1"
+      },
+      {
+        "id": "YQTIkq5l",
+        "name": "An instructive mistake",
+        "fen": "1NB1K3/8/8/8/4k3/8/8/8 w - - 0 1"
+      },
+      {
+        "id": "TFkAuQh5",
+        "name": "Can you do it in 180?",
+        "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+        "orientation": "black"
+      },
+      {
+        "id": "X1JXHGPW",
+        "name": "Don't twist your head on this one!",
+        "fen": "8/8/8/8/4B3/1NK5/k7/8 w - - 0 1"
+      },
+      {
+        "id": "03IjjI6V",
+        "name": "Interactive Lesson!",
+        "fen": "5k2/5N2/5K2/5B2/8/8/8/8 w - - 0 1"
+      },
+      {
+        "id": "J6J84npg",
+        "name": "Test yourself 1",
+        "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1"
+      },
+      {
+        "id": "hnOEbvY6",
+        "name": "Test yourself 2",
+        "fen": "8/8/8/3k4/8/8/8/2B1K1N1 w - - 0 1"
+      },
+      {
+        "id": "x9IT9lUr",
+        "name": "What if he/she doesn't play the best moves?",
+        "fen": "8/8/8/2k5/8/8/7B/6NK w - - 0 1",
+        "players": [
+          {
+            "name": "AdrianoNunesFX"
+          },
+          {
+            "name": "austinconnor07"
+          }
+        ],
+        "status": "1-0"
+      },
+      {
+        "id": "Y6oNhl5Y",
+        "name": "The end...?"
+      }
+    ],
+    "showRatings": true
+  },
+  "data": {
+    "game": {
+      "id": "synthetic",
+      "variant": {
+        "key": "standard",
+        "name": "Standard",
+        "short": "Std"
+      },
+      "opening": null,
+      "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+      "turns": 0,
+      "player": "white",
+      "status": {
+        "id": 10,
+        "name": "created"
+      },
+      "initialFen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1"
+    },
+    "player": {
+      "id": null,
+      "color": "white"
+    },
+    "opponent": {
+      "color": "black",
+      "ai": null
+    },
+    "orientation": "white",
+    "pref": {
+      "animationDuration": 300.0,
+      "coords": 1,
+      "moveEvent": 2,
+      "showCaptured": true,
+      "keyboardMove": false,
+      "highlight": true,
+      "destination": true
+    },
+    "userAnalysis": true,
+    "treeParts": [
+      {
+        "ply": 0,
+        "fen": "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+        "comments": [
+          {
+            "id": "QkNE",
+            "text": "Now that you know what positions you have to achieve, it's time to reach it from the starting position. I'll not show the most precise moves (even if I was a computer and knew them all by heart), but rather the the most natural ones. It's here where you have to avoid spending too much tempi, because the 50-move-draw rule is out there. This is all about piece coordination and controlling territory.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "e1",
+            "dest": "f6"
+          },
+          {
+            "brush": "yellow",
+            "orig": "g1",
+            "dest": "f7"
+          },
+          {
+            "brush": "green",
+            "orig": "e1",
+            "dest": "c3"
+          },
+          {
+            "brush": "yellow",
+            "orig": "g1",
+            "dest": "c2"
+          }
+        ]
+      },
+      {
+        "ply": 1,
+        "fen": "8/8/8/3k4/8/8/3K4/5BN1 b - - 1 1",
+        "uci": "e1d2",
+        "san": "Kd2",
+        "comments": [
+          {
+            "id": "8GrS",
+            "text": "First step: Put your king on the center! There are no concrete moves to follow as we saw in the \"W-maneuver\", only ideas, and you can do this at your own. I'll show some of them to help you. Remember the keys squares!",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 2,
+        "fen": "8/8/8/4k3/8/8/3K4/5BN1 w - - 2 2",
+        "uci": "d5e5",
+        "san": "Ke5"
+      },
+      {
+        "ply": 3,
+        "fen": "8/8/8/4k3/8/4K3/8/5BN1 b - - 3 2",
+        "uci": "d2e3",
+        "san": "Ke3"
+      },
+      {
+        "ply": 4,
+        "fen": "8/8/8/3k4/8/4K3/8/5BN1 w - - 4 3",
+        "uci": "e5d5",
+        "san": "Kd5",
+        "comments": [
+          {
+            "id": "SUxG",
+            "text": "Black is preventing the White's king to come closer, so you have to use your pieces to make progress. Take away the central squares from Black!",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 5,
+        "fen": "8/8/8/3k4/8/4KN2/8/5B2 b - - 5 3",
+        "uci": "g1f3",
+        "san": "Nf3"
+      },
+      {
+        "ply": 6,
+        "fen": "8/8/8/2k5/8/4KN2/8/5B2 w - - 6 4",
+        "uci": "d5c5",
+        "san": "Kc5"
+      },
+      {
+        "ply": 7,
+        "fen": "8/8/8/2k5/4K3/5N2/8/5B2 b - - 7 4",
+        "uci": "e3e4",
+        "san": "Ke4"
+      },
+      {
+        "ply": 8,
+        "fen": "8/8/3k4/8/4K3/5N2/8/5B2 w - - 8 5",
+        "uci": "c5d6",
+        "san": "Kd6"
+      },
+      {
+        "ply": 9,
+        "fen": "8/8/3k4/8/2B1K3/5N2/8/8 b - - 9 5",
+        "uci": "f1c4",
+        "san": "Bc4",
+        "comments": [
+          {
+            "id": "MwOk",
+            "text": "Now the second piece comes in the play. The centralization of your pieces generally is enough to push away the enemy king. You have to keep control of squares without giving Black a \"outflanking\" opportunity.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 10,
+        "fen": "8/8/8/2k5/2B1K3/5N2/8/8 w - - 10 6",
+        "uci": "d6c5",
+        "san": "Kc5"
+      },
+      {
+        "ply": 11,
+        "fen": "8/8/8/2kB4/4K3/5N2/8/8 b - - 11 6",
+        "uci": "c4d5",
+        "san": "Bd5"
+      },
+      {
+        "ply": 12,
+        "fen": "8/8/3k4/3B4/4K3/5N2/8/8 w - - 12 7",
+        "uci": "c5d6",
+        "san": "Kd6"
+      },
+      {
+        "ply": 13,
+        "fen": "8/8/3k4/3B4/3K4/5N2/8/8 b - - 13 7",
+        "uci": "e4d4",
+        "san": "Kd4",
+        "comments": [
+          {
+            "id": "zFOC",
+            "text": "Remember this pattern. It's often used the in \"King + Bishop pair vs King\" checkmate procedure. You're kicking Black king further back. Sometimes, you can even use a bishop defended by a knight.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "red",
+            "orig": "c6"
+          },
+          {
+            "brush": "red",
+            "orig": "c5"
+          },
+          {
+            "brush": "red",
+            "orig": "d5"
+          },
+          {
+            "brush": "red",
+            "orig": "e5"
+          },
+          {
+            "brush": "red",
+            "orig": "e6"
+          }
+        ]
+      },
+      {
+        "ply": 14,
+        "fen": "8/3k4/8/3B4/3K4/5N2/8/8 w - - 14 8",
+        "uci": "d6d7",
+        "san": "Kd7",
+        "children": [
+          {
+            "ply": 15,
+            "fen": "8/3k4/8/3BK3/8/5N2/8/8 b - - 15 8",
+            "uci": "d4e5",
+            "san": "Ke5",
+            "children": [
+              {
+                "ply": 16,
+                "fen": "8/4k3/8/3BK3/8/5N2/8/8 w - - 16 9",
+                "uci": "d7e7",
+                "san": "Ke7",
+                "children": [
+                  {
+                    "ply": 17,
+                    "fen": "8/4k3/8/3BK3/3N4/8/8/8 b - - 17 9",
+                    "uci": "f3d4",
+                    "san": "Nd4",
+                    "children": [
+                      {
+                        "ply": 18,
+                        "fen": "5k2/8/8/3BK3/3N4/8/8/8 w - - 18 10",
+                        "uci": "e7f8",
+                        "san": "Kf8",
+                        "children": [
+                          {
+                            "ply": 19,
+                            "fen": "5k2/8/5K2/3B4/3N4/8/8/8 b - - 19 10",
+                            "uci": "e5f6",
+                            "san": "Kf6",
+                            "children": [
+                              {
+                                "ply": 20,
+                                "fen": "4k3/8/5K2/3B4/3N4/8/8/8 w - - 20 11",
+                                "uci": "f8e8",
+                                "san": "Ke8",
+                                "children": [
+                                  {
+                                    "ply": 21,
+                                    "fen": "4k3/8/5K2/3B1N2/8/8/8/8 b - - 21 11",
+                                    "uci": "d4f5",
+                                    "san": "Nf5",
+                                    "comments": [
+                                      {
+                                        "id": "i9Vs",
+                                        "text": "Some players had difficulties in situations like this in human play. What should we do if the enemy king goes to the \"right corner\" by itself? How to trap it in this situation? The answer: It's already trapped, we're going to do a \"W-maneuver\" via another route. It's worth spending some time (if you have any) to accurately determine the correct sequence of moves.",
+                                        "by": {
+                                          "id": "adrianonunesfx",
+                                          "name": "CM AdrianoNunesFX"
+                                        }
+                                      }
+                                    ],
+                                    "children": [
+                                      {
+                                        "ply": 22,
+                                        "fen": "3k4/8/5K2/3B1N2/8/8/8/8 w - - 22 12",
+                                        "uci": "e8d8",
+                                        "san": "Kd8",
+                                        "children": [
+                                          {
+                                            "ply": 23,
+                                            "fen": "3k4/8/4K3/3B1N2/8/8/8/8 b - - 23 12",
+                                            "uci": "f6e6",
+                                            "san": "Ke6",
+                                            "shapes": [
+                                              {
+                                                "brush": "green",
+                                                "orig": "e7"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "f7"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "d7"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "d6"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "c6"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "b7"
+                                              },
+                                              {
+                                                "brush": "green",
+                                                "orig": "a8"
+                                              }
+                                            ],
+                                            "children": [
+                                              {
+                                                "ply": 24,
+                                                "fen": "8/2k5/4K3/3B1N2/8/8/8/8 w - - 24 13",
+                                                "uci": "d8c7",
+                                                "san": "Kc7",
+                                                "children": [
+                                                  {
+                                                    "ply": 25,
+                                                    "fen": "8/2k5/4K3/3B4/3N4/8/8/8 b - - 25 13",
+                                                    "uci": "f5d4",
+                                                    "san": "Nd4",
+                                                    "shapes": [
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "c6"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "d7"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "d6"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "b5"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "b7"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "a8"
+                                                      },
+                                                      {
+                                                        "brush": "green",
+                                                        "orig": "c8"
+                                                      }
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "ply": 26,
+                                                        "fen": "8/8/1k2K3/3B4/3N4/8/8/8 w - - 26 14",
+                                                        "uci": "c7b6",
+                                                        "san": "Kb6",
+                                                        "children": [
+                                                          {
+                                                            "ply": 27,
+                                                            "fen": "8/8/1k1K4/3B4/3N4/8/8/8 b - - 27 14",
+                                                            "uci": "e6d6",
+                                                            "san": "Kd6",
+                                                            "shapes": [
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "c4"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "b3"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "a2"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "c2"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "b5"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "c6"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "b7"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "a8"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "c5"
+                                                              },
+                                                              {
+                                                                "brush": "green",
+                                                                "orig": "c7"
+                                                              }
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "ply": 28,
+                                                                "fen": "8/8/3K4/k2B4/3N4/8/8/8 w - - 28 15",
+                                                                "uci": "b6a5",
+                                                                "san": "Ka5",
+                                                                "children": [
+                                                                  {
+                                                                    "ply": 29,
+                                                                    "fen": "8/8/8/k1KB4/3N4/8/8/8 b - - 29 15",
+                                                                    "uci": "d6c5",
+                                                                    "san": "Kc5",
+                                                                    "shapes": [
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "b4"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "b5"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "b6"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "c6"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "b7"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "a8"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "b3"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "a2"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "c2"
+                                                                      },
+                                                                      {
+                                                                        "brush": "green",
+                                                                        "orig": "c4"
+                                                                      }
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "ply": 30,
+                                                                        "fen": "8/8/8/2KB4/k2N4/8/8/8 w - - 30 16",
+                                                                        "uci": "a5a4",
+                                                                        "san": "Ka4",
+                                                                        "children": [
+                                                                          {
+                                                                            "ply": 31,
+                                                                            "fen": "8/8/8/1NKB4/k7/8/8/8 b - - 31 16",
+                                                                            "uci": "d4b5",
+                                                                            "san": "Nb5",
+                                                                            "shapes": [
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "a3"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "b3"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "b4"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "b5"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "b6"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "b7"
+                                                                              },
+                                                                              {
+                                                                                "brush": "green",
+                                                                                "orig": "a8"
+                                                                              }
+                                                                            ],
+                                                                            "children": [
+                                                                              {
+                                                                                "ply": 32,
+                                                                                "fen": "8/8/8/kNKB4/8/8/8/8 w - - 32 17",
+                                                                                "uci": "a4a5",
+                                                                                "san": "Ka5",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "ply": 33,
+                                                                                    "fen": "8/8/8/kNK5/8/1B6/8/8 b - - 33 17",
+                                                                                    "uci": "d5b3",
+                                                                                    "san": "Bb3",
+                                                                                    "comments": [
+                                                                                      {
+                                                                                        "id": "N9zg",
+                                                                                        "text": "The most difficult part here is that we have to set up \"W-maneuver\" from the middle stage. You have to be confident in the power of your pieces: Even you're not intending it, they already take control of many squares. The enemy king can't run away! Just adapt your plans!",
+                                                                                        "by": {
+                                                                                          "id": "adrianonunesfx",
+                                                                                          "name": "AdrianoNunesFX"
+                                                                                        }
+                                                                                      }
+                                                                                    ],
+                                                                                    "shapes": [
+                                                                                      {
+                                                                                        "brush": "green",
+                                                                                        "orig": "a4"
+                                                                                      },
+                                                                                      {
+                                                                                        "brush": "green",
+                                                                                        "orig": "b4"
+                                                                                      },
+                                                                                      {
+                                                                                        "brush": "green",
+                                                                                        "orig": "b5"
+                                                                                      },
+                                                                                      {
+                                                                                        "brush": "green",
+                                                                                        "orig": "b6"
+                                                                                      },
+                                                                                      {
+                                                                                        "brush": "green",
+                                                                                        "orig": "a7"
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 15,
+        "fen": "8/3k4/8/3BN3/3K4/8/8/8 b - - 15 8",
+        "uci": "f3e5",
+        "san": "Ne5+"
+      },
+      {
+        "ply": 16,
+        "fen": "8/4k3/8/3BN3/3K4/8/8/8 w - - 16 9",
+        "uci": "d7e7",
+        "san": "Ke7"
+      },
+      {
+        "ply": 17,
+        "fen": "8/4k3/8/3BN3/4K3/8/8/8 b - - 17 9",
+        "uci": "d4e4",
+        "san": "Ke4",
+        "comments": [
+          {
+            "id": "4xeW",
+            "text": "These are human moves.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 18,
+        "fen": "8/8/5k2/3BN3/4K3/8/8/8 w - - 18 10",
+        "uci": "e7f6",
+        "san": "Kf6"
+      },
+      {
+        "ply": 19,
+        "fen": "8/8/2N2k2/3B4/4K3/8/8/8 b - - 19 10",
+        "uci": "e5c6",
+        "san": "Nc6"
+      },
+      {
+        "ply": 20,
+        "fen": "8/6k1/2N5/3B4/4K3/8/8/8 w - - 20 11",
+        "uci": "f6g7",
+        "san": "Kg7"
+      },
+      {
+        "ply": 21,
+        "fen": "8/6k1/2N5/3B1K2/8/8/8/8 b - - 21 11",
+        "uci": "e4f5",
+        "san": "Kf5",
+        "comments": [
+          {
+            "id": "Psj2",
+            "text": "Whenever you have the chance to take more squares away from the enemy, do it! In this case, White already has control over one of the key squares.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 22,
+        "fen": "7k/8/2N5/3B1K2/8/8/8/8 w - - 22 12",
+        "uci": "g7h8",
+        "san": "Kh8"
+      },
+      {
+        "ply": 23,
+        "fen": "7k/8/2N2K2/3B4/8/8/8/8 b - - 23 12",
+        "uci": "f5f6",
+        "san": "Kf6",
+        "comments": [
+          {
+            "id": "FExz",
+            "text": "The key square for White's king!",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "f6"
+          }
+        ]
+      },
+      {
+        "ply": 24,
+        "fen": "8/7k/2N2K2/3B4/8/8/8/8 w - - 24 13",
+        "uci": "h8h7",
+        "san": "Kh7"
+      },
+      {
+        "ply": 25,
+        "fen": "8/7k/5K2/3BN3/8/8/8/8 b - - 25 13",
+        "uci": "c6e5",
+        "san": "Ne5",
+        "children": [
+          {
+            "ply": 26,
+            "fen": "8/8/5K1k/3BN3/8/8/8/8 w - - 26 14",
+            "uci": "h7h6",
+            "san": "Kh6",
+            "comments": [
+              {
+                "id": "GM9z",
+                "text": "Sometimes, you might want to force the enemy king back to the \"wrong corner\" in order to set up the w-maneuver properly.",
+                "by": {
+                  "id": "adrianonunesfx",
+                  "name": "CM AdrianoNunesFX"
+                }
+              }
+            ],
+            "children": [
+              {
+                "ply": 27,
+                "fen": "8/8/5K1k/4N3/8/5B2/8/8 b - - 27 14",
+                "uci": "d5f3",
+                "san": "Bf3",
+                "children": [
+                  {
+                    "ply": 28,
+                    "fen": "8/7k/5K2/4N3/8/5B2/8/8 w - - 28 15",
+                    "uci": "h6h7",
+                    "san": "Kh7",
+                    "children": [
+                      {
+                        "ply": 29,
+                        "fen": "8/7k/5K2/8/6N1/5B2/8/8 b - - 29 15",
+                        "uci": "e5g4",
+                        "san": "Ng4",
+                        "children": [
+                          {
+                            "ply": 30,
+                            "fen": "6k1/8/5K2/8/6N1/5B2/8/8 w - - 30 16",
+                            "uci": "h7g8",
+                            "san": "Kg8",
+                            "children": [
+                              {
+                                "ply": 31,
+                                "fen": "6k1/8/5K2/8/4B1N1/8/8/8 b - - 31 16",
+                                "uci": "f3e4",
+                                "san": "Be4",
+                                "comments": [
+                                  {
+                                    "id": "YPed",
+                                    "text": "And here we go, with Ne5 and Nf7 coming next, it's easy from here.",
+                                    "by": {
+                                      "id": "adrianonunesfx",
+                                      "name": "CM AdrianoNunesFX"
+                                    }
+                                  }
+                                ],
+                                "shapes": [
+                                  {
+                                    "brush": "green",
+                                    "orig": "g4",
+                                    "dest": "e5"
+                                  },
+                                  {
+                                    "brush": "green",
+                                    "orig": "e5",
+                                    "dest": "f7"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 26,
+        "fen": "7k/8/5K2/3BN3/8/8/8/8 w - - 26 14",
+        "uci": "h7h8",
+        "san": "Kh8"
+      },
+      {
+        "ply": 27,
+        "fen": "7k/8/5K2/4N3/4B3/8/8/8 b - - 27 14",
+        "uci": "d5e4",
+        "san": "Be4",
+        "comments": [
+          {
+            "id": "tk9c",
+            "text": "Now we got our dream position, and from here the checkmate should be pretty much automatic if you got the hang of it. Let me emphasize that this isn't the most precise move order, the idea is to reach our \"dream position\" by using a coherent and easy plan, there is no use to be fancy when your clock is ticking here.\n\nGenerally speaking, in less than 20 moves you're able to put the enemy king on the edge of the board. If you don't fool around from the starting position, you'll always be able to checkmate in less than 40 moves.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "h7"
+          },
+          {
+            "brush": "green",
+            "orig": "g7"
+          },
+          {
+            "brush": "green",
+            "orig": "f7"
+          },
+          {
+            "brush": "green",
+            "orig": "g6"
+          },
+          {
+            "brush": "green",
+            "orig": "e6"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          }
+        ]
+      },
+      {
+        "ply": 28,
+        "fen": "6k1/8/5K2/4N3/4B3/8/8/8 w - - 28 15",
+        "uci": "h8g8",
+        "san": "Kg8"
+      },
+      {
+        "ply": 29,
+        "fen": "6k1/5N2/5K2/8/4B3/8/8/8 b - - 29 15",
+        "uci": "e5f7",
+        "san": "Nf7",
+        "comments": [
+          {
+            "id": "ghKe",
+            "text": "The knight reachs its key square! And of course, it cuts off the h8 square.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "h8"
+          },
+          {
+            "brush": "green",
+            "orig": "g7"
+          },
+          {
+            "brush": "green",
+            "orig": "h7"
+          },
+          {
+            "brush": "green",
+            "orig": "f7"
+          }
+        ]
+      },
+      {
+        "ply": 30,
+        "fen": "5k2/5N2/5K2/8/4B3/8/8/8 w - - 30 16",
+        "uci": "g8f8",
+        "san": "Kf8"
+      },
+      {
+        "ply": 31,
+        "fen": "5k2/5N1B/5K2/8/8/8/8/8 b - - 31 16",
+        "uci": "e4h7",
+        "san": "Bh7",
+        "comments": [
+          {
+            "id": "aHzf",
+            "text": "Looks familiar?",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "glyphs": [
+          {
+            "id": 1,
+            "symbol": "!",
+            "name": "Good move"
+          }
+        ]
+      },
+      {
+        "ply": 32,
+        "fen": "4k3/5N1B/5K2/8/8/8/8/8 w - - 32 17",
+        "uci": "f8e8",
+        "san": "Ke8"
+      },
+      {
+        "ply": 33,
+        "fen": "4k3/7B/5K2/4N3/8/8/8/8 b - - 33 17",
+        "uci": "f7e5",
+        "san": "Ne5",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "f7"
+          },
+          {
+            "brush": "green",
+            "orig": "g8"
+          },
+          {
+            "brush": "green",
+            "orig": "g7"
+          }
+        ],
+        "children": [
+          {
+            "ply": 34,
+            "fen": "5k2/7B/5K2/4N3/8/8/8/8 w - - 34 18",
+            "uci": "e8f8",
+            "san": "Kf8",
+            "children": [
+              {
+                "ply": 35,
+                "fen": "5k2/3N3B/5K2/8/8/8/8/8 b - - 35 18",
+                "uci": "e5d7",
+                "san": "Nd7+",
+                "shapes": [
+                  {
+                    "brush": "green",
+                    "orig": "g7"
+                  },
+                  {
+                    "brush": "green",
+                    "orig": "g8"
+                  },
+                  {
+                    "brush": "green",
+                    "orig": "f7"
+                  },
+                  {
+                    "brush": "green",
+                    "orig": "e7"
+                  },
+                  {
+                    "brush": "green",
+                    "orig": "f8"
+                  }
+                ],
+                "children": [
+                  {
+                    "ply": 36,
+                    "fen": "4k3/3N3B/5K2/8/8/8/8/8 w - - 36 19",
+                    "uci": "f8e8",
+                    "san": "Ke8",
+                    "children": [
+                      {
+                        "ply": 37,
+                        "fen": "4k3/3N3B/4K3/8/8/8/8/8 b - - 37 19",
+                        "uci": "f6e6",
+                        "san": "Ke6",
+                        "comments": [
+                          {
+                            "id": "QNia",
+                            "text": "Not the most accurate defense by Black, this will help you to accelerate your plan.",
+                            "by": {
+                              "id": "adrianonunesfx",
+                              "name": "AdrianoNunesFX"
+                            }
+                          }
+                        ],
+                        "shapes": [
+                          {
+                            "brush": "green",
+                            "orig": "f8"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "f7"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "g8"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "e7"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "d7"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 34,
+        "fen": "3k4/7B/5K2/4N3/8/8/8/8 w - - 34 18",
+        "uci": "e8d8",
+        "san": "Kd8",
+        "comments": [
+          {
+            "id": "RIPF",
+            "text": "Now we'll again set up the cage.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 35,
+        "fen": "3k4/7B/4K3/4N3/8/8/8/8 b - - 35 18",
+        "uci": "f6e6",
+        "san": "Ke6",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "f7"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "c6"
+          }
+        ]
+      },
+      {
+        "ply": 36,
+        "fen": "8/2k4B/4K3/4N3/8/8/8/8 w - - 36 19",
+        "uci": "d8c7",
+        "san": "Kc7"
+      },
+      {
+        "ply": 37,
+        "fen": "8/2kN3B/4K3/8/8/8/8/8 b - - 37 19",
+        "uci": "e5d7",
+        "san": "Nd7",
+        "glyphs": [
+          {
+            "id": 1,
+            "symbol": "!",
+            "name": "Good move"
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "c5"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          }
+        ]
+      },
+      {
+        "ply": 38,
+        "fen": "8/1k1N3B/4K3/8/8/8/8/8 w - - 38 20",
+        "uci": "c7b7",
+        "san": "Kb7"
+      },
+      {
+        "ply": 39,
+        "fen": "8/1k1N4/4K3/8/8/3B4/8/8 b - - 39 20",
+        "uci": "h7d3",
+        "san": "Bd3",
+        "comments": [
+          {
+            "id": "juDB",
+            "text": "The cage is created! Knight on d7, bishop on d3, both on light squares. If you read chapter 10 carefully, you'll already know why.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "c4"
+          },
+          {
+            "brush": "green",
+            "orig": "b5"
+          },
+          {
+            "brush": "green",
+            "orig": "a6"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          },
+          {
+            "brush": "green",
+            "orig": "c5"
+          },
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          }
+        ]
+      },
+      {
+        "ply": 40,
+        "fen": "8/3N4/2k1K3/8/8/3B4/8/8 w - - 40 21",
+        "uci": "b7c6",
+        "san": "Kc6",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "c4"
+          },
+          {
+            "brush": "green",
+            "orig": "b5"
+          },
+          {
+            "brush": "green",
+            "orig": "a6"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          },
+          {
+            "brush": "green",
+            "orig": "c5"
+          }
+        ]
+      },
+      {
+        "ply": 41,
+        "fen": "8/3N4/2k1K3/8/2B5/8/8/8 b - - 41 21",
+        "uci": "d3c4",
+        "san": "Bc4",
+        "comments": [
+          {
+            "id": "1DPc",
+            "text": "We have to waste a tempo to give Black the move and tighten the cage.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "glyphs": [
+          {
+            "id": 1,
+            "symbol": "!",
+            "name": "Good move"
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "c5"
+          },
+          {
+            "brush": "green",
+            "orig": "b5"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          },
+          {
+            "brush": "green",
+            "orig": "a6"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          }
+        ]
+      },
+      {
+        "ply": 42,
+        "fen": "8/2kN4/4K3/8/2B5/8/8/8 w - - 42 22",
+        "uci": "c6c7",
+        "san": "Kc7",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "b5"
+          },
+          {
+            "brush": "green",
+            "orig": "c5"
+          },
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "a6"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          }
+        ]
+      },
+      {
+        "ply": 43,
+        "fen": "8/2kN4/4K3/1B6/8/8/8/8 b - - 43 22",
+        "uci": "c4b5",
+        "san": "Bb5",
+        "comments": [
+          {
+            "id": "oBgR",
+            "text": "Taking c6 away! It's becoming easier...",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "c6"
+          },
+          {
+            "brush": "green",
+            "orig": "b6"
+          },
+          {
+            "brush": "green",
+            "orig": "a6"
+          },
+          {
+            "brush": "green",
+            "orig": "c5"
+          },
+          {
+            "brush": "green",
+            "orig": "d6"
+          },
+          {
+            "brush": "green",
+            "orig": "d5"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          }
+        ]
+      },
+      {
+        "ply": 44,
+        "fen": "3k4/3N4/4K3/1B6/8/8/8/8 w - - 44 23",
+        "uci": "c7d8",
+        "san": "Kd8"
+      },
+      {
+        "ply": 45,
+        "fen": "3k4/3N4/3K4/1B6/8/8/8/8 b - - 45 23",
+        "uci": "e6d6",
+        "san": "Kd6",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "c8"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          }
+        ]
+      },
+      {
+        "ply": 46,
+        "fen": "4k3/3N4/3K4/1B6/8/8/8/8 w - - 46 24",
+        "uci": "d8e8",
+        "san": "Ke8",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d8"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "f8"
+          }
+        ]
+      },
+      {
+        "ply": 47,
+        "fen": "4k3/3N4/3K4/8/2B5/8/8/8 b - - 47 24",
+        "uci": "b5c4",
+        "san": "Bc4",
+        "comments": [
+          {
+            "id": "ZCoS",
+            "text": "Remember this important move. Whenever Black \"threatens\" to escape, shut the door!",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "glyphs": [
+          {
+            "id": 1,
+            "symbol": "!",
+            "name": "Good move"
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "f7"
+          },
+          {
+            "brush": "green",
+            "orig": "e6"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "f8"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "red",
+            "orig": "e8",
+            "dest": "f7"
+          }
+        ]
+      },
+      {
+        "ply": 48,
+        "fen": "3k4/3N4/3K4/8/2B5/8/8/8 w - - 48 25",
+        "uci": "e8d8",
+        "san": "Kd8"
+      },
+      {
+        "ply": 49,
+        "fen": "3k4/3N1B2/3K4/8/8/8/8/8 b - - 49 25",
+        "uci": "c4f7",
+        "san": "Bf7",
+        "comments": [
+          {
+            "id": "f9j7",
+            "text": "The same pattern again.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 50,
+        "fen": "2k5/3N1B2/3K4/8/8/8/8/8 w - - 50 26",
+        "uci": "d8c8",
+        "san": "Kc8"
+      },
+      {
+        "ply": 51,
+        "fen": "2k5/5B2/3K4/2N5/8/8/8/8 b - - 51 26",
+        "uci": "d7c5",
+        "san": "Nc5",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "e8"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "b7"
+          }
+        ],
+        "children": [
+          {
+            "ply": 52,
+            "fen": "1k6/5B2/3K4/2N5/8/8/8/8 w - - 52 27",
+            "uci": "c8b8",
+            "san": "Kb8",
+            "children": [
+              {
+                "ply": 53,
+                "fen": "1k6/8/3KB3/2N5/8/8/8/8 b - - 53 27",
+                "uci": "f7e6",
+                "san": "Be6",
+                "children": [
+                  {
+                    "ply": 54,
+                    "fen": "k7/8/3KB3/2N5/8/8/8/8 w - - 54 28",
+                    "uci": "b8a8",
+                    "san": "Ka8",
+                    "children": [
+                      {
+                        "ply": 55,
+                        "fen": "k7/8/2K1B3/2N5/8/8/8/8 b - - 55 28",
+                        "uci": "d6c6",
+                        "san": "Kc6",
+                        "comments": [
+                          {
+                            "id": "SlXj",
+                            "text": "As we saw before, this line doesn't help Black either.",
+                            "by": {
+                              "id": "adrianonunesfx",
+                              "name": "AdrianoNunesFX"
+                            }
+                          }
+                        ],
+                        "shapes": [
+                          {
+                            "brush": "green",
+                            "orig": "a6"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "b6"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "b7"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "c8"
+                          },
+                          {
+                            "brush": "green",
+                            "orig": "c7"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 52,
+        "fen": "3k4/5B2/3K4/2N5/8/8/8/8 w - - 52 27",
+        "uci": "c8d8",
+        "san": "Kd8"
+      },
+      {
+        "ply": 53,
+        "fen": "3k4/1N3B2/3K4/8/8/8/8/8 b - - 53 27",
+        "uci": "c5b7",
+        "san": "Nb7+",
+        "comments": [
+          {
+            "id": "WRwR",
+            "text": "Whenever the Black king tries to move away from the \"right corner\", continuing with the \"W-maneuver\" is enough to put it back right to the track.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d8"
+          },
+          {
+            "brush": "green",
+            "orig": "e8"
+          },
+          {
+            "brush": "green",
+            "orig": "e7"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          }
+        ]
+      },
+      {
+        "ply": 54,
+        "fen": "2k5/1N3B2/3K4/8/8/8/8/8 w - - 54 28",
+        "uci": "d8c8",
+        "san": "Kc8"
+      },
+      {
+        "ply": 55,
+        "fen": "2k5/1N3B2/2K5/8/8/8/8/8 b - - 55 28",
+        "uci": "d6c6",
+        "san": "Kc6",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "b7"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "d8"
+          }
+        ]
+      },
+      {
+        "ply": 56,
+        "fen": "1k6/1N3B2/2K5/8/8/8/8/8 w - - 56 29",
+        "uci": "c8b8",
+        "san": "Kb8"
+      },
+      {
+        "ply": 57,
+        "fen": "1k6/1N3B2/1K6/8/8/8/8/8 b - - 57 29",
+        "uci": "c6b6",
+        "san": "Kb6",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "b7"
+          },
+          {
+            "brush": "green",
+            "orig": "a7"
+          }
+        ]
+      },
+      {
+        "ply": 58,
+        "fen": "2k5/1N3B2/1K6/8/8/8/8/8 w - - 58 30",
+        "uci": "b8c8",
+        "san": "Kc8"
+      },
+      {
+        "ply": 59,
+        "fen": "2k5/1N6/1K2B3/8/8/8/8/8 b - - 59 30",
+        "uci": "f7e6",
+        "san": "Be6+",
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "d8"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "b7"
+          },
+          {
+            "brush": "green",
+            "orig": "a7"
+          },
+          {
+            "brush": "green",
+            "orig": "c8"
+          }
+        ]
+      },
+      {
+        "ply": 60,
+        "fen": "1k6/1N6/1K2B3/8/8/8/8/8 w - - 60 31",
+        "uci": "c8b8",
+        "san": "Kb8",
+        "comments": [
+          {
+            "id": "KIP0",
+            "text": "Now it's time to mate! You can spend some seconds here to calculate the mate, but with practice, you'll know how to apply it without needing to think.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "shapes": [
+          {
+            "brush": "green",
+            "orig": "d7"
+          },
+          {
+            "brush": "green",
+            "orig": "c8"
+          },
+          {
+            "brush": "green",
+            "orig": "c7"
+          },
+          {
+            "brush": "green",
+            "orig": "d8"
+          },
+          {
+            "brush": "green",
+            "orig": "b7"
+          },
+          {
+            "brush": "green",
+            "orig": "a7"
+          }
+        ],
+        "children": [
+          {
+            "ply": 61,
+            "fen": "1k6/1N1B4/1K6/8/8/8/8/8 b - - 61 31",
+            "uci": "e6d7",
+            "san": "Bd7",
+            "shapes": [
+              {
+                "brush": "green",
+                "orig": "c8"
+              },
+              {
+                "brush": "green",
+                "orig": "c7"
+              },
+              {
+                "brush": "green",
+                "orig": "b7"
+              },
+              {
+                "brush": "green",
+                "orig": "a7"
+              }
+            ],
+            "children": [
+              {
+                "ply": 62,
+                "fen": "k7/1N1B4/1K6/8/8/8/8/8 w - - 62 32",
+                "uci": "b8a8",
+                "san": "Ka8",
+                "children": [
+                  {
+                    "ply": 63,
+                    "fen": "k7/3B4/1K6/2N5/8/8/8/8 b - - 63 32",
+                    "uci": "b7c5",
+                    "san": "Nc5",
+                    "children": [
+                      {
+                        "ply": 64,
+                        "fen": "1k6/3B4/1K6/2N5/8/8/8/8 w - - 64 33",
+                        "uci": "a8b8",
+                        "san": "Kb8",
+                        "children": [
+                          {
+                            "ply": 65,
+                            "fen": "1k6/3B4/NK6/8/8/8/8/8 b - - 65 33",
+                            "uci": "c5a6",
+                            "san": "Na6+",
+                            "comments": [
+                              {
+                                "id": "ceLu",
+                                "text": "Don't forget: Just play this knight move when it comes WITH CHECK!",
+                                "by": {
+                                  "id": "adrianonunesfx",
+                                  "name": "AdrianoNunesFX"
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "ply": 66,
+                                "fen": "k7/3B4/NK6/8/8/8/8/8 w - - 66 34",
+                                "uci": "b8a8",
+                                "san": "Ka8",
+                                "children": [
+                                  {
+                                    "ply": 67,
+                                    "fen": "k7/8/NKB5/8/8/8/8/8 b - - 67 34",
+                                    "uci": "d7c6",
+                                    "san": "Bc6#"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 61,
+        "fen": "1k6/8/1K2B3/2N5/8/8/8/8 b - - 61 31",
+        "uci": "b7c5",
+        "san": "Nc5"
+      },
+      {
+        "ply": 62,
+        "fen": "k7/8/1K2B3/2N5/8/8/8/8 w - - 62 32",
+        "uci": "b8a8",
+        "san": "Ka8",
+        "children": [
+          {
+            "ply": 63,
+            "fen": "k1B5/8/1K6/2N5/8/8/8/8 b - - 63 32",
+            "uci": "e6c8",
+            "san": "Bc8",
+            "children": [
+              {
+                "ply": 64,
+                "fen": "1kB5/8/1K6/2N5/8/8/8/8 w - - 64 33",
+                "uci": "a8b8",
+                "san": "Kb8",
+                "children": [
+                  {
+                    "ply": 65,
+                    "fen": "1k6/8/BK6/2N5/8/8/8/8 b - - 65 33",
+                    "uci": "c8a6",
+                    "san": "Ba6",
+                    "children": [
+                      {
+                        "ply": 66,
+                        "fen": "k7/8/BK6/2N5/8/8/8/8 w - - 66 34",
+                        "uci": "b8a8",
+                        "san": "Ka8",
+                        "children": [
+                          {
+                            "ply": 67,
+                            "fen": "k7/1B6/1K6/2N5/8/8/8/8 b - - 67 34",
+                            "uci": "a6b7",
+                            "san": "Bb7+",
+                            "children": [
+                              {
+                                "ply": 68,
+                                "fen": "1k6/1B6/1K6/2N5/8/8/8/8 w - - 68 35",
+                                "uci": "a8b8",
+                                "san": "Kb8",
+                                "children": [
+                                  {
+                                    "ply": 69,
+                                    "fen": "1k6/1B6/NK6/8/8/8/8/8 b - - 69 35",
+                                    "uci": "c5a6",
+                                    "san": "Na6#",
+                                    "comments": [
+                                      {
+                                        "id": "hFqQ",
+                                        "text": "I mentioned this line earlier in this study. It's one move longer.",
+                                        "by": {
+                                          "id": "adrianonunesfx",
+                                          "name": "AdrianoNunesFX"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "ply": 63,
+            "fen": "k7/8/NK2B3/8/8/8/8/8 b - - 63 32",
+            "uci": "c5a6",
+            "san": "Na6",
+            "comments": [
+              {
+                "id": "X9w6",
+                "text": "Stalemate. Make sure the knight is coming with check.",
+                "by": {
+                  "id": "adrianonunesfx",
+                  "name": "CM AdrianoNunesFX"
+                }
+              }
+            ],
+            "glyphs": [
+              {
+                "id": 4,
+                "symbol": "??",
+                "name": "Blunder"
+              },
+              {
+                "id": 10,
+                "symbol": "=",
+                "name": "Equal position"
+              }
+            ]
+          },
+          {
+            "ply": 63,
+            "fen": "k7/8/1K6/2N5/8/7B/8/8 b - - 63 32",
+            "uci": "e6h3",
+            "san": "Bh3",
+            "comments": [
+              {
+                "id": "O7jy",
+                "text": "This is just a matter of taste. Like we've seen earlier, GM Alexandra Kosteniuk preferred to checkmate from the distance.",
+                "by": {
+                  "id": "adrianonunesfx",
+                  "name": "CM AdrianoNunesFX"
+                }
+              }
+            ],
+            "children": [
+              {
+                "ply": 64,
+                "fen": "1k6/8/1K6/2N5/8/7B/8/8 w - - 64 33",
+                "uci": "a8b8",
+                "san": "Kb8",
+                "children": [
+                  {
+                    "ply": 65,
+                    "fen": "1k6/8/NK6/8/8/7B/8/8 b - - 65 33",
+                    "uci": "c5a6",
+                    "san": "Na6+",
+                    "children": [
+                      {
+                        "ply": 66,
+                        "fen": "k7/8/NK6/8/8/7B/8/8 w - - 66 34",
+                        "uci": "b8a8",
+                        "san": "Ka8",
+                        "children": [
+                          {
+                            "ply": 67,
+                            "fen": "k7/8/NK6/8/8/8/6B1/8 b - - 67 34",
+                            "uci": "h3g2",
+                            "san": "Bg2#",
+                            "comments": [
+                              {
+                                "id": "SQtK",
+                                "text": "Quite pretty too.",
+                                "by": {
+                                  "id": "adrianonunesfx",
+                                  "name": "CM AdrianoNunesFX"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ply": 63,
+        "fen": "k7/3B4/1K6/2N5/8/8/8/8 b - - 63 32",
+        "uci": "e6d7",
+        "san": "Bd7",
+        "comments": [
+          {
+            "id": "FHah",
+            "text": "Avoiding stalemate.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ],
+        "glyphs": [
+          {
+            "id": 1,
+            "symbol": "!",
+            "name": "Good move"
+          }
+        ]
+      },
+      {
+        "ply": 64,
+        "fen": "1k6/3B4/1K6/2N5/8/8/8/8 w - - 64 33",
+        "uci": "a8b8",
+        "san": "Kb8"
+      },
+      {
+        "ply": 65,
+        "fen": "1k6/3B4/NK6/8/8/8/8/8 b - - 65 33",
+        "uci": "c5a6",
+        "san": "Na6+",
+        "comments": [
+          {
+            "id": "0qJo",
+            "text": "Now it comes with CHECK! Make sure that happens.",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ]
+      },
+      {
+        "ply": 66,
+        "fen": "k7/3B4/NK6/8/8/8/8/8 w - - 66 34",
+        "uci": "b8a8",
+        "san": "Ka8"
+      },
+      {
+        "ply": 67,
+        "fen": "k7/8/NKB5/8/8/8/8/8 b - - 67 34",
+        "uci": "d7c6",
+        "san": "Bc6#",
+        "comments": [
+          {
+            "id": "2rwf",
+            "text": "34 moves, with small inaccuracies from both sides. From the worst winning position, the superior side mates within ~33 moves with optimal play. But we're not engines, and it's not necessary to be one. No one with the bare king would be such a great defender to find ways to extend the defeat for two or three moves. Believe in yourself!",
+            "by": {
+              "id": "adrianonunesfx",
+              "name": "CM AdrianoNunesFX"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "tagTypes": "White,WhiteElo,WhiteTitle,WhiteTeam,WhiteFideId,Black,BlackElo,BlackTitle,BlackTeam,BlackFideId,TimeControl,Date,Result,Termination,Site,Event,Round,Board,Annotator,GameId",
+  "userId": "dcep93",
+  "chat": {
+    "data": {
+      "id": "Swsb2uYm",
+      "name": "Chat room",
+      "lines": [
+        {
+          "u": "chessmaster512",
+          "t": "first!"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Guys, don't forget to tell me if you any of find mistakes, specially in the \"interactive lesson\".",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "It's easy to something pass by me unnoticed, since I did all this alone.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "norla",
+          "t": "I struggled with the official tutorial based on deletang, because I felt they skipped a lot of \"what if he does this\"",
+          "pc": 10
+        },
+        {
+          "u": "norla",
+          "t": "Managed to learn this method, thanks a bunch!",
+          "pc": 10
+        },
+        {
+          "u": "norla",
+          "t": "One thing I'm still not confident about is phase 1, where you push king into wrong corner. What do if he retreats to edge or right corner",
+          "pc": 10
+        },
+        {
+          "u": "norla",
+          "t": "and tries to outflank you?",
+          "pc": 10
+        },
+        {
+          "u": "Chessguy1010",
+          "t": "i have no clue about any of this"
+        },
+        {
+          "u": "Chessguy1010",
+          "t": "in test yourself one"
+        },
+        {
+          "u": "Chessguy1010",
+          "t": "how get king in da corner"
+        },
+        {
+          "u": "Chessguy1010",
+          "t": "he always runs away"
+        },
+        {
+          "u": "RickRenegade",
+          "t": "https://www.youtube.com/watch?v=7OGAiz5p_L4&t=449s",
+          "f": "smileys.smiling-face-with-sunglasses"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "I'll update the study soon, with more ideas in the 11th chapter.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "It will be easier if I see how you guys are playing it, so I'll be able to come up with good ideas to solve the problem.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Send to me the PGNs of your tries against the engine, I'll check them out carefully.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "hitsujyun",
+          "t": "Really good study! I also love KNB vs K.",
+          "f": "nature.bird"
+        },
+        {
+          "u": "hitsujyun",
+          "t": "I usually move Nd7 > f6 > d5 and create cage in chapter 10 ( 7.Nf6 Kc7 8.Nd5+ Kd8 9.Kd6 Kc8 10.Ke7 not best but my pattern ).",
+          "f": "nature.bird"
+        },
+        {
+          "u": "hitsujyun",
+          "t": "I wrote articles about KNB vs K( from part1 to 7 ).  https://chesski.blogspot.com/2012/08/k-n-b-vs-k.html",
+          "f": "nature.bird"
+        },
+        {
+          "u": "hitsujyun",
+          "t": "It's written in japanese, however I'm happy if diagrams give  you ideas ( especially part 5, 6 and 7 ).",
+          "f": "nature.bird"
+        },
+        {
+          "u": "schruv",
+          "t": "Chapter 9 - Key position: b1-h7 diagonal rather than a2-h7",
+          "f": "objects.nut-and-bolt"
+        },
+        {
+          "u": "Rubrum",
+          "t": "Correct chapter 9 has a typo."
+        },
+        {
+          "u": "victorpaschoal",
+          "t": "Thank you very much, nice method!!! learned in less than 2 hours... Just need to practice some more to be a little faster!!"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Thanks guys! I corrected them now!",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "this study is bad chapter 16 Be4 also works"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "just need control some squares chapter 17"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "and reach chapter 16 position"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "white ke6 nd7 bh7 kb7 this varition is possible at chapter 16"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "Bd3 Kc6 Bc4 +-"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "after kc7 Bb5 or Be4 same position"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "opps Bb5 only"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "because Kd8 Nc5! Kc7 Na4! Kd8 kd6+-"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "Bb7 Nd7 Kb6 Ka8 mate  well known mate pattern"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "test yourself  3 just 1 move  slower"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "hardest position is 8/8/8/6B1/8/8/4k3/1K5N b - - 0 1"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "first push king made blockade"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "control opposite color ( bishop) corner"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "test yourself 3"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "would be more harder because white pieces are so good just white king in corner"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "some impromant thinks here ıf you have white color bishop ıf black king at a1 corner control knight at c2 don't block white color bisohp"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "not forced checkmates are possible"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "not forced mate 2 possible"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "example white be2 ke3 Nf4 black kf1 black to move ıf ke1 Nd3 mate"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "triangulation or waiting move is possible at some positions"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "turkyem021 I'll add a even harder position in a new chapter.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "turkyem021 Call the entire study as \"bad\" because there are even more quicker ways to checkmate in some positions is somewhat strange,",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Because I made several warnings about other ways along the study. I wanted to be coherent on it, I used the easier plan, as the title says.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "I allowed the engine for the users to see alternative lines if they want to do so. I'm pretty sure that you used it too.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Anyway, I appreciate some of your suggestions, and I'll add one of them in the study as I said before.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "K1k1B3/8/8/8/8/8/7N/8 w -- 0 1   Delétang's triangle method is not used in study but it's not impormant  not forced checkmates are useful so"
+        },
+        {
+          "u": "turkiyem021",
+          "t": "metimes"
+        },
+        {
+          "u": "adu711",
+          "t": "At first it actually is really hard"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Indeed. But once you mastered, you'll be able to handle this very quickly.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Thanks for +100 likes, guys! I'm very happy, I wasn't expecting this! Thank you very much!",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "knightsrobe",
+          "t": "sorry, I am not understanding how you can implement this pattern without stalemate first"
+        },
+        {
+          "u": "knightsrobe",
+          "t": "its the knight making check but he was already stalemate, no?"
+        },
+        {
+          "u": "knightsrobe",
+          "t": "Oh wait I see now, ok very good"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Don't worry, I understand. ;-D",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "sosuspicious",
+          "t": "I don't understand how to prevent the repetition draw"
+        },
+        {
+          "u": "JoeLagw",
+          "t": "Finally a schematic that I can easily memorize. Thanks for pointing out the key positions.",
+          "f": "food-drink.beer-mug"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "I appreciate your comment! Thank you!",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "max123PL",
+          "t": "I tried many times to learn it but now I finally got it",
+          "f": "nature.fox"
+        },
+        {
+          "u": "Isacote",
+          "t": "hola"
+        },
+        {
+          "u": "Isacote",
+          "t": "hello"
+        },
+        {
+          "u": "Arpan_Jn",
+          "t": "Thanks a lot. The way u taught the W-maneuver was really good!!"
+        },
+        {
+          "u": "s_mith",
+          "t": "excellent guide, taught me better than any video or article"
+        },
+        {
+          "u": "ssk64",
+          "t": "Hi brother, appreciated the hardwork. My suggestion is to include step by step process mentioned in the book \"100 Endgames You Must Know\"\"",
+          "f": "activity.lichess-bullet"
+        },
+        {
+          "u": "steddye",
+          "t": "Thanks, I successfully did the interactive lesson but I need to  more practice but is really a good start thnx"
+        },
+        {
+          "u": "chicootanque",
+          "t": "muito fixe adriano bg mano"
+        },
+        {
+          "u": "stawstack",
+          "t": "Thanks!"
+        },
+        {
+          "u": "thiruuk",
+          "t": "you are legend!. Thank you for the hard work to create guide for dummy like me."
+        },
+        {
+          "u": "Felix_Reiter",
+          "t": "Great tutorial"
+        },
+        {
+          "u": "Felix_Reiter",
+          "t": "Amazing"
+        },
+        {
+          "u": "GusJacob9",
+          "t": "Thanks for your work and effort to this ."
+        },
+        {
+          "u": "feliziann",
+          "t": "thx i was actually able to checkmate"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "Thanks a lot, guys!",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "March 26 update: Lots of text completely rewritten, typos fixed and other improvements.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "AdrianoNunesFX",
+          "t": "*March 2026, hehe, another typo.",
+          "pc": 10,
+          "f": "travel-places.wooden-ship",
+          "title": "CM"
+        },
+        {
+          "u": "exa456",
+          "t": "Thank you for this guide"
+        }
+      ],
+      "resourceType": "study",
+      "resourceId": "study/Swsb2uYm",
+      "userId": "dcep93",
+      "loginRequired": true
+    },
+    "writeable": true,
+    "public": true,
+    "permissions": {
+      "local": false
+    }
+  },
+  "socketUrl": "/study/Swsb2uYm/socket/v6",
+  "socketVersion": 0,
+  "explorer": {
+    "endpoint": "https://explorer.lichess.org",
+    "tablebaseEndpoint": "https://tablebase.lichess.org",
+    "showRatings": true
+  },
+  "externalEngineEndpoint": "https://engine.lichess.ovh"
+}

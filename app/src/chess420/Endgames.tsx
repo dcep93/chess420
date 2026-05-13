@@ -9,6 +9,12 @@ export type EndgameType = {
   id: EndgameId;
   label: string;
   fen: string;
+  study?: {
+    id: string;
+    name: string;
+    source: string;
+    initialFen: string;
+  };
 };
 
 export const ENDGAMES: EndgameType[] = [
@@ -16,6 +22,12 @@ export const ENDGAMES: EndgameType[] = [
     id: "knightAndBishop",
     label: "Knight and Bishop",
     fen: "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+    study: {
+      id: "Swsb2uYm",
+      name: "Knight +  Bishop mate - Easy Guide",
+      source: "./studies/knight-and-bishop-mate-easy-guide.json",
+      initialFen: "8/8/8/3k4/8/8/8/4KBN1 w - - 0 1",
+    },
   },
   {
     id: "twoBishops",
