@@ -1,6 +1,6 @@
 import React from "react";
 import Brain, { View } from "./Brain";
-import { ENDGAMES, type EndgameId } from "./Endgames";
+import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
 import StorageW from "./StorageW";
 
 export function Header() {
@@ -21,8 +21,12 @@ export function Header() {
           }}
         >
           <option value="">select endgame</option>
-          {ENDGAMES.map((endgame) => (
-            <option key={endgame.id} value={endgame.id}>
+          {ENDGAME_OPTIONS.map((endgame) => (
+            <option
+              key={endgame.id}
+              value={endgame.id}
+              disabled={"disabled" in endgame && endgame.disabled}
+            >
               {endgame.label}
             </option>
           ))}

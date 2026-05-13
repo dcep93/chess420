@@ -1,9 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { type Square } from "chess.js";
 
 import Brain, { View } from "../src/chess420/Brain";
 import { Header } from "../src/chess420/Controls";
-import { ENDGAMES, getEndgame, type EndgameId } from "../src/chess420/Endgames";
+import {
+  ENDGAME_OPTIONS,
+  ENDGAMES,
+  getBaseEndgame,
+  getEndgame,
+  type EndgameId,
+} from "../src/chess420/Endgames";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 
@@ -20,6 +27,8 @@ type TestElement = {
   type?: unknown;
   props?: {
     children?: unknown;
+    disabled?: boolean;
+    value?: string;
   };
 };
 
@@ -41,6 +50,14 @@ function getChildrenValue(node: unknown): unknown[] {
 function hasElementType(node: unknown, type: string): boolean {
   if (!isTestElement(node)) return false;
   return node.type === type || getChildren(node).some((child) => hasElementType(child, type));
+}
+
+function findElementsByType(node: unknown, type: string): TestElement[] {
+  if (!isTestElement(node)) return [];
+  const matches = node.type === type ? [node] : [];
+  return matches.concat(
+    getChildren(node).flatMap((child) => findElementsByType(child, type)),
+  );
 }
 
 function textContent(node: unknown): string {
@@ -70,6 +87,43 @@ function assertLegalSans(fen: string, sans: string[]) {
   const legalMoves = Brain.getChess(fen).moves();
   assert.ok(sans.length > 0);
   sans.forEach((san) => assert.ok(legalMoves.includes(san), san));
+}
+
+function lookupEntryFen(key: string): string {
+  return `${key.split(" ")[0]} w - - 0 1`;
+}
+
+function transformLookupEntryFen(
+  key: string,
+  transformName: string,
+): string {
+  const transform = Brain.getSquareTransform(transformName);
+  const boardFen = Brain.boardFenFromPlacements(
+    Brain.getEndgamePiecePlacements(lookupEntryFen(key)).map((piece) => ({
+      ...piece,
+      square: Brain.transformSquare(piece.square, transform),
+    })),
+  );
+  return `${boardFen} w - - 0 1`;
+}
+
+function getMoveSan(fen: string, from: Square, to: Square): string {
+  const chess = Brain.getChess(fen);
+  const move = chess.move({ from, to });
+  assert.ok(move, `${from}-${to} should be legal in ${fen}`);
+  return move.san;
+}
+
+function transformedFenSet(fen: string): Set<string> {
+  return new Set(
+    Brain.SQUARE_TRANSFORMS.map((transform) =>
+      Brain.getRandomTransformedEndgameFenWithTransform(fen, transform),
+    ),
+  );
+}
+
+function transformedFenSets(fens: string[]): Set<string> {
+  return new Set(fens.flatMap((fen) => [...transformedFenSet(fen)]));
 }
 
 type ExpectedEndgameBestMoves = string | string[];
@@ -143,7 +197,23 @@ test("selected and invalid endgame routes are handled", () => {
   assert.equal(Brain.endgameId, "rook");
   assert.equal(Brain.isLegalEndgameStart(Brain.getInitialState().fen), true);
 
+  assert.equal(assignBrainRoute("/endgames/rook+"), true);
+  assert.equal(Brain.view, View.endgame);
+  assert.equal(Brain.endgameId, "rook+");
+  assert.equal(Brain.isLegalEndgameStart(Brain.getInitialState().fen), true);
+
+  assert.equal(assignBrainRoute("/endgames/queen+"), true);
+  assert.equal(Brain.endgameId, "queen+");
+
+  assert.equal(assignBrainRoute("/endgames/twoBishops+"), true);
+  assert.equal(Brain.endgameId, "twoBishops+");
+
+  assert.equal(assignBrainRoute("/endgames/knightAndBishop+"), true);
+  assert.equal(Brain.endgameId, "knightAndBishop+");
+
   assert.equal(assignBrainRoute("/endgames/nope"), false);
+  assert.equal(assignBrainRoute("/endgames/twoKnightsVsPawn"), false);
+  assert.equal(assignBrainRoute("/endgames/twoKnightsVsPawn+"), false);
 });
 
 test("endgame dropdown is only shown in endgame mode", () => {
@@ -161,7 +231,28 @@ test("endgame dropdown is only shown in endgame mode", () => {
   header = Header();
   assert.equal(hasElementType(header, "select"), true);
   assert.match(textContent(header), /select endgame/);
+  assert.match(textContent(header), /Rook \+/);
+  assert.match(textContent(header), /Queen \+/);
+  assert.match(textContent(header), /Two Bishops \+/);
+  assert.match(textContent(header), /Knight and Bishop \+/);
+  assert.match(textContent(header), /Two Knights vs Pawn \+/);
   assert.doesNotMatch(textContent(header), /home/);
+
+  const options = findElementsByType(header, "option");
+  assert.deepEqual(
+    options.map((option) => option.props?.value),
+    ["", ...ENDGAME_OPTIONS.map((endgame) => endgame.id)],
+  );
+  assert.equal(
+    options.find((option) => option.props?.value === "twoKnightsVsPawn")?.props
+      ?.disabled,
+    true,
+  );
+  assert.equal(
+    options.find((option) => option.props?.value === "twoKnightsVsPawn+")?.props
+      ?.disabled,
+    true,
+  );
 });
 
 test("piece-count guard detects impossible endgame positions", () => {
@@ -180,13 +271,17 @@ test("piece-count guard detects impossible endgame positions", () => {
 test("random endgame starts keep the same material in legal positions", () => {
   for (const id of [
     "knightAndBishop",
+    "knightAndBishop+",
     "twoBishops",
+    "twoBishops+",
     "twoKnightsVsPawn",
     "rook",
+    "rook+",
     "queen",
+    "queen+",
   ] as const) {
     const fen = Brain.getRandomEndgameFen(id);
-    const expectedPieces = Brain.getEndgamePieces(getEndgame(id).fen)
+    const expectedPieces = Brain.getEndgamePieces(getBaseEndgame(id).fen)
       .map((piece) => `${piece.color}${piece.type}`)
       .sort();
     const actualPieces = Brain.getEndgamePieces(fen)
@@ -198,6 +293,60 @@ test("random endgame starts keep the same material in legal positions", () => {
   }
 });
 
+test("plus endgame starts are transformed tactical starts", () => {
+  for (const id of [
+    "knightAndBishop+",
+    "twoBishops+",
+    "rook+",
+    "queen+",
+  ] as const) {
+    const endgame = getEndgame(id);
+    const plusFens = endgame.plusFens ?? [endgame.plusFen!];
+    const expectedFens = transformedFenSets(plusFens);
+
+    if (id === "twoBishops+") {
+      assert.equal(expectedFens.size, 16);
+    }
+
+    for (let index = 0; index < 20; index++) {
+      const fen = Brain.getRandomEndgameFen(id);
+      assert.equal(expectedFens.has(fen), true, `${id}: ${fen}`);
+      assert.equal(Brain.isLegalEndgameStart(fen), true, id);
+    }
+  }
+});
+
+test("plus endgames use base move logic", () => {
+  for (const [plusId, baseId] of [
+    ["knightAndBishop+", "knightAndBishop"],
+    ["twoBishops+", "twoBishops"],
+    ["rook+", "rook"],
+    ["queen+", "queen"],
+  ] as const) {
+    for (const fen of getEndgame(plusId).plusFens ?? [getEndgame(plusId).plusFen!]) {
+      setEndgame(baseId);
+      const baseWhiteMoves = Brain.getIdealEndgameWhiteMoves(fen);
+      setEndgame(plusId);
+
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), baseWhiteMoves);
+      assertLegalSans(fen, Brain.getIdealEndgameWhiteMoves(fen));
+    }
+  }
+});
+
+test("random two-bishop starts use opposite-colored bishops", () => {
+  for (let index = 0; index < 50; index++) {
+    const fen = Brain.getRandomEndgameFen("twoBishops");
+    const bishopColors = Brain.getChess(fen)
+      .board()
+      .flat()
+      .filter((piece) => piece?.color === "w" && piece.type === "b")
+      .map((piece) => Brain.squareColor(piece!.square));
+
+    assert.deepEqual(bishopColors.sort(), [0, 1]);
+  }
+});
+
 test("every endgame has a comparable position score", () => {
   for (const endgame of ENDGAMES) {
     setEndgame(endgame.id);
@@ -205,7 +354,7 @@ test("every endgame has a comparable position score", () => {
   }
 });
 
-test("non-rook and non-queen endgames use generic legal deterministic moves", () => {
+test("non-rook and non-queen endgames choose legal deterministic moves", () => {
   for (const endgame of ENDGAMES.filter(
     (endgame) => endgame.id !== "rook" && endgame.id !== "queen",
   )) {
@@ -224,6 +373,278 @@ test("non-rook and non-queen endgames use generic legal deterministic moves", ()
   }
 });
 
+test("two-bishop lookup chooses exact mating phase moves", () => {
+  setEndgame("twoBishops");
+
+  const cases: Array<[string, string[]]> = [
+    ["4k3/8/4K3/3BB3/8/8/8/8 w - - 38 20", ["Bc7"]],
+    ["5k2/2B5/4K3/3B4/8/8/8/8 w - - 40 21", ["Kf6"]],
+    ["4k3/2B5/5K2/3B4/8/8/8/8 w - - 42 22", ["Bc6+"]],
+    ["5k2/2B5/2B2K2/8/8/8/8/8 w - - 44 23", ["Bd6+"]],
+    ["6k1/8/2BB1K2/8/8/8/8/8 w - - 46 24", ["Kg6"]],
+    ["7k/8/2BB2K1/8/8/8/8/8 w - - 48 25", ["Bd7"]],
+    ["6k1/3B4/3B2K1/8/8/8/8/8 w - - 50 26", ["Be6+"]],
+    ["7k/8/3BB1K1/8/8/8/8/8 w - - 52 27", ["Be5#"]],
+    ["3k4/8/4K3/3BB3/8/8/8/8 w - - 44 23", ["Bd6"]],
+    ["4k3/8/3BK3/3B4/8/8/8/8 w - - 46 24", ["Bc7"]],
+  ];
+
+  for (const [fen, moves] of cases) {
+    assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), moves, fen);
+  }
+});
+
+test("two-bishop lookup accepts moves through every board symmetry", () => {
+  setEndgame("twoBishops");
+
+  for (const entry of Brain.TWO_BISHOPS_LOOKUP_ENTRIES) {
+    for (const transform of Brain.SQUARE_TRANSFORMS) {
+      const inverseTransform = Brain.getSquareTransform(transform.inverseName);
+      const fen = transformLookupEntryFen(entry.key, inverseTransform.name);
+      const from = Brain.transformSquare(entry.from, inverseTransform);
+      const to = Brain.transformSquare(entry.to, inverseTransform);
+      const expectedSan = getMoveSan(fen, from, to);
+
+      assert.ok(
+        Brain.getIdealEndgameWhiteMoves(fen).includes(expectedSan),
+        `${entry.key} via ${transform.name}: ${expectedSan}`,
+      );
+    }
+  }
+});
+
+test("two-bishop lookup positions are phase two", () => {
+  setEndgame("twoBishops");
+  const lines = [
+    {
+      fen: "4k3/8/4K3/3BB3/8/8/8/8 w - - 38 20",
+      moves: [
+        "Bc7",
+        "Kf8",
+        "Kf6",
+        "Ke8",
+        "Bc6+",
+        "Kf8",
+        "Bd6+",
+        "Kg8",
+        "Kg6",
+        "Kh8",
+        "Bd7",
+        "Kg8",
+        "Be6+",
+        "Kh8",
+        "Be5#",
+      ],
+    },
+    {
+      fen: "3k4/8/4K3/3BB3/8/8/8/8 w - - 44 23",
+      moves: ["Bd6", "Ke8", "Bc7", "Kf8", "Kf6"],
+    },
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(line.fen);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    for (const san of line.moves) {
+      chess.move(san);
+      assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+    }
+  }
+
+  assert.equal(
+    Brain.getEndgamePhase(getEndgame("twoBishops").fen),
+    "1/2",
+  );
+});
+
+test("two-bishop lookup accepts additional transcript moves", () => {
+  setEndgame("twoBishops");
+  const lines = [
+    {
+      fen: "4k3/8/3K4/3BB3/8/8/8/8 w - - 44 23",
+      moves: [
+        "Be6",
+        "Kf8",
+        "Bf6",
+        "Ke8",
+        "Bg7",
+        "Kd8",
+        "Bf7",
+        "Kc8",
+        "Kc6",
+        "Kb8",
+        "Be6",
+        "Ka8",
+        "Kb6",
+        "Kb8",
+        "Be5+",
+        "Ka8",
+        "Bd5#",
+      ],
+    },
+    {
+      fen: "1k6/5BB1/2K5/8/8/8/8/8 w - - 54 28",
+      moves: ["Be6", "Ka7", "Bc3", "Ka6"],
+    },
+    {
+      fen: "8/k5B1/2K1B3/8/8/8/8/8 w - - 56 29",
+      moves: [
+        "Bc3",
+        "Kb8",
+        "Kb6",
+        "Ka8",
+        "Bd4",
+        "Kb8",
+        "Be5+",
+        "Ka8",
+        "Bd5#",
+      ],
+    },
+    {
+      fen: "8/k5B1/2K1B3/8/8/8/8/8 w - - 56 29",
+      moves: ["Bc3", "Ka8", "Kb6", "Kb8", "Be5+", "Ka8", "Bd5#"],
+    },
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(line.fen);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    line.moves.forEach((san, index) => {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+      if (index < line.moves.length - 1 || chess.isCheckmate()) {
+        assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+      }
+    });
+  }
+});
+
+test("two-bishop phase-two black replies are all ideal when a lookup reply exists", () => {
+  setEndgame("twoBishops");
+  const chess = Brain.getChess(
+    "8/8/8/4BK2/4B2k/8/8/8 w - - 44 23",
+  );
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Bf4"));
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+  chess.move("Bf4");
+  const candidates = Brain.getEndgameOpponentCandidates(chess);
+
+  assert.deepEqual(candidates.moves, ["Kh5", "Kh3"]);
+  assert.deepEqual(candidates.idealMoves, candidates.moves);
+  assert.deepEqual(Brain.getIdealEndgameMovesForTurn(chess.fen()), candidates.moves);
+});
+
+test("two-bishop lookup includes lower-corner bishop net fragment", () => {
+  setEndgame("twoBishops");
+  const chess = Brain.getChess(
+    "8/1B6/8/2B5/8/2K5/8/1k6 w - - 56 29",
+  );
+
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Bf3"));
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+
+  chess.move("Bf3");
+  chess.move("Kc1");
+
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Be3+"));
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+});
+
+test("two-bishop lookup falls back to priority rules", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/3BB3/8/5K2/3k4/8/8 w - - 10 6";
+
+  assert.deepEqual(Brain.getTwoBishopsLookupWhiteMoves(fen), []);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Be5"]);
+});
+
+test("two-bishop white rules prefer centered safe bishops", () => {
+  setEndgame("twoBishops");
+  const fen = getEndgame("twoBishops").fen;
+  const centered = Brain.scoreTwoBishopsWhiteMove(fen, "Bf4");
+  const edge = Brain.scoreTwoBishopsWhiteMove(fen, "Ba3");
+
+  assert.equal(centered.centerBishopPenalty < edge.centerBishopPenalty, true);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(centered, edge) < 0, true);
+});
+
+test("two-bishop white rules use bishop distance to the center", () => {
+  setEndgame("twoBishops");
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/8/3BB3/8/5K2/3k4/8/8 w - - 10 6"),
+    ["Be5"],
+  );
+});
+
+test("two-bishop white rules prefer bishops closer before king between", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/8/3B4/8/k1K5/8/5B2 w - - 0 1";
+  const closer = Brain.scoreTwoBishopsWhiteMove(fen, "Ba6");
+  const between = Brain.scoreTwoBishopsWhiteMove(fen, "Be4");
+
+  assert.equal(closer.centerBishopPenalty, between.centerBishopPenalty);
+  assert.equal(
+    closer.bishopBlackKingDistance < between.bishopBlackKingDistance,
+    true,
+  );
+  assert.equal(
+    closer.kingBetweenBlackAndBishopsPenalty >
+      between.kingBetweenBlackAndBishopsPenalty,
+    true,
+  );
+  assert.equal(Brain.compareTwoBishopsWhiteScores(closer, between) < 0, true);
+});
+
+test("two-bishop white rules prefer king between black king and bishops", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/8/1k1KB3/4B3/8/8/8 w - - 10 6";
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/8/8/1k2B3/4B3/2K5/8/8 w - - 10 6"),
+    ["Kd4"],
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kd4"]);
+  assert.equal(
+    Brain.scoreTwoBishopsWhiteMove(fen, "Kd4").kingBetweenBlackAndBishopsPenalty,
+    0,
+  );
+  assert.equal(
+    Brain.scoreTwoBishopsWhiteMove(fen, "Bd4").kingBetweenBlackAndBishopsPenalty,
+    1,
+  );
+});
+
+test("two-bishop white rules prefer all white pieces in a line", () => {
+  setEndgame("twoBishops");
+
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/8/2K5/3B4/3B1k2/8/8/8 w - - 14 8"),
+    ["Kd6"],
+  );
+});
+
+test("two-bishop black rules approach unprotected bishops", () => {
+  setEndgame("twoBishops");
+  const fen = getEndgame("twoBishops").fen.replace(" w ", " b ");
+  const closer = Brain.scoreTwoBishopsBlackMove(fen, "Kd7");
+  const farther = Brain.scoreTwoBishopsBlackMove(fen, "Kd8");
+
+  assert.equal(
+    closer.unprotectedBishopDistance < farther.unprotectedBishopDistance,
+    true,
+  );
+  assert.equal(Brain.compareTwoBishopsBlackScores(closer, farther) < 0, true);
+});
+
 test("queen white rules choose explicit best moves", () => {
   setEndgame("queen");
 
@@ -233,10 +654,14 @@ test("queen white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/8/4k3/8/8/3QK3 w - - 0 1"),
-    ["Qd2"],
+    ["Qd6"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("7k/8/8/6Q1/8/5K2/8/8 w - - 0 1"),
+    ["Kf4"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/8/8/6K1/8/4Q3/6k1/8 w - - 6 4"),
     ["Kf4"],
   );
   assert.deepEqual(
@@ -249,11 +674,11 @@ test("queen white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/K7/8/3k4/Q7/8/8 w - - 0 1"),
-    ["Qb3"],
+    ["Qf3"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/3K4/8/8/4k3/7Q/8 w - - 0 1"),
-    ["Qg2"],
+    ["Qc2"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/5k2/3Q4/6K1/8/8/8 w - - 6 4"),
@@ -263,6 +688,31 @@ test("queen white rules choose explicit best moves", () => {
     Brain.getIdealEndgameWhiteMoves("8/7k/5Q2/5K2/8/8/8/8 w - - 20 11"),
     ["Qg5"],
   );
+});
+
+test("queen white rules prefer queen off edge before queen knight geometry", () => {
+  setEndgame("queen");
+  const fen = "8/8/8/8/8/8/3k4/KQ6 w - - 0 1";
+  const offEdge = Brain.scoreQueenWhiteMove(fen, "Qb5");
+  const edgeKnight = Brain.scoreQueenWhiteMove(fen, "Qf1");
+
+  assert.equal(offEdge.queenEdgePenalty, 0);
+  assert.equal(offEdge.queenKnightMovePenalty, 1);
+  assert.equal(edgeKnight.queenEdgePenalty, 1);
+  assert.equal(edgeKnight.queenKnightMovePenalty, 0);
+  assert.equal(Brain.compareQueenWhiteScores(offEdge, edgeKnight) < 0, true);
+});
+
+test("queen white rules prefer smaller queen box after queen knight geometry", () => {
+  setEndgame("queen");
+  const fen = "8/8/8/8/4k3/8/8/3QK3 w - - 0 1";
+  const smallerBox = Brain.scoreQueenWhiteMove(fen, "Qd6");
+  const largerBox = Brain.scoreQueenWhiteMove(fen, "Qd2");
+
+  assert.equal(smallerBox.queenKnightMovePenalty, 0);
+  assert.equal(largerBox.queenKnightMovePenalty, 0);
+  assert.equal(smallerBox.queenBoxArea < largerBox.queenBoxArea, true);
+  assert.equal(Brain.compareQueenWhiteScores(smallerBox, largerBox) < 0, true);
 });
 
 test("queen white rules avoid queen loss and stalemate", () => {
@@ -346,6 +796,12 @@ test("queen black rules choose explicit defensive moves", () => {
       Brain.getChess("8/8/8/8/3k4/8/8/3QK3 b - - 0 1"),
     ).idealMoves,
     ["Ke5", "Ke4"],
+  );
+  assert.deepEqual(
+    Brain.getEndgameOpponentCandidates(
+      Brain.getChess("8/5k2/3Q4/8/8/8/8/5K2 b - - 3 2"),
+    ).idealMoves,
+    ["Kg7"],
   );
 });
 

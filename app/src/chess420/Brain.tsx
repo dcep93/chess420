@@ -5,7 +5,13 @@ import lichessF, {
   getLatestGame,
   latestGameCache,
 } from "./Lichess";
-import { getEndgame, type EndgameId } from "./Endgames";
+import {
+  getBaseEndgame,
+  getBaseEndgameId,
+  getEndgame,
+  type BaseEndgameId,
+  type EndgameId,
+} from "./Endgames";
 import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
@@ -32,6 +38,20 @@ type EndgamePiece = {
   color: "w" | "b";
   type: string;
   isPawn: boolean;
+};
+
+type EndgamePiecePlacement = EndgamePiece & { square: Square };
+
+type SquareTransform = {
+  name: string;
+  inverseName: string;
+  map: (file: number, rank: number) => { file: number; rank: number };
+};
+
+type TwoBishopsLookupEntry = {
+  key: string;
+  from: Square;
+  to: Square;
 };
 
 type EndgamePositionScore =
@@ -129,17 +149,36 @@ type QueenWhiteMoveScore = {
   queenCapturePenalty: number;
   stalematePenalty: number;
   cagePenalty: number;
+  queenEdgePenalty: number;
   queenKnightMovePenalty: number;
+  queenBoxArea: number;
   cageKingApproach: number;
-  kingMiddlePenalty: number;
-  majorBetweenKingsPenalty: number;
+  kingMiddleDistance: number;
+  whiteKingBetweenPiecesPenalty: number;
   kingDistance: number;
   queenMoveDistance: number | null;
 };
 
 type QueenBlackMoveScore = {
   captureQueenPenalty: number;
-  edgeDistanceScore: number;
+  centerDistance: number;
+};
+
+type TwoBishopsWhiteMoveScore = {
+  matePenalty: number;
+  stalematePenalty: number;
+  bishopCapturePenalty: number;
+  bishopContactPenalty: number;
+  centerBishopPenalty: number;
+  bishopBlackKingDistance: number;
+  kingBetweenBlackAndBishopsPenalty: number;
+  kingDistance: number;
+  whitePiecesLinePenalty: number;
+};
+
+type TwoBishopsBlackMoveScore = {
+  unprotectedBishopDistance: number;
+  centerDistance: number;
 };
 
 type ScoreReason<T> = {
@@ -179,6 +218,185 @@ export default class Brain {
   static lichessUsername?: string;
   static endgameId: EndgameId | undefined = undefined;
   static readonly ENDGAME_PICKER_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
+  static readonly TWO_BISHOPS_LOOKUP_ENTRIES: TwoBishopsLookupEntry[] = [
+    {
+      key: "4k3/8/4K3/3BB3/8/8/8/8 w",
+      from: "e5",
+      to: "c7",
+    },
+    {
+      key: "5k2/2B5/4K3/3B4/8/8/8/8 w",
+      from: "e6",
+      to: "f6",
+    },
+    {
+      key: "4k3/2B5/5K2/3B4/8/8/8/8 w",
+      from: "d5",
+      to: "c6",
+    },
+    {
+      key: "5k2/2B5/2B2K2/8/8/8/8/8 w",
+      from: "c7",
+      to: "d6",
+    },
+    {
+      key: "6k1/8/2BB1K2/8/8/8/8/8 w",
+      from: "f6",
+      to: "g6",
+    },
+    {
+      key: "7k/8/2BB2K1/8/8/8/8/8 w",
+      from: "c6",
+      to: "d7",
+    },
+    {
+      key: "6k1/3B4/3B2K1/8/8/8/8/8 w",
+      from: "d7",
+      to: "e6",
+    },
+    {
+      key: "7k/8/3BB1K1/8/8/8/8/8 w",
+      from: "d6",
+      to: "e5",
+    },
+    {
+      key: "3k4/8/4K3/3BB3/8/8/8/8 w",
+      from: "e5",
+      to: "d6",
+    },
+    {
+      key: "4k3/8/3BK3/3B4/8/8/8/8 w",
+      from: "d6",
+      to: "c7",
+    },
+    {
+      key: "4k3/8/3K4/3BB3/8/8/8/8 w",
+      from: "d5",
+      to: "e6",
+    },
+    {
+      key: "5k2/8/3KB3/4B3/8/8/8/8 w",
+      from: "e5",
+      to: "f6",
+    },
+    {
+      key: "4k3/8/3KBB2/8/8/8/8/8 w",
+      from: "f6",
+      to: "g7",
+    },
+    {
+      key: "3k4/6B1/3KB3/8/8/8/8/8 w",
+      from: "e6",
+      to: "f7",
+    },
+    {
+      key: "2k5/5BB1/3K4/8/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "1k6/5BB1/2K5/8/8/8/8/8 w",
+      from: "f7",
+      to: "e6",
+    },
+    {
+      key: "k7/6B1/2K1B3/8/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "1k6/6B1/1K2B3/8/8/8/8/8 w",
+      from: "g7",
+      to: "e5",
+    },
+    {
+      key: "k7/8/1K2B3/4B3/8/8/8/8 w",
+      from: "e6",
+      to: "d5",
+    },
+    {
+      key: "8/k5B1/2K1B3/8/8/8/8/8 w",
+      from: "g7",
+      to: "c3",
+    },
+    {
+      key: "1k6/8/2K1B3/8/8/2B5/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "k7/8/1K2B3/8/8/2B5/8/8 w",
+      from: "c3",
+      to: "d4",
+    },
+    {
+      key: "1k6/8/1K2B3/8/3B4/8/8/8 w",
+      from: "d4",
+      to: "e5",
+    },
+    {
+      key: "k7/8/2K1B3/8/8/2B5/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "1k6/8/1K2B3/8/8/2B5/8/8 w",
+      from: "c3",
+      to: "e5",
+    },
+    {
+      key: "8/1B6/8/2B5/8/2K5/8/1k6 w",
+      from: "b7",
+      to: "f3",
+    },
+    {
+      key: "8/8/8/2B5/8/2K2B2/8/2k5 w",
+      from: "c5",
+      to: "e3",
+    },
+  ];
+  static readonly SQUARE_TRANSFORMS: SquareTransform[] = [
+    {
+      name: "identity",
+      inverseName: "identity",
+      map: (file, rank) => ({ file, rank }),
+    },
+    {
+      name: "rotate90",
+      inverseName: "rotate270",
+      map: (file, rank) => ({ file: 7 - rank, rank: file }),
+    },
+    {
+      name: "rotate180",
+      inverseName: "rotate180",
+      map: (file, rank) => ({ file: 7 - file, rank: 7 - rank }),
+    },
+    {
+      name: "rotate270",
+      inverseName: "rotate90",
+      map: (file, rank) => ({ file: rank, rank: 7 - file }),
+    },
+    {
+      name: "mirrorFile",
+      inverseName: "mirrorFile",
+      map: (file, rank) => ({ file: 7 - file, rank }),
+    },
+    {
+      name: "mirrorRank",
+      inverseName: "mirrorRank",
+      map: (file, rank) => ({ file, rank: 7 - rank }),
+    },
+    {
+      name: "diagonal",
+      inverseName: "diagonal",
+      map: (file, rank) => ({ file: rank, rank: file }),
+    },
+    {
+      name: "antiDiagonal",
+      inverseName: "antiDiagonal",
+      map: (file, rank) => ({ file: 7 - rank, rank: 7 - file }),
+    },
+  ];
 
   //
 
@@ -214,6 +432,10 @@ export default class Brain {
 
   static hasSelectedEndgame(): boolean {
     return Brain.endgameId !== undefined;
+  }
+
+  static getSelectedBaseEndgameId(): BaseEndgameId {
+    return getBaseEndgameId(Brain.endgameId);
   }
 
   static getEndgameTerminalOutcome(
@@ -288,8 +510,12 @@ export default class Brain {
     if (!Brain.hasSelectedEndgame()) {
       return "";
     }
-    if (Brain.endgameId === "knightAndBishop") {
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "knightAndBishop") {
       return `${Brain.getKnightAndBishopPhase(fen)}/3`;
+    }
+    if (baseEndgameId === "twoBishops") {
+      return `${Brain.getTwoBishopsPhase(fen)}/2`;
     }
     const majorPiece = Brain.getMajorEndgamePieceType();
     if (!majorPiece) {
@@ -316,6 +542,29 @@ export default class Brain {
     return 1;
   }
 
+  static getTwoBishopsPhase(fen: string): number {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const bishops = Brain.getWhiteBishopSquares(fen);
+    if (!whiteKing || !blackKing || bishops.length !== 2) {
+      return 0;
+    }
+    const chess = Brain.getChess(fen);
+    if (chess.isCheckmate()) {
+      return 2;
+    }
+    if (chess.turn() === "w") {
+      return Brain.getTwoBishopsLookupWhiteMoves(fen).length > 0 ? 2 : 1;
+    }
+    return chess.moves().some((san) => {
+      const nextChess = Brain.getChess(fen);
+      nextChess.move(san);
+      return Brain.getTwoBishopsLookupWhiteMoves(nextChess.fen()).length > 0;
+    })
+      ? 2
+      : 1;
+  }
+
   static getLogResultFen(log: LogType): string {
     const chess = Brain.getChess(log.fen);
     chess.move(log.san);
@@ -326,8 +575,9 @@ export default class Brain {
   }
 
   static getMajorEndgamePieceType(): "r" | "q" | null {
-    if (Brain.endgameId === "rook") return "r";
-    if (Brain.endgameId === "queen") return "q";
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "rook") return "r";
+    if (baseEndgameId === "queen") return "q";
     return null;
   }
 
@@ -351,7 +601,8 @@ export default class Brain {
   }
 
   static getEndgameReason(fen: string): string {
-    if (Brain.endgameId === "rook") {
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "rook") {
       const scoredMoves = Brain.getChess(fen)
         .moves()
         .map((san) => ({
@@ -367,7 +618,7 @@ export default class Brain {
         ? Brain.getScoreReason(correct.score, incorrect.score, Brain.getRookWhiteScoreReasons())
         : "";
     }
-    if (Brain.endgameId === "queen") {
+    if (baseEndgameId === "queen") {
       const scoredMoves = Brain.getChess(fen)
         .moves()
         .map((san) => ({
@@ -381,6 +632,31 @@ export default class Brain {
       );
       return incorrect
         ? Brain.getScoreReason(correct.score, incorrect.score, Brain.getQueenWhiteScoreReasons())
+        : "";
+    }
+    if (baseEndgameId === "twoBishops") {
+      const lookupMoves = Brain.getTwoBishopsLookupWhiteMoves(fen);
+      if (lookupMoves.length > 0) {
+        return "mating net";
+      }
+      const scoredMoves = Brain.getChess(fen)
+        .moves()
+        .map((san) => ({
+          san,
+          score: Brain.scoreTwoBishopsWhiteMove(fen, san),
+        }))
+        .sort((a, b) => Brain.compareTwoBishopsWhiteScores(a.score, b.score));
+      const correct = scoredMoves[0];
+      const incorrect = scoredMoves.find(
+        (move) =>
+          Brain.compareTwoBishopsWhiteScores(move.score, correct.score) !== 0
+      );
+      return incorrect
+        ? Brain.getScoreReason(
+            correct.score,
+            incorrect.score,
+            Brain.getTwoBishopsWhiteScoreReasons()
+          )
         : "";
     }
     return "";
@@ -420,11 +696,18 @@ export default class Brain {
     if (chess.turn() !== "w" || moves.length === 0) {
       return moves;
     }
-    if (Brain.endgameId === "rook") {
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "rook") {
       return Brain.getIdealRookWhiteMoves(fen);
     }
-    if (Brain.endgameId === "queen") {
+    if (baseEndgameId === "queen") {
       return Brain.getIdealQueenWhiteMoves(fen);
+    }
+    if (baseEndgameId === "knightAndBishop") {
+      return Brain.getIdealKnightAndBishopWhiteMoves(fen);
+    }
+    if (baseEndgameId === "twoBishops") {
+      return Brain.getIdealTwoBishopsWhiteMoves(fen);
     }
     const scoredMoves = Brain.getEndgameMoveScores(fen, moves);
     scoredMoves.sort(
@@ -455,6 +738,16 @@ export default class Brain {
   static getEndgamePositionScore(fen: string): EndgamePositionScore {
     if (!Brain.hasSelectedEndgame()) {
       throw new Error("no endgame selected");
+    }
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "rook" || baseEndgameId === "queen") {
+      return Brain.getMajorEndgamePositionScore(fen, baseEndgameId);
+    }
+    if (baseEndgameId === "knightAndBishop") {
+      return Brain.getKnightAndBishopPositionScore(fen);
+    }
+    if (baseEndgameId === "twoBishops" || baseEndgameId === "twoKnightsVsPawn") {
+      return Brain.getBasicEndgamePositionScore(fen, baseEndgameId);
     }
     return Brain.getGenericEndgamePositionScore(fen);
   }
@@ -548,7 +841,7 @@ export default class Brain {
     const whitePieceTypes = Brain.hasSelectedEndgame()
       ? Array.from(
           new Set(
-            Brain.getEndgamePieces(getEndgame(Brain.endgameId).fen)
+            Brain.getEndgamePieces(getBaseEndgame(Brain.endgameId).fen)
               .filter((piece) => piece.color === "w" && piece.type !== "k")
               .map((piece) => piece.type)
           )
@@ -903,6 +1196,112 @@ export default class Brain {
     );
   }
 
+  static getIdealTwoBishopsWhiteMoves(fen: string): string[] {
+    const chess = Brain.getChess(fen);
+    const moves = chess.moves();
+    if (chess.turn() !== "w" || moves.length === 0) {
+      return moves;
+    }
+    const lookupMoves = Brain.getTwoBishopsLookupWhiteMoves(fen);
+    if (lookupMoves.length > 0) {
+      return lookupMoves;
+    }
+    const scoredMoves = moves
+      .map((san) => ({
+        san,
+        score: Brain.scoreTwoBishopsWhiteMove(fen, san),
+      }))
+      .sort((a, b) => Brain.compareTwoBishopsWhiteScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.twoBishopsWhiteScoresTie(move.score, best))
+      .map((move) => move.san);
+  }
+
+  static getTwoBishopsLookupWhiteMove(fen: string): string | null {
+    return Brain.getTwoBishopsLookupWhiteMoves(fen)[0] ?? null;
+  }
+
+  static getTwoBishopsLookupWhiteMoves(fen: string): string[] {
+    const lookupMoves: string[] = [];
+    for (const transform of Brain.SQUARE_TRANSFORMS) {
+      const key = Brain.getTransformedPositionKey(fen, transform);
+      for (const entry of Brain.TWO_BISHOPS_LOOKUP_ENTRIES.filter(
+        (lookupEntry) => lookupEntry.key === key
+      )) {
+        const inverseTransform = Brain.getSquareTransform(transform.inverseName);
+        const from = Brain.transformSquare(entry.from, inverseTransform);
+        const to = Brain.transformSquare(entry.to, inverseTransform);
+        const chess = Brain.getChess(fen);
+        const move = chess.move({ from, to });
+        if (move && !lookupMoves.includes(move.san)) {
+          lookupMoves.push(move.san);
+        }
+      }
+    }
+    return lookupMoves;
+  }
+
+  static scoreTwoBishopsWhiteMove(
+    fen: string,
+    san: string
+  ): TwoBishopsWhiteMoveScore {
+    const chess = Brain.getChess(fen);
+    chess.move(san);
+    const resultFen = chess.fen();
+    const whiteKing = Brain.findPiece(resultFen, "w", "k");
+    const blackKing = Brain.findPiece(resultFen, "b", "k");
+    return {
+      matePenalty: chess.isCheckmate() ? 0 : 1,
+      stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
+      bishopCapturePenalty: Brain.blackCanTakeWhitePieces(resultFen, ["b"])
+        ? 1
+        : 0,
+      bishopContactPenalty: Brain.blackCanWalkUpToWhiteBishop(resultFen) ? 1 : 0,
+      centerBishopPenalty: Brain.getWhiteBishopCenterDistance(resultFen),
+      bishopBlackKingDistance: blackKing
+        ? Brain.getWhiteBishopDistanceToSquare(resultFen, blackKing.square)
+        : 99,
+      kingBetweenBlackAndBishopsPenalty:
+        Brain.whiteKingIsBetweenBlackKingAndBishops(resultFen) ? 0 : 1,
+      kingDistance:
+        whiteKing && blackKing
+          ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
+          : 99,
+      whitePiecesLinePenalty: Brain.whiteKingAndBishopsAreLinedUp(resultFen)
+        ? 0
+        : 1,
+    };
+  }
+
+  static compareTwoBishopsWhiteScores(
+    a: TwoBishopsWhiteMoveScore,
+    b: TwoBishopsWhiteMoveScore
+  ): number {
+    return Brain.compareScoreReasons(a, b, Brain.getTwoBishopsWhiteScoreReasons());
+  }
+
+  static getTwoBishopsWhiteScoreReasons(): Array<ScoreReason<TwoBishopsWhiteMoveScore>> {
+    return [
+      { reason: "mate", compare: (a, b) => a.matePenalty - b.matePenalty },
+      { reason: "no stalemate", compare: (a, b) => a.stalematePenalty - b.stalematePenalty },
+      { reason: "bishops safe", compare: (a, b) => a.bishopCapturePenalty - b.bishopCapturePenalty },
+      { reason: "bishops not approachable", compare: (a, b) => a.bishopContactPenalty - b.bishopContactPenalty },
+      { reason: "more bishops centered", compare: (a, b) => a.centerBishopPenalty - b.centerBishopPenalty },
+      { reason: "bishops closer", compare: (a, b) => a.bishopBlackKingDistance - b.bishopBlackKingDistance },
+      { reason: "king between black and bishops", compare: (a, b) => a.kingBetweenBlackAndBishopsPenalty - b.kingBetweenBlackAndBishopsPenalty },
+      { reason: "king closer", compare: (a, b) => a.kingDistance - b.kingDistance },
+      { reason: "white pieces lined up", compare: (a, b) => a.whitePiecesLinePenalty - b.whitePiecesLinePenalty },
+    ];
+  }
+
+  static twoBishopsWhiteScoresTie(
+    a: TwoBishopsWhiteMoveScore,
+    b: TwoBishopsWhiteMoveScore
+  ): boolean {
+    return Brain.compareTwoBishopsWhiteScores(a, b) === 0;
+  }
+
   static getIdealRookWhiteMoves(fen: string): string[] {
     const chess = Brain.getChess(fen);
     const moves = chess.moves();
@@ -1076,12 +1475,18 @@ export default class Brain {
         : 0,
       stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
       cagePenalty: resultCage ? 0 : 1,
+      queenEdgePenalty:
+        whiteQueen && Brain.edgeDistance(whiteQueen.square) === 0 ? 1 : 0,
       queenKnightMovePenalty:
         whiteQueen &&
         blackKing &&
         Brain.isKnightMove(whiteQueen.square, blackKing.square)
           ? 0
           : 1,
+      queenBoxArea:
+        whiteQueen && blackKing
+          ? Brain.getQueenBoxArea(whiteQueen.square, blackKing.square)
+          : 99,
       cageKingApproach:
         shouldWalkCageKing && resultCage && whiteKing && whiteQueen
           ? move?.piece === "k"
@@ -1098,13 +1503,13 @@ export default class Brain {
                 )
             : 99
           : 0,
-      kingMiddlePenalty: whiteKing && Brain.isMiddle16Square(whiteKing.square) ? 0 : 1,
-      majorBetweenKingsPenalty:
+      kingMiddleDistance: whiteKing ? Brain.middle2x2Distance(whiteKing.square) : 99,
+      whiteKingBetweenPiecesPenalty:
         move?.piece === "k" &&
         whiteQueen &&
         whiteKing &&
         blackKing &&
-        !Brain.isMajorPieceBetweenKings(whiteQueen, whiteKing, blackKing)
+        Brain.isMajorPieceBetweenKings(whiteKing, whiteQueen, blackKing)
           ? 1
           : 0,
       kingDistance:
@@ -1133,9 +1538,11 @@ export default class Brain {
       { reason: "no stalemate", compare: (a, b) => a.stalematePenalty - b.stalematePenalty },
       { reason: "corner cage", compare: (a, b) => a.cagePenalty - b.cagePenalty },
       { reason: "king to cage", compare: (a, b) => a.cageKingApproach - b.cageKingApproach },
-      { reason: "king in middle", compare: (a, b) => a.kingMiddlePenalty - b.kingMiddlePenalty },
-      { reason: "queen between kings", compare: (a, b) => a.majorBetweenKingsPenalty - b.majorBetweenKingsPenalty },
+      { reason: "queen off edge", compare: (a, b) => a.queenEdgePenalty - b.queenEdgePenalty },
       { reason: "queen knight move", compare: (a, b) => a.queenKnightMovePenalty - b.queenKnightMovePenalty },
+      { reason: "queen box size", compare: (a, b) => a.queenBoxArea - b.queenBoxArea },
+      { reason: "king near middle", compare: (a, b) => a.kingMiddleDistance - b.kingMiddleDistance },
+      { reason: "king not between pieces", compare: (a, b) => a.whiteKingBetweenPiecesPenalty - b.whiteKingBetweenPiecesPenalty },
       { reason: "king closer", compare: (a, b) => a.kingDistance - b.kingDistance },
       {
         reason: "shorter queen move",
@@ -1154,9 +1561,11 @@ export default class Brain {
       a.stalematePenalty === b.stalematePenalty &&
       a.cagePenalty === b.cagePenalty &&
       a.cageKingApproach === b.cageKingApproach &&
-      a.kingMiddlePenalty === b.kingMiddlePenalty &&
-      a.majorBetweenKingsPenalty === b.majorBetweenKingsPenalty &&
+      a.queenEdgePenalty === b.queenEdgePenalty &&
       a.queenKnightMovePenalty === b.queenKnightMovePenalty &&
+      a.queenBoxArea === b.queenBoxArea &&
+      a.kingMiddleDistance === b.kingMiddleDistance &&
+      a.whiteKingBetweenPiecesPenalty === b.whiteKingBetweenPiecesPenalty &&
       a.kingDistance === b.kingDistance &&
       Brain.compareQueenMoveDistances(a.queenMoveDistance, b.queenMoveDistance) === 0
     );
@@ -1378,14 +1787,45 @@ export default class Brain {
   }
 
   static getRandomEndgameFen(id: EndgameId): string {
-    const pieces = Brain.getEndgamePieces(getEndgame(id).fen);
+    const endgame = getEndgame(id);
+    if (endgame.plusFens) {
+      const fen =
+        endgame.plusFens[Math.floor(Math.random() * endgame.plusFens.length)];
+      return Brain.getRandomTransformedEndgameFen(fen);
+    }
+    if (endgame.plusFen) {
+      return Brain.getRandomTransformedEndgameFen(endgame.plusFen);
+    }
+    const pieces = Brain.getEndgamePieces(endgame.fen);
     for (let attempt = 0; attempt < 1000; attempt++) {
-      const fen = Brain.getRandomEndgameFenAttempt(pieces);
+      const fen = Brain.getRandomEndgameFenAttempt(pieces, id);
       if (fen) {
         return fen;
       }
     }
     return getEndgame(id).fen;
+  }
+
+  static getRandomTransformedEndgameFen(fen: string): string {
+    const transform =
+      Brain.SQUARE_TRANSFORMS[
+        Math.floor(Math.random() * Brain.SQUARE_TRANSFORMS.length)
+      ];
+    return Brain.getRandomTransformedEndgameFenWithTransform(fen, transform);
+  }
+
+  static getRandomTransformedEndgameFenWithTransform(
+    fen: string,
+    transform: SquareTransform
+  ): string {
+    const [, turn = "w", castling = "-", enPassant = "-", halfmove = "0", fullmove = "1"] =
+      fen.split(" ");
+    return `${Brain.boardFenFromPlacements(
+      Brain.getEndgamePiecePlacements(fen).map((piece) => ({
+        ...piece,
+        square: Brain.transformSquare(piece.square, transform),
+      }))
+    )} ${turn} ${castling} ${enPassant} ${halfmove} ${fullmove}`;
   }
 
   static getEndgamePieces(fen: string): EndgamePiece[] {
@@ -1400,9 +1840,25 @@ export default class Brain {
       }));
   }
 
-  static getRandomEndgameFenAttempt(pieces: EndgamePiece[]): string | null {
+  static getEndgamePiecePlacements(fen: string): EndgamePiecePlacement[] {
+    return Brain.getChess(fen)
+      .board()
+      .flat()
+      .filter((piece) => piece !== null)
+      .map((piece) => ({
+        color: piece!.color,
+        type: piece!.type,
+        isPawn: piece!.type === "p",
+        square: piece!.square,
+      }));
+  }
+
+  static getRandomEndgameFenAttempt(
+    pieces: EndgamePiece[],
+    id?: EndgameId
+  ): string | null {
     const availableSquares = Brain.allSquares();
-    const placements: (EndgamePiece & { square: Square })[] = [];
+    const placements: EndgamePiecePlacement[] = [];
     for (const piece of pieces) {
       const candidates = availableSquares.filter(
         (square) => !piece.isPawn || !["1", "8"].includes(square[1])
@@ -1414,6 +1870,12 @@ export default class Brain {
       availableSquares.splice(availableSquares.indexOf(square), 1);
       placements.push({ ...piece, square });
     }
+    if (
+      id === "twoBishops" &&
+      !Brain.whiteBishopsAreOppositeColored(placements)
+    ) {
+      return null;
+    }
     const fen = `${Brain.boardFenFromPlacements(placements)} w - - 0 1`;
     if (!Brain.isLegalEndgameStart(fen)) {
       return null;
@@ -1421,8 +1883,20 @@ export default class Brain {
     return fen;
   }
 
+  static whiteBishopsAreOppositeColored(
+    placements: EndgamePiecePlacement[]
+  ): boolean {
+    const bishopSquares = placements
+      .filter((piece) => piece.color === "w" && piece.type === "b")
+      .map((piece) => piece.square);
+    return (
+      bishopSquares.length === 2 &&
+      Brain.squareColor(bishopSquares[0]) !== Brain.squareColor(bishopSquares[1])
+    );
+  }
+
   static boardFenFromPlacements(
-    placements: (EndgamePiece & { square: Square })[]
+    placements: EndgamePiecePlacement[]
   ): string {
     const pieceBySquare = new Map(
       placements.map((piece) => [
@@ -1449,6 +1923,41 @@ export default class Brain {
       }
       return row + (empty > 0 ? empty : "");
     }).join("/");
+  }
+
+  static getTransformedPositionKey(
+    fen: string,
+    transform: SquareTransform
+  ): string {
+    return `${Brain.boardFenFromPlacements(
+      Brain.getEndgamePiecePlacements(fen).map((piece) => ({
+        ...piece,
+        square: Brain.transformSquare(piece.square, transform),
+      }))
+    )} ${Brain.getChess(fen).turn()}`;
+  }
+
+  static transformSquare(square: Square, transform: SquareTransform): Square {
+    const coords = Brain.squareCoords(square);
+    const transformed = transform.map(coords.file, coords.rank);
+    const transformedSquare = Brain.squareFromCoords(
+      transformed.file,
+      transformed.rank
+    );
+    if (!transformedSquare) {
+      throw new Error(`invalid transformed square: ${square}`);
+    }
+    return transformedSquare;
+  }
+
+  static getSquareTransform(name: string): SquareTransform {
+    const transform = Brain.SQUARE_TRANSFORMS.find(
+      (candidate) => candidate.name === name
+    );
+    if (!transform) {
+      throw new Error(`unknown square transform: ${name}`);
+    }
+    return transform;
   }
 
   static isLegalEndgameStart(fen: string): boolean {
@@ -1738,7 +2247,7 @@ export default class Brain {
   static playBest() {
     if (Brain.view === View.endgame) {
       if (!Brain.hasSelectedEndgame()) return;
-      const moves = Brain.getIdealEndgameWhiteMoves(Brain.getState().fen);
+      const moves = Brain.getIdealEndgameMovesForTurn(Brain.getState().fen);
       return Brain.playMove(moves[Math.floor(Math.random() * moves.length)]);
     }
     Brain.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
@@ -1749,7 +2258,7 @@ export default class Brain {
       if (!Brain.hasSelectedEndgame()) {
         return Promise.resolve("");
       }
-      const moves = Brain.getIdealEndgameWhiteMoves(fen);
+      const moves = Brain.getIdealEndgameMovesForTurn(fen);
       return Promise.resolve(moves[Math.floor(Math.random() * moves.length)]);
     }
     if (Brain.isMyTurn(fen)) {
@@ -1761,6 +2270,14 @@ export default class Brain {
     return lichessF(fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san);
+  }
+
+  static getIdealEndgameMovesForTurn(fen: string): string[] {
+    const chess = Brain.getChess(fen);
+    if (chess.turn() === "b") {
+      return Brain.getEndgameOpponentCandidates(chess).idealMoves;
+    }
+    return Brain.getIdealEndgameWhiteMoves(fen);
   }
 
   static getNovelty(fen?: string): string | null {
@@ -1964,16 +2481,26 @@ export default class Brain {
     if (moves.length === 0) {
       return { moves, idealMoves: [] };
     }
-    if (Brain.endgameId === "rook") {
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    if (baseEndgameId === "rook") {
       return {
         moves,
         idealMoves: Brain.getIdealRookBlackMoves(chess, moves),
       };
     }
-    if (Brain.endgameId === "queen") {
+    if (baseEndgameId === "queen") {
       return {
         moves,
         idealMoves: Brain.getIdealQueenBlackMoves(chess, moves),
+      };
+    }
+    if (baseEndgameId === "knightAndBishop") {
+      return Brain.getKnightAndBishopOpponentCandidates(chess, moves);
+    }
+    if (baseEndgameId === "twoBishops") {
+      return {
+        moves,
+        idealMoves: Brain.getIdealTwoBishopsBlackMoves(chess, moves),
       };
     }
     const scoredMoves = Brain.getEndgameMoveScores(chess.fen(), moves);
@@ -2084,7 +2611,9 @@ export default class Brain {
     const blackKing = Brain.findPiece(chess.fen(), "b", "k");
     return {
       captureQueenPenalty: move?.captured === "q" ? 0 : 1,
-      edgeDistanceScore: blackKing ? -Brain.edgeDistance(blackKing.square) : 0,
+      centerDistance: blackKing
+        ? Brain.kingWalkCenterDistance(blackKing.square)
+        : 99,
     };
   }
 
@@ -2094,7 +2623,7 @@ export default class Brain {
   ): number {
     return (
       a.captureQueenPenalty - b.captureQueenPenalty ||
-      a.edgeDistanceScore - b.edgeDistanceScore
+      a.centerDistance - b.centerDistance
     );
   }
 
@@ -2104,8 +2633,65 @@ export default class Brain {
   ): boolean {
     return (
       a.captureQueenPenalty === b.captureQueenPenalty &&
-      a.edgeDistanceScore === b.edgeDistanceScore
+      a.centerDistance === b.centerDistance
     );
+  }
+
+  static getIdealTwoBishopsBlackMoves(chess: Chess, moves: string[]): string[] {
+    if (Brain.twoBishopsBlackHasLookupReply(chess.fen(), moves)) {
+      return moves;
+    }
+    const scoredMoves = moves
+      .map((san) => ({
+        san,
+        score: Brain.scoreTwoBishopsBlackMove(chess.fen(), san),
+      }))
+      .sort((a, b) => Brain.compareTwoBishopsBlackScores(a.score, b.score));
+    const best = scoredMoves[0].score;
+    return scoredMoves
+      .filter((move) => Brain.twoBishopsBlackScoresTie(move.score, best))
+      .map((move) => move.san);
+  }
+
+  static twoBishopsBlackHasLookupReply(fen: string, moves: string[]): boolean {
+    return moves.some((san) => {
+      const chess = Brain.getChess(fen);
+      chess.move(san);
+      return Brain.getTwoBishopsLookupWhiteMoves(chess.fen()).length > 0;
+    });
+  }
+
+  static scoreTwoBishopsBlackMove(
+    fen: string,
+    san: string
+  ): TwoBishopsBlackMoveScore {
+    const chess = Brain.getChess(fen);
+    const move = chess.move(san);
+    const blackKing = Brain.findPiece(chess.fen(), "b", "k");
+    return {
+      unprotectedBishopDistance:
+        move?.captured === "b"
+          ? 0
+          : Brain.distanceToNearestUnprotectedWhiteBishop(chess.fen()),
+      centerDistance: blackKing ? Brain.centerDistance(blackKing.square) : 99,
+    };
+  }
+
+  static compareTwoBishopsBlackScores(
+    a: TwoBishopsBlackMoveScore,
+    b: TwoBishopsBlackMoveScore
+  ): number {
+    return (
+      a.unprotectedBishopDistance - b.unprotectedBishopDistance ||
+      a.centerDistance - b.centerDistance
+    );
+  }
+
+  static twoBishopsBlackScoresTie(
+    a: TwoBishopsBlackMoveScore,
+    b: TwoBishopsBlackMoveScore
+  ): boolean {
+    return Brain.compareTwoBishopsBlackScores(a, b) === 0;
   }
 
   static getRookCutAxisPreservingOpponentMoves(
@@ -2114,7 +2700,7 @@ export default class Brain {
     idealMoves: string[]
   ): string[] | null {
     if (
-      Brain.endgameId !== "rook" ||
+      Brain.getSelectedBaseEndgameId() !== "rook" ||
       chess.turn() !== "b" ||
       Brain.getMajorEndgamePhase(chess.fen(), "r") !== 2
     ) {
@@ -2351,6 +2937,14 @@ export default class Brain {
     );
   }
 
+  static middle2x2Distance(square: Square): number {
+    const coords = Brain.squareCoords(square);
+    return (
+      Brain.distanceToRange(coords.file, 3, 4) +
+      Brain.distanceToRange(coords.rank, 3, 4)
+    );
+  }
+
   static isMiddle16Square(square: Square): boolean {
     const coords = Brain.squareCoords(square);
     return (
@@ -2361,12 +2955,26 @@ export default class Brain {
     );
   }
 
+  static distanceToRange(value: number, min: number, max: number): number {
+    if (value < min) return min - value;
+    if (value > max) return value - max;
+    return 0;
+  }
+
   static centerDistance(square: Square): number {
     const coords = Brain.squareCoords(square);
     return Math.min(
       Math.abs(coords.file - 3),
       Math.abs(coords.file - 4)
     ) + Math.min(Math.abs(coords.rank - 3), Math.abs(coords.rank - 4));
+  }
+
+  static kingWalkCenterDistance(square: Square): number {
+    return Math.min(
+      ...(["d4", "e4", "d5", "e5"] as Square[]).map((centerSquare) =>
+        Brain.kingDistance(square, centerSquare)
+      )
+    );
   }
 
   static majorPieceBoxDistance(a: Square, b: Square): number {
@@ -2802,6 +3410,125 @@ export default class Brain {
         nextChess.move(san);
         return !Brain.knightAndBishopPiecesPresent(nextChess.fen());
       });
+  }
+
+  static blackCanWalkUpToWhiteBishop(fen: string): boolean {
+    const chess = Brain.getChess(fen);
+    if (chess.turn() !== "b") {
+      return false;
+    }
+    return chess.moves().some((san) => {
+      const nextChess = Brain.getChess(fen);
+      const move = nextChess.move(san);
+      if (move?.captured === "b") {
+        return false;
+      }
+      const blackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+      return (
+        blackKing != null &&
+        Brain.getWhiteBishopSquares(nextChess.fen()).some(
+          (square) => Brain.kingDistance(blackKing.square, square) <= 1
+        )
+      );
+    });
+  }
+
+  static getWhiteBishopCenterDistance(fen: string): number {
+    return Brain.getWhiteBishopSquares(fen).reduce(
+      (distance, square) => distance + Brain.centerDistance(square),
+      0
+    );
+  }
+
+  static getWhiteBishopDistanceToSquare(fen: string, target: Square): number {
+    return Brain.getWhiteBishopSquares(fen).reduce(
+      (distance, square) => distance + Brain.manhattanDistance(square, target),
+      0
+    );
+  }
+
+  static whiteKingIsBetweenBlackKingAndBishops(fen: string): boolean {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const bishops = Brain.getWhiteBishopSquares(fen);
+    if (!whiteKing || !blackKing || bishops.length === 0) {
+      return false;
+    }
+    return bishops.every((bishop) =>
+      Brain.squareIsBetweenByKingDistance(
+        blackKing.square,
+        whiteKing.square,
+        bishop
+      )
+    );
+  }
+
+  static squareIsBetweenByKingDistance(
+    a: Square,
+    middle: Square,
+    b: Square
+  ): boolean {
+    return (
+      Brain.kingDistance(a, b) ===
+      Brain.kingDistance(a, middle) + Brain.kingDistance(middle, b)
+    );
+  }
+
+  static whiteKingAndBishopsAreLinedUp(fen: string): boolean {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const bishops = Brain.getWhiteBishopSquares(fen);
+    if (!whiteKing || bishops.length !== 2) {
+      return false;
+    }
+    return Brain.squaresAreOnSameLine([
+      whiteKing.square,
+      bishops[0],
+      bishops[1],
+    ]);
+  }
+
+  static squaresAreOnSameLine(squares: Square[]): boolean {
+    const coords = squares.map(Brain.squareCoords);
+    const sameFile = coords.every((coord) => coord.file === coords[0].file);
+    const sameRank = coords.every((coord) => coord.rank === coords[0].rank);
+    const sameDiagonal = coords.every(
+      (coord) => coord.file - coord.rank === coords[0].file - coords[0].rank
+    );
+    const sameAntiDiagonal = coords.every(
+      (coord) => coord.file + coord.rank === coords[0].file + coords[0].rank
+    );
+    return sameFile || sameRank || sameDiagonal || sameAntiDiagonal;
+  }
+
+  static distanceToNearestUnprotectedWhiteBishop(fen: string): number {
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    if (!blackKing) {
+      return 99;
+    }
+    const unprotectedBishops = Brain.getWhiteBishopSquares(fen).filter(
+      (square) => !Brain.whiteBishopIsProtectedByKing(fen, square)
+    );
+    if (unprotectedBishops.length === 0) {
+      return 99;
+    }
+    return Math.min(
+      ...unprotectedBishops.map((square) =>
+        Brain.kingDistance(blackKing.square, square)
+      )
+    );
+  }
+
+  static whiteBishopIsProtectedByKing(fen: string, square: Square): boolean {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    return whiteKing != null && Brain.kingDistance(whiteKing.square, square) <= 1;
+  }
+
+  static getWhiteBishopSquares(fen: string): Square[] {
+    return Brain.getChess(fen)
+      .board()
+      .flat()
+      .filter((piece) => piece?.color === "w" && piece.type === "b")
+      .map((piece) => piece!.square);
   }
 
   static whiteKingIsAdjacentToRook(fen: string): boolean {
