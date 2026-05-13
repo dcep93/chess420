@@ -237,7 +237,7 @@ test("queen white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("7k/8/8/6Q1/8/5K2/8/8 w - - 0 1"),
-    ["Kg4"],
+    ["Kf4"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/4K3/2Q5/8/1k6/8/8 w - - 2 2"),
@@ -261,7 +261,7 @@ test("queen white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/7k/5Q2/5K2/8/8/8/8 w - - 20 11"),
-    ["Kg5"],
+    ["Qg5"],
   );
 });
 
@@ -312,11 +312,15 @@ test("queen white rules keep walking the king once a two-square cage exists", ()
 
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("k7/8/8/1Q6/2K5/8/8/8 w - - 6 4"),
-    ["Kc5", "Kb4"],
+    ["Kc5"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("7k/8/8/6Q1/5K2/8/8/8 w - - 6 4"),
-    ["Kf5", "Kg4"],
+    ["Kf5"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("4K2k/4Q3/8/8/8/8/8/8 w - - 10 6"),
+    ["Kd7"],
   );
 });
 
@@ -362,7 +366,7 @@ test("rook white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("5K2/3R4/8/8/8/k7/8/8 w - - 0 1"),
-    ["Rd1"],
+    ["Rb7"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/2k5/8/R7/3K4/8 w - - 0 1"),
@@ -386,7 +390,7 @@ test("rook white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/1k6/7R/1K6/8/8/8/8 w - - 8 5"),
-    ["Ra6"],
+    ["Rh7+"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("5k2/8/3K4/8/8/8/8/4R3 w - - 8 5"),
@@ -394,7 +398,7 @@ test("rook white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("4k3/8/8/6R1/8/8/6K1/8 w - - 0 1"),
-    ["Rh5", "Ra5"],
+    ["Kf3"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/k7/1R6/3K4/8/8 w - - 8 5"),
@@ -402,11 +406,15 @@ test("rook white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/5R2/6k1/8/6K1/8/8 w - - 2 2"),
-    ["Rf4"],
+    ["Rf1"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/5R2/4K3/6k1/8/8 w - - 4 3"),
-    ["Rf8"],
+    ["Ke3"],
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("7K/8/8/2R5/8/8/8/7k w - - 0 1"),
+    ["Rc2"],
   );
 });
 
@@ -429,7 +437,7 @@ test("rook white rules avoid rook loss and stalemate", () => {
   });
 });
 
-test("rook white rules prefer between-kings edge moves before box size", () => {
+test("rook white rules use rank and file box cuts symmetrically", () => {
   setEndgame("rook");
 
   assert.deepEqual(
@@ -442,25 +450,20 @@ test("rook white rules prefer between-kings edge moves before box size", () => {
   );
 });
 
-test("rook white rules use side and black distance when kings are a knight move apart", () => {
+test("rook white rules separate the white king and rook", () => {
   setEndgame("rook");
   const fen = "8/8/8/8/8/k7/8/1KR5 w - - 0 1";
   const ideal = Brain.getIdealEndgameWhiteMoves(fen);
 
-  assert.deepEqual(ideal, ["Rc2"]);
+  assert.deepEqual(ideal, ["Rc8"]);
   ideal.forEach((san) => {
-    const startingRook = Brain.findPiece(fen, "w", "r");
-    const startingWhiteKing = Brain.findPiece(fen, "w", "k");
-    const startingBlackKing = Brain.findPiece(fen, "b", "k");
     const chess = Brain.getChess(fen);
-    const move = chess.move(san);
-    assert.equal(move?.piece, "r");
+    chess.move(san);
     const whiteRook = Brain.findPiece(chess.fen(), "w", "r");
-    assert.ok(startingRook && startingWhiteKing && startingBlackKing && whiteRook);
-    assert.ok(
-      Brain.kingDistance(whiteRook!.square, startingWhiteKing!.square) <
-        Brain.kingDistance(whiteRook!.square, startingBlackKing!.square),
-    );
+    const whiteKing = Brain.findPiece(chess.fen(), "w", "k");
+    assert.ok(whiteRook && whiteKing);
+    assert.equal(Brain.isDiagonalKingMove(whiteRook!.square, whiteKing!.square), false);
+    assert.equal(Brain.sharesRankOrFile(whiteRook!.square, whiteKing!.square), false);
   });
 });
 
@@ -511,12 +514,12 @@ test("rook black rules approach the rook before the center", () => {
   assert.deepEqual(candidates.idealMoves, ["Ke3"]);
 });
 
-test("rook phase 2 knight-distance rule prefers the white side", () => {
+test("rook phase 2 uses post-box rook distance priorities", () => {
   setEndgame("rook");
 
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/8/4K3/7R/3k4/8 w - - 14 8"),
-    ["Ra3"],
+    ["Kd4"],
   );
 });
 

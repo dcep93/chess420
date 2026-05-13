@@ -105,19 +105,14 @@ type RookWhiteMoveScore = {
   matePenalty: number;
   rookCapturePenalty: number;
   stalematePenalty: number;
-  diagonalChainPenalty: number;
+  rookKingContactPenalty: number;
   rookBetweenKingsPenalty: number;
-  rookEdgePenalty: number;
   oppositionRookCheckPenalty: number;
   edgeOwnLinePenalty: number;
   boxSize: number;
-  edgeTrapPenalty: number;
-  saveRookBoxPenalty: number;
-  saveRookEdgePenalty: number;
-  saveRookKingDistance: number;
+  rookBlackSidePenalty: number;
+  rookBlackDistanceScore: number;
   kingEdgePenalty: number;
-  knightRookSidePenalty: number;
-  knightRookBlackDistanceScore: number;
   kingDistance: number;
 };
 
@@ -136,6 +131,7 @@ type QueenWhiteMoveScore = {
   cagePenalty: number;
   queenKnightMovePenalty: number;
   cageKingApproach: number;
+  kingMiddlePenalty: number;
   majorBetweenKingsPenalty: number;
   kingDistance: number;
   queenMoveDistance: number | null;
@@ -929,10 +925,6 @@ export default class Brain {
     const beforeRook = Brain.findPiece(fen, "w", "r");
     const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
     const beforeBlackKing = Brain.findPiece(fen, "b", "k");
-    const kingsAreKnightMove =
-      beforeWhiteKing && beforeBlackKing
-        ? Brain.isKnightMove(beforeWhiteKing.square, beforeBlackKing.square)
-        : false;
     const hasStartingKingOpposition =
       beforeWhiteKing && beforeBlackKing
         ? Brain.hasDirectKingOpposition(beforeWhiteKing.square, beforeBlackKing.square)
@@ -941,7 +933,6 @@ export default class Brain {
       beforeRook && beforeWhiteKing
         ? Brain.sharesRankOrFile(beforeRook.square, beforeWhiteKing.square)
         : false;
-    const rookStartsAttacked = Brain.blackKingAttacksWhiteMajorPiece(fen, "r");
     const chess = Brain.getChess(fen);
     const move = chess.move(san);
     const resultFen = chess.fen();
@@ -949,41 +940,26 @@ export default class Brain {
     const whiteKing = Brain.findPiece(resultFen, "w", "k");
     const blackKing = Brain.findPiece(resultFen, "b", "k");
     const rookIsSafe = !Brain.blackCanTakeWhiteMajorPiece(resultFen, "r");
-    const isSavingRook = rookStartsAttacked && rookIsSafe && move?.piece === "r";
-    const startingRookBetweenKings =
-      beforeRook && beforeWhiteKing && beforeBlackKing
-        ? Brain.isMajorPieceBetweenKings(beforeRook, beforeWhiteKing, beforeBlackKing)
-        : false;
     const rookBetweenKings =
       whiteRook && whiteKing && blackKing
         ? Brain.isMajorPieceBetweenKings(whiteRook, whiteKing, blackKing)
         : false;
-    const startingBoxSize =
-      startingRookBetweenKings && beforeRook && beforeBlackKing
-        ? Brain.getRookOneDimensionalBoxSize(beforeRook.square, beforeBlackKing.square)
-        : 99;
-    const maintainsStartingBox =
-      startingRookBetweenKings &&
-      rookBetweenKings &&
-      whiteRook &&
-      blackKing &&
-      Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square) ===
-        startingBoxSize;
-    const isKnightRookMove = kingsAreKnightMove && move?.piece === "r";
+    const rookCutAxis =
+      whiteRook && whiteKing && blackKing
+        ? Brain.getRookCutAxis(whiteRook, whiteKing, blackKing)
+        : null;
     return {
       matePenalty: chess.isCheckmate() ? 0 : 1,
       rookCapturePenalty: rookIsSafe ? 0 : 1,
       stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
-      diagonalChainPenalty:
+      rookKingContactPenalty:
         whiteRook &&
         whiteKing &&
-        blackKing &&
-        Brain.isThreePieceDiagonalChain(whiteKing.square, whiteRook.square, blackKing.square)
+        (Brain.isDiagonalKingMove(whiteKing.square, whiteRook.square) ||
+          Brain.sharesRankOrFile(whiteKing.square, whiteRook.square))
           ? 1
           : 0,
       rookBetweenKingsPenalty: rookBetweenKings ? 0 : 1,
-      rookEdgePenalty:
-        whiteRook && Brain.edgeDistance(whiteRook.square) === 0 ? 0 : 1,
       oppositionRookCheckPenalty:
         hasStartingKingOpposition &&
         move?.piece === "r" &&
@@ -1004,37 +980,21 @@ export default class Brain {
           ? 1
           : 0,
       boxSize:
-        whiteRook && blackKing
-          ? Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square)
+        whiteRook && whiteKing && blackKing && rookCutAxis
+          ? Brain.getRookBoxSize(whiteRook, whiteKing, blackKing)
           : 99,
-      edgeTrapPenalty: 0,
-      saveRookBoxPenalty:
-        isSavingRook && startingRookBetweenKings && !maintainsStartingBox ? 1 : 0,
-      saveRookEdgePenalty:
-        isSavingRook &&
-        maintainsStartingBox &&
-        whiteRook &&
-        Brain.edgeDistance(whiteRook.square) > 0
-          ? 1
-          : 0,
-      saveRookKingDistance:
-        isSavingRook && whiteRook && whiteKing
-          ? Brain.manhattanDistance(whiteRook.square, whiteKing.square)
-          : 0,
-      kingEdgePenalty: whiteKing && Brain.edgeDistance(whiteKing.square) === 0 ? 1 : 0,
-      knightRookSidePenalty: kingsAreKnightMove
-        ? isKnightRookMove && whiteRook && whiteKing && blackKing
+      rookBlackSidePenalty:
+        whiteRook && whiteKing && blackKing
           ? Brain.kingDistance(whiteRook.square, whiteKing.square) <
             Brain.kingDistance(whiteRook.square, blackKing.square)
             ? 0
             : 1
-          : 99
-        : 0,
-      knightRookBlackDistanceScore: kingsAreKnightMove
-        ? isKnightRookMove && whiteRook && blackKing
+          : 0,
+      rookBlackDistanceScore:
+        whiteRook && blackKing
           ? -Brain.kingDistance(whiteRook.square, blackKing.square)
-          : 99
-        : 0,
+          : 0,
+      kingEdgePenalty: whiteKing && Brain.edgeDistance(whiteKing.square) === 0 ? 1 : 0,
       kingDistance:
         whiteKing && blackKing
           ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
@@ -1054,20 +1014,15 @@ export default class Brain {
       { reason: "mate", compare: (a, b) => a.matePenalty - b.matePenalty },
       { reason: "rook safe", compare: (a, b) => a.rookCapturePenalty - b.rookCapturePenalty },
       { reason: "no stalemate", compare: (a, b) => a.stalematePenalty - b.stalematePenalty },
-      { reason: "no diagonal chain", compare: (a, b) => a.diagonalChainPenalty - b.diagonalChainPenalty },
+      { reason: "king rook separated", compare: (a, b) => a.rookKingContactPenalty - b.rookKingContactPenalty },
+      { reason: "direct opposition check", compare: (a, b) => a.oppositionRookCheckPenalty - b.oppositionRookCheckPenalty },
       { reason: "rook between kings", compare: (a, b) => a.rookBetweenKingsPenalty - b.rookBetweenKingsPenalty },
-      { reason: "rook on edge", compare: (a, b) => a.rookEdgePenalty - b.rookEdgePenalty },
-      { reason: "opposition rook check", compare: (a, b) => a.oppositionRookCheckPenalty - b.oppositionRookCheckPenalty },
       { reason: "avoid new own line", compare: (a, b) => a.edgeOwnLinePenalty - b.edgeOwnLinePenalty },
       { reason: "rook box size", compare: (a, b) => a.boxSize - b.boxSize },
-      { reason: "edge trap", compare: (a, b) => a.edgeTrapPenalty - b.edgeTrapPenalty },
-      { reason: "save rook box", compare: (a, b) => a.saveRookBoxPenalty - b.saveRookBoxPenalty },
-      { reason: "save rook edge", compare: (a, b) => a.saveRookEdgePenalty - b.saveRookEdgePenalty },
-      { reason: "save rook near king", compare: (a, b) => a.saveRookKingDistance - b.saveRookKingDistance },
-      { reason: "king off edge", compare: (a, b) => a.kingEdgePenalty - b.kingEdgePenalty },
-      { reason: "rook on white side", compare: (a, b) => a.knightRookSidePenalty - b.knightRookSidePenalty },
-      { reason: "far from black king", compare: (a, b) => a.knightRookBlackDistanceScore - b.knightRookBlackDistanceScore },
       { reason: "king closer", compare: (a, b) => a.kingDistance - b.kingDistance },
+      { reason: "closer to white", compare: (a, b) => a.rookBlackSidePenalty - b.rookBlackSidePenalty },
+      { reason: "maximize black distance", compare: (a, b) => a.rookBlackDistanceScore - b.rookBlackDistanceScore },
+      { reason: "king off edge", compare: (a, b) => a.kingEdgePenalty - b.kingEdgePenalty },
     ];
   }
 
@@ -1134,9 +1089,16 @@ export default class Brain {
                 whiteKing.square,
                 whiteQueen.square,
                 startingCage.corner
-              )
+              ) *
+                8 +
+                Brain.getQueenCageKingApproachManhattanDistance(
+                  whiteKing.square,
+                  whiteQueen.square,
+                  startingCage.corner
+                )
             : 99
           : 0,
+      kingMiddlePenalty: whiteKing && Brain.isMiddle16Square(whiteKing.square) ? 0 : 1,
       majorBetweenKingsPenalty:
         move?.piece === "k" &&
         whiteQueen &&
@@ -1171,6 +1133,7 @@ export default class Brain {
       { reason: "no stalemate", compare: (a, b) => a.stalematePenalty - b.stalematePenalty },
       { reason: "corner cage", compare: (a, b) => a.cagePenalty - b.cagePenalty },
       { reason: "king to cage", compare: (a, b) => a.cageKingApproach - b.cageKingApproach },
+      { reason: "king in middle", compare: (a, b) => a.kingMiddlePenalty - b.kingMiddlePenalty },
       { reason: "queen between kings", compare: (a, b) => a.majorBetweenKingsPenalty - b.majorBetweenKingsPenalty },
       { reason: "queen knight move", compare: (a, b) => a.queenKnightMovePenalty - b.queenKnightMovePenalty },
       { reason: "king closer", compare: (a, b) => a.kingDistance - b.kingDistance },
@@ -1191,6 +1154,7 @@ export default class Brain {
       a.stalematePenalty === b.stalematePenalty &&
       a.cagePenalty === b.cagePenalty &&
       a.cageKingApproach === b.cageKingApproach &&
+      a.kingMiddlePenalty === b.kingMiddlePenalty &&
       a.majorBetweenKingsPenalty === b.majorBetweenKingsPenalty &&
       a.queenKnightMovePenalty === b.queenKnightMovePenalty &&
       a.kingDistance === b.kingDistance &&
@@ -2387,6 +2351,16 @@ export default class Brain {
     );
   }
 
+  static isMiddle16Square(square: Square): boolean {
+    const coords = Brain.squareCoords(square);
+    return (
+      coords.file >= 2 &&
+      coords.file <= 5 &&
+      coords.rank >= 2 &&
+      coords.rank <= 5
+    );
+  }
+
   static centerDistance(square: Square): number {
     const coords = Brain.squareCoords(square);
     return Math.min(
@@ -2507,16 +2481,19 @@ export default class Brain {
     const placements = Brain.getChess(fen)
       .board()
       .flat()
-      .filter((piece) => piece !== null && piece.square !== square)
+      .filter(
+        (piece) =>
+          piece !== null &&
+          piece.square !== square &&
+          !(piece.color === "b" && piece.type === "k")
+      )
       .map((piece) => ({
         color: piece!.color,
         type: piece!.type,
         isPawn: piece!.type === "p",
-        square: piece!.color === "b" && piece!.type === "k" ? square : piece!.square,
+        square: piece!.square,
       }));
-    if (!placements.some((piece) => piece.color === "b" && piece.type === "k")) {
-      return null;
-    }
+    placements.push({ color: "b", type: "k", isPawn: false, square });
     const candidateFen = `${Brain.boardFenFromPlacements(placements)} ${turn} - - 0 1`;
     try {
       Brain.getChess(candidateFen);
@@ -2555,6 +2532,21 @@ export default class Brain {
           Brain.isKnightMove(square, whiteQueenSquare)
       )
       .map((square) => Brain.kingDistance(whiteKingSquare, square));
+    return targetDistances.length === 0 ? 99 : Math.min(...targetDistances);
+  }
+
+  static getQueenCageKingApproachManhattanDistance(
+    whiteKingSquare: Square,
+    whiteQueenSquare: Square,
+    corner: Square
+  ): number {
+    const targetDistances = Brain.boardSquares()
+      .filter(
+        (square) =>
+          Brain.isKnightMove(square, corner) &&
+          Brain.isKnightMove(square, whiteQueenSquare)
+      )
+      .map((square) => Brain.manhattanDistance(whiteKingSquare, square));
     return targetDistances.length === 0 ? 99 : Math.min(...targetDistances);
   }
 
@@ -2600,6 +2592,28 @@ export default class Brain {
       return "file";
     }
     return null;
+  }
+
+  static getRookBoxSize(
+    whiteRook: { square: Square },
+    whiteKing: { square: Square },
+    blackKing: { square: Square }
+  ): number {
+    const rook = Brain.squareCoords(whiteRook.square);
+    const white = Brain.squareCoords(whiteKing.square);
+    const black = Brain.squareCoords(blackKing.square);
+    const cutSizes: number[] = [];
+    if (Brain.isStrictlyBetween(rook.rank, white.rank, black.rank)) {
+      cutSizes.push(
+        Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square, "rank")
+      );
+    }
+    if (Brain.isStrictlyBetween(rook.file, white.file, black.file)) {
+      cutSizes.push(
+        Brain.getRookOneDimensionalBoxSize(whiteRook.square, blackKing.square, "file")
+      );
+    }
+    return cutSizes.length === 0 ? 99 : Math.min(...cutSizes);
   }
 
   static getRookOneDimensionalBoxSize(
