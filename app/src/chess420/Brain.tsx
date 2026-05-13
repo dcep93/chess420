@@ -54,6 +54,12 @@ type TwoBishopsLookupEntry = {
   to: Square;
 };
 
+type KnightAndBishopLookupEntry = {
+  key: string;
+  from: Square;
+  to: Square;
+};
+
 type EndgamePositionScore =
   | {
       kind: "generic";
@@ -270,6 +276,16 @@ export default class Brain {
       to: "c7",
     },
     {
+      key: "4k3/1BB5/5K2/8/8/8/8/8 w",
+      from: "b7",
+      to: "c6",
+    },
+    {
+      key: "4k3/1BB5/5K2/8/8/8/8/8 w",
+      from: "f6",
+      to: "e6",
+    },
+    {
       key: "4k3/8/3K4/3BB3/8/8/8/8 w",
       from: "d5",
       to: "e6",
@@ -353,6 +369,418 @@ export default class Brain {
       key: "8/8/8/2B5/8/2K2B2/8/2k5 w",
       from: "c5",
       to: "e3",
+    },
+  ];
+  static readonly KNIGHT_AND_BISHOP_LOOKUP_ENTRIES: KnightAndBishopLookupEntry[] = [
+    {
+      key: "7k/8/5K2/6N1/4B3/8/8/8 w",
+      from: "g5",
+      to: "f7",
+    },
+    {
+      key: "6k1/5N2/5K2/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "g6",
+    },
+    {
+      key: "5k2/5N2/5KB1/8/8/8/8/8 w",
+      from: "g6",
+      to: "h7",
+    },
+    {
+      key: "4k3/5N1B/5K2/8/8/8/8/8 w",
+      from: "f7",
+      to: "e5",
+    },
+    {
+      key: "5k2/7B/5K2/4N3/8/8/8/8 w",
+      from: "e5",
+      to: "d7",
+    },
+    {
+      key: "3k4/7B/5K2/4N3/8/8/8/8 w",
+      from: "f6",
+      to: "e6",
+    },
+    {
+      key: "2k5/7B/4K3/4N3/8/8/8/8 w",
+      from: "e5",
+      to: "d7",
+    },
+    {
+      key: "8/2kN3B/4K3/8/8/8/8/8 w",
+      from: "h7",
+      to: "e4",
+    },
+    {
+      key: "2k5/3N3B/4K3/8/8/8/8/8 w",
+      from: "h7",
+      to: "e4",
+    },
+    {
+      key: "2k5/3N3B/3K4/8/8/8/8/8 w",
+      from: "d6",
+      to: "e6",
+    },
+    {
+      key: "4k3/7B/4K3/4N3/8/8/8/8 w",
+      from: "e5",
+      to: "d7",
+    },
+    {
+      key: "8/2k4B/4K3/4N3/8/8/8/8 w",
+      from: "e5",
+      to: "d7",
+    },
+    {
+      key: "8/1k1N3B/4K3/8/8/8/8/8 w",
+      from: "h7",
+      to: "d3",
+    },
+    {
+      key: "k7/3N4/4K3/8/8/3B4/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "8/1k1N4/3K4/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "c4",
+    },
+    {
+      key: "8/3N4/2k1K3/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "c4",
+    },
+    {
+      key: "8/1k1N4/4K3/8/2B5/8/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "8/1k1N4/4K3/8/8/3B4/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "2k5/3N4/3K4/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "e4",
+    },
+    {
+      key: "8/k2N4/3K4/8/2B5/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "8/k2N4/4K3/8/8/3B4/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "k7/3N4/3K4/8/8/3B4/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "k7/3N4/2K5/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "c4",
+    },
+    {
+      key: "8/k2N4/2K5/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "c4",
+    },
+    {
+      key: "8/k2N4/3K4/8/8/3B4/8/8 w",
+      from: "d6",
+      to: "e6",
+    },
+    {
+      key: "k7/3N4/2K5/8/2B5/8/8/8 w",
+      from: "d7",
+      to: "c5",
+    },
+    {
+      key: "k7/3N4/3K4/8/2B5/8/8/8 w",
+      from: "c4",
+      to: "d3",
+    },
+    {
+      key: "8/3N3B/2k1K3/8/8/8/8/8 w",
+      from: "h7",
+      to: "d3",
+    },
+    {
+      key: "8/2kN4/4K3/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "e4",
+    },
+    {
+      key: "8/2kN4/4K3/8/2B5/8/8/8 w",
+      from: "c4",
+      to: "d5",
+    },
+    {
+      key: "8/2kN4/4K3/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "d5",
+    },
+    {
+      key: "2k5/3N4/4K3/8/8/3B4/8/8 w",
+      from: "d3",
+      to: "h7",
+    },
+    {
+      key: "3k4/3N4/4K3/8/4B3/8/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "3k4/3N4/3K4/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "f5",
+    },
+    {
+      key: "4k3/3N4/3K4/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "g6",
+    },
+    {
+      key: "4k3/3N4/3K4/5B2/8/8/8/8 w",
+      from: "f5",
+      to: "g6",
+    },
+    {
+      key: "2k5/3N4/3K4/5B2/8/8/8/8 w",
+      from: "d7",
+      to: "c5",
+    },
+    {
+      key: "1k6/8/3K4/2N2B2/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "8/k7/2K5/2N2B2/8/8/8/8 w",
+      from: "f5",
+      to: "e6",
+    },
+    {
+      key: "k7/8/2K1B3/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "2k5/3N4/4K3/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "h7",
+    },
+    {
+      key: "2k5/3N4/3K4/8/4B3/8/8/8 w",
+      from: "e4",
+      to: "d5",
+    },
+    {
+      key: "3k4/3N4/3K4/3B4/8/8/8/8 w",
+      from: "d5",
+      to: "f7",
+    },
+    {
+      key: "2k5/3N4/3K4/3B4/8/8/8/8 w",
+      from: "d5",
+      to: "e4",
+    },
+    {
+      key: "2k5/3N4/4K3/3B4/8/8/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "2k5/3N4/4K3/3B4/8/8/8/8 w",
+      from: "d5",
+      to: "e4",
+    },
+    {
+      key: "3k4/3N4/4K3/3B4/8/8/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "4k3/3N4/3K4/3B4/8/8/8/8 w",
+      from: "d5",
+      to: "e6",
+    },
+    {
+      key: "3k4/3N4/3KB3/8/8/8/8/8 w",
+      from: "e6",
+      to: "f7",
+    },
+    {
+      key: "2k5/3N1B2/3K4/8/8/8/8/8 w",
+      from: "d7",
+      to: "c5",
+    },
+    {
+      key: "4k3/3N3B/5K2/8/8/8/8/8 w",
+      from: "f6",
+      to: "e6",
+    },
+    {
+      key: "3k4/3N3B/4K3/8/8/8/8/8 w",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "4k3/3N3B/3K4/8/8/8/8/8 w",
+      from: "h7",
+      to: "g6",
+    },
+    {
+      key: "3k4/3N4/3K2B1/8/8/8/8/8 w",
+      from: "d7",
+      to: "c5",
+    },
+    {
+      key: "2k5/3N4/3K4/8/2B5/8/8/8 w",
+      from: "c4",
+      to: "d5",
+    },
+    {
+      key: "3k4/8/3K4/2N2B2/8/8/8/8 w",
+      from: "c5",
+      to: "d7",
+    },
+    {
+      key: "3k4/8/3K4/2N2B2/8/8/8/8 w",
+      from: "f5",
+      to: "g6",
+    },
+    {
+      key: "1k6/8/2K5/2N5/2B5/8/8/8 w",
+      from: "c4",
+      to: "e6",
+    },
+    {
+      key: "k7/8/2K5/2N2B2/8/8/8/8 w",
+      from: "f5",
+      to: "e6",
+    },
+    {
+      key: "2k5/8/3K2B1/2N5/8/8/8/8 w",
+      from: "g6",
+      to: "f7",
+    },
+    {
+      key: "3k4/5B2/3K4/2N5/8/8/8/8 w",
+      from: "c5",
+      to: "b7",
+    },
+    {
+      key: "1k6/5B2/3K4/2N5/8/8/8/8 w",
+      from: "f7",
+      to: "e6",
+    },
+    {
+      key: "8/k7/3KB3/2N5/8/8/8/8 w",
+      from: "d6",
+      to: "c7",
+    },
+    {
+      key: "k7/2K5/4B3/2N5/8/8/8/8 w",
+      from: "c7",
+      to: "b6",
+    },
+    {
+      key: "1k6/8/1K2B3/2N5/8/8/8/8 w",
+      from: "c5",
+      to: "a6",
+    },
+    {
+      key: "k7/8/NK2B3/8/8/8/8/8 w",
+      from: "e6",
+      to: "d5",
+    },
+    {
+      key: "k7/8/3KB3/2N5/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "8/k7/2K1B3/2N5/8/8/8/8 w",
+      from: "e6",
+      to: "d7",
+    },
+    {
+      key: "8/k7/2K5/2N5/2B5/8/8/8 w",
+      from: "c5",
+      to: "d7",
+    },
+    {
+      key: "1k6/8/2K1B3/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "d6",
+    },
+    {
+      key: "1k6/8/2K1B3/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "1k6/3B4/2K5/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "k7/3B4/2K5/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "k7/3B4/1K6/2N5/8/8/8/8 w",
+      from: "d7",
+      to: "e6",
+    },
+    {
+      key: "2k5/1N3B2/3K4/8/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "1k6/1N3B2/2K5/8/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "k7/1N3B2/1K6/8/8/8/8/8 w",
+      from: "f7",
+      to: "e6",
+    },
+    {
+      key: "2k5/1N3B2/1K6/8/8/8/8/8 w",
+      from: "f7",
+      to: "e6",
+    },
+    {
+      key: "1k6/1N6/1K2B3/8/8/8/8/8 w",
+      from: "b7",
+      to: "c5",
+    },
+    {
+      key: "k7/8/1K2B3/2N5/8/8/8/8 w",
+      from: "e6",
+      to: "d7",
+    },
+    {
+      key: "1k6/3B4/1K6/2N5/8/8/8/8 w",
+      from: "c5",
+      to: "a6",
+    },
+    {
+      key: "k7/3B4/NK6/8/8/8/8/8 w",
+      from: "d7",
+      to: "c6",
     },
   ];
   static readonly SQUARE_TRANSFORMS: SquareTransform[] = [
@@ -512,7 +940,7 @@ export default class Brain {
     }
     const baseEndgameId = Brain.getSelectedBaseEndgameId();
     if (baseEndgameId === "knightAndBishop") {
-      return `${Brain.getKnightAndBishopPhase(fen)}/3`;
+      return Brain.isKnightAndBishopLookupPhasePosition(fen) ? "2/2" : "1/2";
     }
     if (baseEndgameId === "twoBishops") {
       return `${Brain.getTwoBishopsPhase(fen)}/2`;
@@ -540,6 +968,27 @@ export default class Brain {
       return 2;
     }
     return 1;
+  }
+
+  static isKnightAndBishopLookupPhasePosition(fen: string): boolean {
+    if (!Brain.knightAndBishopPiecesPresent(fen)) {
+      return false;
+    }
+    const chess = Brain.getChess(fen);
+    if (chess.turn() === "w") {
+      return Brain.getKnightAndBishopLookupWhiteMoves(fen).length > 0;
+    }
+    if (chess.isCheckmate()) {
+      return Brain.lookupEntryResultMatches(
+        fen,
+        Brain.KNIGHT_AND_BISHOP_LOOKUP_ENTRIES
+      );
+    }
+    return chess.moves().some((san) => {
+      const nextChess = Brain.getChess(fen);
+      nextChess.move(san);
+      return Brain.getKnightAndBishopLookupWhiteMoves(nextChess.fen()).length > 0;
+    });
   }
 
   static getTwoBishopsPhase(fen: string): number {
@@ -633,6 +1082,12 @@ export default class Brain {
       return incorrect
         ? Brain.getScoreReason(correct.score, incorrect.score, Brain.getQueenWhiteScoreReasons())
         : "";
+    }
+    if (baseEndgameId === "knightAndBishop") {
+      const lookupMoves = Brain.getKnightAndBishopLookupWhiteMoves(fen);
+      if (lookupMoves.length > 0) {
+        return "mating net";
+      }
     }
     if (baseEndgameId === "twoBishops") {
       const lookupMoves = Brain.getTwoBishopsLookupWhiteMoves(fen);
@@ -1124,6 +1579,10 @@ export default class Brain {
     if (chess.turn() !== "w" || moves.length === 0) {
       return moves;
     }
+    const lookupMoves = Brain.getKnightAndBishopLookupWhiteMoves(fen);
+    if (lookupMoves.length > 0) {
+      return lookupMoves;
+    }
     const scoredMoves = moves.map((san, index) => ({
       san,
       index,
@@ -1136,6 +1595,52 @@ export default class Brain {
         (move) => Brain.compareKnightAndBishopWhiteScores(move, best) === 0
       )
       .map((move) => move.san);
+  }
+
+  static getKnightAndBishopLookupWhiteMoves(fen: string): string[] {
+    const lookupMoves: string[] = [];
+    for (const transform of Brain.SQUARE_TRANSFORMS) {
+      const key = Brain.getTransformedPositionKey(fen, transform);
+      for (const entry of Brain.KNIGHT_AND_BISHOP_LOOKUP_ENTRIES.filter(
+        (lookupEntry) => lookupEntry.key === key
+      )) {
+        const inverseTransform = Brain.getSquareTransform(transform.inverseName);
+        const from = Brain.transformSquare(entry.from, inverseTransform);
+        const to = Brain.transformSquare(entry.to, inverseTransform);
+        const chess = Brain.getChess(fen);
+        const move = chess.move({ from, to });
+        if (move && !lookupMoves.includes(move.san)) {
+          lookupMoves.push(move.san);
+        }
+      }
+    }
+    return lookupMoves;
+  }
+
+  static lookupEntryResultMatches(
+    fen: string,
+    entries: Array<{ key: string; from: Square; to: Square }>
+  ): boolean {
+    return Brain.SQUARE_TRANSFORMS.some((transform) => {
+      const key = Brain.getTransformedPositionKey(fen, transform);
+      return entries.some(
+        (entry) => Brain.getLookupEntryResultKey(entry) === key
+      );
+    });
+  }
+
+  static getLookupEntryResultKey(entry: {
+    key: string;
+    from: Square;
+    to: Square;
+  }): string {
+    const [board, turn] = entry.key.split(" ");
+    const chess = Brain.getChess(`${board} ${turn} - - 0 1`);
+    chess.move({ from: entry.from, to: entry.to });
+    return Brain.getTransformedPositionKey(
+      chess.fen(),
+      Brain.getSquareTransform("identity")
+    );
   }
 
   static scoreKnightAndBishopWhiteMove(fen: string, san: string) {
@@ -2766,6 +3271,9 @@ export default class Brain {
     moves: string[];
     idealMoves: string[];
   } {
+    if (Brain.knightAndBishopBlackHasLookupReply(chess.fen(), moves)) {
+      return { moves, idealMoves: moves };
+    }
     const scoredMoves = moves.map((san, index) => {
       const nextChess = Brain.getChess(chess.fen());
       nextChess.move(san);
@@ -2798,6 +3306,17 @@ export default class Brain {
         )
         .map((move) => move.san),
     };
+  }
+
+  static knightAndBishopBlackHasLookupReply(
+    fen: string,
+    moves: string[]
+  ): boolean {
+    return moves.some((san) => {
+      const chess = Brain.getChess(fen);
+      chess.move(san);
+      return Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()).length > 0;
+    });
   }
 
   static scoreKnightAndBishopOpponentPosition(fen: string) {

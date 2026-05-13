@@ -373,6 +373,462 @@ test("non-rook and non-queen endgames choose legal deterministic moves", () => {
   }
 });
 
+test("knight-bishop lookup chooses mating net moves", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf7+",
+    "Kg8",
+    "Bg6",
+    "Kf8",
+    "Bh7",
+    "Ke8",
+    "Ne5",
+    "Kf8",
+    "Nd7+",
+    "Ke8",
+    "Ke6",
+    "Kd8",
+    "Kd6",
+    "Ke8",
+    "Bg6+",
+    "Kd8",
+    "Nc5",
+    "Kc8",
+    "Bf7",
+    "Kd8",
+    "Nb7+",
+    "Kc8",
+    "Kc6",
+    "Kb8",
+    "Kb6",
+    "Kc8",
+    "Be6+",
+    "Kb8",
+    "Nc5",
+    "Ka8",
+    "Bd7",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bc6#",
+  ];
+  const chess = Brain.getChess(
+    "7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22",
+  );
+
+  assert.equal(Brain.getEndgamePhase(getEndgame("knightAndBishop").fen), "1/2");
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.ok(
+        Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+        `${san} should be accepted from ${chess.fen()}`,
+      );
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(chess).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+    }
+    chess.move(san);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup accepts moves through every board symmetry", () => {
+  setEndgame("knightAndBishop");
+
+  for (const entry of Brain.KNIGHT_AND_BISHOP_LOOKUP_ENTRIES) {
+    for (const transform of Brain.SQUARE_TRANSFORMS) {
+      const inverseTransform = Brain.getSquareTransform(transform.inverseName);
+      const fen = transformLookupEntryFen(entry.key, inverseTransform.name);
+      const from = Brain.transformSquare(entry.from, inverseTransform);
+      const to = Brain.transformSquare(entry.to, inverseTransform);
+      const expectedSan = getMoveSan(fen, from, to);
+
+      assert.ok(
+        Brain.getIdealEndgameWhiteMoves(fen).includes(expectedSan),
+        `${entry.key} via ${transform.name}: ${expectedSan}`,
+      );
+      assert.equal(Brain.getEndgamePhase(fen), "2/2", fen);
+    }
+  }
+});
+
+test("knight-bishop phase-two black replies are all ideal when a lookup reply exists", () => {
+  setEndgame("knightAndBishop");
+  const chess = Brain.getChess(
+    "1k6/1N3B2/2K5/8/8/8/8/8 w - - 66 34",
+  );
+
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Kb6"));
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+  chess.move("Kb6");
+  const candidates = Brain.getEndgameOpponentCandidates(chess);
+  assert.deepEqual(candidates.moves, ["Kc8", "Ka8"]);
+  assert.deepEqual(candidates.idealMoves, candidates.moves);
+
+  chess.move("Ka8");
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Be6"));
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+});
+
+test("knight-bishop lookup includes alternate bishop f7 branches", () => {
+  setEndgame("knightAndBishop");
+  const lines = [
+    [
+      "Bf7",
+      "Kb8",
+      "Be6",
+      "Ka7",
+      "Kc7",
+      "Ka8",
+      "Kb6",
+      "Kb8",
+      "Na6+",
+      "Ka8",
+      "Bd5#",
+    ],
+    [
+      "Bf7",
+      "Kb8",
+      "Be6",
+      "Ka8",
+      "Kc6",
+      "Ka7",
+      "Bd7",
+      "Kb8",
+      "Kb6",
+      "Ka8",
+      "Be6",
+      "Kb8",
+      "Na6+",
+      "Ka8",
+      "Bd5#",
+    ],
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(
+      "2k5/8/3K2B1/2N5/8/8/8/8 w - - 60 31",
+    );
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    for (const san of line) {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+        assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      } else {
+        const candidates = Brain.getEndgameOpponentCandidates(chess);
+        if (chess.fen().startsWith("2k5/5B2/3K4/2N5/8/8/8/8 b ")) {
+          assert.deepEqual(candidates.moves, ["Kd8", "Kb8"]);
+          assert.deepEqual(candidates.idealMoves, candidates.moves);
+        }
+        assert.ok(
+          candidates.idealMoves.includes(san),
+          `${san} should be an ideal reply from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+      assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+    }
+    assert.equal(chess.isCheckmate(), true);
+  }
+});
+
+test("knight-bishop lookup includes knight retreat branches", () => {
+  setEndgame("knightAndBishop");
+  const lines = [
+    ["Ke6", "Ke8", "Nd7", "Kd8"],
+    [
+      "Ke6",
+      "Kc7",
+      "Nd7",
+      "Kc6",
+      "Bd3",
+      "Kc7",
+      "Be4",
+      "Kd8",
+      "Kd6",
+      "Ke8",
+      "Bg6+",
+      "Kd8",
+    ],
+    [
+      "Ke6",
+      "Kc7",
+      "Nd7",
+      "Kc6",
+      "Bd3",
+      "Kc7",
+      "Be4",
+      "Kd8",
+      "Kd6",
+      "Kc8",
+      "Bd5",
+      "Kd8",
+      "Bf7",
+      "Kc8",
+      "Nc5",
+      "Kd8",
+    ],
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(
+      "3k4/7B/5K2/4N3/8/8/8/8 w - - 50 26",
+    );
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    for (const san of line) {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+        assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      } else {
+        assert.ok(
+          Brain.getEndgameOpponentCandidates(chess).idealMoves.includes(san),
+          `${san} should be an ideal reply from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+      assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+    }
+  }
+});
+
+test("knight-bishop lookup includes king c8 and knight d7 branches", () => {
+  setEndgame("knightAndBishop");
+  const lines = [
+    [
+      "Nd7",
+      "Kc7",
+      "Be4",
+      "Kd8",
+    ],
+    [
+      "Ke6",
+      "Kc8",
+      "Nd7",
+      "Kb7",
+      "Bd3",
+      "Ka8",
+      "Kd6",
+      "Kb7",
+      "Bc4",
+      "Ka7",
+      "Kc6",
+      "Ka8",
+      "Nc5",
+      "Kb8",
+    ],
+  ];
+
+  const starts = [
+    "2k5/7B/4K3/4N3/8/8/8/8 w - - 52 27",
+    "3k4/7B/5K2/4N3/8/8/8/8 w - - 50 26",
+  ];
+
+  lines.forEach((line, index) => {
+    const chess = Brain.getChess(starts[index]);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    for (const san of line) {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+        assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      } else {
+        const candidates = Brain.getEndgameOpponentCandidates(chess);
+        if (chess.fen().startsWith("2k5/3N3B/4K3/8/8/8/8/8 b ")) {
+          assert.deepEqual(candidates.idealMoves, candidates.moves);
+        }
+        if (chess.fen().startsWith("3k4/7B/4K3/4N3/8/8/8/8 b ")) {
+          assert.deepEqual(candidates.idealMoves, candidates.moves);
+        }
+        assert.ok(
+          candidates.idealMoves.includes(san),
+          `${san} should be an ideal reply from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+    }
+  });
+});
+
+test("knight-bishop lookup patches forced re-entry holes", () => {
+  setEndgame("knightAndBishop");
+  const cases = [
+    ["2k5/3N3B/4K3/8/8/8/8/8 w - - 54 28", "Be4"],
+    ["2k5/3N3B/3K4/8/8/8/8/8 w - - 56 29", "Ke6"],
+    ["2k5/3N4/4K3/8/8/3B4/8/8 w - - 56 29", "Bh7"],
+    ["2k5/3N4/4K3/8/4B3/8/8/8 w - - 56 29", "Bh7"],
+    ["2k5/3N4/4K3/3B4/8/8/8/8 w - - 58 30", ["Kd6", "Be4"]],
+    ["8/k2N4/3K4/8/8/3B4/8/8 w - - 58 30", "Ke6"],
+    ["2k5/3N4/3K4/3B4/8/8/8/8 w - - 60 31", "Be4"],
+    ["2k5/3N4/3K4/8/2B5/8/8/8 w - - 60 31", "Bd5"],
+    ["3k4/8/3K4/2N2B2/8/8/8/8 w - - 64 33", ["Nd7", "Bg6"]],
+    ["8/k7/2K5/2N5/2B5/8/8/8 w - - 64 33", "Nd7"],
+    ["1k6/8/2K5/2N5/2B5/8/8/8 w - - 64 33", "Be6"],
+    ["1k6/8/2K1B3/2N5/8/8/8/8 w - - 66 34", ["Kd6", "Kb6"]],
+    ["k7/8/2K5/2N2B2/8/8/8/8 w - - 66 34", "Be6"],
+    ["8/2kN4/4K3/8/2B5/8/8/8 w - - 58 30", "Bd5"],
+    ["k7/3N4/3K4/8/2B5/8/8/8 w - - 60 31", "Bd3"],
+    ["k7/3B4/2K5/2N5/8/8/8/8 w - - 68 35", "Kb6"],
+  ] as const;
+
+  for (const [fen, expectedMoves] of cases) {
+    const moves = expectedMovesArray(expectedMoves);
+    for (const expectedMove of moves) {
+      const chess = Brain.getChess(fen);
+      assert.ok(
+        Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(expectedMove),
+        `${expectedMove} should be accepted from ${chess.fen()}`,
+      );
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+      chess.move(expectedMove);
+      const candidates = Brain.getEndgameOpponentCandidates(chess);
+      assert.deepEqual(candidates.idealMoves, candidates.moves, chess.fen());
+
+      for (const blackMove of candidates.moves) {
+        const branch = Brain.getChess(chess.fen());
+        branch.move(blackMove);
+        assert.equal(Brain.getEndgamePhase(branch.fen()), "2/2", branch.fen());
+      }
+    }
+  }
+});
+
+test("knight-bishop lookup includes bishop d5 branch", () => {
+  setEndgame("knightAndBishop");
+  const chess = Brain.getChess(
+    "8/2kN4/4K3/8/4B3/8/8/8 w - - 56 29",
+  );
+  const line = ["Bd5", "Kd8", "Kd6", "Ke8", "Be6", "Kd8", "Bf7", "Kc8"];
+
+  assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+  assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.ok(
+        Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+        `${san} should be accepted from ${chess.fen()}`,
+      );
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(chess).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+    }
+    chess.move(san);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+  }
+
+  assert.ok(Brain.getIdealEndgameWhiteMoves(chess.fen()).includes("Nc5"));
+});
+
+test("knight-bishop lookup includes bishop d3 retreat branch", () => {
+  setEndgame("knightAndBishop");
+  const lines = [
+    ["Kd6", "Kc8", "Be4", "Kd8", "Bf5", "Ke8", "Bg6+", "Kd8"],
+    [
+      "Kd6",
+      "Kc8",
+      "Be4",
+      "Kd8",
+      "Bf5",
+      "Kc8",
+      "Nc5+",
+      "Kb8",
+      "Kc6",
+      "Ka7",
+      "Be6",
+      "Ka8",
+      "Kb6",
+      "Kb8",
+    ],
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(
+      "8/1k1N4/4K3/8/8/3B4/8/8 w - - 56 29",
+    );
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    for (const san of line) {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+        assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      } else {
+        assert.ok(
+          Brain.getEndgameOpponentCandidates(chess).idealMoves.includes(san),
+          `${san} should be an ideal reply from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+      assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+    }
+  }
+});
+
+test("knight-bishop lookup includes final bishop d3 holes", () => {
+  setEndgame("knightAndBishop");
+  const lines = [
+    {
+      fen: "8/3N4/2k1K3/8/8/3B4/8/8 w - - 56 29",
+      moves: ["Bc4", "Kb7", "Kd6", "Ka8"],
+    },
+    {
+      fen: "8/k2N4/4K3/8/8/3B4/8/8 w - - 56 29",
+      moves: ["Kd6", "Ka8", "Kc6", "Ka7", "Bc4", "Ka8"],
+    },
+  ];
+
+  for (const line of lines) {
+    const chess = Brain.getChess(line.fen);
+    assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2");
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    for (const san of line.moves) {
+      if (chess.turn() === "w") {
+        assert.ok(
+          Brain.getIdealEndgameWhiteMoves(chess.fen()).includes(san),
+          `${san} should be accepted from ${chess.fen()}`,
+        );
+        assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      } else {
+        assert.ok(
+          Brain.getEndgameOpponentCandidates(chess).idealMoves.includes(san),
+          `${san} should be an ideal reply from ${chess.fen()}`,
+        );
+      }
+      chess.move(san);
+      assert.equal(Brain.getEndgamePhase(chess.fen()), "2/2", chess.fen());
+    }
+  }
+});
+
 test("two-bishop lookup chooses exact mating phase moves", () => {
   setEndgame("twoBishops");
 
@@ -538,6 +994,26 @@ test("two-bishop phase-two black replies are all ideal when a lookup reply exist
   assert.deepEqual(candidates.moves, ["Kh5", "Kh3"]);
   assert.deepEqual(candidates.idealMoves, candidates.moves);
   assert.deepEqual(Brain.getIdealEndgameMovesForTurn(chess.fen()), candidates.moves);
+});
+
+test("two-bishop lookup patches forced re-entry holes", () => {
+  setEndgame("twoBishops");
+  const fen = "4k3/1BB5/5K2/8/8/8/8/8 w - - 54 28";
+  const expectedMoves = ["Bc6+", "Ke6"];
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), expectedMoves);
+  for (const expectedMove of expectedMoves) {
+    const chess = Brain.getChess(fen);
+    chess.move(expectedMove);
+    const candidates = Brain.getEndgameOpponentCandidates(chess);
+    assert.deepEqual(candidates.idealMoves, candidates.moves, chess.fen());
+
+    for (const blackMove of candidates.moves) {
+      const branch = Brain.getChess(chess.fen());
+      branch.move(blackMove);
+      assert.equal(Brain.getEndgamePhase(branch.fen()), "2/2", branch.fen());
+    }
+  }
 });
 
 test("two-bishop lookup includes lower-corner bishop net fragment", () => {
