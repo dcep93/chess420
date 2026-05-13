@@ -543,7 +543,7 @@
 .endgame-log-table {
   padding: 0.75rem;
   display: grid;
-  grid-template-columns: max-content max-content max-content max-content max-content max-content max-content;
+  grid-template-columns: max-content max-content max-content max-content max-content max-content max-content max-content;
   column-gap: 1rem;
   row-gap: 0.15rem;
   width: max-content;

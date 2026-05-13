@@ -16,6 +16,7 @@ export type LogType = {
   endgame_phase?: string;
   endgame_is_correct?: boolean;
   endgame_correct_choices?: number;
+  endgame_reason?: string;
 };
 
 const titles = [
@@ -195,6 +196,7 @@ function EndgameLog() {
           <div>num choices</div>
           <div>correctness</div>
           <div>duration</div>
+          <div>reason</div>
         </div>
         {logs.map((log, index) => (
           <EndgameLogRow log={log} index={index} key={`${index}-${log.san}-${log.opponent_san}`} />
@@ -212,6 +214,7 @@ function EndgameLogRow(props: { log: LogType; index: number }) {
     log.endgame_is_correct ?? Brain.isEndgameLogCorrect(log);
   const correctChoices =
     log.endgame_correct_choices ?? Brain.getIdealEndgameWhiteMoves(log.fen).length;
+  const reason = log.endgame_reason ?? Brain.getEndgameReason(log.fen);
   return (
     <div className="endgame-log-row">
       <div>{index + 1}</div>
@@ -235,6 +238,7 @@ function EndgameLogRow(props: { log: LogType; index: number }) {
         {correctChoices ? `/${correctChoices}` : ""}
       </div>
       <div>{formatDuration(log.duration_ms)}</div>
+      <div>{reason}</div>
     </div>
   );
 }
