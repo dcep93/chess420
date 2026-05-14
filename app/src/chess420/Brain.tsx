@@ -153,6 +153,7 @@ type RookWhiteMoveScore = {
   matePenalty: number;
   rookCapturePenalty: number;
   stalematePenalty: number;
+  rookBoxEstablishedPenalty: number;
   rookKingContactPenalty: number;
   rookBetweenKingsPenalty: number;
   oppositionRookCheckPenalty: number;
@@ -220,6 +221,11 @@ type TwoBishopsWaitingMoveContext = {
 type TwoBishopsBlackMoveScore = {
   unprotectedBishopDistance: number;
   centerDistance: number;
+};
+
+type KnightAndBishopPlanMove = {
+  san: string;
+  reason: string;
 };
 
 type ScoreReason<T> = {
@@ -1187,6 +1193,13 @@ export default class Brain {
         : "";
     }
     if (baseEndgameId === "knightAndBishop") {
+      const planMove = Brain.getKnightAndBishopHumanPlanMove(fen);
+      if (planMove) {
+        if (Brain.getKnightAndBishopLookupWhiteMoves(fen).length > 0) {
+          return "mating net";
+        }
+        return planMove.reason;
+      }
       const lookupMoves = Brain.getKnightAndBishopLookupWhiteMoves(fen);
       if (lookupMoves.length > 0) {
         return "mating net";
@@ -1289,6 +1302,7 @@ export default class Brain {
         "Checkmate immediately when mate is available.",
         "Keep the rook safe from capture.",
         "Avoid stalemate.",
+        "Establish the rook's box when the position is still phase 1.",
         "Keep the kings and rook from becoming tangled together.",
         "Use direct-opposition checks when they force progress.",
         "Put the rook between the kings when it helps hold the box.",
@@ -1324,6 +1338,7 @@ export default class Brain {
         "Keep the bishop and knight safe.",
         "Enter the known mating net when it is available.",
         "Keep the bishop and knight connected.",
+        "Force Black's king away from the center.",
         "Centralize White's king.",
         "Centralize the minor pieces.",
       ];
@@ -1864,6 +1879,10 @@ export default class Brain {
     if (mateMoves.length > 0) {
       return mateMoves;
     }
+    const planMove = Brain.getKnightAndBishopHumanPlanMove(fen);
+    if (planMove) {
+      return [planMove.san];
+    }
     const lookupMoves = Brain.getKnightAndBishopLookupWhiteMoves(fen);
     if (lookupMoves.length > 0) {
       return lookupMoves;
@@ -1876,6 +1895,114 @@ export default class Brain {
       }),
       Brain.compareKnightAndBishopWhiteScores
     );
+  }
+
+  static getKnightAndBishopHumanPlanMove(
+    fen: string
+  ): KnightAndBishopPlanMove | undefined {
+    const chess = Brain.getChess(fen);
+    if (chess.turn() !== "w") {
+      return undefined;
+    }
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const bishop = Brain.findPiece(fen, "w", "b");
+    const knight = Brain.findPiece(fen, "w", "n");
+    if (!whiteKing || !blackKing || !bishop || !knight) {
+      return undefined;
+    }
+    const matches = (
+      black: Square,
+      king: Square,
+      bishopSquare: Square,
+      knightSquare: Square
+    ) =>
+      blackKing.square === black &&
+      whiteKing.square === king &&
+      bishop.square === bishopSquare &&
+      knight.square === knightSquare;
+    const move = (from: Square, to: Square, reason: string) => {
+      const next = Brain.getChess(fen);
+      const result = next.move({ from, to });
+      return result ? { san: result.san, reason } : undefined;
+    };
+
+    if (matches("d5", "e1", "f1", "g1")) {
+      return move("e1", "d2", "centralize king");
+    }
+    if (matches("e5", "d2", "f1", "g1")) {
+      return move("d2", "e3", "centralize king");
+    }
+    if (matches("d5", "e3", "f1", "g1")) {
+      return move("g1", "f3", "take away central squares");
+    }
+    if (matches("c5", "e3", "f1", "f3")) {
+      return move("e3", "e4", "centralize king");
+    }
+    if (matches("d6", "e4", "f1", "f3")) {
+      return move("f1", "c4", "centralize pieces");
+    }
+    if (matches("c5", "e4", "c4", "f3")) {
+      return move("c4", "d5", "take away central squares");
+    }
+    if (matches("d7", "d4", "d5", "f3")) {
+      return move("f3", "e5", "kick black king back");
+    }
+    if (matches("e7", "d4", "d5", "e5")) {
+      return move("d4", "e4", "king near middle");
+    }
+    if (matches("f6", "e4", "d5", "e5")) {
+      return move("e5", "c6", "take away key squares");
+    }
+    if (matches("h7", "f6", "d5", "c6")) {
+      return move("c6", "e5", "set up the cage");
+    }
+    if (matches("h8", "f6", "d5", "e5")) {
+      return move("d5", "e4", "reach the dream position");
+    }
+    if (matches("g8", "f6", "e4", "e5")) {
+      return move("e5", "f7", "knight to key square");
+    }
+    if (matches("f8", "f6", "e4", "f7")) {
+      return move("e4", "h7", "set up the W-maneuver");
+    }
+    if (matches("e8", "f6", "h7", "f7")) {
+      return move("f7", "e5", "set up the W-maneuver");
+    }
+    if (matches("d8", "f6", "h7", "e5")) {
+      return move("f6", "e6", "set up the cage");
+    }
+    if (matches("c7", "e6", "h7", "e5")) {
+      return move("e5", "d7", "set up the cage");
+    }
+    if (matches("b7", "e6", "h7", "d7")) {
+      return move("h7", "d3", "build the cage");
+    }
+    if (matches("c7", "e6", "c4", "d7")) {
+      return move("c4", "b5", "take away c6");
+    }
+    if (matches("d8", "e6", "b5", "d7")) {
+      return move("e6", "d6", "king to key square");
+    }
+    if (matches("e8", "d6", "b5", "d7")) {
+      return move("b5", "c4", "shut the door");
+    }
+    if (matches("d8", "d6", "c4", "d7")) {
+      return move("c4", "f7", "shut the door");
+    }
+    if (matches("c8", "d6", "f7", "d7")) {
+      return move("d7", "c5", "continue the W-maneuver");
+    }
+    if (matches("d8", "d6", "f7", "c5")) {
+      return move("c5", "b7", "continue the W-maneuver");
+    }
+    if (matches("b8", "b6", "e6", "b7")) {
+      return move("b7", "c5", "start the mating pattern");
+    }
+    if (matches("a8", "b6", "e6", "c5")) {
+      return move("e6", "d7", "avoid stalemate");
+    }
+    return undefined;
   }
 
   static getKnightAndBishopLookupWhiteMoves(fen: string): string[] {
@@ -1934,9 +2061,15 @@ export default class Brain {
 
   static scoreKnightAndBishopWhiteMove(fen: string, san: string) {
     const chess = Brain.getChess(fen);
-    chess.move(san);
+    const move = chess.move(san);
     const resultFen = chess.fen();
     const whiteKing = Brain.findPiece(resultFen, "w", "k");
+    const blackKing = Brain.findPiece(resultFen, "b", "k");
+    const bishop = Brain.findPiece(resultFen, "w", "b");
+    const currentBlackKing = Brain.findPiece(fen, "b", "k");
+    const useEdgePlan = Boolean(
+      currentBlackKing && Brain.edgeDistance(currentBlackKing.square) <= 1
+    );
     return {
       mateScore: chess.isCheckmate() ? 0 : 1,
       stalemateScore:
@@ -1947,9 +2080,54 @@ export default class Brain {
         : 1,
       bishopKnightDiagonalAdjacencyScore:
         Brain.bishopKnightDiagonallyAdjacent(resultFen) ? 0 : 1,
+      usefulCheckScore:
+        useEdgePlan && !Brain.isCorner(currentBlackKing!.square)
+          ? chess.isCheck()
+            ? 0
+            : 1
+          : 0,
+      wManeuverSetupDistance: useEdgePlan
+        ? Brain.wManeuverSetupDistance(resultFen)
+        : 0,
+      edgeKingKeyDistance: useEdgePlan
+        ? Brain.whiteKingEdgeKeyDistance(resultFen)
+        : 0,
+      edgeCageScore: useEdgePlan ? -Brain.edgeCageScore(resultFen) : 0,
+      blackEscapeMoveCount: useEdgePlan
+        ? Brain.blackEscapeMoveCount(resultFen)
+        : 0,
+      blackInwardEscapeCount: useEdgePlan
+        ? Brain.blackInwardEscapeCount(resultFen)
+        : 0,
+      centralEscapeMoveCount: useEdgePlan
+        ? Brain.blackCentralEscapeMoveCount(resultFen)
+        : 0,
+      blackKingCenterAccessScore:
+        Brain.knightAndBishopShouldDriveFromCenter(fen)
+          ? -Brain.knightAndBishopBestBlackReplyCenterDistance(resultFen)
+          : 0,
       whiteKingCentralDistance: whiteKing
         ? Brain.centerDistance(whiteKing.square)
         : 99,
+      whiteKingDistance:
+        whiteKing && blackKing
+          && Brain.centerDistance(whiteKing.square) > 0
+          ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
+          : 0,
+      bishopBlackKingDistance:
+        bishop && blackKing
+          ? Brain.manhattanDistance(bishop.square, blackKing.square)
+          : 99,
+      bishopWallMoveScore: Brain.knightAndBishopBuildsBishopWall(
+        fen,
+        resultFen,
+        move?.piece
+      )
+        ? 0
+        : 1,
+      triangleCompactness: useEdgePlan
+        ? 0
+        : Brain.whiteTriangleCompactness(resultFen),
       minorCentralDistance: Brain.whiteMinorCentralDistance(resultFen),
       wManeuverKingMoveScore: 0,
       unprotectedMinorAttackScore: 0,
@@ -1959,19 +2137,10 @@ export default class Brain {
       edgeCornerResistanceDistance: 0,
       nearEdgeCornerResistanceDistance: 0,
       edgeKnightShufflePenalty: 0,
-      blackInwardEscapeCount: 0,
       edgePieceSetupScore: 0,
-      blackEscapeMoveCount: 0,
-      wManeuverSetupDistance: 0,
-      centralEscapeMoveCount: 0,
-      edgeKingKeyDistance: 0,
       nearEdgeMobilityScore: 0,
-      triangleCompactness: 0,
-      usefulCheckScore: 0,
       blackMobilityScore: 0,
       edgeDistance: 0,
-      edgeCageScore: 0,
-      whiteKingDistance: 0,
       minorCoordination: 0,
     };
   }
@@ -1991,6 +2160,7 @@ export default class Brain {
       a.phaseTwoEntryScore - b.phaseTwoEntryScore ||
       a.bishopKnightDiagonalAdjacencyScore -
         b.bishopKnightDiagonalAdjacencyScore ||
+      a.blackKingCenterAccessScore - b.blackKingCenterAccessScore ||
       a.whiteKingCentralDistance - b.whiteKingCentralDistance ||
       a.minorCentralDistance - b.minorCentralDistance
     );
@@ -2020,6 +2190,11 @@ export default class Brain {
           b.bishopKnightDiagonalAdjacencyScore,
       },
       {
+        reason: "black king away from center",
+        compare: (a, b) =>
+          a.blackKingCenterAccessScore - b.blackKingCenterAccessScore,
+      },
+      {
         reason: "king near middle",
         compare: (a, b) =>
           a.whiteKingCentralDistance - b.whiteKingCentralDistance,
@@ -2029,6 +2204,49 @@ export default class Brain {
         compare: (a, b) => a.minorCentralDistance - b.minorCentralDistance,
       },
     ];
+  }
+
+  static knightAndBishopShouldDriveFromCenter(fen: string): boolean {
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    return Boolean(blackKing);
+  }
+
+  static knightAndBishopBuildsBishopWall(
+    fen: string,
+    resultFen: string,
+    piece: string | undefined
+  ): boolean {
+    if (piece !== "b") {
+      return false;
+    }
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const bishop = Brain.findPiece(resultFen, "w", "b");
+    if (
+      !blackKing ||
+      !bishop ||
+      Brain.edgeDistance(blackKing.square) <= 1 ||
+      Brain.centerDistance(blackKing.square) > 1
+    ) {
+      return false;
+    }
+    return Brain.kingDistance(blackKing.square, bishop.square) <= 1;
+  }
+
+  static knightAndBishopBestBlackReplyCenterDistance(fen: string): number {
+    const chess = Brain.getChess(fen);
+    const moves = chess.moves();
+    if (chess.turn() !== "b" || moves.length === 0) {
+      const blackKing = Brain.findPiece(fen, "b", "k");
+      return blackKing ? Brain.centerDistance(blackKing.square) : 0;
+    }
+    return Math.min(
+      ...moves.map((san) => {
+        const nextChess = Brain.getChess(fen);
+        nextChess.move(san);
+        const blackKing = Brain.findPiece(nextChess.fen(), "b", "k");
+        return blackKing ? Brain.centerDistance(blackKing.square) : 0;
+      })
+    );
   }
 
   static bishopKnightDiagonallyAdjacent(fen: string): boolean {
@@ -3039,13 +3257,30 @@ export default class Brain {
       beforeRook &&
       whiteRook &&
       rookCutAxis === beforeRookCutAxis &&
-      Brain.manhattanDistance(beforeRook.square, whiteRook.square) === 1 &&
       Brain.squareCoords(whiteRook.square)[beforeRookCutAxis] ===
         Brain.squareCoords(beforeRook.square)[beforeRookCutAxis];
+    const rookEstablishesBox =
+      beforeRook &&
+      beforeWhiteKing &&
+      beforeBlackKing &&
+      !beforeRookCutAxis &&
+      whiteRook &&
+      whiteKing &&
+      blackKing &&
+      rookCutAxis &&
+      Brain.getRookBoxSize(whiteRook, whiteKing, blackKing) <= 3 &&
+      Brain.kingDistance(whiteRook.square, blackKing.square) > 1 &&
+      !chess.isCheck();
     return {
       matePenalty: chess.isCheckmate() ? 0 : 1,
       rookCapturePenalty: rookIsSafe ? 0 : 1,
       stalematePenalty: !chess.isCheckmate() && chess.isStalemate() ? 1 : 0,
+      rookBoxEstablishedPenalty:
+        beforeRook && beforeWhiteKing && beforeBlackKing && !beforeRookCutAxis
+          ? rookEstablishesBox
+            ? 0
+            : 1
+          : 0,
       rookKingContactPenalty:
         whiteRook &&
         whiteKing &&
@@ -3113,6 +3348,7 @@ export default class Brain {
       { reason: "mate", compare: (a, b) => a.matePenalty - b.matePenalty },
       { reason: "rook safe", compare: (a, b) => a.rookCapturePenalty - b.rookCapturePenalty },
       { reason: "no stalemate", compare: (a, b) => a.stalematePenalty - b.stalematePenalty },
+      { reason: "establish box", compare: (a, b) => a.rookBoxEstablishedPenalty - b.rookBoxEstablishedPenalty },
       { reason: "king rook separated", compare: (a, b) => a.rookKingContactPenalty - b.rookKingContactPenalty },
       { reason: "direct opposition check", compare: (a, b) => a.oppositionRookCheckPenalty - b.oppositionRookCheckPenalty },
       { reason: "rook between kings", compare: (a, b) => a.rookBetweenKingsPenalty - b.rookBetweenKingsPenalty },
