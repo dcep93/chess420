@@ -198,6 +198,8 @@ function playKnightAndBishopSelfPlay(
   const seen = new Set<string>();
   const moves: string[] = [];
   let phaseTwoReached = false;
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
 
   for (let ply = 0; ply < limit; ply += 1) {
     phaseTwoReached ||= Brain.getEndgamePhase(chess.fen()) === "2/2";
@@ -226,7 +228,8 @@ function playKnightAndBishopSelfPlay(
     const choices =
       chess.turn() === "w"
         ? Brain.getIdealEndgameWhiteMoves(chess.fen())
-        : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+        : Brain.getEndgameOpponentCandidates(chess, blackReturnTargetFen)
+            .idealMoves;
     const move = choices[Math.floor(random() * choices.length)];
     if (!move) {
       return {
@@ -236,6 +239,12 @@ function playKnightAndBishopSelfPlay(
         finalFen: chess.fen(),
         moves,
       };
+    }
+    if (chess.turn() === "w") {
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      blackReturnTargetFen = undefined;
     }
     moves.push(move);
     chess.move(move);
@@ -263,13 +272,16 @@ function assertBestEndgameLineToMate(
 ) {
   setEndgame(id);
   const chess = Brain.getChess(startingFen);
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
 
   expectedLine.forEach((expectedBestMoves, index) => {
     assert.equal(chess.isCheckmate(), false);
     const actualBestMoves =
       chess.turn() === "w"
         ? Brain.getIdealEndgameWhiteMoves(chess.fen())
-        : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+        : Brain.getEndgameOpponentCandidates(chess, blackReturnTargetFen)
+            .idealMoves;
     const expectedMoves = expectedMovesArray(expectedBestMoves);
     const moveNumber = Math.floor(index / 2) + 1;
     const side = chess.turn() === "w" ? "white" : "black";
@@ -279,6 +291,12 @@ function assertBestEndgameLineToMate(
       expectedMoves,
       `${id} ${side} move ${moveNumber} from ${chess.fen()}`,
     );
+    if (chess.turn() === "w") {
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      blackReturnTargetFen = undefined;
+    }
     chess.move(expectedMoves[0]);
   });
 
@@ -320,7 +338,7 @@ function assertSeededBestEndgameFixture(fixture: HardcodedEndgameLineFixture) {
   assert.equal(Brain.getEndgameTerminalOutcome(chess.fen()), "checkmate");
 }
 
-const HARDCODED_ENDGAME_LINE_FIXTURES = JSON.parse(`[{"id":"knightAndBishop","startingFen":"8/8/8/2N1k3/8/3B4/K7/8 w - - 0 1","seed":73000,"expectedLine":[["Nb3"],["Kd5"],["Ka3"],["Ke5"],["Kb4"],["Kd5"],["Nc5"],["Ke5"],["Kc4"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kg4"],["Ke4"],["Kg5"],["Nd7"],["Kg6"],["Kf4+"],["Kf7"],["Bf5"],["Ke7"],["Ke5"],["Kd8"],["Kd6"],["Ke8","Kc8"],["Bg6+"],["Kd8"],["Nc5"],["Kc8"],["Bf7"],["Kd8","Kb8"],["Be6"],["Ka7","Ka8"],["Kc7"],["Ka8"],["Kb6"],["Kb8"],["Na6+"],["Ka8"],["Bd5#"]]},{"id":"knightAndBishop","startingFen":"2N5/8/8/8/8/2KB4/7k/8 w - - 0 1","seed":73038,"expectedLine":[["Be4"],["Kg3"],["Kd3"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kh6"],["Kf6"],["Kh5"],["Bf3+"],["Kh4"],["Be2"],["Kg3"],["Bd1"],["Kf2"],["Bh5"],["Kg3"],["Kg5"],["Kf2"],["Kf4"],["Kg2"],["Nd6"],["Kh3"],["Bg4+"],["Kh4"],["Nf5#"]]},{"id":"knightAndBishop","startingFen":"5B1N/8/8/4k3/8/5K2/8/8 w - - 0 1","seed":73076,"expectedLine":[["Ke3"],["Kf6"],["Ke4"],["Ke6"],["Bc5"],["Kd7"],["Kd5"],["Ke8"],["Ke6"],["Kd8"],["Bb6+"],["Ke8"],["Nf7"],["Kf8"],["Bc5+"],["Ke8"],["Nd6+"],["Kd8"],["Bb6#"]]},{"id":"knightAndBishop","startingFen":"1k4B1/8/8/4K3/8/3N4/8/8 w - - 0 1","seed":73114,"expectedLine":[["Kd6"],["Kc8"],["Be6+"],["Kd8"],["Ne5"],["Ke8"],["Nd7"],["Kd8"],["Bf7"],["Kc8"],["Nc5"],["Kd8","Kb8"],["Nb7+"],["Kc8"],["Kc6"],["Kb8"],["Kb6"],["Kc8","Ka8"],["Be6"],["Kb8"],["Nc5"],["Ka8"],["Bd7"],["Kb8"],["Na6+"],["Ka8"],["Bc6#"]]},{"id":"knightAndBishop","startingFen":"8/8/8/8/3N3k/1K6/8/B7 w - - 0 1","seed":73152,"expectedLine":[["Ne6"],["Kg4"],["Nd4"],["Kf4"],["Kc4"],["Ke3"],["Kd5"],["Kd2"],["Ke4"],["Kc1"],["Bc3"],["Kd1"],["Kd3"],["Kc1"],["Ne2+"],["Kd1"],["Bd4"],["Ke1"],["Bc3+"],["Kf2"],["Nd4"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg3"],["Kf5"],["Kf2"],["Kf4"],["Kf1"],["Kf3"],["Kg1"],["Ne2+"],["Kf1"],["Ng3+"],["Kg1"],["Bd4+"],["Kh2"],["Bf2"],["Kh3"],["Bg1"],["Kh4"],["Ne4"],["Kh5","Kh3"],["Ng5+"],["Kh4"],["Kf4"],["Kh5"],["Kf5"],["Kh6","Kh4"],["Bf2+"],["Kh5"],["Ne6"],["Kh6"],["Bg3"],["Kh7","Kh5"],["Ng7+"],["Kh6"],["Kf6"],["Kh7"],["Kf7"],["Kh8","Kh6"],["Bf4"],["Kh7"],["Ne6"],["Kh8"],["Bg5"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"3K4/7k/5B2/8/8/8/4N3/8 w - - 0 1","seed":73190,"expectedLine":[["Nf4"],["Kh6"],["Ke7"],["Kh7"],["Kf8"],["Kh6"],["Kf7"],["Kh7"],["Bg5"],["Kh8"],["Ne6"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"2K5/8/4k3/5N2/8/8/8/6B1 w - - 0 1","seed":73228,"expectedLine":[["Ne3"],["Ke5"],["Kd7"],["Kf4"],["Ke6"],["Kg3"],["Kf5"],["Kf3"],["Ke5"],["Kg3"],["Ke4"],["Kh3"],["Bf2"],["Kh2"],["Kf3"],["Kh3"],["Be1"],["Kh2"],["Ng4+"],["Kg1"],["Bf2+"],["Kf1"],["Nh2#","Ne3#"]]},{"id":"knightAndBishop","startingFen":"8/4B3/4k3/8/N7/8/2K5/8 w - - 0 1","seed":73266,"expectedLine":[["Bc5"],["Kd5"],["Kd3"],["Kc6"],["Kc4"],["Kb7"],["Kb5"],["Kc7"],["Nb6"],["Kd8"],["Kc6"],["Ke8"],["Kd6"],["Kf7"],["Nd5"],["Kg6"],["Ba7"],["Kf7","Kg7","Kh7","Kh6","Kh5","Kg5","Kf5"],["Ne7+"],["Kf6","Kg5","Kg4","Kf4","Ke4"],["Ke5"],["Kg5"],["Kd6"],["Kf6","Kh6","Kh5","Kh4","Kg4","Kf4"],["Be3"],["Kf7","Kg7"],["Ke6"],["Kf8","Kh8","Kh7"],["Bd4"],["Ke8"],["Bc5"],["Kf8","Kd8"],["Nf5+"],["Kg8","Ke8"],["Kf6"],["Kh8","Kh7"],["Bd6"],["Kg8","Kh8"],["Kg6"],["Kg8"],["Nh6+"],["Kh8"],["Be5#"]]},{"id":"twoBishops","startingFen":"8/8/B7/8/8/2B2K2/8/7k w - - 0 1","seed":73296,"expectedLine":[["Bd3"],["Kh2","Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"4k2B/8/8/3B1K2/8/8/8/8 w - - 0 1","seed":73334,"expectedLine":[["Bc6+"],["Ke7"],["Be5"],["Kd8"],["Bd5"],["Ke8","Ke7","Kd7","Kc8"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/B7/K7/8/8/k7/4B3/8 w - - 0 1","seed":73372,"expectedLine":[["Bc5+"],["Ka4","Kb3"],["Bd1#"]]},{"id":"twoBishops","startingFen":"7k/7B/3B4/8/6K1/8/8/8 w - - 0 1","seed":73410,"expectedLine":[["Be4"],["Kg7"],["Be5+"],["Kf7"],["Bd5+"],["Ke7"],["Kg5"],["Kd7"],["Kf5"],["Kc8","Kd8","Ke8","Ke7"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/8/8/8/1BB1K3/8/8/k7 w - - 0 1","seed":73448,"expectedLine":[["Bc3+"],["Kb1"],["Bd3+"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bc3+","Ke3"],["Kf1"],["Bd3+"],["Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/6B1/8/8/4K3/3B4/8/3k4 w - - 0 1","seed":73486,"expectedLine":[["Bc3"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bd3"],["Kh2","Kh1"],["Kg3"],["Kg1"],["Bd4+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/8/6B1/4B3/5K2/8/8/4k3 w - - 0 1","seed":73524,"expectedLine":[["Bc3+"],["Ke2"],["Be4"],["Kd1"],["Bd4"],["Kd2","Ke2","Ke1","Kc1"],["Kg3"],["Kf1","Ke1","Kd1","Kd2"],["Kf2"],["Kd1","Kc1"],["Ke3"],["Ke1","Kc1"],["Kd3"],["Kd1","Kb1"],["Bf2"],["Kc1"],["Kc3"],["Kd1"],["Bf3+"],["Kc1"],["Be3+"],["Kb1"],["Kb3"],["Ka1"],["Be2"],["Kb1"],["Bd3+"],["Ka1"],["Bd4#"]]},{"id":"twoBishops","startingFen":"8/4K3/8/1k6/8/7B/8/6B1 w - - 0 1","seed":73562,"expectedLine":[["Be3"],["Kc4"],["Bf5"],["Kd5"],["Kf6","Bd3","Bf4"],["Kd4"],["Kd6"],["Kc4"],["Be5"],["Kb5","Kb4"],["Be4"],["Kc4"],["Ke6"],["Kb5","Kc5","Kb3","Kb4"],["Bd5"],["Kb6","Kb4","Kb5"],["Bd4"],["Kb5"],["Kd7"],["Kb4"],["Kd6"],["Ka5","Kb5","Ka3","Ka4"],["Kc7"],["Ka6","Kb4","Ka4","Ka5"],["Kb6"],["Ka3","Ka4"],["Kc5"],["Ka5","Ka3"],["Bb3"],["Ka6"],["Kc6"],["Ka5"],["Bc3+"],["Ka6"],["Bc4+"],["Ka7"],["Kc7"],["Ka8"],["Bb4"],["Ka7"],["Bc5+"],["Ka8"],["Bd5#"]]},{"id":"rook","startingFen":"8/5k2/8/5K2/8/8/8/6R1 w - - 0 1","seed":73592,"expectedLine":[["Rh1","Re1","Rd1","Rc1","Rb1","Ra1"],["Ke7"],["Rb6"],["Kd7"],["Ke5"],["Kc7"],["Rh6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/2k5/8/6R1/3K4/8/8/8 w - - 0 1","seed":73630,"expectedLine":[["Rg6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Ra6"],["Kg7"],["Kf5"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/K7/7R/8/8/8/8 w - - 0 1","seed":73668,"expectedLine":[["Re5"],["Kf6"],["Re1"],["Kf5"],["Kb5"],["Kf4"],["Kc4"],["Kf3"],["Kd3"],["Kf2"],["Re8"],["Kf1"],["Kd2"],["Kf2"],["Rf8+"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg5"],["Ke5"],["Kg6"],["Ke6"],["Kg7"],["Rf1"],["Kg8"],["Ke7"],["Kg7"],["Rg1+"],["Kh6"],["Kf6"],["Kh5"],["Kf5"],["Kh4"],["Kf4"],["Kh3"],["Kf3"],["Kh2"],["Rg8"],["Kh1"],["Kf2"],["Kh2"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/R5K1/8 w - - 0 1","seed":73706,"expectedLine":[["Ra6"],["Ke7"],["Kf3"],["Kd7"],["Ke4"],["Kc7"],["Kd5"],["Kb7"],["Rh6"],["Kc7"],["Kc5"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/1R6/8/8/8/8/1K6 w - - 0 1","seed":73744,"expectedLine":[["Kc2"],["Ke7"],["Kd3"],["Kd7"],["Kd4"],["Kc7"],["Rh6"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/8/8/8/1K6/4k3/1R6/8 w - - 0 1","seed":73782,"expectedLine":[["Rc2"],["Kd3"],["Rc8"],["Kd2"],["Kb3"],["Kd1"],["Kb2"],["Kd2"],["Rd8+"],["Ke3"],["Kc3"],["Ke4"],["Kc4"],["Ke5"],["Kc5"],["Ke6"],["Kc6"],["Ke7"],["Rd1"],["Ke8"],["Kc7"],["Ke7"],["Re1+"],["Kf6"],["Kd6"],["Kf5"],["Kd5"],["Kf4"],["Kd4"],["Kf3"],["Kd3"],["Kf2"],["Re8"],["Kf1"],["Kd2"],["Kf2"],["Rf8+"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg5"],["Ke5"],["Kg6"],["Ke6"],["Kg7"],["Rf1"],["Kg8"],["Ke7"],["Kg7"],["Rg1+"],["Kh6"],["Kf6"],["Kh5"],["Kf5"],["Kh4"],["Kf4"],["Kh3"],["Kf3"],["Kh2"],["Rg8"],["Kh1"],["Kf2"],["Kh2"],["Rh8#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/8/3RK3 w - - 0 1","seed":73820,"expectedLine":[["Rd6"],["Ke7"],["Ra6"],["Kd7"],["Kd2"],["Kc7"],["Kc3"],["Kb7"],["Rh6"],["Kc7"],["Kc4"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"rook","startingFen":"8/8/8/6k1/8/4R3/6K1/8 w - - 0 1","seed":73858,"expectedLine":[["Re4"],["Kf5"],["Ra4"],["Ke5"],["Kf3"],["Kd5"],["Ke3"],["Kc5"],["Kd3"],["Kb5"],["Rh4"],["Kc5"],["Kc3"],["Kd5"],["Kd3"],["Ke5"],["Ke3"],["Kf5"],["Kf3"],["Kg5"],["Ra4"],["Kh5"],["Kg3"],["Kg5"],["Ra5+"],["Kf6"],["Kf4"],["Ke6"],["Ke4"],["Kd6"],["Kd4"],["Kc6"],["Kc4"],["Kb6"],["Rh5"],["Ka6"],["Kb4"],["Kb6"],["Rh6+"],["Kc7"],["Kc5"],["Kd7"],["Kd5"],["Ke7"],["Ke5"],["Kf7"],["Kf5"],["Kg7"],["Ra6"],["Kh7"],["Kg5"],["Kg7"],["Ra7+"],["Kf8"],["Kf6"],["Ke8"],["Ke6"],["Kd8"],["Kd6"],["Kc8"],["Kc6"],["Kb8"],["Rh7"],["Ka8"],["Kb6"],["Kb8"],["Rh8#"]]},{"id":"queen","startingFen":"8/5k2/8/4Q3/8/8/8/7K w - - 0 1","seed":73888,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qf6"],["Kg8"],["Qe7"],["Kh8"],["Kg2"],["Kg8"],["Kg3"],["Kh8"],["Kg4"],["Kg8"],["Kg5"],["Kh8"],["Kg6"],["Kg8"],["Qg7#"]]},{"id":"queen","startingFen":"8/4Q3/8/3K4/8/8/3k4/8 w - - 0 1","seed":73926,"expectedLine":[["Qe4"],["Kc3"],["Ke5"],["Kd2","Kb2","Kb3"],["Qf3"],["Kc2"],["Qe3"],["Kb2"],["Qd3"],["Kc1","Ka1","Ka2"],["Qd2"],["Kb1"],["Kd4"],["Ka1"],["Kc3"],["Kb1"],["Qb2#"]]},{"id":"queen","startingFen":"1K6/5k2/8/8/8/8/8/6Q1 w - - 0 1","seed":73964,"expectedLine":[["Qg5"],["Ke6"],["Qc5"],["Kf6"],["Qd5"],["Ke7","Kg7","Kg6"],["Qc6"],["Kf7"],["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qd7"],["Kg8"],["Qe7"],["Kh8"],["Kc7"],["Kg8"],["Kd6"],["Kh8"],["Ke6"],["Kg8"],["Kf6"],["Kh8"],["Qg7#"]]},{"id":"queen","startingFen":"8/8/1Q6/6K1/4k3/8/8/8 w - - 0 1","seed":74002,"expectedLine":[["Qd6","Qc5"],["Kf3","Kd3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qd3","Qc4"],["Kc1","Ka1","Ka2"],["Qc3"],["Kb1"],["Qd2"],["Ka1"],["Kf4"],["Kb1"],["Ke3"],["Ka1"],["Kd3"],["Kb1"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/3K4/7Q/4k3/8/8/8/8 w - - 0 1","seed":74040,"expectedLine":[["Qc6"],["Kd4"],["Qe6"],["Kc5","Kd3","Kc3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qc6"],["Kb3"],["Qc5"],["Kb2"],["Qc4"],["Ka3","Kb1","Ka1"],["Qb5"],["Ka2"],["Qb4"],["Ka1"],["Kc6"],["Ka2"],["Kc5"],["Ka1"],["Kc4"],["Ka2"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/5k2/8/8/2K5/8/Q7/8 w - - 0 1","seed":74078,"expectedLine":[["Qe2"],["Kf6"],["Qe4"],["Kf7","Kg7","Kg5"],["Qf3"],["Kg6"],["Qf4"],["Kg7"],["Qf5"],["Kg8","Kh8","Kh6"],["Qf6"],["Kh7"],["Qg5"],["Kh8"],["Kd5"],["Kh7"],["Ke6"],["Kh8"],["Kf7"],["Kh7"],["Qg7#"]]},{"id":"queen","startingFen":"Q6K/5k2/8/8/8/8/8/8 w - - 0 1","seed":74116,"expectedLine":[["Qc6"],["Ke7"],["Kg7"],["Kd8"],["Qb7"],["Ke8"],["Qf7+"],["Kd8"],["Kf6"],["Kc8"],["Qe7"],["Kb8"],["Qd7"],["Ka8"],["Ke6"],["Kb8"],["Kd6"],["Ka8"],["Kc6"],["Kb8"],["Qb7#"]]},{"id":"queen","startingFen":"8/5k2/1Q6/8/8/5K2/8/8 w - - 0 1","seed":74154,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qe7"],["Kg8"],["Kg4"],["Kh8"],["Kg5"],["Kg8"],["Kg6"],["Kh8"],["Qg7#"]]}]`) as HardcodedEndgameLineFixture[];
+const HARDCODED_ENDGAME_LINE_FIXTURES = JSON.parse(`[{"id":"knightAndBishop","startingFen":"8/8/8/2N1k3/8/3B4/K7/8 w - - 0 1","seed":73000,"expectedLine":[["Nb3"],["Kd5"],["Ka3"],["Ke5"],["Kb4"],["Kd5"],["Nc5"],["Ke5"],["Kc4"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kg4"],["Ke4"],["Kg5"],["Nd7"],["Kg6"],["Kf4+"],["Kf7"],["Bf5"],["Ke7"],["Ke5"],["Kd8"],["Kd6"],["Ke8","Kc8"],["Bg6+"],["Kd8"],["Nc5"],["Kc8"],["Bf7"],["Kd8","Kb8"],["Be6"],["Ka7","Ka8"],["Kc7"],["Ka8"],["Kb6"],["Kb8"],["Na6+"],["Ka8"],["Bd5#"]]},{"id":"knightAndBishop","startingFen":"2N5/8/8/8/8/2KB4/7k/8 w - - 0 1","seed":73038,"expectedLine":[["Be4"],["Kg3"],["Kd3"],["Kf4"],["Kd4"],["Kg5"],["Ke5"],["Kh6"],["Kf6"],["Kh5"],["Bf3+"],["Kh4"],["Be2"],["Kg3"],["Bd1"],["Kf2"],["Bh5"],["Kg3"],["Kg5"],["Kf2"],["Kf4"],["Kg2"],["Nd6"],["Kh3"],["Bg4+"],["Kh4"],["Nf5#"]]},{"id":"knightAndBishop","startingFen":"5B1N/8/8/4k3/8/5K2/8/8 w - - 0 1","seed":73076,"expectedLine":[["Ke3"],["Kf6"],["Ke4"],["Ke6"],["Bc5"],["Kd7"],["Kd5"],["Ke8"],["Ke6"],["Kd8"],["Bb6+"],["Ke8"],["Nf7"],["Kf8"],["Bc5+"],["Ke8"],["Nd6+"],["Kd8"],["Bb6#"]]},{"id":"knightAndBishop","startingFen":"1k4B1/8/8/4K3/8/3N4/8/8 w - - 0 1","seed":73114,"expectedLine":[["Kd6"],["Kc8"],["Be6+"],["Kd8"],["Ne5"],["Ke8"],["Nd7"],["Kd8"],["Bf7"],["Kc8"],["Nc5"],["Kd8","Kb8"],["Nb7+"],["Kc8"],["Kc6"],["Kb8"],["Kb6"],["Kc8","Ka8"],["Be6"],["Kb8"],["Nc5"],["Ka8"],["Bd7"],["Kb8"],["Na6+"],["Ka8"],["Bc6#"]]},{"id":"knightAndBishop","startingFen":"8/8/8/8/3N3k/1K6/8/B7 w - - 0 1","seed":73152,"expectedLine":[["Ne6"],["Kg4"],["Nd4"],["Kf4"],["Kc4"],["Ke3"],["Kd5"],["Kd2"],["Ke4"],["Kc1"],["Bc3"],["Kd1"],["Kd3"],["Kc1"],["Ne2+"],["Kd1"],["Bd4"],["Ke1"],["Bc3+"],["Kf2"],["Nd4"],["Kg3"],["Ke3"],["Kg4"],["Ke4"],["Kg3"],["Kf5"],["Kf2"],["Kf4"],["Kf1"],["Kf3"],["Kg1"],["Ne2+"],["Kf1"],["Ng3+"],["Kg1"],["Bd4+"],["Kh2"],["Bf2"],["Kh3"],["Bg1"],["Kh4"],["Ne4"],["Kh5","Kh3"],["Ng5+"],["Kh4"],["Kf4"],["Kh5"],["Kf5"],["Kh6","Kh4"],["Bf2+"],["Kh5"],["Ne6"],["Kh6"],["Bg3"],["Kh7","Kh5"],["Ng7+"],["Kh6"],["Kf6"],["Kh7"],["Kf7"],["Kh8","Kh6"],["Bf4"],["Kh7"],["Ne6"],["Kh8"],["Bg5"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"3K4/7k/5B2/8/8/8/4N3/8 w - - 0 1","seed":73190,"expectedLine":[["Nf4"],["Kh6"],["Ke7"],["Kh7"],["Kf8"],["Kh6"],["Kf7"],["Kh7"],["Bg5"],["Kh8"],["Ne6"],["Kh7"],["Nf8+"],["Kh8"],["Bf6#"]]},{"id":"knightAndBishop","startingFen":"2K5/8/4k3/5N2/8/8/8/6B1 w - - 0 1","seed":73228,"expectedLine":[["Ne3"],["Ke5"],["Kd7"],["Kf4"],["Ke6"],["Kg3"],["Kf5"],["Kf3"],["Ke5"],["Kg3"],["Ke4"],["Kh3"],["Bf2"],["Kh2"],["Kf3"],["Kh3"],["Be1"],["Kh2"],["Ng4+"],["Kg1"],["Bf2+"],["Kf1"],["Nh2#","Ne3#"]]},{"id":"knightAndBishop","startingFen":"8/4B3/4k3/8/N7/8/2K5/8 w - - 0 1","seed":73266,"expectedLine":[["Bc5"],["Kd5"],["Kd3"],["Kc6"],["Kc4"],["Kb7"],["Kb5"],["Kc7"],["Nb6"],["Kd8"],["Kc6"],["Ke8"],["Kd6"],["Kf7"],["Nd5"],["Kg6"],["Ba7"],["Kf7","Kg7","Kh7","Kh6","Kh5","Kg5","Kf5"],["Ne7+"],["Kf6","Kg5","Kg4","Kf4","Ke4"],["Ke5"],["Kg5"],["Kd6"],["Kf6","Kh6","Kh5","Kh4","Kg4","Kf4"],["Be3"],["Kf7","Kg7"],["Ke6"],["Kf8","Kh8","Kh7"],["Bd4"],["Ke8"],["Bc5"],["Kf8","Kd8"],["Nf5+"],["Kg8","Ke8"],["Kf6"],["Kh8","Kh7"],["Bd6"],["Kg8","Kh8"],["Kg6"],["Kg8"],["Nh6+"],["Kh8"],["Be5#"]]},{"id":"twoBishops","startingFen":"8/8/B7/8/8/2B2K2/8/7k w - - 0 1","seed":73296,"expectedLine":[["Bd3"],["Kh2","Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"4k2B/8/8/3B1K2/8/8/8/8 w - - 0 1","seed":73334,"expectedLine":[["Bc6+"],["Ke7"],["Be5"],["Kd8"],["Bd5"],["Ke8","Ke7","Kd7","Kc8"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/B7/K7/8/8/k7/4B3/8 w - - 0 1","seed":73372,"expectedLine":[["Bc5+"],["Ka4","Kb3"],["Bd1#"]]},{"id":"twoBishops","startingFen":"7k/7B/3B4/8/6K1/8/8/8 w - - 0 1","seed":73410,"expectedLine":[["Be4"],["Kg7"],["Be5+"],["Kf7"],["Bd5+"],["Ke7"],["Kg5"],["Kd7"],["Kf5"],["Kc8","Kd8","Ke8","Ke7"],["Kg6"],["Kd8","Ke8","Kf8","Kd7"],["Kf7"],["Kc8","Kd8"],["Ke6"],["Ke8","Kc8"],["Kd6"],["Kd8","Kb8"],["Bf7"],["Kc8"],["Kc6"],["Kd8"],["Bf6+"],["Kc8"],["Be6+"],["Kb8"],["Kb6"],["Ka8"],["Be7"],["Kb8"],["Bd6+"],["Ka8"],["Bd5#"]]},{"id":"twoBishops","startingFen":"8/8/8/8/1BB1K3/8/8/k7 w - - 0 1","seed":73448,"expectedLine":[["Bc3+"],["Kb1"],["Bd3+"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bc3+","Ke3"],["Kf1"],["Bd3+"],["Kg1"],["Kg3"],["Kh1"],["Bd2"],["Kg1"],["Be3+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/6B1/8/8/4K3/3B4/8/3k4 w - - 0 1","seed":73486,"expectedLine":[["Bc3"],["Kc1"],["Ke3"],["Kd1"],["Bb2"],["Ke1"],["Bc2"],["Kf1"],["Kf3"],["Kg1","Ke1"],["Bd3"],["Kh2","Kh1"],["Kg3"],["Kg1"],["Bd4+"],["Kh1"],["Be4#"]]},{"id":"twoBishops","startingFen":"8/8/6B1/4B3/5K2/8/8/4k3 w - - 0 1","seed":73524,"expectedLine":[["Bc3+"],["Ke2"],["Be4"],["Kd1"],["Bd4"],["Kd2","Ke2","Ke1","Kc1"],["Kg3"],["Kf1","Ke1","Kd1","Kd2"],["Kf2"],["Kd1","Kc1"],["Ke3"],["Ke1","Kc1"],["Kd3"],["Kd1","Kb1"],["Bf2"],["Kc1"],["Kc3"],["Kd1"],["Bf3+"],["Kc1"],["Be3+"],["Kb1"],["Kb3"],["Ka1"],["Be2"],["Kb1"],["Bd3+"],["Ka1"],["Bd4#"]]},{"id":"twoBishops","startingFen":"8/4K3/8/1k6/8/7B/8/6B1 w - - 0 1","seed":73562,"expectedLine":[["Be3"],["Kc4"],["Bf5"],["Kd5"],["Kf6","Bd3","Bf4"],["Kd4"],["Kd6"],["Kc4"],["Be5"],["Kb5","Kb4"],["Be4"],["Kc4"],["Ke6"],["Kb5","Kc5","Kb3","Kb4"],["Bd5"],["Kb6","Kb4","Kb5"],["Bd4"],["Kb5"],["Kd7"],["Kb4"],["Kd6"],["Ka5","Kb5","Ka3","Ka4"],["Kc7"],["Ka6","Kb4","Ka4","Ka5"],["Kb6"],["Ka3","Ka4"],["Kc5"],["Ka5","Ka3"],["Bb3"],["Ka6"],["Kc6"],["Ka5"],["Bc3+"],["Ka6"],["Bc4+"],["Ka7"],["Kc7"],["Ka8"],["Bb4"],["Ka7"],["Bc5+"],["Ka8"],["Bd5#"]]},{"id":"rook","startingFen":"8/5k2/8/5K2/8/8/8/6R1 w - - 0 1","seed":73592,"expectedLine":[["Rh1","Re1","Rd1","Rc1","Rb1","Ra1"],["Ke7"],["Rb6"],["Kd7"],["Ke5"],["Kc7"],["Rh6"],["Kd7"],["Rg6"],["Kc7"],["Kd5"],["Kb7"],["Kc5"],["Ka7"],["Kb5"],["Kb7"],["Rg7+"],["Kc8"],["Kc6"],["Kd8"],["Rh7"],["Ke8"],["Kd6"],["Kf8"],["Ke6"],["Kg8"],["Ra7"],["Kf8"],["Rb7"],["Kg8"],["Kf6"],["Kh8"],["Kg6"],["Kg8"],["Rb8#"]]},{"id":"rook","startingFen":"8/2k5/8/6R1/3K4/8/8/8 w - - 0 1","seed":73630,"expectedLine":[["Rg6"],["Kd7"],["Kd5"],["Ke7"],["Rh6"],["Kf7"],["Ke5"],["Kg7"],["Ra6"],["Kf7"],["Rb6"],["Kg7"],["Kf5"],["Kh7"],["Kg5"],["Kg7"],["Rb7+"],["Kf8"],["Kf6"],["Ke8"],["Ra7"],["Kd8"],["Ke6"],["Kc8"],["Kd6"],["Kb8"],["Rh7"],["Kc8"],["Rg7"],["Kb8"],["Kc6"],["Ka8"],["Kb6"],["Kb8"],["Rg8#"]]},{"id":"rook","startingFen":"8/5k2/K7/7R/8/8/8/8 w - - 0 1","seed":73668,"expectedLine":[["Re5"],["Kf6"],["Re1"],["Kf5"],["Kb5"],["Kf4"],["Kc4"],["Kf3"],["Kd3"],["Kf2"],["Re8"],["Kf1"],["Kd2"],["Kf2"],["Rf8+"],["Kg3"],["Ke3"],["Kg4"],["Rf7"],["Kg5"],["Ke4"],["Kg6"],["Rf1"],["Kg5"],["Rf2"],["Kg6"],["Ke5"],["Kg7"],["Ke6"],["Kg8"],["Ke7"],["Kg7"],["Rg2+"],["Kh6"],["Kf6"],["Kh5"],["Rg1"],["Kh4"],["Kf5"],["Kh3"],["Kf4"],["Kh2"],["Rg8"],["Kh3"],["Rg7"],["Kh2"],["Kf3"],["Kh1"],["Kf2"],["Kh2"],["Rh7#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/R5K1/8 w - - 0 1","seed":73706,"expectedLine":[["Ra6"],["Ke7"],["Kf3"],["Kd7"],["Ke4"],["Kc7"],["Kd5"],["Kb7"],["Rh6"],["Kc7"],["Rg6"],["Kb7"],["Kc5"],["Ka7"],["Kb5"],["Kb7"],["Rg7+"],["Kc8"],["Kc6"],["Kd8"],["Rh7"],["Ke8"],["Kd6"],["Kf8"],["Ke6"],["Kg8"],["Ra7"],["Kf8"],["Rb7"],["Kg8"],["Kf6"],["Kh8"],["Kg6"],["Kg8"],["Rb8#"]]},{"id":"rook","startingFen":"8/5k2/1R6/8/8/8/8/1K6 w - - 0 1","seed":73744,"expectedLine":[["Kc2"],["Ke7"],["Kd3"],["Kd7"],["Kd4"],["Kc7"],["Rh6"],["Kd7"],["Kd5"],["Ke7"],["Rg6"],["Kf7"],["Ra6"],["Ke7"],["Rb6"],["Kf7"],["Ke5"],["Kg7"],["Kf5"],["Kh7"],["Kg5"],["Kg7"],["Rb7+"],["Kf8"],["Kf6"],["Ke8"],["Ra7"],["Kd8"],["Ke6"],["Kc8"],["Kd6"],["Kb8"],["Rh7"],["Kc8"],["Rg7"],["Kb8"],["Kc6"],["Ka8"],["Kb6"],["Kb8"],["Rg8#"]]},{"id":"rook","startingFen":"8/8/8/8/1K6/4k3/1R6/8 w - - 0 1","seed":73782,"expectedLine":[["Rc2"],["Kd3"],["Rc1"],["Kd2"],["Rc8"],["Kd3"],["Rc7"],["Kd2"],["Kb3"],["Kd1"],["Kb2"],["Kd2"],["Rd7+"],["Ke3"],["Kc3"],["Ke4"],["Rd8"],["Ke5"],["Kc4"],["Ke6"],["Kc5"],["Ke7"],["Rd1"],["Ke6"],["Rd2"],["Ke7"],["Kc6"],["Ke8"],["Kc7"],["Ke7"],["Re2+"],["Kf6"],["Kd6"],["Kf5"],["Re1"],["Kf4"],["Kd5"],["Kf3"],["Kd4"],["Kf2"],["Re8"],["Kf3"],["Re7"],["Kf2"],["Kd3"],["Kf1"],["Kd2"],["Kf2"],["Rf7+"],["Kg3"],["Ke3"],["Kg4"],["Rf8"],["Kg5"],["Ke4"],["Kg6"],["Ke5"],["Kg7"],["Rf1"],["Kg6"],["Rf2"],["Kg7"],["Ke6"],["Kg8"],["Ke7"],["Kg7"],["Rg2+"],["Kh6"],["Kf6"],["Kh5"],["Rg1"],["Kh4"],["Kf5"],["Kh3"],["Kf4"],["Kh2"],["Rg8"],["Kh3"],["Rg7"],["Kh2"],["Kf3"],["Kh1"],["Kf2"],["Kh2"],["Rh7#"]]},{"id":"rook","startingFen":"8/5k2/8/8/8/8/8/3RK3 w - - 0 1","seed":73820,"expectedLine":[["Rd6"],["Ke7"],["Ra6"],["Kd7"],["Kd2"],["Kc7"],["Kc3"],["Kb7"],["Rh6"],["Kc7"],["Kc4"],["Kd7"],["Kd5"],["Ke7"],["Rg6"],["Kf7"],["Ra6"],["Ke7"],["Rb6"],["Kf7"],["Ke5"],["Kg7"],["Kf5"],["Kh7"],["Kg5"],["Kg7"],["Rb7+"],["Kf8"],["Kf6"],["Ke8"],["Ra7"],["Kd8"],["Ke6"],["Kc8"],["Kd6"],["Kb8"],["Rh7"],["Kc8"],["Rg7"],["Kb8"],["Kc6"],["Ka8"],["Kb6"],["Kb8"],["Rg8#"]]},{"id":"rook","startingFen":"8/8/8/6k1/8/4R3/6K1/8 w - - 0 1","seed":73858,"expectedLine":[["Re4"],["Kf5"],["Ra4"],["Ke5"],["Kf3"],["Kd5"],["Ke3"],["Kc5"],["Kd3"],["Kb5"],["Rh4"],["Kc5"],["Rg4"],["Kb5"],["Kc3"],["Ka5"],["Kb3"],["Kb5"],["Rg5+"],["Kc6"],["Kc4"],["Kd6"],["Rh5"],["Ke6"],["Kd4"],["Kf6"],["Ke4"],["Kg6"],["Ra5"],["Kf6"],["Rb5"],["Kg6"],["Kf4"],["Kh6"],["Kg4"],["Kg6"],["Rb6+"],["Kf7"],["Kf5"],["Ke7"],["Ra6"],["Kd7"],["Ke5"],["Kc7"],["Kd5"],["Kb7"],["Rh6"],["Kc7"],["Rg6"],["Kb7"],["Kc5"],["Ka7"],["Kb5"],["Kb7"],["Rg7+"],["Kc8"],["Kc6"],["Kd8"],["Rh7"],["Ke8"],["Kd6"],["Kf8"],["Ke6"],["Kg8"],["Ra7"],["Kf8"],["Rb7"],["Kg8"],["Kf6"],["Kh8"],["Kg6"],["Kg8"],["Rb8#"]]},{"id":"queen","startingFen":"8/5k2/8/4Q3/8/8/8/7K w - - 0 1","seed":73888,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qf6"],["Kg8"],["Qe7"],["Kh8"],["Kg2"],["Kg8"],["Kg3"],["Kh8"],["Kg4"],["Kg8"],["Kg5"],["Kh8"],["Kg6"],["Kg8"],["Qg7#"]]},{"id":"queen","startingFen":"8/4Q3/8/3K4/8/8/3k4/8 w - - 0 1","seed":73926,"expectedLine":[["Qe4"],["Kc3"],["Ke5"],["Kd2","Kb2","Kb3"],["Qf3"],["Kc2"],["Qe3"],["Kb2"],["Qd3"],["Kc1","Ka1","Ka2"],["Qd2"],["Kb1"],["Kd4"],["Ka1"],["Kc3"],["Kb1"],["Qb2#"]]},{"id":"queen","startingFen":"1K6/5k2/8/8/8/8/8/6Q1 w - - 0 1","seed":73964,"expectedLine":[["Qg5"],["Ke6"],["Qc5"],["Kf6"],["Qd5"],["Ke7","Kg7","Kg6"],["Qc6"],["Kf7"],["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qd7"],["Kg8"],["Qe7"],["Kh8"],["Kc7"],["Kg8"],["Kd6"],["Kh8"],["Ke6"],["Kg8"],["Kf6"],["Kh8"],["Qg7#"]]},{"id":"queen","startingFen":"8/8/1Q6/6K1/4k3/8/8/8 w - - 0 1","seed":74002,"expectedLine":[["Qd6","Qc5"],["Kf3","Kd3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qd3","Qc4"],["Kc1","Ka1","Ka2"],["Qc3"],["Kb1"],["Qd2"],["Ka1"],["Kf4"],["Kb1"],["Ke3"],["Ka1"],["Kd3"],["Kb1"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/3K4/7Q/4k3/8/8/8/8 w - - 0 1","seed":74040,"expectedLine":[["Qc6"],["Kd4"],["Qe6"],["Kc5","Kd3","Kc3"],["Qe5"],["Kc4"],["Qd6"],["Kc3"],["Qd5"],["Kb4","Kc2","Kb2"],["Qc6"],["Kb3"],["Qc5"],["Kb2"],["Qc4"],["Ka3","Kb1","Ka1"],["Qb5"],["Ka2"],["Qb4"],["Ka1"],["Kc6"],["Ka2"],["Kc5"],["Ka1"],["Kc4"],["Ka2"],["Kc3"],["Ka1"],["Qb2#"]]},{"id":"queen","startingFen":"8/5k2/8/8/2K5/8/Q7/8 w - - 0 1","seed":74078,"expectedLine":[["Qe2"],["Kf6"],["Qe4"],["Kf7","Kg7","Kg5"],["Qf3"],["Kg6"],["Qf4"],["Kg7"],["Qf5"],["Kg8","Kh8","Kh6"],["Qf6"],["Kh7"],["Qg5"],["Kh8"],["Kd5"],["Kh7"],["Ke6"],["Kh8"],["Kf7"],["Kh7"],["Qg7#"]]},{"id":"queen","startingFen":"Q6K/5k2/8/8/8/8/8/8 w - - 0 1","seed":74116,"expectedLine":[["Qc6"],["Ke7"],["Kg7"],["Kd8"],["Qb7"],["Ke8"],["Qf7+"],["Kd8"],["Kf6"],["Kc8"],["Qe7"],["Kb8"],["Qd7"],["Ka8"],["Ke6"],["Kb8"],["Kd6"],["Ka8"],["Kc6"],["Kb8"],["Qb7#"]]},{"id":"queen","startingFen":"8/5k2/1Q6/8/8/5K2/8/8 w - - 0 1","seed":74154,"expectedLine":[["Qd6"],["Kg7"],["Qe6"],["Kf8","Kh8","Kh7"],["Qe7"],["Kg8"],["Kg4"],["Kh8"],["Kg5"],["Kg8"],["Kg6"],["Kh8"],["Qg7#"]]}]`) as HardcodedEndgameLineFixture[];
 
 test("hardcoded endgame priority lines mate from random starts", () => {
   const counts = new Map<EndgameId, number>();
@@ -1010,6 +1028,829 @@ test("knight-bishop lookup chooses mating net moves", () => {
   assert.equal(chess.isCheckmate(), true);
 });
 
+test("knight-bishop lookup resolves final collision groups", () => {
+  setEndgame("knightAndBishop");
+  const cases = [
+    {
+      fen: "k7/1N3B2/1K6/8/8/8/8/8 w - - 0 1",
+      whiteMove: "Be6",
+      blackMove: "Kb8",
+    },
+    {
+      fen: "3k4/8/3K4/2N2B2/8/8/8/8 w - - 0 1",
+      whiteMove: "Bg6",
+      blackMove: "Kc8",
+    },
+  ];
+
+  for (const { fen, whiteMove, blackMove } of cases) {
+    const chess = Brain.getChess(fen);
+    assert.deepEqual(
+      Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+      [whiteMove],
+      `${whiteMove} should be the only lookup move from ${chess.fen()}`,
+    );
+    assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [whiteMove]);
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    chess.move(whiteMove);
+    assert.deepEqual(
+      Brain.getEndgameOpponentCandidates(chess).idealMoves,
+      [blackMove],
+    );
+  }
+});
+
+test("knight-bishop lookup overrides collision into nc5 net path", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nc5",
+    "Kb8",
+    "Kc6",
+    "Kc8",
+    "Nb7",
+    "Kb8",
+    "Kb6",
+    "Kc8",
+    "Bf5+",
+    "Kb8",
+    "Nc5",
+    "Ka8",
+    "Be6",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "2k5/3N3B/3K4/8/8/8/8/8 w - - 0 1",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup resolves requested collision groups", () => {
+  setEndgame("knightAndBishop");
+  const cases = [
+    {
+      fen: "1k6/8/2K1B3/2N5/8/8/8/8 w - - 0 1",
+      whiteMove: "Kb6",
+      blackMove: "Ka8",
+    },
+    {
+      fen: "2k5/3N4/4K3/3B4/8/8/8/8 w - - 0 1",
+      whiteMove: "Kd6",
+      blackMove: "Kd8",
+    },
+  ];
+
+  for (const { fen, whiteMove, blackMove } of cases) {
+    const chess = Brain.getChess(fen);
+    assert.deepEqual(
+      Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+      [whiteMove],
+      `${whiteMove} should be the only lookup move from ${chess.fen()}`,
+    );
+    assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [whiteMove]);
+    assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+
+    chess.move(whiteMove);
+    assert.deepEqual(
+      Brain.getEndgameOpponentCandidates(chess).idealMoves,
+      [blackMove],
+    );
+  }
+});
+
+test("knight-bishop lookup exits repeated ka7 net position", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf7+",
+    "Kg8",
+    "Bg6",
+    "Kf8",
+    "Bh7",
+    "Ke8",
+    "Ne5",
+    "Kf8",
+    "Nd7+",
+    "Ke8",
+    "Ke6",
+    "Kd8",
+    "Kd6",
+    "Kc8",
+    "Nc5",
+    "Kb8",
+    "Kc6",
+    "Ka7",
+    "Bf5",
+    "Kb8",
+    "Kb6",
+    "Ka8",
+    "Be6",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup exits repeated bd3 net position", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf7+",
+    "Kg8",
+    "Bg6",
+    "Kf8",
+    "Bh7",
+    "Ke8",
+    "Ne5",
+    "Kd8",
+    "Ke6",
+    "Kc8",
+    "Nd7",
+    "Kb7",
+    "Bd3",
+    "Kc8",
+    "Be4",
+    "Kc7",
+    "Bd5",
+    "Kc8",
+    "Kd6",
+    "Kd8",
+    "Bf7",
+    "Kc8",
+  ];
+  const chess = Brain.getChess(
+    "7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+});
+
+test("knight-bishop lookup keeps f5 corner branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nc7+",
+    "Kb8",
+    "Bb6",
+    "Kc8",
+    "Ba7",
+    "Kd8",
+    "Nd5",
+    "Kc8",
+    "Ne7+",
+    "Kd8",
+    "Kd6",
+    "Ke8",
+    "Ke6",
+    "Kf8",
+    "Nf5",
+    "Kg8",
+    "Kf6",
+    "Kh8",
+    "Kg6",
+    "Kg8",
+    "Bc5",
+    "Kh8",
+    "Bd6",
+    "Kg8",
+    "Nh6+",
+    "Kh8",
+  ];
+  const chess = Brain.getChess(
+    "k7/8/2K5/1N6/3B4/8/8/8 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+});
+
+test("knight-bishop lookup keeps ka8 bd3 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf7+",
+    "Kg8",
+    "Bg6",
+    "Kf8",
+    "Bh7",
+    "Ke8",
+    "Ne5",
+    "Kd8",
+    "Ke6",
+    "Kc8",
+    "Nd7",
+    "Kb7",
+    "Bd3",
+    "Ka8",
+    "Kd6",
+    "Ka7",
+    "Kc7",
+    "Ka8",
+    "Nc5",
+    "Ka7",
+    "Bf5",
+    "Ka8",
+    "Kb6",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Be4#",
+  ];
+  const chess = Brain.getChess(
+    "7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(
+        Brain.getEndgameReason(chess.fen()),
+        "mating net",
+      );
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps reflected ka8 nd6 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nb3+",
+    "Ka2",
+    "Bc2",
+    "Ka3",
+    "Bb1",
+    "Ka4",
+    "Nd4",
+    "Ka3",
+    "Nb5+",
+    "Ka4",
+    "Kc4",
+    "Ka5",
+    "Kc5",
+    "Ka6",
+    "Nd6",
+    "Ka7",
+    "Kc6",
+    "Ka6",
+    "Nb7",
+    "Ka7",
+    "Kc7",
+    "Ka8",
+    "Nd6",
+    "Ka7",
+    "Bd3",
+    "Ka8",
+    "Bc4",
+    "Ka7",
+    "Nc8+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "8/8/8/8/4B3/2K5/3N4/k7 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps reflected kb8 nc7 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nb3+",
+    "Ka2",
+    "Bc2",
+    "Ka3",
+    "Bb1",
+    "Ka4",
+    "Nd4",
+    "Ka5",
+    "Kc4",
+    "Ka6",
+    "Nb5",
+    "Kb7",
+    "Bf5",
+    "Kb8",
+    "Kc5",
+    "Kb7",
+    "Be6",
+    "Kb8",
+    "Kb6",
+    "Ka8",
+    "Nc7+",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "8/8/8/8/4B3/2K5/3N4/k7 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps kc7 be4 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf7+",
+    "Kg8",
+    "Bg6",
+    "Kf8",
+    "Bh7",
+    "Ke8",
+    "Ne5",
+    "Kd8",
+    "Ke6",
+    "Kc8",
+    "Nd7",
+    "Kb7",
+    "Bd3",
+    "Kc7",
+    "Be4",
+    "Kc8",
+    "Kd6",
+    "Kd8",
+    "Bg6",
+    "Kc8",
+    "Nc5",
+    "Kd8",
+    "Nb7+",
+    "Kc8",
+    "Kc6",
+    "Kb8",
+    "Kb6",
+    "Kc8",
+    "Bf5+",
+    "Kb8",
+    "Nc5",
+    "Ka8",
+    "Be6",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps c-file reflected nc4 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nf2+",
+    "Kg1",
+    "Bg3",
+    "Kf1",
+    "Bh2",
+    "Ke1",
+    "Ne4",
+    "Kd1",
+    "Ke3",
+    "Kc2",
+    "Nd2",
+    "Kc3",
+    "Bd6",
+    "Kc2",
+    "Be5",
+    "Kc1",
+    "Kd3",
+    "Kd1",
+    "Bg3",
+    "Kc1",
+    "Nc4",
+    "Kb1",
+    "Kc3",
+    "Kc1",
+    "Nb2",
+    "Kb1",
+    "Kb3",
+    "Ka1",
+    "Nc4",
+    "Kb1",
+    "Bf4",
+    "Ka1",
+    "Be3",
+    "Kb1",
+    "Na3+",
+    "Ka1",
+    "Bd4#",
+  ];
+  const chess = Brain.getChess(
+    "8/8/8/4B3/6N1/5K2/8/7k w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps h-file reflected nf1 branch in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Nc2+",
+    "Kb1",
+    "Bb3",
+    "Kc1",
+    "Ba2",
+    "Kd1",
+    "Nd4",
+    "Ke1",
+    "Kd3",
+    "Kf1",
+    "Ne2",
+    "Kg2",
+    "Be6",
+    "Kh2",
+    "Ke3",
+    "Kg2",
+    "Bf5",
+    "Kh1",
+    "Kf2",
+    "Kh2",
+    "Bg4",
+    "Kh1",
+    "Ng3+",
+    "Kh2",
+    "Nf1+",
+    "Kh1",
+    "Bf3#",
+  ];
+  const chess = Brain.getChess(
+    "8/8/8/3B4/1N6/2K5/8/k7 w - - 42 22",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps short kb6 re-entry in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Kb6",
+    "Kb8",
+    "Bf5",
+    "Ka8",
+    "Be6",
+    "Kb8",
+    "Na6+",
+    "Ka8",
+    "Bd5#",
+  ];
+  const chess = Brain.getChess(
+    "k7/8/2K3B1/2N5/8/8/8/8 w - - 64 33",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+  assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup keeps short kg6 ng5 handoff in net", () => {
+  setEndgame("knightAndBishop");
+  const line = [
+    "Kg6",
+    "Kh8",
+    "Ng5",
+    "Kg8",
+    "Bc5",
+    "Kh8",
+  ];
+  const chess = Brain.getChess(
+    "6k1/8/4NK2/8/8/8/5B2/8 w - - 68 35",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+});
+
+test("knight-bishop lookup keeps short kb6 bishop-e6 re-entry in net", () => {
+  setEndgame("knightAndBishop");
+  const line = ["Kb6", "Kb8"];
+  const chess = Brain.getChess(
+    "k7/8/2K1B3/1N6/8/8/8/8 w - - 66 34",
+  );
+  let lastWhiteTurnFen: string | undefined;
+  let blackReturnTargetFen: string | undefined;
+
+  for (const san of line) {
+    if (chess.turn() === "w") {
+      assert.deepEqual(
+        Brain.getKnightAndBishopLookupWhiteMoves(chess.fen()),
+        [san],
+        `${san} should be the only lookup move from ${chess.fen()}`,
+      );
+      assert.deepEqual(Brain.getIdealEndgameWhiteMoves(chess.fen()), [san]);
+      assert.equal(Brain.getEndgameReason(chess.fen()), "mating net");
+      blackReturnTargetFen = lastWhiteTurnFen;
+      lastWhiteTurnFen = chess.fen();
+    } else {
+      assert.ok(
+        Brain.getEndgameOpponentCandidates(
+          chess,
+          blackReturnTargetFen,
+        ).idealMoves.includes(san),
+        `${san} should be an ideal reply from ${chess.fen()}`,
+      );
+      blackReturnTargetFen = undefined;
+    }
+    chess.move(san);
+  }
+});
+
 test("knight-bishop lookup accepts moves through every board symmetry", () => {
   setEndgame("knightAndBishop");
 
@@ -1028,6 +1869,33 @@ test("knight-bishop lookup accepts moves through every board symmetry", () => {
       assert.equal(Brain.getEndgamePhase(fen), "2/2", fen);
     }
   }
+});
+
+test("knight-bishop lookup table has no transformed collisions", () => {
+  setEndgame("knightAndBishop");
+  const movesByFen = new Map<string, Set<string>>();
+
+  for (const entry of Brain.KNIGHT_AND_BISHOP_LOOKUP_ENTRIES) {
+    for (const transform of Brain.SQUARE_TRANSFORMS) {
+      const inverseTransform = Brain.getSquareTransform(transform.inverseName);
+      const fen = transformLookupEntryFen(entry.key, inverseTransform.name);
+      const from = Brain.transformSquare(entry.from, inverseTransform);
+      const to = Brain.transformSquare(entry.to, inverseTransform);
+      const san = getMoveSan(fen, from, to);
+      const key = Brain.boardTurnKey(fen);
+      const moves = movesByFen.get(key) ?? new Set<string>();
+      moves.add(san);
+      movesByFen.set(key, moves);
+    }
+  }
+
+  const collisions = Array.from(movesByFen.entries()).filter(
+    ([, moves]) => moves.size > 1,
+  );
+  assert.deepEqual(
+    collisions.map(([fen, moves]) => [fen, Array.from(moves).sort()]),
+    [],
+  );
 });
 
 test("knight-bishop phase-two black replies are all ideal when a lookup reply exists", () => {
@@ -1201,10 +2069,10 @@ test("knight-bishop lookup includes king c8 and knight d7 branches", () => {
       "Kb7",
       "Bc4",
       "Ka7",
-      "Kc6",
+      "Kc7",
       "Ka8",
-      "Nc5",
-      "Kb8",
+      "Nb6+",
+      "Ka7",
     ],
   ];
 
@@ -1247,20 +2115,20 @@ test("knight-bishop lookup patches forced re-entry holes", () => {
   setEndgame("knightAndBishop");
   const cases = [
     ["2k5/3N3B/4K3/8/8/8/8/8 w - - 54 28", "Be4"],
-    ["2k5/3N3B/3K4/8/8/8/8/8 w - - 56 29", "Ke6"],
-    ["2k5/3N4/4K3/8/8/3B4/8/8 w - - 56 29", "Bh7"],
-    ["2k5/3N4/4K3/8/4B3/8/8/8 w - - 56 29", "Bh7"],
-    ["2k5/3N4/4K3/3B4/8/8/8/8 w - - 58 30", ["Kd6", "Be4"]],
-    ["8/k2N4/3K4/8/8/3B4/8/8 w - - 58 30", "Ke6"],
+    ["2k5/3N3B/3K4/8/8/8/8/8 w - - 56 29", "Nc5"],
+    ["2k5/3N4/4K3/8/8/3B4/8/8 w - - 56 29", "Be4"],
+    ["2k5/3N4/4K3/8/4B3/8/8/8 w - - 56 29", "Kd6"],
+    ["2k5/3N4/4K3/3B4/8/8/8/8 w - - 58 30", "Kd6"],
+    ["8/k2N4/3K4/8/8/3B4/8/8 w - - 58 30", "Kc7"],
     ["2k5/3N4/3K4/3B4/8/8/8/8 w - - 60 31", "Be4"],
     ["2k5/3N4/3K4/8/2B5/8/8/8 w - - 60 31", "Bd5"],
-    ["3k4/8/3K4/2N2B2/8/8/8/8 w - - 64 33", ["Nd7", "Bg6"]],
+    ["3k4/8/3K4/2N2B2/8/8/8/8 w - - 64 33", "Bg6"],
     ["8/k7/2K5/2N5/2B5/8/8/8 w - - 64 33", "Nd7"],
     ["1k6/8/2K5/2N5/2B5/8/8/8 w - - 64 33", "Be6"],
-    ["1k6/8/2K1B3/2N5/8/8/8/8 w - - 66 34", ["Kd6", "Kb6"]],
+    ["1k6/8/2K1B3/2N5/8/8/8/8 w - - 66 34", "Kb6"],
     ["k7/8/2K5/2N2B2/8/8/8/8 w - - 66 34", "Be6"],
     ["8/2kN4/4K3/8/2B5/8/8/8 w - - 58 30", "Bd5"],
-    ["k7/3N4/3K4/8/2B5/8/8/8 w - - 60 31", "Bd3"],
+    ["k7/3N4/3K4/8/2B5/8/8/8 w - - 60 31", "Kc7"],
     ["k7/3B4/2K5/2N5/8/8/8/8 w - - 68 35", "Kb6"],
   ] as const;
 
@@ -1319,22 +2187,22 @@ test("knight-bishop lookup includes bishop d5 branch", () => {
 test("knight-bishop lookup includes bishop d3 retreat branch", () => {
   setEndgame("knightAndBishop");
   const lines = [
-    ["Kd6", "Kc8", "Be4", "Kd8", "Bf5", "Ke8", "Bg6+", "Kd8"],
+    ["Kd6", "Kc8", "Be4", "Kd8", "Bg6", "Kc8"],
     [
       "Kd6",
       "Kc8",
       "Be4",
       "Kd8",
-      "Bf5",
+      "Bg6",
       "Kc8",
-      "Nc5+",
-      "Kb8",
+      "Nc5",
+      "Kd8",
+      "Nb7+",
+      "Kc8",
       "Kc6",
-      "Ka7",
-      "Be6",
-      "Ka8",
-      "Kb6",
       "Kb8",
+      "Kb6",
+      "Kc8",
     ],
   ];
 
@@ -1424,6 +2292,39 @@ test("endgame phase two is only reported on white turns", () => {
     const blackFen = whiteFen.replace(" w ", " b ");
     assert.equal(Brain.getEndgamePhase(blackFen), "1/2", blackFen);
   }
+});
+
+test("endgame board border keeps phase two during black reply animation", () => {
+  setEndgame("knightAndBishop");
+  const startingFen = "4k3/5N1B/5K2/8/8/8/8/8 w - - 48 25";
+  const afterWhiteFen = Brain.getFen(startingFen, "Ne5");
+  const finalFen = Brain.getFen(afterWhiteFen, "Kd8");
+  Brain.history = {
+    index: 0,
+    states: [
+      {
+        fen: finalFen,
+        startingFen: afterWhiteFen,
+        orientationIsWhite: true,
+        logs: [
+          {
+            fen: startingFen,
+            san: "Ne5",
+            opponent_san: "Kd8",
+            ...Brain.getEndgameLogFields(
+              startingFen,
+              "Ne5",
+              afterWhiteFen,
+            ),
+          },
+        ],
+      },
+    ],
+  };
+
+  assert.equal(Brain.getEndgamePhase(afterWhiteFen), "1/2");
+  assert.equal(Brain.getVisibleEndgamePhase(afterWhiteFen), "2/2");
+  assert.equal(Brain.shouldShowPhaseTwoBoardBorder(afterWhiteFen), true);
 });
 
 test("two-bishop phase two requires black on edge and one target pattern", () => {
@@ -1533,6 +2434,25 @@ test("two-bishop phase two uses corner waiting moves", () => {
     Brain.canBishopMoveToControlSquare(afterWaiting.fen(), "c6", "b1"),
     true,
   );
+});
+
+test("two-bishop best move reuses corner waiting move search", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/2B5/2B5/8/8/2K5/k7 w - - 68 35";
+  const original = Brain.getTwoBishopsCornerWaitingMoves;
+  let calls = 0;
+  Brain.getTwoBishopsCornerWaitingMoves = ((...args) => {
+    calls += 1;
+    return original.apply(Brain, args);
+  }) as typeof Brain.getTwoBishopsCornerWaitingMoves;
+
+  try {
+    assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Be4"]);
+    assert.equal(calls, 1);
+    assert.equal(Brain.getEndgameReason(fen), "waiting move");
+  } finally {
+    Brain.getTwoBishopsCornerWaitingMoves = original;
+  }
 });
 
 test("two-bishop phase two prefers forcing opposition before corner distance", () => {
@@ -1908,6 +2828,10 @@ test("rook white rules choose explicit best moves", () => {
     ["Kd5"],
   );
   assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves("8/4k3/R7/3K4/8/8/8/8 w - - 32 17"),
+    ["Rb6"],
+  );
+  assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("5R2/8/8/8/8/4K3/8/6k1 w - - 8 5"),
     ["Ke2"],
   );
@@ -1933,7 +2857,7 @@ test("rook white rules choose explicit best moves", () => {
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/5R2/4K3/6k1/8/8 w - - 4 3"),
-    ["Ke3"],
+    ["Rf6"],
   );
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("7K/8/8/2R5/8/8/8/7k w - - 0 1"),
@@ -2042,7 +2966,7 @@ test("rook phase 2 uses post-box rook distance priorities", () => {
 
   assert.deepEqual(
     Brain.getIdealEndgameWhiteMoves("8/8/8/8/4K3/7R/3k4/8 w - - 14 8"),
-    ["Kd4"],
+    ["Rg3"],
   );
 });
 
@@ -2080,12 +3004,18 @@ function findBlackReplyFixture(
   for (const fixture of HARDCODED_ENDGAME_LINE_FIXTURES) {
     setEndgame(fixture.id);
     const chess = Brain.getChess(fixture.startingFen);
+    let lastWhiteTurnFen: string | undefined;
     for (const expectedMoves of fixture.expectedLine) {
       if (chess.turn() === "w") {
         const fen = chess.fen();
+        const previousTurnFen = lastWhiteTurnFen;
         const whiteMove = chess.move(expectedMoves[0]);
         assert.ok(whiteMove);
-        const candidates = Brain.getEndgameOpponentCandidates(chess);
+        const candidates = Brain.getEndgameOpponentCandidates(
+          chess,
+          previousTurnFen,
+        );
+        lastWhiteTurnFen = fen;
         if (predicate(candidates)) {
           return {
             id: fixture.id,
@@ -2116,14 +3046,19 @@ function findWhiteChoiceFixture(): {
   for (const fixture of HARDCODED_ENDGAME_LINE_FIXTURES) {
     setEndgame(fixture.id);
     const chess = Brain.getChess(fixture.startingFen);
+    let lastWhiteTurnFen: string | undefined;
     for (const expectedMoves of fixture.expectedLine) {
       if (chess.turn() === "w") {
         const fen = chess.fen();
         const idealMoves = Brain.getIdealEndgameWhiteMoves(fen);
         if (idealMoves.length > 1) {
+          const previousTurnFen = lastWhiteTurnFen;
           const whiteMove = chess.move(idealMoves[0]);
           assert.ok(whiteMove);
-          const candidates = Brain.getEndgameOpponentCandidates(chess);
+          const candidates = Brain.getEndgameOpponentCandidates(
+            chess,
+            previousTurnFen,
+          );
           return {
             id: fixture.id,
             log: {
@@ -2137,6 +3072,7 @@ function findWhiteChoiceFixture(): {
             idealMoves,
           };
         }
+        lastWhiteTurnFen = fen;
         chess.move(expectedMoves[0]);
       } else {
         chess.move(expectedMoves[0]);
@@ -2145,6 +3081,169 @@ function findWhiteChoiceFixture(): {
   }
   throw new Error("No white choice fixture found");
 }
+
+test("endgame position keys ignore only move counters", () => {
+  assert.equal(
+    Brain.positionKey("8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25"),
+    Brain.positionKey("8/8/8/4k3/7B/3K2N1/8/8 w - - 52 27"),
+  );
+  assert.notEqual(
+    Brain.positionKey("8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25"),
+    Brain.positionKey("8/8/8/4k3/7B/3K2N1/8/8 b - - 48 25"),
+  );
+});
+
+test("endgame lines preload logs and undoable states", () => {
+  setEndgame("knightAndBishop");
+  const startingFen = "8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25";
+  const moves = ["Kc3", "Kf4", "Kd3", "Ke5"];
+  const expectedChess = Brain.getChess(startingFen);
+  moves.forEach((move) => expectedChess.move(move));
+
+  const states = Brain.getEndgameLineStates(startingFen, moves);
+  const finalState = states[states.length - 1];
+
+  assert.equal(states[0].fen, startingFen);
+  assert.equal(states[0].logs.length, 0);
+  assert.equal(finalState.fen, expectedChess.fen());
+  assert.deepEqual(
+    finalState.logs.map((log) => [log.san, log.opponent_san]),
+    [
+      ["Kc3", "Kf4"],
+      ["Kd3", "Ke5"],
+    ],
+  );
+  const secondBlackPosition = Brain.getChess(finalState.logs[1].fen);
+  secondBlackPosition.move(finalState.logs[1].san);
+  const secondBlackCandidates = Brain.getEndgameOpponentCandidates(
+    secondBlackPosition,
+    finalState.logs[0].fen,
+  );
+  assert.equal(
+    finalState.logs[1].ideal_choices,
+    secondBlackCandidates.idealMoves.length,
+  );
+  assert.equal(finalState.logs[1].num_choices, secondBlackCandidates.moves.length);
+
+  Brain.updateHistory = (history) => {
+    Brain.history = history;
+  };
+  Brain.loadEndgameLine(startingFen, moves);
+
+  assert.equal(Brain.history.index, 0);
+  assert.equal(Brain.history.states[0].fen, expectedChess.fen());
+  assert.equal(
+    Brain.history.states[Brain.history.states.length - 1].fen,
+    startingFen,
+  );
+});
+
+test("endgame loop search detects a single repeated position on the final ply", () => {
+  setEndgame("knightAndBishop");
+  const startingFen = "8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25";
+  const script = ["Kc3", "Kf4", "Kd3", "Ke5"];
+  const originalWhiteMoves = Brain.getIdealEndgameWhiteMoves;
+  const originalOpponentCandidates = Brain.getEndgameOpponentCandidates;
+  let index = 0;
+
+  Brain.getIdealEndgameWhiteMoves = () => [script[index++]];
+  Brain.getEndgameOpponentCandidates = () => {
+    const move = script[index++];
+    return { moves: [move], idealMoves: [move] };
+  };
+
+  try {
+    const result = Brain.tryEndgamePathToMate(startingFen, script.length, () => 0);
+    assert.equal(result.result, "loop");
+    assert.equal(result.plies, script.length);
+    assert.deepEqual(result.moves, script);
+    assert.equal(Brain.boardTurnKey(result.finalFen), Brain.boardTurnKey(startingFen));
+  } finally {
+    Brain.getIdealEndgameWhiteMoves = originalWhiteMoves;
+    Brain.getEndgameOpponentCandidates = originalOpponentCandidates;
+  }
+});
+
+test("black endgame replies prefer returning to the previous white-turn position", () => {
+  setEndgame("knightAndBishop");
+  const firstWhiteTurnFen = "8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25";
+  const chess = Brain.getChess(firstWhiteTurnFen);
+  const firstWhiteMove = chess.move("Kc3");
+  assert.ok(firstWhiteMove);
+  const firstBlackCandidates = Brain.getEndgameOpponentCandidates(chess);
+  const firstBlackMove = chess.move("Kf4");
+  assert.ok(firstBlackMove);
+  const secondWhiteTurnFen = chess.fen();
+  const secondWhiteMove = chess.move("Kd3");
+  assert.ok(secondWhiteMove);
+
+  const candidates = Brain.getEndgameOpponentCandidates(chess, firstWhiteTurnFen);
+  assert.deepEqual(
+    Brain.getEndgameReturnToPositionMoves(chess.fen(), firstWhiteTurnFen),
+    ["Ke5"],
+  );
+  assert.deepEqual(candidates.idealMoves, ["Ke5"]);
+
+  const logs: LogType[] = [
+    {
+      fen: firstWhiteTurnFen,
+      san: firstWhiteMove.san,
+      opponent_san: firstBlackMove.san,
+      ideal_choices: firstBlackCandidates.idealMoves.length,
+      num_choices: firstBlackCandidates.moves.length,
+      ...Brain.getEndgameLogFields(
+        firstWhiteTurnFen,
+        firstWhiteMove.san,
+        Brain.getFen(firstWhiteTurnFen, firstWhiteMove.san),
+      ),
+    },
+    {
+      fen: secondWhiteTurnFen,
+      san: secondWhiteMove.san,
+      opponent_san: "Ke5",
+      ideal_choices: candidates.idealMoves.length,
+      num_choices: candidates.moves.length,
+      ...Brain.getEndgameLogFields(
+        secondWhiteTurnFen,
+        secondWhiteMove.san,
+        chess.fen(),
+      ),
+    },
+  ];
+  Brain.history = {
+    index: 0,
+    states: [
+      {
+        fen: chess.fen(),
+        startingFen: secondWhiteTurnFen,
+        orientationIsWhite: true,
+        logs,
+      },
+    ],
+  };
+
+  assert.equal(Brain.isEndgameLogOpponentMoveIdeal(1), true);
+  const nonReturnMove = candidates.moves.find((san) => san !== "Ke5");
+  assert.ok(nonReturnMove);
+  Brain.history.states[0].logs[1] = {
+    ...logs[1],
+    opponent_san: nonReturnMove,
+  };
+  assert.equal(Brain.isEndgameLogOpponentMoveIdeal(1), false);
+});
+
+test("black endgame replies fall back when no previous position is available", () => {
+  setEndgame("knightAndBishop");
+  const chess = Brain.getChess("8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25");
+  chess.move("Kc3");
+  const candidates = Brain.getEndgameOpponentCandidates(chess);
+
+  assert.deepEqual(
+    Brain.getEndgameReturnToPositionMoves(chess.fen(), undefined),
+    [],
+  );
+  assert.equal(candidates.idealMoves.length > 0, true);
+});
 
 test("endgame log cycles black to a different best reply", () => {
   const fixture = findBlackReplyFixture(

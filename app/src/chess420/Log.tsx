@@ -236,7 +236,7 @@ function EndgameLogRow(props: {
   const reason = log.endgame_reason ?? Brain.getEndgameReason(log.fen);
   const idealChoices = log.ideal_choices ?? log.num_choices;
   const showChoices = log.num_choices !== undefined && log.num_choices > 0;
-  const opponentMoveIsIdeal = Brain.isEndgameOpponentMoveIdeal(log);
+  const opponentMoveIsIdeal = Brain.isEndgameLogOpponentMoveIdeal(index);
   return (
     <div className="endgame-log-row">
       <div>{index + 1}</div>

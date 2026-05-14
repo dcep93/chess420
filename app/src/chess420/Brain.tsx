@@ -157,6 +157,7 @@ type RookWhiteMoveScore = {
   rookBetweenKingsPenalty: number;
   oppositionRookCheckPenalty: number;
   edgeOwnLinePenalty: number;
+  rookPhaseTwoWaitingPenalty: number;
   boxSize: number;
   rookBlackSidePenalty: number;
   rookBlackDistanceScore: number;
@@ -205,6 +206,15 @@ type TwoBishopsWhiteMoveScore = {
   kingEdgePenalty: number;
   kingWalkDistance: number;
   bishopBlackKingDistance: number;
+};
+
+type TwoBishopsWaitingMove = { from: Square; to: Square };
+
+type TwoBishopsLineWaitingMoveTargets = { from: Square; to: Square[] };
+
+type TwoBishopsWaitingMoveContext = {
+  cornerMoves: TwoBishopsWaitingMove[];
+  lineTargets: TwoBishopsLineWaitingMoveTargets | null;
 };
 
 type TwoBishopsBlackMoveScore = {
@@ -309,11 +319,6 @@ export default class Brain {
       to: "e4",
     },
     {
-      key: "2k5/3N3B/3K4/8/8/8/8/8 w",
-      from: "d6",
-      to: "e6",
-    },
-    {
       key: "4k3/7B/4K3/4N3/8/8/8/8 w",
       from: "e5",
       to: "d7",
@@ -361,7 +366,7 @@ export default class Brain {
     {
       key: "8/k2N4/3K4/8/2B5/8/8/8 w",
       from: "d6",
-      to: "c6",
+      to: "c7",
     },
     {
       key: "8/k2N4/4K3/8/8/3B4/8/8 w",
@@ -386,17 +391,42 @@ export default class Brain {
     {
       key: "8/k2N4/3K4/8/8/3B4/8/8 w",
       from: "d6",
-      to: "e6",
+      to: "c7",
     },
     {
-      key: "k7/3N4/2K5/8/2B5/8/8/8 w",
+      key: "k7/2KN4/8/8/8/3B4/8/8 w",
       from: "d7",
       to: "c5",
     },
     {
+      key: "8/k1K5/8/2N5/8/3B4/8/8 w",
+      from: "d3",
+      to: "f5",
+    },
+    {
+      key: "k7/2K5/8/2N2B2/8/8/8/8 w",
+      from: "c7",
+      to: "b6",
+    },
+    {
+      key: "1k6/8/1K6/2N2B2/8/8/8/8 w",
+      from: "c5",
+      to: "a6",
+    },
+    {
+      key: "k7/8/NK6/5B2/8/8/8/8 w",
+      from: "f5",
+      to: "e4",
+    },
+    {
+      key: "k7/3N4/2K5/8/2B5/8/8/8 w",
+      from: "c6",
+      to: "c7",
+    },
+    {
       key: "k7/3N4/3K4/8/2B5/8/8/8 w",
-      from: "c4",
-      to: "d3",
+      from: "d6",
+      to: "c7",
     },
     {
       key: "8/3N3B/2k1K3/8/8/8/8/8 w",
@@ -421,7 +451,7 @@ export default class Brain {
     {
       key: "2k5/3N4/4K3/8/8/3B4/8/8 w",
       from: "d3",
-      to: "h7",
+      to: "e4",
     },
     {
       key: "3k4/3N4/4K3/8/4B3/8/8/8 w",
@@ -431,7 +461,7 @@ export default class Brain {
     {
       key: "3k4/3N4/3K4/8/4B3/8/8/8 w",
       from: "e4",
-      to: "f5",
+      to: "g6",
     },
     {
       key: "4k3/3N4/3K4/8/4B3/8/8/8 w",
@@ -465,8 +495,33 @@ export default class Brain {
     },
     {
       key: "2k5/3N4/4K3/8/4B3/8/8/8 w",
-      from: "e4",
-      to: "h7",
+      from: "e6",
+      to: "d6",
+    },
+    {
+      key: "2k5/3N4/3K2B1/8/8/8/8/8 w",
+      from: "d7",
+      to: "c5",
+    },
+    {
+      key: "3k4/8/3K2B1/2N5/8/8/8/8 w",
+      from: "c5",
+      to: "b7",
+    },
+    {
+      key: "2k5/1N6/3K2B1/8/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "1k6/1N6/2K3B1/8/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "2k5/1N6/1K4B1/8/8/8/8/8 w",
+      from: "g6",
+      to: "f5",
     },
     {
       key: "2k5/3N4/3K4/8/4B3/8/8/8 w",
@@ -489,11 +544,6 @@ export default class Brain {
       to: "d6",
     },
     {
-      key: "2k5/3N4/4K3/3B4/8/8/8/8 w",
-      from: "d5",
-      to: "e4",
-    },
-    {
       key: "3k4/3N4/4K3/3B4/8/8/8/8 w",
       from: "e6",
       to: "d6",
@@ -504,6 +554,26 @@ export default class Brain {
       to: "e6",
     },
     {
+      key: "5k2/B3N3/4K3/8/8/8/8/8 w",
+      from: "e7",
+      to: "f5",
+    },
+    {
+      key: "7k/B7/5K2/5N2/8/8/8/8 w",
+      from: "f6",
+      to: "g6",
+    },
+    {
+      key: "6k1/B7/6K1/5N2/8/8/8/8 w",
+      from: "a7",
+      to: "c5",
+    },
+    {
+      key: "4k3/B7/4K3/5N2/8/8/8/8 w",
+      from: "a7",
+      to: "b6",
+    },
+    {
       key: "3k4/3N4/3KB3/8/8/8/8/8 w",
       from: "e6",
       to: "f7",
@@ -512,6 +582,46 @@ export default class Brain {
       key: "2k5/3N1B2/3K4/8/8/8/8/8 w",
       from: "d7",
       to: "c5",
+    },
+    {
+      key: "1k6/7B/3K4/2N5/8/8/8/8 w",
+      from: "d6",
+      to: "c6",
+    },
+    {
+      key: "8/k6B/2K5/2N5/8/8/8/8 w",
+      from: "h7",
+      to: "f5",
+    },
+    {
+      key: "1k6/8/2K5/2N2B2/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "2k5/7B/2K5/2N5/8/8/8/8 w",
+      from: "c5",
+      to: "b7",
+    },
+    {
+      key: "1k6/1N5B/2K5/8/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "2k5/1N5B/1K6/8/8/8/8/8 w",
+      from: "h7",
+      to: "f5",
+    },
+    {
+      key: "1k6/1N6/1K6/5B2/8/8/8/8 w",
+      from: "b7",
+      to: "c5",
+    },
+    {
+      key: "k7/8/1K6/2N2B2/8/8/8/8 w",
+      from: "f5",
+      to: "e6",
     },
     {
       key: "4k3/3N3B/5K2/8/8/8/8/8 w",
@@ -537,11 +647,6 @@ export default class Brain {
       key: "2k5/3N4/3K4/8/2B5/8/8/8 w",
       from: "c4",
       to: "d5",
-    },
-    {
-      key: "3k4/8/3K4/2N2B2/8/8/8/8 w",
-      from: "c5",
-      to: "d7",
     },
     {
       key: "3k4/8/3K4/2N2B2/8/8/8/8 w",
@@ -611,11 +716,6 @@ export default class Brain {
     {
       key: "1k6/8/2K1B3/2N5/8/8/8/8 w",
       from: "c6",
-      to: "d6",
-    },
-    {
-      key: "1k6/8/2K1B3/2N5/8/8/8/8 w",
-      from: "c6",
       to: "b6",
     },
     {
@@ -634,6 +734,16 @@ export default class Brain {
       to: "e6",
     },
     {
+      key: "k7/8/2K3B1/2N5/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
+      key: "k7/8/2K1B3/1N6/8/8/8/8 w",
+      from: "c6",
+      to: "b6",
+    },
+    {
       key: "2k5/1N3B2/3K4/8/8/8/8/8 w",
       from: "d6",
       to: "c6",
@@ -644,9 +754,84 @@ export default class Brain {
       to: "b6",
     },
     {
+      key: "1k6/8/4B3/1NK5/8/8/8/8 w",
+      from: "c5",
+      to: "b6",
+    },
+    {
+      key: "k7/8/1K2B3/1N6/8/8/8/8 w",
+      from: "b5",
+      to: "c7",
+    },
+    {
+      key: "1k6/2N5/1K2B3/8/8/8/8/8 w",
+      from: "c7",
+      to: "a6",
+    },
+    {
+      key: "8/8/8/8/2N5/3K2B1/8/1k6 w",
+      from: "d3",
+      to: "c3",
+    },
+    {
+      key: "8/8/8/8/2N5/2K3B1/8/2k5 w",
+      from: "c4",
+      to: "b2",
+    },
+    {
+      key: "8/8/8/8/8/1K4B1/1N6/k7 w",
+      from: "b2",
+      to: "c4",
+    },
+    {
+      key: "8/8/8/8/2N5/1K4B1/8/1k6 w",
+      from: "g3",
+      to: "f4",
+    },
+    {
+      key: "8/8/8/5B2/8/4K3/4N3/7k w",
+      from: "e3",
+      to: "f2",
+    },
+    {
+      key: "8/8/8/5B2/8/8/4NK1k/8 w",
+      from: "f5",
+      to: "g4",
+    },
+    {
+      key: "8/8/8/8/6B1/8/4NK2/7k w",
+      from: "e2",
+      to: "g3",
+    },
+    {
+      key: "8/8/8/8/6B1/6N1/5K1k/8 w",
+      from: "g3",
+      to: "f1",
+    },
+    {
+      key: "6k1/8/4NK2/8/8/8/5B2/8 w",
+      from: "f6",
+      to: "g6",
+    },
+    {
+      key: "7k/8/4N1K1/8/8/8/5B2/8 w",
+      from: "e6",
+      to: "g5",
+    },
+    {
+      key: "6k1/8/6K1/6N1/8/8/5B2/8 w",
+      from: "f2",
+      to: "c5",
+    },
+    {
       key: "k7/1N3B2/1K6/8/8/8/8/8 w",
       from: "f7",
       to: "e6",
+    },
+    {
+      key: "k7/1NK5/8/8/8/8/8/1B6 w",
+      from: "b7",
+      to: "d6",
     },
     {
       key: "2k5/1N3B2/1K6/8/8/8/8/8 w",
@@ -672,6 +857,11 @@ export default class Brain {
       key: "k7/3B4/NK6/8/8/8/8/8 w",
       from: "d7",
       to: "c6",
+    },
+    {
+      key: "6k1/2B5/6K1/5N2/8/8/8/8 w",
+      from: "c7",
+      to: "d6",
     },
   ];
   static readonly SQUARE_TRANSFORMS: SquareTransform[] = [
@@ -866,8 +1056,8 @@ export default class Brain {
     const state = Brain.getState();
     const latestLog = state.logs[state.logs.length - 1];
     if (
-      state.fen === fen &&
-      latestLog?.opponent_san === undefined &&
+      (state.startingFen === fen ||
+        (state.fen === fen && latestLog?.opponent_san === undefined)) &&
       latestLog?.endgame_phase !== undefined &&
       Brain.getChess(fen).turn() === "b"
     ) {
@@ -1036,11 +1226,12 @@ export default class Brain {
         : "";
     }
     if (baseEndgameId === "twoBishops") {
+      const waitingMoveContext = Brain.getTwoBishopsWaitingMoveContext(fen);
       const scoredMoves = Brain.getChess(fen)
         .moves()
         .map((san) => ({
           san,
-          score: Brain.scoreTwoBishopsWhiteMove(fen, san),
+          score: Brain.scoreTwoBishopsWhiteMove(fen, san, waitingMoveContext),
         }))
         .sort((a, b) => Brain.compareTwoBishopsWhiteScores(a.score, b.score));
       const correct = scoredMoves[0];
@@ -1102,6 +1293,7 @@ export default class Brain {
         "Use direct-opposition checks when they force progress.",
         "Put the rook between the kings when it helps hold the box.",
         "Avoid giving Black a fresh escape line.",
+        "In phase 2, when the kings are a knight move apart, make a rook waiting move on the cut line.",
         "Shrink Black's box.",
         "Bring White's king closer.",
         "Move the rook toward the useful side of Black's king.",
@@ -1162,8 +1354,11 @@ export default class Brain {
   }
 
   static getEndgameBlackPriorityLabels(baseEndgameId: BaseEndgameId): string[] {
+    const returnPositionPriority =
+      "Return to the previous full position when a legal reply can recreate it.";
     if (baseEndgameId === "rook") {
       return [
+        returnPositionPriority,
         "Take the rook if White leaves it loose.",
         "Move toward the rook's cut line when that weakens White's box.",
         "Approach a diagonally protected rook when White's king and rook are awkwardly placed.",
@@ -1173,12 +1368,14 @@ export default class Brain {
     }
     if (baseEndgameId === "queen") {
       return [
+        returnPositionPriority,
         "Take the queen if White leaves it loose.",
         "Head toward the center, where Black has the most room to resist.",
       ];
     }
     if (baseEndgameId === "knightAndBishop") {
       return [
+        returnPositionPriority,
         "Take a loose bishop or knight if White allows it.",
         "Move toward unprotected minor pieces.",
         "Run toward the center when possible.",
@@ -1189,12 +1386,14 @@ export default class Brain {
     }
     if (baseEndgameId === "twoBishops") {
       return [
+        returnPositionPriority,
         "Take a loose bishop if White allows it.",
         "Move toward unprotected bishops.",
         "Head toward the center, where Black has the most room to resist.",
       ];
     }
     return [
+      returnPositionPriority,
       "Take loose material if White allows it.",
       "Head toward freedom and the center.",
       "Keep distance from White's king and pieces.",
@@ -1927,6 +2126,10 @@ export default class Brain {
     return `${board} ${turn}`;
   }
 
+  static positionKey(fen: string): string {
+    return fen.split(" ").slice(0, 4).join(" ");
+  }
+
   static boardKey(fen: string): string {
     return fen.split(" ")[0];
   }
@@ -2063,16 +2266,18 @@ export default class Brain {
     if (mateMoves.length > 0) {
       return mateMoves;
     }
+    const waitingMoveContext = Brain.getTwoBishopsWaitingMoveContext(fen);
     return Brain.selectBestMovesByScoreReasons(
       moves,
-      (san) => Brain.scoreTwoBishopsWhiteMove(fen, san),
+      (san) => Brain.scoreTwoBishopsWhiteMove(fen, san, waitingMoveContext),
       Brain.getTwoBishopsWhiteScoreReasons()
     );
   }
 
   static scoreTwoBishopsWhiteMove(
     fen: string,
-    san: string
+    san: string,
+    waitingMoveContext = Brain.getTwoBishopsWaitingMoveContext(fen)
   ): TwoBishopsWhiteMoveScore {
     const chess = Brain.getChess(fen);
     const move = chess.move(san);
@@ -2095,7 +2300,8 @@ export default class Brain {
         ? Brain.twoBishopsPhaseTwoWaitingMovePenalty(
             fen,
             move.from,
-            move.to
+            move.to,
+            waitingMoveContext
           )
         : 1,
       phaseTwoForceOpponentOppositionPenalty:
@@ -2126,11 +2332,35 @@ export default class Brain {
     };
   }
 
+  static getTwoBishopsWaitingMoveContext(
+    fen: string
+  ): TwoBishopsWaitingMoveContext {
+    return {
+      cornerMoves: Brain.getTwoBishopsCornerWaitingMoves(fen),
+      lineTargets: Brain.getTwoBishopsPhaseTwoWaitingMoveTargets(fen),
+    };
+  }
+
   static twoBishopsPhaseTwoWaitingMovePenalty(
     fen: string,
     from: Square,
-    to: Square
+    to: Square,
+    waitingMoveContext?: TwoBishopsWaitingMoveContext
   ): number {
+    if (waitingMoveContext) {
+      if (waitingMoveContext.cornerMoves.length > 0) {
+        return waitingMoveContext.cornerMoves.some(
+          (target) => target.from === from && target.to === to
+        )
+          ? 0
+          : 1;
+      }
+      const targets = waitingMoveContext.lineTargets;
+      if (!targets) {
+        return 0;
+      }
+      return targets.from === from && targets.to.includes(to) ? 0 : 1;
+    }
     const cornerPenalty = Brain.twoBishopsCornerWaitingMovePenalty(
       fen,
       from,
@@ -2170,7 +2400,15 @@ export default class Brain {
 
   static getTwoBishopsCornerWaitingMoves(
     fen: string
-  ): Array<{ from: Square; to: Square }> {
+  ): TwoBishopsWaitingMove[] {
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    if (
+      !blackKing ||
+      !Brain.isCorner(blackKing.square) ||
+      !Brain.isTwoBishopsPhaseTwoPosition(fen)
+    ) {
+      return [];
+    }
     const moves = Brain.getChess(fen)
       .moves({ verbose: true })
       .filter((move) => move.piece === "b")
@@ -2768,6 +3006,17 @@ export default class Brain {
       beforeRook && beforeWhiteKing
         ? Brain.sharesRankOrFile(beforeRook.square, beforeWhiteKing.square)
         : false;
+    const beforeRookCutAxis =
+      beforeRook && beforeWhiteKing && beforeBlackKing
+        ? Brain.getRookCutAxis(beforeRook, beforeWhiteKing, beforeBlackKing)
+        : null;
+    const needsPhaseTwoWaitingMove =
+      beforeRook &&
+      beforeWhiteKing &&
+      beforeBlackKing &&
+      beforeRookCutAxis &&
+      Brain.getMajorEndgamePhase(fen, "r") === 2 &&
+      Brain.isKnightMove(beforeWhiteKing.square, beforeBlackKing.square);
     const chess = Brain.getChess(fen);
     const move = chess.move(san);
     const resultFen = chess.fen();
@@ -2783,6 +3032,16 @@ export default class Brain {
       whiteRook && whiteKing && blackKing
         ? Brain.getRookCutAxis(whiteRook, whiteKing, blackKing)
         : null;
+    const rookPhaseTwoWaitingMove =
+      needsPhaseTwoWaitingMove &&
+      move?.piece === "r" &&
+      !chess.isCheck() &&
+      beforeRook &&
+      whiteRook &&
+      rookCutAxis === beforeRookCutAxis &&
+      Brain.manhattanDistance(beforeRook.square, whiteRook.square) === 1 &&
+      Brain.squareCoords(whiteRook.square)[beforeRookCutAxis] ===
+        Brain.squareCoords(beforeRook.square)[beforeRookCutAxis];
     return {
       matePenalty: chess.isCheckmate() ? 0 : 1,
       rookCapturePenalty: rookIsSafe ? 0 : 1,
@@ -2814,6 +3073,11 @@ export default class Brain {
         !startsOnOwnKingLine
           ? 1
           : 0,
+      rookPhaseTwoWaitingPenalty: needsPhaseTwoWaitingMove
+        ? rookPhaseTwoWaitingMove
+          ? 0
+          : 1
+        : 0,
       boxSize:
         whiteRook && whiteKing && blackKing && rookCutAxis
           ? Brain.getRookBoxSize(whiteRook, whiteKing, blackKing)
@@ -2853,6 +3117,7 @@ export default class Brain {
       { reason: "direct opposition check", compare: (a, b) => a.oppositionRookCheckPenalty - b.oppositionRookCheckPenalty },
       { reason: "rook between kings", compare: (a, b) => a.rookBetweenKingsPenalty - b.rookBetweenKingsPenalty },
       { reason: "avoid new own line", compare: (a, b) => a.edgeOwnLinePenalty - b.edgeOwnLinePenalty },
+      { reason: "rook waiting move", compare: (a, b) => a.rookPhaseTwoWaitingPenalty - b.rookPhaseTwoWaitingPenalty },
       { reason: "rook box size", compare: (a, b) => a.boxSize - b.boxSize },
       { reason: "king closer", compare: (a, b) => a.kingDistance - b.kingDistance },
       { reason: "closer to white", compare: (a, b) => a.rookBlackSidePenalty - b.rookBlackSidePenalty },
@@ -3805,7 +4070,11 @@ export default class Brain {
   static playBest() {
     if (Brain.view === View.endgame) {
       if (!Brain.hasSelectedEndgame()) return;
-      const moves = Brain.getIdealEndgameMovesForTurn(Brain.getState().fen);
+      const state = Brain.getState();
+      const moves = Brain.getIdealEndgameMovesForTurn(
+        state.fen,
+        Brain.getEndgameBlackReturnTargetFen(state.logs, state.logs.length - 1)
+      );
       return Brain.playMove(moves[Math.floor(Math.random() * moves.length)]);
     }
     Brain.getBest(Brain.getState().fen).then((san) => Brain.playMove(san));
@@ -3816,7 +4085,13 @@ export default class Brain {
       if (!Brain.hasSelectedEndgame()) {
         return Promise.resolve("");
       }
-      const moves = Brain.getIdealEndgameMovesForTurn(fen);
+      const state = Brain.getState();
+      const moves = Brain.getIdealEndgameMovesForTurn(
+        fen,
+        state.fen === fen
+          ? Brain.getEndgameBlackReturnTargetFen(state.logs, state.logs.length - 1)
+          : undefined
+      );
       return Promise.resolve(moves[Math.floor(Math.random() * moves.length)]);
     }
     if (Brain.isMyTurn(fen)) {
@@ -3834,16 +4109,95 @@ export default class Brain {
     if (!Brain.hasSelectedEndgame()) return;
     const result = Brain.searchRandomEndgameLoops();
     if (result.found) {
-      Brain.resetState({
-        fen: result.found.startingFen,
-        startingFen: undefined,
-        orientationIsWhite: true,
-        logs: [],
-        endgame_started_at_ms: Date.now(),
-      });
+      Brain.loadEndgameLine(result.found.startingFen, result.found.moves);
       return;
     }
     alert(Brain.formatEndgameLoopSearchStats(result));
+  }
+
+  static loadEndgameLine(startingFen: string, moves: string[]) {
+    const states = Brain.getEndgameLineStates(startingFen, moves);
+    if (states.length === 0) return;
+    clearTimeout(Brain.timeout);
+    Brain.updateHistory({
+      index: 0,
+      states: states.slice().reverse(),
+    });
+  }
+
+  static getEndgameLineStates(
+    startingFen: string,
+    moves: string[]
+  ): StateType[] {
+    const startedAt = Date.now();
+    const chess = Brain.getChess(startingFen);
+    const logs: LogType[] = [];
+    const states: StateType[] = [
+      {
+        fen: startingFen,
+        startingFen: undefined,
+        orientationIsWhite: true,
+        logs: [],
+        endgame_started_at_ms: startedAt,
+      },
+    ];
+
+    for (const san of moves) {
+      const preMoveFen = chess.fen();
+      if (chess.turn() === "w") {
+        const whiteMove = chess.move(san);
+        if (whiteMove === null) break;
+        const afterWhiteFen = chess.fen();
+        const terminalOutcome = Brain.getEndgameTerminalOutcome(afterWhiteFen);
+        logs.push({
+          fen: preMoveFen,
+          san: whiteMove.san,
+          ...Brain.getEndgameLogFields(
+            preMoveFen,
+            whiteMove.san,
+            afterWhiteFen
+          ),
+        });
+        states.push({
+          fen: afterWhiteFen,
+          startingFen: preMoveFen,
+          orientationIsWhite: true,
+          logs: logs.slice(),
+          endgame_started_at_ms: startedAt,
+          endgame_finished_at_ms: terminalOutcome ? startedAt : undefined,
+        });
+        continue;
+      }
+
+      const latestLog = logs[logs.length - 1];
+      const blackReplyCandidates = latestLog
+        ? Brain.getEndgameOpponentCandidates(
+            chess,
+            Brain.getEndgameBlackReturnTargetFen(logs, logs.length - 1)
+          )
+        : { moves: [], idealMoves: [] };
+      const blackMove = chess.move(san);
+      if (blackMove === null) break;
+      if (latestLog) {
+        logs[logs.length - 1] = {
+          ...latestLog,
+          opponent_san: blackMove.san,
+          ideal_choices: blackReplyCandidates.idealMoves.length,
+          num_choices: blackReplyCandidates.moves.length,
+        };
+      }
+      const terminalOutcome = Brain.getEndgameTerminalOutcome(chess.fen());
+      states.push({
+        fen: chess.fen(),
+        startingFen: preMoveFen,
+        orientationIsWhite: true,
+        logs: logs.slice(),
+        endgame_started_at_ms: startedAt,
+        endgame_finished_at_ms: terminalOutcome ? startedAt : undefined,
+      });
+    }
+
+    return states;
   }
 
   static searchRandomEndgameLoops(
@@ -3898,8 +4252,10 @@ export default class Brain {
     random: () => number = Math.random,
   ): EndgamePathSearchResult {
     const chess = Brain.getChess(startingFen);
-    const seen = new Set<string>();
+    const seen = new Set<string>([Brain.boardTurnKey(chess.fen())]);
     const moves: string[] = [];
+    let lastWhiteTurnFen: string | undefined;
+    let blackReturnTargetFen: string | undefined;
 
     for (let ply = 0; ply < plyLimit; ply += 1) {
       const terminalOutcome = Brain.getEndgameTerminalOutcome(chess.fen());
@@ -3913,22 +4269,11 @@ export default class Brain {
         };
       }
 
-      const key = Brain.boardTurnKey(chess.fen());
-      if (seen.has(key)) {
-        return {
-          result: "loop",
-          plies: ply,
-          startingFen,
-          finalFen: chess.fen(),
-          moves,
-        };
-      }
-      seen.add(key);
-
       const choices =
         chess.turn() === "w"
           ? Brain.getIdealEndgameWhiteMoves(chess.fen())
-          : Brain.getEndgameOpponentCandidates(chess).idealMoves;
+          : Brain.getEndgameOpponentCandidates(chess, blackReturnTargetFen)
+              .idealMoves;
       const move = choices[Math.floor(random() * choices.length)];
       if (!move) {
         return {
@@ -3939,8 +4284,37 @@ export default class Brain {
           moves,
         };
       }
+      if (chess.turn() === "w") {
+        blackReturnTargetFen = lastWhiteTurnFen;
+        lastWhiteTurnFen = chess.fen();
+      } else {
+        blackReturnTargetFen = undefined;
+      }
       moves.push(move);
       chess.move(move);
+
+      const terminalAfterMove = Brain.getEndgameTerminalOutcome(chess.fen());
+      if (terminalAfterMove) {
+        return {
+          result: terminalAfterMove === "checkmate" ? "mate" : terminalAfterMove,
+          plies: ply + 1,
+          startingFen,
+          finalFen: chess.fen(),
+          moves,
+        };
+      }
+
+      const key = Brain.boardTurnKey(chess.fen());
+      if (seen.has(key)) {
+        return {
+          result: "loop",
+          plies: ply + 1,
+          startingFen,
+          finalFen: chess.fen(),
+          moves,
+        };
+      }
+      seen.add(key);
     }
 
     return {
@@ -3966,10 +4340,14 @@ export default class Brain {
     ].join("\n");
   }
 
-  static getIdealEndgameMovesForTurn(fen: string): string[] {
+  static getIdealEndgameMovesForTurn(
+    fen: string,
+    previousTurnFen?: string
+  ): string[] {
     const chess = Brain.getChess(fen);
     if (chess.turn() === "b") {
-      return Brain.getEndgameOpponentCandidates(chess).idealMoves;
+      return Brain.getEndgameOpponentCandidates(chess, previousTurnFen)
+        .idealMoves;
     }
     return Brain.getIdealEndgameWhiteMoves(fen);
   }
@@ -4108,14 +4486,14 @@ export default class Brain {
       return;
     }
     const shouldReply = Brain.autoreplyRef.current?.checked;
+    const previousLog = state.logs[state.logs.length - 1];
     const blackReplyCandidates = shouldReply
-      ? Brain.getEndgameOpponentCandidates(chess)
+      ? Brain.getEndgameOpponentCandidates(chess, previousLog?.fen)
       : { moves: [], idealMoves: [] };
     const opponentSan = shouldReply
       ? Brain.chooseEndgameOpponentMove(blackReplyCandidates.idealMoves)
       : undefined;
     const now = Date.now();
-    const previousLog = state.logs[state.logs.length - 1];
     const previousMoveAt =
       previousLog?.created_at_ms ?? state.endgame_started_at_ms;
     const endgameLogFields = Brain.getEndgameLogFields(
@@ -4167,13 +4545,31 @@ export default class Brain {
     return idealMoves[Math.floor(Math.random() * idealMoves.length)];
   }
 
-  static getEndgameOpponentCandidates(chess: Chess): {
+  static getEndgameBlackReturnTargetFen(
+    logs: LogType[],
+    logIndex: number
+  ): string | undefined {
+    return logs[logIndex - 1]?.fen;
+  }
+
+  static getEndgameOpponentCandidates(
+    chess: Chess,
+    previousTurnFen?: string
+  ): {
     moves: string[];
     idealMoves: string[];
   } {
     const moves = chess.moves();
     if (moves.length === 0) {
       return { moves, idealMoves: [] };
+    }
+    const returnMoves = Brain.getEndgameReturnToPositionMoves(
+      chess.fen(),
+      previousTurnFen,
+      moves
+    );
+    if (returnMoves.length > 0) {
+      return { moves, idealMoves: returnMoves };
     }
     const baseEndgameId = Brain.getSelectedBaseEndgameId();
     if (baseEndgameId === "rook") {
@@ -4210,6 +4606,25 @@ export default class Brain {
       moves,
       idealMoves,
     };
+  }
+
+  static getEndgameReturnToPositionMoves(
+    fen: string,
+    previousTurnFen: string | undefined,
+    moves = Brain.getChess(fen).moves()
+  ): string[] {
+    if (!previousTurnFen) {
+      return [];
+    }
+    const previousPositionKey = Brain.positionKey(previousTurnFen);
+    return moves.filter((san) => {
+      const nextChess = Brain.getChess(fen);
+      const move = nextChess.move(san);
+      return (
+        move !== null &&
+        Brain.positionKey(nextChess.fen()) === previousPositionKey
+      );
+    });
   }
 
   static getIdealRookBlackMoves(chess: Chess, moves: string[]): string[] {
@@ -5587,7 +6002,10 @@ export default class Brain {
     if (Brain.getEndgameTerminalOutcome(state.fen)) {
       return;
     }
-    const blackReplyCandidates = Brain.getEndgameOpponentCandidates(chess);
+    const blackReplyCandidates = Brain.getEndgameOpponentCandidates(
+      chess,
+      Brain.getEndgameBlackReturnTargetFen(state.logs, state.logs.length - 1)
+    );
     const blackMove = chess.move(san);
     if (blackMove === null) {
       return;
@@ -5614,7 +6032,10 @@ export default class Brain {
     });
   }
 
-  static isEndgameOpponentMoveIdeal(log: LogType): boolean {
+  static isEndgameOpponentMoveIdeal(
+    log: LogType,
+    previousTurnFen?: string
+  ): boolean {
     if (!log.opponent_san) {
       return true;
     }
@@ -5622,8 +6043,20 @@ export default class Brain {
     if (chess.move(log.san) === null) {
       return true;
     }
-    const candidates = Brain.getEndgameOpponentCandidates(chess);
+    const candidates = Brain.getEndgameOpponentCandidates(chess, previousTurnFen);
     return candidates.idealMoves.includes(log.opponent_san);
+  }
+
+  static isEndgameLogOpponentMoveIdeal(logIndex: number): boolean {
+    const logs = Brain.getState().logs;
+    const log = logs[logIndex];
+    if (!log) {
+      return true;
+    }
+    return Brain.isEndgameOpponentMoveIdeal(
+      log,
+      Brain.getEndgameBlackReturnTargetFen(logs, logIndex)
+    );
   }
 
   static forceDifferentIdealEndgameOpponentMove(logIndex: number) {
@@ -5669,7 +6102,10 @@ export default class Brain {
     if (whiteMove === null) {
       return;
     }
-    const candidates = Brain.getEndgameOpponentCandidates(chess);
+    const candidates = Brain.getEndgameOpponentCandidates(
+      chess,
+      Brain.getEndgameBlackReturnTargetFen(state.logs, logIndex)
+    );
     const nextSan = chooseMove(candidates, log.opponent_san);
     if (!nextSan) {
       return;
@@ -5727,7 +6163,10 @@ export default class Brain {
     const whiteTerminalOutcome = Brain.getEndgameTerminalOutcome(afterWhiteFen);
     const candidates = whiteTerminalOutcome
       ? { moves: [], idealMoves: [] }
-      : Brain.getEndgameOpponentCandidates(chess);
+      : Brain.getEndgameOpponentCandidates(
+          chess,
+          Brain.getEndgameBlackReturnTargetFen(state.logs, logIndex)
+        );
     const opponentSan =
       log.opponent_san && candidates.moves.includes(log.opponent_san)
         ? log.opponent_san
