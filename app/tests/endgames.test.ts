@@ -279,6 +279,13 @@ function expectedMovesArray(expected: ExpectedEndgameBestMoves): string[] {
   return Array.isArray(expected) ? expected : [expected];
 }
 
+function firstLegalExpectedMove(chess: ReturnType<typeof Brain.getChess>, expectedMoves: string[]): string {
+  const legalMoves = chess.moves();
+  const match = expectedMoves.find((move) => legalMoves.includes(move));
+  assert.ok(match, `No legal expected move from ${chess.fen()} in [${expectedMoves.join(", ")}]`);
+  return match;
+}
+
 function assertBestEndgameLineToMate(
   id: EndgameId,
   startingFen: string,
@@ -3084,7 +3091,7 @@ function findBlackReplyFixture(
       if (chess.turn() === "w") {
         const fen = chess.fen();
         const previousTurnFen = lastWhiteTurnFen;
-        const whiteMove = chess.move(expectedMoves[0]);
+        const whiteMove = chess.move(firstLegalExpectedMove(chess, expectedMoves));
         assert.ok(whiteMove);
         const candidates = Brain.getEndgameOpponentCandidates(
           chess,
@@ -3106,7 +3113,7 @@ function findBlackReplyFixture(
           };
         }
       } else {
-        chess.move(expectedMoves[0]);
+        chess.move(firstLegalExpectedMove(chess, expectedMoves));
       }
     }
   }
@@ -3118,7 +3125,7 @@ function findWhiteChoiceFixture(): {
   log: LogType;
   idealMoves: string[];
 } {
-  for (const fixture of HARDCODED_ENDGAME_LINE_FIXTURES) {
+  fixtureLoop: for (const fixture of HARDCODED_ENDGAME_LINE_FIXTURES) {
     setEndgame(fixture.id);
     const chess = Brain.getChess(fixture.startingFen);
     let lastWhiteTurnFen: string | undefined;
@@ -3148,9 +3155,17 @@ function findWhiteChoiceFixture(): {
           };
         }
         lastWhiteTurnFen = fen;
-        chess.move(expectedMoves[0]);
+        const legalMove = expectedMoves.find((move) => chess.moves().includes(move));
+        if (!legalMove) {
+          continue fixtureLoop;
+        }
+        chess.move(legalMove);
       } else {
-        chess.move(expectedMoves[0]);
+        const legalMove = expectedMoves.find((move) => chess.moves().includes(move));
+        if (!legalMove) {
+          continue fixtureLoop;
+        }
+        chess.move(legalMove);
       }
     }
   }
