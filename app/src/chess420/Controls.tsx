@@ -9,28 +9,37 @@ export function Header() {
       <h1>♟ chess420 ♟</h1>
       <span className="controls__subtitle">opening trainer</span>
       {Brain.view === View.endgame ? (
-        <select
-          className="controls__endgame-select"
-          value={Brain.endgameId ?? ""}
-          onChange={(e) => {
-            if (e.target.value === "") {
-              Brain.endgames();
-            } else {
-              Brain.selectEndgame(e.target.value as EndgameId);
-            }
-          }}
-        >
-          <option value="">select endgame</option>
-          {ENDGAME_OPTIONS.map((endgame) => (
-            <option
-              key={endgame.id}
-              value={endgame.id}
-              disabled={"disabled" in endgame && endgame.disabled}
-            >
-              {endgame.label}
-            </option>
-          ))}
-        </select>
+        <div className="controls__endgame-tools">
+          <select
+            className="controls__endgame-select"
+            value={Brain.endgameId ?? ""}
+            onChange={(e) => {
+              if (e.target.value === "") {
+                Brain.endgames();
+              } else {
+                Brain.selectEndgame(e.target.value as EndgameId);
+              }
+            }}
+          >
+            <option value="">select endgame</option>
+            {ENDGAME_OPTIONS.map((endgame) => (
+              <option
+                key={endgame.id}
+                value={endgame.id}
+                disabled={"disabled" in endgame && endgame.disabled}
+              >
+                {endgame.label}
+              </option>
+            ))}
+          </select>
+          <button
+            className="controls__find-loop"
+            disabled={!Brain.hasSelectedEndgame()}
+            onClick={() => Brain.findEndgameLoop()}
+          >
+            find a loop
+          </button>
+        </div>
       ) : null}
     </div>
   );

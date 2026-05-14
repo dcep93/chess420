@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Brain, { View } from "./Brain";
 import lichessF, { type LiMove } from "./Lichess";
 import settings from "./Settings";
@@ -178,6 +179,7 @@ export function GetLog(props: { log: LogType | null }) {
 }
 
 function EndgameLog() {
+  const [showPriorityHelp, updateShowPriorityHelp] = useState(false);
   if (!Brain.hasSelectedEndgame()) {
     return null;
   }
@@ -196,25 +198,45 @@ function EndgameLog() {
           <div>num choices</div>
           <div>correctness</div>
           <div>duration</div>
-          <div>reason</div>
+          <div
+            className="endgame-log-reason-cell endgame-log-reason-cell--button"
+            onClick={() => updateShowPriorityHelp(true)}
+          >
+            reason
+          </div>
         </div>
         {logs.map((log, index) => (
-          <EndgameLogRow log={log} index={index} key={`${index}-${log.san}-${log.opponent_san}`} />
+          <EndgameLogRow
+            log={log}
+            index={index}
+            key={`${index}-${log.san}-${log.opponent_san}`}
+            onOpenPriorityHelp={() => updateShowPriorityHelp(true)}
+          />
         ))}
       </div>
+      {showPriorityHelp ? (
+        <EndgamePriorityHelpModal onClose={() => updateShowPriorityHelp(false)} />
+      ) : null}
     </>
   );
 }
 
-function EndgameLogRow(props: { log: LogType; index: number }) {
-  const { log, index } = props;
+function EndgameLogRow(props: {
+  log: LogType;
+  index: number;
+  onOpenPriorityHelp: () => void;
+}) {
+  const { log, index, onOpenPriorityHelp } = props;
   const phase =
-    log.endgame_phase ?? Brain.getEndgamePhase(Brain.getLogResultFen(log));
+    log.endgame_phase ?? Brain.getEndgamePhase(log.fen);
   const isCorrect =
     log.endgame_is_correct ?? Brain.isEndgameLogCorrect(log);
   const correctChoices =
     log.endgame_correct_choices ?? Brain.getIdealEndgameWhiteMoves(log.fen).length;
   const reason = log.endgame_reason ?? Brain.getEndgameReason(log.fen);
+  const idealChoices = log.ideal_choices ?? log.num_choices;
+  const showChoices = log.num_choices !== undefined && log.num_choices > 0;
+  const opponentMoveIsIdeal = Brain.isEndgameOpponentMoveIdeal(log);
   return (
     <div className="endgame-log-row">
       <div>{index + 1}</div>
@@ -222,24 +244,106 @@ function EndgameLogRow(props: { log: LogType; index: number }) {
       <div>{log.san}</div>
       <div>{log.opponent_san || ""}</div>
       <div>
-        {log.num_choices === undefined || log.num_choices === 0 ? (
+        {!showChoices ? (
           ""
         ) : (
-          <button
-            className="endgame-log-choice-button"
-            onClick={() => Brain.forceDifferentIdealEndgameMove(index)}
-          >
-            {log.ideal_choices ?? log.num_choices}/{log.num_choices}
-          </button>
+          <>
+            <button
+              className="endgame-log-choice-button"
+              onClick={() => Brain.forceDifferentIdealEndgameOpponentMove(index)}
+              title="play a different best black reply"
+            >
+              {idealChoices}
+            </button>
+            /
+            <button
+              className="endgame-log-choice-button"
+              onClick={() => Brain.forceDifferentRandomEndgameOpponentMove(index)}
+              title="play a different legal black reply"
+            >
+              {log.num_choices}
+            </button>
+            {!opponentMoveIsIdeal ? (
+              <>
+                /<span className="endgame-log-emoji">👎</span>
+              </>
+            ) : null}
+          </>
         )}
       </div>
       <div className="endgame-log-correctness">
-        {isCorrect ? "👍" : "👎"}
-        {correctChoices ? `/${correctChoices}` : ""}
+        <span className="endgame-log-emoji">{isCorrect ? "👍" : "👎"}</span>
+        {correctChoices ? (
+          <button
+            className="endgame-log-choice-button"
+            onClick={() => Brain.forceDifferentIdealEndgameWhiteMove(index)}
+            title="play a different best white move"
+          >
+            /{correctChoices}
+          </button>
+        ) : null}
       </div>
       <div>{formatDuration(log.duration_ms)}</div>
-      <div>{reason}</div>
+      <div
+        className="endgame-log-reason-cell endgame-log-reason-cell--button"
+        onClick={onOpenPriorityHelp}
+      >
+        {reason}
+      </div>
     </div>
+  );
+}
+
+function EndgamePriorityHelpModal(props: { onClose: () => void }) {
+  const help = Brain.getEndgamePriorityHelp();
+  return createPortal(
+    <div className="endgame-priority-modal-backdrop" onClick={props.onClose}>
+      <section
+        className="endgame-priority-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="endgame-priority-modal-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="endgame-priority-modal__header">
+          <h2 id="endgame-priority-modal-title">{help.title}</h2>
+          <button className="help-close-button" onClick={props.onClose}>
+            close
+          </button>
+        </div>
+        <div className="endgame-priority-modal__body">
+          <section>
+            <h3>White best moves</h3>
+            <p>{help.whiteIntro}</p>
+            <ol>
+              {help.whitePriorities.map((priority) => (
+                <li key={priority}>{priority}</li>
+              ))}
+            </ol>
+          </section>
+          <section>
+            <h3>Black resistance</h3>
+            <p>{help.blackIntro}</p>
+            <ol>
+              {help.blackPriorities.map((priority) => (
+                <li key={priority}>{priority}</li>
+              ))}
+            </ol>
+          </section>
+          {help.notes.length > 0 ? (
+            <section>
+              <h3>Notes</h3>
+              <ul>
+                {help.notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </div>
+      </section>
+    </div>,
+    document.body
   );
 }
 

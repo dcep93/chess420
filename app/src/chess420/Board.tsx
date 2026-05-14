@@ -106,7 +106,7 @@ function SubBoard() {
   const isPhaseTwo =
     isEndgame &&
     Brain.hasSelectedEndgame() &&
-    Brain.getEndgamePhase(fen).startsWith("2/");
+    Brain.shouldShowPhaseTwoBoardBorder(fen);
   const borderColor = isPhaseTwo
     ? "var(--board-phase-two-border)"
     : getBorderColor(total, winOdds);

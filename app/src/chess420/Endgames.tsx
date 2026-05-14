@@ -64,12 +64,8 @@ export const ENDGAMES: EndgameType[] = [
     id: "twoBishops+",
     label: "Two Bishops +",
     baseId: "twoBishops",
-    fen: "4k3/8/4K3/3BB3/8/8/8/8 w - - 38 20",
-    plusFen: "4k3/8/4K3/3BB3/8/8/8/8 w - - 38 20",
-    plusFens: [
-      "4k3/8/4K3/3BB3/8/8/8/8 w - - 38 20",
-      "3k4/8/4K3/3BB3/8/8/8/8 w - - 44 23",
-    ],
+    fen: "4k3/8/3KBB2/8/8/8/8/8 w - - 56 29",
+    plusFen: "4k3/8/3KBB2/8/8/8/8/8 w - - 56 29",
   },
   {
     id: "twoKnightsVsPawn",
@@ -86,8 +82,8 @@ export const ENDGAMES: EndgameType[] = [
     id: "rook+",
     label: "Rook +",
     baseId: "rook",
-    fen: "8/8/8/8/5k2/R7/5K2/8 w - - 0 1",
-    plusFen: "8/8/8/8/5k2/R7/5K2/8 w - - 0 1",
+    fen: "8/8/8/8/3k4/8/1R6/3K4 w - - 0 1",
+    plusFen: "8/8/8/8/3k4/8/1R6/3K4 w - - 0 1",
   },
   {
     id: "queen",
@@ -98,8 +94,8 @@ export const ENDGAMES: EndgameType[] = [
     id: "queen+",
     label: "Queen +",
     baseId: "queen",
-    fen: "8/2K5/8/8/1Q6/4k3/8/8 w - - 30 16",
-    plusFen: "8/2K5/8/8/1Q6/4k3/8/8 w - - 30 16",
+    fen: "8/8/8/8/3k4/1Q6/8/3K4 w - - 0 1",
+    plusFen: "8/8/8/8/3k4/1Q6/8/3K4 w - - 0 1",
   },
 ];
 
