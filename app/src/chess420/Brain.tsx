@@ -1283,6 +1283,8 @@ export default class Brain {
       return [
         "In known mating-net positions, White may use table moves instead of the general priority list.",
         "Black can have many equally resistant replies when every legal move still stays inside the same mating net.",
+        "A key square is the White-king square used when Black is on the edge: your king belongs two king moves from Black (a knight-move gap), on the side that boxes Black toward the bishop-colored corner.",
+        "How to find it over the board: first identify your bishop-colored mating corner (a1/h8 for a dark bishop, h1/a8 for a light bishop). Then place your king so Black stays on the edge and cannot step toward the center while your knight starts the W-maneuver.",
       ];
     }
     if (baseEndgameId === "twoBishops") {
@@ -1339,7 +1341,12 @@ export default class Brain {
         "Enter the known mating net when it is available.",
         "Keep the bishop and knight connected.",
         "Force Black's king away from the center.",
-        "Centralize White's king.",
+        "Limit Black's legal king escapes.",
+        "Drive Black toward the bishop-colored mating corner.",
+        "Move White's king toward the edge key square.",
+        "Avoid king tempi that do not improve coordination.",
+        "Bring White's king closer to Black's king.",
+        "Centralize White's king when no direct king-step progress is available.",
         "Centralize the minor pieces.",
       ];
     }
@@ -2093,9 +2100,22 @@ export default class Brain {
         ? Brain.whiteKingEdgeKeyDistance(resultFen)
         : 0,
       edgeCageScore: useEdgePlan ? -Brain.edgeCageScore(resultFen) : 0,
-      blackEscapeMoveCount: useEdgePlan
-        ? Brain.blackEscapeMoveCount(resultFen)
-        : 0,
+      blackEscapeMoveCount: Brain.getChess(resultFen).moves().length,
+      blackKingBishopCornerDistance: Brain.distanceToNearestBishopCorner(
+        resultFen
+      ),
+      kingMoveNoGainPenalty:
+        move?.piece === "k" &&
+        whiteKing &&
+        blackKing &&
+        currentBlackKing &&
+        Brain.manhattanDistance(whiteKing.square, blackKing.square) >=
+          Brain.manhattanDistance(
+            Brain.findPiece(fen, "w", "k")?.square || whiteKing.square,
+            currentBlackKing.square
+          )
+          ? 1
+          : 0,
       blackInwardEscapeCount: useEdgePlan
         ? Brain.blackInwardEscapeCount(resultFen)
         : 0,
@@ -2161,6 +2181,11 @@ export default class Brain {
       a.bishopKnightDiagonalAdjacencyScore -
         b.bishopKnightDiagonalAdjacencyScore ||
       a.blackKingCenterAccessScore - b.blackKingCenterAccessScore ||
+      a.blackEscapeMoveCount - b.blackEscapeMoveCount ||
+      a.blackKingBishopCornerDistance - b.blackKingBishopCornerDistance ||
+      a.edgeKingKeyDistance - b.edgeKingKeyDistance ||
+      a.kingMoveNoGainPenalty - b.kingMoveNoGainPenalty ||
+      a.whiteKingDistance - b.whiteKingDistance ||
       a.whiteKingCentralDistance - b.whiteKingCentralDistance ||
       a.minorCentralDistance - b.minorCentralDistance
     );
@@ -2195,6 +2220,27 @@ export default class Brain {
           a.blackKingCenterAccessScore - b.blackKingCenterAccessScore,
       },
       {
+        reason: "limit black king escapes",
+        compare: (a, b) => a.blackEscapeMoveCount - b.blackEscapeMoveCount,
+      },
+      {
+        reason: "drive king to bishop corner",
+        compare: (a, b) =>
+          a.blackKingBishopCornerDistance - b.blackKingBishopCornerDistance,
+      },
+      {
+        reason: "king to edge key square",
+        compare: (a, b) => a.edgeKingKeyDistance - b.edgeKingKeyDistance,
+      },
+      {
+        reason: "avoid king tempi",
+        compare: (a, b) => a.kingMoveNoGainPenalty - b.kingMoveNoGainPenalty,
+      },
+      {
+        reason: "bring king closer",
+        compare: (a, b) => a.whiteKingDistance - b.whiteKingDistance,
+      },
+      {        
         reason: "king near middle",
         compare: (a, b) =>
           a.whiteKingCentralDistance - b.whiteKingCentralDistance,
