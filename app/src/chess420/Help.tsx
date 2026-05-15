@@ -83,6 +83,13 @@ export default function Help() {
       ],
     },
     {
+      title: "What is endgame mode?",
+      content: [
+        "Endgame mode is in beta. It trains you to pick simple human moves that lead to checkmate, instead of asking you to memorize engine-perfect tablebase lines.",
+        "There are other endgame tools, and especially many excellent guides. This free combination is meant to sit beside them: it includes a checklist priority guide, a timer, random position starts, and close-to-mate training wheels.",
+      ],
+    },
+    {
       title: "How is a move's score calculated?",
       content: [
         "chess420 gives every move a raw score based on how often it wins decisive games and how often it's played. More commonly played moves are rewarded, and very uncommon moves are severely punished.",
@@ -150,7 +157,7 @@ export default function Help() {
             <h1>welcome to chess420</h1>
             <p>
               Learn the philosophy behind the trainer, how the scoring works,
-              and the best ways to use it for opening study.
+              and the best ways to use it for opening and endgame study.
             </p>
           </div>
           <button
