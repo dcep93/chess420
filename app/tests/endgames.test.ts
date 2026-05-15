@@ -449,7 +449,7 @@ test("endgame dropdown is only shown in endgame mode", () => {
   header = Header();
   assert.equal(hasElementType(header, "select"), true);
   assert.match(textContent(header), /select endgame/);
-  assert.match(textContent(header), /find a loop/);
+  assert.doesNotMatch(textContent(header), /find a loop/);
   assert.match(textContent(header), /Rook \+/);
   assert.match(textContent(header), /Queen \+/);
   assert.match(textContent(header), /Two Bishops \+/);
@@ -472,6 +472,10 @@ test("endgame dropdown is only shown in endgame mode", () => {
       ?.disabled,
     true,
   );
+
+  settings.IS_DEV = true;
+  assert.match(textContent(Header()), /find a loop/);
+  settings.IS_DEV = false;
 });
 
 test("piece-count guard detects impossible endgame positions", () => {
@@ -2393,6 +2397,10 @@ test("endgame board border keeps phase two during black reply animation", () => 
 test("two-bishop phase two follows the documented front-square conditions", () => {
   setEndgame("twoBishops");
 
+  assert.deepEqual(Brain.getBlackKingFrontSquares("a1"), ["a2", "b1", "b2"]);
+  assert.deepEqual(Brain.getBlackKingFrontSquares("h1"), ["h2", "g1", "g2"]);
+  assert.deepEqual(Brain.getBlackKingFrontSquares("a8"), ["a7", "b8", "b7"]);
+  assert.deepEqual(Brain.getBlackKingFrontSquares("h8"), ["h7", "g8", "g7"]);
   assert.equal(
     Brain.getEndgamePhase("8/8/8/8/8/4K3/1BB5/5k2 w - - 34 18"),
     "2/2",
@@ -2410,6 +2418,10 @@ test("two-bishop phase two follows the documented front-square conditions", () =
     "2/2",
   );
   assert.equal(
+    Brain.getEndgamePhase("8/8/2B5/2B5/8/8/K7/k7 w - - 0 1"),
+    "2/2",
+  );
+  assert.equal(
     Brain.getEndgamePhase("4k3/8/4B3/5B2/4K3/8/8/8 w - - 0 1"),
     "1/2",
   );
@@ -2421,6 +2433,44 @@ test("two-bishop phase two follows the documented front-square conditions", () =
     Brain.getEndgamePhase("8/8/8/8/8/5K2/B7/B6k w - - 0 1"),
     "1/2",
   );
+  assert.equal(
+    Brain.getEndgamePhase("8/8/8/5K2/4BB2/7k/8/8 w - - 32 17"),
+    "2/2",
+  );
+});
+
+test("two-bishop diagonal edge-walk phase two preserves the phase", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/8/5K2/4B2k/4B3/8/8 w - - 30 16";
+  const afterWhite = Brain.getFen(fen, "Bf4");
+  const afterBlack = Brain.getFen(afterWhite, "Kh3");
+
+  assert.equal(afterBlack, "8/8/8/5K2/4BB2/7k/8/8 w - - 32 17");
+  assert.equal(Brain.getEndgamePhase(afterBlack), "2/2");
+  assert.equal(Brain.scoreTwoBishopsWhiteMove(fen, "Bf4").phaseTwoForceOpponentOppositionPenalty, 1);
+});
+
+test("two-bishop phase two direct opposition satisfies the combined opposition rule", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/8/3B4/8/3K2B1/8/2k5 w - - 64 33";
+  const directOpposition = Brain.scoreTwoBishopsWhiteMove(fen, "Kc3");
+  const movesBlackColorBishop = Brain.scoreTwoBishopsWhiteMove(fen, "Bf2");
+
+  assert.equal(Brain.getEndgamePhase(fen), "2/2");
+  assert.equal(directOpposition.phaseTwoForceOpponentOppositionPenalty, 0);
+  assert.equal(movesBlackColorBishop.phaseTwoForceOpponentOppositionPenalty, 1);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(directOpposition, movesBlackColorBishop) < 0, true);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kc3"]);
+});
+
+test("two-bishop phase two can move the black-color bishop when checking into opposition", () => {
+  setEndgame("twoBishops");
+  const fen = "3k4/5BB1/2K5/8/8/8/8/8 w - - 24 13";
+  const checkingEdgeWalk = Brain.scoreTwoBishopsWhiteMove(fen, "Bf6+");
+
+  assert.equal(Brain.getEndgamePhase(fen), "2/2");
+  assert.equal(checkingEdgeWalk.phaseTwoForceOpponentOppositionPenalty, 0);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bf6+"]);
 });
 
 test("two-bishop white priorities are ordered", () => {
@@ -2430,10 +2480,11 @@ test("two-bishop white priorities are ordered", () => {
       "mate",
       "no stalemate",
       "bishops safe",
+      "stay phase two",
+      "keep opponent on edge",
       "waiting move",
       "king not on bishop line",
       "force opponent to take opposition",
-      "take opposition",
       "force opponent toward corner",
       "check king",
       "bishops far from corner",
@@ -2441,9 +2492,27 @@ test("two-bishop white priorities are ordered", () => {
       "bishops together",
       "king not on edge",
       "king closer",
+      "force black to edge",
+      "take adjacent bishops opposition",
       "bishops closer",
     ],
   );
+});
+
+test("two-bishop white rules take opposition when king already touches both bishops", () => {
+  setEndgame("twoBishops");
+  const fen = "8/8/2B5/2BK4/5k2/8/8/8 w - - 14 8";
+  const opposition = Brain.scoreTwoBishopsWhiteMove(fen, "Kd4");
+  const bishopCloser = Brain.scoreTwoBishopsWhiteMove(fen, "Bd6+");
+
+  assert.equal(Brain.getEndgamePhase(fen), "1/2");
+  assert.equal(opposition.adjacentBishopsOppositionPenalty, 0);
+  assert.equal(bishopCloser.adjacentBishopsOppositionPenalty, 1);
+  assert.equal(opposition.bishopBlackKingDistance > bishopCloser.bishopBlackKingDistance, true);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(opposition, bishopCloser) < 0, true);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kd4"]);
+  assert.equal(Brain.getEndgameReason(fen), "take adjacent bishops opposition");
+  assert.equal(Brain.getEndgameReasonText(Brain.getEndgameReason(fen)), "take king opposition");
 });
 
 test("two-bishop white rules avoid bishops being captured or attacked", () => {
@@ -2521,8 +2590,8 @@ test("two-bishop phase two prefers forcing opposition before corner distance", (
   assert.equal(forceOpposition.phaseTwoKingOnBishopLinePenalty, forceCorner.phaseTwoKingOnBishopLinePenalty);
   assert.equal(forceOpposition.phaseTwoForceOpponentOppositionPenalty, 0);
   assert.equal(forceCorner.phaseTwoForceOpponentOppositionPenalty, 1);
-  assert.equal(forceOpposition.phaseTwoForceOpponentCornerPenalty, 1);
-  assert.equal(forceCorner.phaseTwoForceOpponentCornerPenalty, 1);
+  assert.equal(forceOpposition.phaseTwoForceOpponentCornerPenalty, 6);
+  assert.equal(forceCorner.phaseTwoForceOpponentCornerPenalty, 7);
   assert.equal(
     Brain.compareTwoBishopsWhiteScores(forceOpposition, forceCorner) < 0,
     true,
@@ -2533,18 +2602,67 @@ test("two-bishop phase two prefers checking before bishop-corner distance", () =
   setEndgame("twoBishops");
   const fen = "8/8/8/1B6/1B6/8/k1K5/8 w - - 0 1";
   const checking = Brain.scoreTwoBishopsWhiteMove(fen, "Bc4+");
-  const nonCheckingNearer = Brain.scoreTwoBishopsWhiteMove(fen, "Ba6");
+  const nonCheckingNearer = Brain.scoreTwoBishopsWhiteMove(fen, "Be2");
 
   assert.equal(Brain.getEndgamePhase(fen), "2/2");
-  assert.equal(checking.phaseTwoForceOpponentCornerPenalty, nonCheckingNearer.phaseTwoForceOpponentCornerPenalty);
+  assert.equal(checking.phaseTwoForceOpponentCornerPenalty, 7);
+  assert.equal(nonCheckingNearer.phaseTwoForceOpponentCornerPenalty, 7);
   assert.equal(checking.phaseTwoCheckPenalty, 0);
   assert.equal(nonCheckingNearer.phaseTwoCheckPenalty, 1);
   assert.equal(checking.phaseTwoBishopCornerDistance <= nonCheckingNearer.phaseTwoBishopCornerDistance, true);
   assert.equal(Brain.compareTwoBishopsWhiteScores(checking, nonCheckingNearer) < 0, true);
-  assert.equal(Brain.getEndgameReason(fen), "check king");
 });
 
-test("two-bishop phase two prefers taking opposition before corner distance", () => {
+test("two-bishop phase two staying in phase two comes before edge details", () => {
+  setEndgame("twoBishops");
+  const fen = "7B/8/8/8/4B3/8/k1K5/8 w - - 0 1";
+  const checkingEdgeLock = Brain.scoreTwoBishopsWhiteMove(fen, "Bd5+");
+  const kingMoveLooser = Brain.scoreTwoBishopsWhiteMove(fen, "Kd3");
+
+  assert.equal(Brain.getEndgamePhase(fen), "2/2");
+  assert.equal(checkingEdgeLock.phaseTwoStayPhaseTwoPenalty, 0);
+  assert.equal(kingMoveLooser.phaseTwoStayPhaseTwoPenalty, 1);
+  assert.equal(checkingEdgeLock.phaseTwoKeepOpponentEdgePenalty, 0);
+  assert.equal(kingMoveLooser.phaseTwoKeepOpponentEdgePenalty, 1);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(checkingEdgeLock, kingMoveLooser) < 0, true);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bd5+"]);
+  assert.equal(Brain.getEndgameReason(fen, "Kd3"), "stay phase two");
+});
+
+test("two-bishop phase two forces Black to stay in phase two before edge details", () => {
+  setEndgame("twoBishops");
+  const fen = "8/1B6/8/6B1/8/5K2/7k/8 w - - 0 1";
+  const staysPhaseTwo = Brain.scoreTwoBishopsWhiteMove(fen, "Kf2");
+  const leavesPhaseTwo = Brain.scoreTwoBishopsWhiteMove(fen, "Ba8");
+
+  assert.equal(Brain.getEndgamePhase(fen), "2/2");
+  assert.equal(staysPhaseTwo.bishopSafetyPenalty, leavesPhaseTwo.bishopSafetyPenalty);
+  assert.equal(staysPhaseTwo.phaseTwoStayPhaseTwoPenalty, 0);
+  assert.equal(leavesPhaseTwo.phaseTwoStayPhaseTwoPenalty, 1);
+  assert.equal(staysPhaseTwo.phaseTwoKeepOpponentEdgePenalty, 0);
+  assert.equal(leavesPhaseTwo.phaseTwoKeepOpponentEdgePenalty, 0);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(staysPhaseTwo, leavesPhaseTwo) < 0, true);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kf2"]);
+  assert.equal(Brain.getEndgameReason(fen, "Ba8"), "stay phase two");
+});
+
+test("two-bishop phase two accepts checking moves that keep Black in the corner", () => {
+  setEndgame("twoBishops");
+  const fen = "8/k1K5/8/4B3/2B5/8/8/8 w - - 32 17";
+  const checkingCorner = Brain.scoreTwoBishopsWhiteMove(fen, "Bd4+");
+  const quietCorner = Brain.scoreTwoBishopsWhiteMove(fen, "Bc3");
+
+  assert.equal(Brain.getEndgamePhase(fen), "2/2");
+  assert.equal(checkingCorner.phaseTwoKeepOpponentEdgePenalty, 0);
+  assert.equal(quietCorner.phaseTwoKeepOpponentEdgePenalty, 0);
+  assert.equal(checkingCorner.phaseTwoCheckPenalty, 0);
+  assert.equal(quietCorner.phaseTwoCheckPenalty, 1);
+  assert.equal(Brain.compareTwoBishopsWhiteScores(checkingCorner, quietCorner) < 0, true);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bd4+"]);
+  assert.equal(Brain.getEndgameReason(fen, "Bd4+"), "check king");
+});
+
+test("two-bishop phase two folds direct opposition into the combined opposition rule", () => {
   setEndgame("twoBishops");
   const fen = "8/8/8/1B6/1B6/8/k1K5/8 w - - 0 1";
   const forceCorner = Brain.scoreTwoBishopsWhiteMove(fen, "Kc3");
@@ -2554,13 +2672,11 @@ test("two-bishop phase two prefers taking opposition before corner distance", ()
   assert.equal(forceCorner.bishopSafetyPenalty, 0);
   assert.equal(takeOpposition.bishopSafetyPenalty, 0);
   assert.equal(forceCorner.phaseTwoForceOpponentOppositionPenalty, 1);
-  assert.equal(takeOpposition.phaseTwoForceOpponentOppositionPenalty, 1);
-  assert.equal(forceCorner.phaseTwoForceOpponentCornerPenalty, 1);
+  assert.equal(takeOpposition.phaseTwoForceOpponentOppositionPenalty, 0);
+  assert.equal(forceCorner.phaseTwoForceOpponentCornerPenalty, 9);
   assert.equal(takeOpposition.phaseTwoForceOpponentCornerPenalty, 2);
   assert.equal(forceCorner.phaseTwoKingOnBishopLinePenalty, 1);
   assert.equal(takeOpposition.phaseTwoKingOnBishopLinePenalty, 0);
-  assert.equal(forceCorner.phaseTwoTakeOppositionPenalty, 1);
-  assert.equal(takeOpposition.phaseTwoTakeOppositionPenalty, 0);
   assert.equal(Brain.compareTwoBishopsWhiteScores(takeOpposition, forceCorner) < 0, true);
 });
 
@@ -2571,12 +2687,10 @@ test("two-bishop phase two uses corner distance after opposition", () => {
   const centralBishops = Brain.scoreTwoBishopsWhiteMove(fen, "Bf6+");
 
   assert.equal(Brain.getEndgamePhase(fen), "2/2");
-  assert.equal(towardCorner.phaseTwoForceOpponentOppositionPenalty, 1);
-  assert.equal(centralBishops.phaseTwoForceOpponentOppositionPenalty, 1);
-  assert.equal(towardCorner.phaseTwoTakeOppositionPenalty, 0);
-  assert.equal(centralBishops.phaseTwoTakeOppositionPenalty, 0);
+  assert.equal(towardCorner.phaseTwoForceOpponentOppositionPenalty, 0);
+  assert.equal(centralBishops.phaseTwoForceOpponentOppositionPenalty, 0);
   assert.equal(towardCorner.phaseTwoForceOpponentCornerPenalty, 2);
-  assert.equal(centralBishops.phaseTwoForceOpponentCornerPenalty, 3);
+  assert.equal(centralBishops.phaseTwoForceOpponentCornerPenalty, 4);
   assert.equal(towardCorner.bishopMiddle16Penalty > centralBishops.bishopMiddle16Penalty, true);
   assert.equal(Brain.compareTwoBishopsWhiteScores(towardCorner, centralBishops) < 0, true);
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bf7"]);
@@ -2590,12 +2704,10 @@ test("two-bishop phase two takes opposition before later priorities", () => {
   const middle = Brain.scoreTwoBishopsWhiteMove(fen, "Bc3");
 
   assert.equal(Brain.getEndgamePhase(fen), "2/2");
-  assert.equal(opposition.phaseTwoForceOpponentOppositionPenalty, 1);
+  assert.equal(opposition.phaseTwoForceOpponentOppositionPenalty, 0);
   assert.equal(middle.phaseTwoForceOpponentOppositionPenalty, 1);
   assert.equal(opposition.phaseTwoForceOpponentCornerPenalty, 3);
-  assert.equal(middle.phaseTwoForceOpponentCornerPenalty, 2);
-  assert.equal(opposition.phaseTwoTakeOppositionPenalty, 0);
-  assert.equal(middle.phaseTwoTakeOppositionPenalty, 1);
+  assert.equal(middle.phaseTwoForceOpponentCornerPenalty, 9);
   assert.equal(Brain.compareTwoBishopsWhiteScores(opposition, middle) < 0, true);
 });
 
@@ -2606,12 +2718,13 @@ test("two-bishop phase two takes the optimal opposition entry", () => {
   const bishopSetup = Brain.scoreTwoBishopsWhiteMove(fen, "Bf4");
 
   assert.equal(Brain.getEndgamePhase(fen), "2/2");
-  assert.equal(opposition.phaseTwoTakeOppositionPenalty, 0);
-  assert.equal(bishopSetup.phaseTwoTakeOppositionPenalty, 1);
-  assert.equal(opposition.phaseTwoForceOpponentCornerPenalty > bishopSetup.phaseTwoForceOpponentCornerPenalty, true);
+  assert.equal(opposition.phaseTwoStayPhaseTwoPenalty, 0);
+  assert.equal(bishopSetup.phaseTwoStayPhaseTwoPenalty, 1);
+  assert.equal(opposition.phaseTwoForceOpponentCornerPenalty, 2);
+  assert.equal(bishopSetup.phaseTwoForceOpponentCornerPenalty, 9);
   assert.equal(Brain.compareTwoBishopsWhiteScores(opposition, bishopSetup) < 0, true);
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kf7"]);
-  assert.equal(Brain.getEndgameReason(fen), "take opposition");
+  assert.equal(Brain.getEndgameReason(fen), "force opponent to take opposition");
 });
 
 test("two-bishop white rules prefer middle 16 before adjacent bishops", () => {
@@ -2692,12 +2805,27 @@ test("two-bishop king closer uses king walk distance", () => {
   );
 });
 
-test("two-bishop black rules approach unprotected bishops", () => {
+test("two-bishop black rules stay off edges before approaching unprotected bishops", () => {
+  setEndgame("twoBishops");
+  const fen = "8/3k4/7B/8/8/8/K7/5B2 b - - 0 1";
+  const central = Brain.scoreTwoBishopsBlackMove(fen, "Kd6");
+  const bishopApproach = Brain.scoreTwoBishopsBlackMove(fen, "Ke8");
+
+  assert.equal(central.centerDistance < bishopApproach.centerDistance, true);
+  assert.equal(
+    central.unprotectedBishopDistance > bishopApproach.unprotectedBishopDistance,
+    true,
+  );
+  assert.equal(Brain.compareTwoBishopsBlackScores(central, bishopApproach) < 0, true);
+});
+
+test("two-bishop black rules approach unprotected bishops after edge distance", () => {
   setEndgame("twoBishops");
   const fen = getEndgame("twoBishops").fen.replace(" w ", " b ");
   const closer = Brain.scoreTwoBishopsBlackMove(fen, "Kd7");
   const farther = Brain.scoreTwoBishopsBlackMove(fen, "Kd8");
 
+  assert.equal(closer.centerDistance < farther.centerDistance, true);
   assert.equal(
     closer.unprotectedBishopDistance < farther.unprotectedBishopDistance,
     true,
@@ -3370,6 +3498,25 @@ test("endgame log cycles white to a different best move", () => {
   assert.equal(log.endgame_reason, Brain.getEndgameReason(fixture.log.fen));
 });
 
+test("incorrect endgame log reason compares the best move to the played move", () => {
+  setEndgame("queen");
+  const fen = "8/8/4k3/8/8/3Q4/1K6/8 w - - 0 1";
+  const playedSan = "Qa6+";
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Qd4"]);
+  assert.equal(Brain.getEndgameReason(fen), "queen knight move");
+  assert.equal(Brain.getEndgameReason(fen, playedSan), "white pieces off edge");
+
+  const logFields = Brain.getEndgameLogFields(
+    fen,
+    playedSan,
+    Brain.getFen(fen, playedSan),
+  );
+
+  assert.equal(logFields.endgame_is_correct, false);
+  assert.equal(logFields.endgame_reason, "white pieces off edge");
+});
+
 test("endgame priority help explains white best moves and black resistance", () => {
   for (const id of [
     "rook",
@@ -3417,6 +3564,7 @@ test("endgame priority help covers every white reason key", () => {
 
 test("endgame priority help does not hide active queen and rook rules", () => {
   const queenHelp = Brain.getEndgamePriorityHelp("queen");
+  const knightAndBishopHelp = Brain.getEndgamePriorityHelp("knightAndBishop");
   assert.equal(
     queenHelp.whitePriorities.includes("Keep White's king near the middle."),
     false,
@@ -3434,6 +3582,38 @@ test("endgame priority help does not hide active queen and rook rules", () => {
     ),
     true,
   );
+  assert.equal(
+    Brain.getEndgamePriorityHelp("rook").whitePriorities.some((priority) =>
+      priority.includes("row or file between the kings")
+    ),
+    true,
+  );
+  assert.equal(
+    Brain.getEndgamePriorityHelp("rook").whitePriorities.some((priority) =>
+      priority.includes("row or file between them")
+    ),
+    true,
+  );
+  assert.equal(
+    knightAndBishopHelp.whitePriorities.includes("Limit Black's legal replies."),
+    true,
+  );
+  assert.equal(
+    knightAndBishopHelp.blackPriorities.includes("Keep as many legal replies as possible."),
+    true,
+  );
+  assert.deepEqual(
+    Brain.getEndgamePriorityHelp("twoBishops").blackPriorities.slice(1),
+    [
+      "Take a piece if White isn't looking.",
+      "Stay away from edges and corners.",
+      "Move toward unprotected bishops.",
+    ],
+  );
+  assert.equal(
+    knightAndBishopHelp.whitePriorities.includes("Keep White's king near the middle."),
+    true,
+  );
 });
 
 test("endgame reason text disambiguates terse scoring keys", () => {
@@ -3449,6 +3629,14 @@ test("endgame reason text disambiguates terse scoring keys", () => {
     Brain.getEndgameReasonText("queen knight move"),
     "queen a knight move from Black king",
   );
+  assert.equal(
+    Brain.getEndgameReasonText("king near middle"),
+    "White king near middle",
+  );
+  assert.equal(
+    Brain.getEndgameReasonText("force black to edge"),
+    "force Black to edge",
+  );
 });
 
 test("two-bishop priority help explains phase-two terms concretely", () => {
@@ -3458,12 +3646,41 @@ test("two-bishop priority help explains phase-two terms concretely", () => {
 
   assert.match(text, /Phase 2/);
   assert.match(text, /waiting move is not any quiet move/);
+  assert.match(text, /Corner front squares are the 3 inward squares/);
+  assert.match(text, /two diagonal king moves/);
   assert.match(text, /c3 through f6/);
   assert.match(text, /Keep the bishops adjacent/);
   assert.match(text, /White king should not occupy a square controlled by a bishop/);
-  assert.match(text, /force Black to the nearest corner/);
+  assert.match(text, /without moving the bishop on the black king's current color \(unless it's a check\)/);
+  assert.match(text, /force Black towards the corner along its current edge and further from the bishops/);
+  assert.match(text, /force Black to stay in phase 2/);
+  assert.match(text, /keep Black's king on the edge or in a corner/);
+  assert.doesNotMatch(text, /corner and opposition pressure/);
+  assert.doesNotMatch(text, /bishop-controlled square/);
   assert.match(text, /Check the king/);
   assert.match(text, /Prefer bishops to be farther from the corner closest to Black's king/);
+  assert.match(text, /Force Black to the edge/);
+  assert.match(text, /Take king opposition if king is already adjacent to both bishops/);
+  assert.equal(
+    help.whitePriorities.indexOf("Phase 2: force Black to stay in phase 2.") <
+      help.whitePriorities.indexOf("Phase 2: keep Black's king on the edge or in a corner."),
+    true,
+  );
+  assert.equal(
+    help.whitePriorities.indexOf("Phase 2: keep Black's king on the edge or in a corner.") <
+      help.whitePriorities.indexOf("Phase 2: use the specific bishop waiting move when Black is boxed in."),
+    true,
+  );
+  assert.equal(
+    help.whitePriorities.indexOf("Force Black to the edge.") <
+      help.whitePriorities.indexOf("Take king opposition if king is already adjacent to both bishops."),
+    true,
+  );
+  assert.equal(
+    help.whitePriorities.indexOf("Take king opposition if king is already adjacent to both bishops.") <
+      help.whitePriorities.indexOf("Bring the bishops closer to Black's king."),
+    true,
+  );
   assert.equal(/useful middle|working together|toward the edge/.test(text), false);
 });
 

@@ -1,6 +1,7 @@
 import React from "react";
 import Brain, { View } from "./Brain";
 import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
+import settings from "./Settings";
 import StorageW from "./StorageW";
 
 export function Header() {
@@ -32,7 +33,7 @@ export function Header() {
               </option>
             ))}
           </select>
-          {Brain.hasSelectedEndgame() ? (
+          {settings.IS_DEV && Brain.hasSelectedEndgame() ? (
             <button onClick={Brain.findEndgameLoop}>find a loop</button>
           ) : null}
         </div>
