@@ -181,14 +181,34 @@ export function GetLog(props: { log: LogType | null }) {
 
 function EndgameLog() {
   const [showPriorityHelp, updateShowPriorityHelp] = useState(false);
+  const [showReasonHints, updateShowReasonHints] = useState(false);
   if (!Brain.hasSelectedEndgame()) {
     return null;
   }
   const logs = Brain.getState().logs;
+  const displayedLogs = logs
+    .map((log, index) => ({ log, index }))
+    .reverse();
+  const currentFen = Brain.getState().fen;
+  const currentChess = Brain.getChess(currentFen);
+  const currentReason =
+    currentChess.turn() === "w" && currentChess.moves().length > 0
+      ? Brain.getEndgameReasonText(Brain.getEndgameReason(currentFen))
+      : "";
   return (
     <>
       <div className="endgame-starting-fen">
-        starting fen: {Brain.getEndgameStartingFen()}
+        <div>
+          starting fen: {Brain.getEndgameStartingFen()}
+        </div>
+        <label className="endgame-reason-hints-toggle">
+          <input
+            type="checkbox"
+            checked={showReasonHints}
+            onChange={(event) => updateShowReasonHints(event.target.checked)}
+          />
+          <span>show reason hints</span>
+        </label>
       </div>
       <div className="endgame-log-table">
         <div className="endgame-log-row endgame-log-row--header">
@@ -219,7 +239,34 @@ function EndgameLog() {
             <span>reason</span>
           </div>
         </div>
-        {logs.map((log, index) => (
+        {showReasonHints && currentReason ? (
+          <div className="endgame-log-row endgame-reason-hint-row">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div
+              className="endgame-log-reason-cell endgame-log-reason-cell--button"
+              onClick={() => updateShowPriorityHelp(true)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  updateShowPriorityHelp(true);
+                  event.currentTarget.blur();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="show how endgame reasons are chosen"
+            >
+              {currentReason}
+            </div>
+          </div>
+        ) : null}
+        {displayedLogs.map(({ log, index }) => (
           <EndgameLogRow
             log={log}
             index={index}

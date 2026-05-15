@@ -197,19 +197,17 @@ type TwoBishopsWhiteMoveScore = {
   stalematePenalty: number;
   bishopSafetyPenalty: number;
   phaseTwoWaitingMovePenalty: number;
-  phaseTwoKingOnBishopLinePenalty: number;
   phaseTwoForceOpponentOppositionPenalty: number;
+  phaseTwoTakeDirectOppositionPenalty: number;
   phaseTwoForceOpponentCornerPenalty: number;
   phaseTwoStayPhaseTwoPenalty: number;
   phaseTwoKeepOpponentEdgePenalty: number;
   phaseTwoCheckPenalty: number;
   phaseTwoBishopCornerDistance: number;
-  bishopMiddle16Penalty: number;
   bishopAdjacencyPenalty: number;
   kingEdgePenalty: number;
   kingWalkDistance: number;
   blackKingEdgeDistance: number;
-  adjacentBishopsOppositionPenalty: number;
   bishopBlackKingDistance: number;
 };
 
@@ -1382,18 +1380,16 @@ export default class Brain {
         "bring king closer": "Bring White's king closer to Black's king.",
         "centralize pieces": "Centralize the minor pieces.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
-        "king not on bishop line": "Phase 2: White king should not occupy a square controlled by a bishop.",
-        "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color (unless it's a check), or take direct king opposition.",
-        "force opponent toward corner": "Phase 2: force Black towards the corner along its current edge and further from the bishops.",
+        "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
+        "take direct opposition": "Phase 2: take direct king opposition, unless it moves the white king into a square controlled by a bishop.",
+        "force opponent toward corner": "Phase 2: force Black towards the corner along its current edge and closer to White's king.",
         "stay phase two": "Phase 2: force Black to stay in phase 2.",
         "keep opponent on edge": "Phase 2: keep Black's king on the edge or in a corner.",
         "check king": "Phase 2: Check the king.",
         "bishops far from corner": "Phase 2: Prefer bishops to be farther from the corner closest to Black's king.",
-        "bishops in middle 16": "Keep bishops on middle-16 squares: c3 through f6.",
         "bishops together": "Keep the bishops adjacent.",
         "king not on edge": "Keep White's king off the edge.",
         "force black to edge": "Force Black to the edge.",
-        "take adjacent bishops opposition": "Take king opposition if king is already adjacent to both bishops.",
         "bishops closer": "Bring the bishops closer to Black's king.",
       } satisfies Record<string, string>
     )[reason] ?? `${reason}.`;
@@ -1410,7 +1406,6 @@ export default class Brain {
         "bring king closer": "White king closer",
         "force black to edge": "force Black to edge",
         "keep opponent on edge": "keep Black on edge or corner",
-        "take adjacent bishops opposition": "take king opposition",
         "bishops closer": "bishops closer to Black king",
         "bishops far from corner": "bishops farther from corner",
       } satisfies Record<string, string>
@@ -2634,15 +2629,13 @@ export default class Brain {
           waitingMoveContext
         )
         : 1,
-      phaseTwoKingOnBishopLinePenalty: Brain.twoBishopsPhaseTwoKingOnBishopLinePenalty(
-        fen,
-        resultFen
-      ),
       phaseTwoForceOpponentOppositionPenalty:
         Brain.twoBishopsPhaseTwoForceOpponentOppositionPenalty(
           fen,
           resultFen
         ),
+      phaseTwoTakeDirectOppositionPenalty:
+        Brain.twoBishopsPhaseTwoTakeDirectOppositionPenalty(fen, resultFen),
       phaseTwoForceOpponentCornerPenalty:
         Brain.twoBishopsPhaseTwoForceOpponentCornerPenalty(
           fen,
@@ -2655,7 +2648,6 @@ export default class Brain {
       phaseTwoCheckPenalty: Brain.twoBishopsPhaseTwoCheckPenalty(fen, resultFen),
       phaseTwoBishopCornerDistance:
         Brain.twoBishopsPhaseTwoBishopCornerDistance(fen, resultFen),
-      bishopMiddle16Penalty: Brain.getWhiteBishopMiddle16Penalty(resultFen),
       bishopAdjacencyPenalty: Brain.whiteBishopsAreAdjacent(resultFen)
         ? 0
         : 1,
@@ -2663,8 +2655,6 @@ export default class Brain {
         whiteKing && Brain.edgeDistance(whiteKing.square) === 0 ? 1 : 0,
       kingWalkDistance,
       blackKingEdgeDistance: blackKing ? Brain.edgeDistance(blackKing.square) : 99,
-      adjacentBishopsOppositionPenalty:
-        Brain.twoBishopsAdjacentBishopsOppositionPenalty(fen, resultFen),
       bishopBlackKingDistance: blackKing
         ? Brain.getWhiteBishopDistanceToSquare(resultFen, blackKing.square)
         : 99,
@@ -2678,33 +2668,6 @@ export default class Brain {
       cornerMoves: Brain.getTwoBishopsCornerWaitingMoves(fen),
       lineTargets: Brain.getTwoBishopsPhaseTwoWaitingMoveTargets(fen),
     };
-  }
-
-  static twoBishopsAdjacentBishopsOppositionPenalty(
-    fen: string,
-    resultFen: string
-  ): number {
-    const whiteKing = Brain.findPiece(fen, "w", "k");
-    const bishops = Brain.getWhiteBishopSquares(fen);
-    if (
-      !whiteKing ||
-      bishops.length !== 2 ||
-      !bishops.every(
-        (bishop) => Brain.kingDistance(whiteKing.square, bishop) === 1
-      )
-    ) {
-      return 0;
-    }
-    const resultWhiteKing = Brain.findPiece(resultFen, "w", "k");
-    const resultBlackKing = Brain.findPiece(resultFen, "b", "k");
-    return resultWhiteKing &&
-      resultBlackKing &&
-      Brain.hasDirectKingOpposition(
-        resultWhiteKing.square,
-        resultBlackKing.square
-      )
-      ? 0
-      : 1;
   }
 
   static twoBishopsPhaseTwoWaitingMovePenalty(
@@ -2740,24 +2703,6 @@ export default class Brain {
       return 0;
     }
     return targets.from === from && targets.to.includes(to) ? 0 : 1;
-  }
-
-  static twoBishopsPhaseTwoKingOnBishopLinePenalty(
-    fen: string,
-    resultFen: string
-  ): number {
-    if (!Brain.isTwoBishopsPhaseTwoPosition(fen)) {
-      return 0;
-    }
-    const whiteKing = Brain.findPiece(resultFen, "w", "k");
-    if (!whiteKing) {
-      return 1;
-    }
-    return Brain.getWhiteBishopSquares(resultFen).some((bishop) =>
-      Brain.bishopControlsOrOccupiesSquare(resultFen, bishop, whiteKing.square)
-    )
-      ? 1
-      : 0;
   }
 
   static twoBishopsCornerWaitingMovePenalty(
@@ -2950,6 +2895,12 @@ export default class Brain {
     if (!Brain.isTwoBishopsPhaseTwoPosition(fen)) {
       return 0;
     }
+    if (
+      !Brain.getChess(resultFen).isCheck() &&
+      !Brain.twoBishopsBlackKingColorBishopStayedPut(fen, resultFen)
+    ) {
+      return 1;
+    }
     const resultWhiteKing = Brain.findPiece(resultFen, "w", "k");
     const resultBlackKing = Brain.findPiece(resultFen, "b", "k");
     if (
@@ -2959,12 +2910,6 @@ export default class Brain {
         resultWhiteKing.square,
         resultBlackKing.square
       )
-    ) {
-      return 0;
-    }
-    if (
-      !Brain.getChess(resultFen).isCheck() &&
-      !Brain.twoBishopsBlackKingColorBishopStayedPut(fen, resultFen)
     ) {
       return 1;
     }
@@ -2978,12 +2923,50 @@ export default class Brain {
           whiteKing &&
           blackKing &&
           Brain.hasTwoBishopsPhaseTwoOppositionPressure(
-            nextFen,
             whiteKing.square,
             blackKing.square
           )
         );
       }
+    );
+  }
+
+  static twoBishopsPhaseTwoTakeDirectOppositionPenalty(
+    fen: string,
+    resultFen: string
+  ): number {
+    if (!Brain.isTwoBishopsPhaseTwoPosition(fen)) {
+      return 0;
+    }
+    const startingWhiteKing = Brain.findPiece(fen, "w", "k");
+    const resultWhiteKing = Brain.findPiece(resultFen, "w", "k");
+    const resultBlackKing = Brain.findPiece(resultFen, "b", "k");
+    if (
+      !startingWhiteKing ||
+      !resultWhiteKing ||
+      !resultBlackKing ||
+      !Brain.hasDirectKingOpposition(
+        resultWhiteKing.square,
+        resultBlackKing.square
+      )
+    ) {
+      return 1;
+    }
+    const kingMoved =
+      startingWhiteKing.square !== resultWhiteKing.square;
+    return kingMoved &&
+      Brain.whiteKingOccupiesBishopControlledSquare(resultFen)
+      ? 1
+      : 0;
+  }
+
+  static whiteKingOccupiesBishopControlledSquare(fen: string): boolean {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    return Boolean(
+      whiteKing &&
+      Brain.getWhiteBishopSquares(fen).some((bishop) =>
+        Brain.bishopControlsOrOccupiesSquare(fen, bishop, whiteKing.square)
+      )
     );
   }
 
@@ -3048,15 +3031,19 @@ export default class Brain {
     if (currentEdgeCorners.length === 0) {
       return [];
     }
-    const bestBishopDistance = Math.max(
+    const whiteKing = Brain.findPiece(resultFen, "w", "k");
+    if (!whiteKing) {
+      return [];
+    }
+    const bestWhiteKingDistance = Math.min(
       ...currentEdgeCorners.map((corner) =>
-        Brain.getWhiteBishopDistanceToSquare(resultFen, corner)
+        Brain.kingWalkDistance(whiteKing.square, corner)
       )
     );
     return currentEdgeCorners.filter(
       (corner) =>
-        Brain.getWhiteBishopDistanceToSquare(resultFen, corner) ===
-        bestBishopDistance
+        Brain.kingWalkDistance(whiteKing.square, corner) ===
+        bestWhiteKingDistance
     );
   }
 
@@ -3181,15 +3168,38 @@ export default class Brain {
   }
 
   static hasTwoBishopsPhaseTwoOppositionPressure(
-    fen: string,
     whiteKing: Square,
     blackKing: Square
   ): boolean {
     return (
       Brain.hasDirectKingOpposition(whiteKing, blackKing) ||
-      (!Brain.isCorner(blackKing) &&
-        Brain.isTwoBishopsDiagonalEdgeWalkPhaseTwo(fen, blackKing, whiteKing))
+      Brain.isOneEdgeKingMoveFromDirectOpposition(whiteKing, blackKing)
     );
+  }
+
+  static isOneEdgeKingMoveFromDirectOpposition(
+    whiteKing: Square,
+    blackKing: Square
+  ): boolean {
+    if (Brain.edgeDistance(blackKing) !== 0) {
+      return false;
+    }
+    return Brain.getDirectOppositionSquares(whiteKing).some(
+      (square) =>
+        Brain.edgeDistance(square) === 0 &&
+        Brain.sharesAnyEdge(blackKing, square) &&
+        Brain.kingDistance(blackKing, square) === 1
+    );
+  }
+
+  static getDirectOppositionSquares(square: Square): Square[] {
+    const coords = Brain.squareCoords(square);
+    return [
+      Brain.squareFromCoords(coords.file - 2, coords.rank),
+      Brain.squareFromCoords(coords.file + 2, coords.rank),
+      Brain.squareFromCoords(coords.file, coords.rank - 2),
+      Brain.squareFromCoords(coords.file, coords.rank + 2),
+    ].filter((candidate): candidate is Square => candidate != null);
   }
 
   static isTwoBishopsDiagonalEdgeWalkPhaseTwo(
@@ -3591,17 +3601,15 @@ export default class Brain {
         compare: Brain.compareTwoBishopsPhaseTwoEdgeLock,
       },
       { reason: "waiting move", compare: (a, b) => a.phaseTwoWaitingMovePenalty - b.phaseTwoWaitingMovePenalty },
-      { reason: "king not on bishop line", compare: (a, b) => a.phaseTwoKingOnBishopLinePenalty - b.phaseTwoKingOnBishopLinePenalty },
       { reason: "force opponent to take opposition", compare: (a, b) => a.phaseTwoForceOpponentOppositionPenalty - b.phaseTwoForceOpponentOppositionPenalty },
+      { reason: "take direct opposition", compare: (a, b) => a.phaseTwoTakeDirectOppositionPenalty - b.phaseTwoTakeDirectOppositionPenalty },
       { reason: "force opponent toward corner", compare: (a, b) => a.phaseTwoForceOpponentCornerPenalty - b.phaseTwoForceOpponentCornerPenalty },
       { reason: "check king", compare: (a, b) => a.phaseTwoCheckPenalty - b.phaseTwoCheckPenalty },
       { reason: "bishops far from corner", compare: (a, b) => b.phaseTwoBishopCornerDistance - a.phaseTwoBishopCornerDistance },
-      { reason: "bishops in middle 16", compare: (a, b) => a.bishopMiddle16Penalty - b.bishopMiddle16Penalty },
       { reason: "bishops together", compare: (a, b) => a.bishopAdjacencyPenalty - b.bishopAdjacencyPenalty },
       { reason: "king not on edge", compare: (a, b) => a.kingEdgePenalty - b.kingEdgePenalty },
       { reason: "king closer", compare: (a, b) => a.kingWalkDistance - b.kingWalkDistance },
       { reason: "force black to edge", compare: (a, b) => a.blackKingEdgeDistance - b.blackKingEdgeDistance },
-      { reason: "take adjacent bishops opposition", compare: (a, b) => a.adjacentBishopsOppositionPenalty - b.adjacentBishopsOppositionPenalty },
       { reason: "bishops closer", compare: (a, b) => a.bishopBlackKingDistance - b.bishopBlackKingDistance },
     ];
   }
