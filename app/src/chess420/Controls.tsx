@@ -32,6 +32,9 @@ export function Header() {
               </option>
             ))}
           </select>
+          {Brain.hasSelectedEndgame() ? (
+            <button onClick={Brain.findEndgameLoop}>find a loop</button>
+          ) : null}
         </div>
       ) : null}
     </div>

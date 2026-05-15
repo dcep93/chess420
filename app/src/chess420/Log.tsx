@@ -255,7 +255,7 @@ function EndgameLogRow(props: {
   const opponentMoveIsIdeal = Brain.isEndgameLogOpponentMoveIdeal(index);
   return (
     <div className="endgame-log-row">
-      <div>{index + 1}</div>
+      <div>{index + 1}.</div>
       <div>{phase}</div>
       <div>{log.san}</div>
       <div>{log.opponent_san || ""}</div>

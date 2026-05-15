@@ -107,12 +107,17 @@ function SubBoard() {
     isEndgame &&
     Brain.hasSelectedEndgame() &&
     Brain.shouldShowPhaseTwoBoardBorder(fen);
+  const isPhaseOne = isEndgame && Brain.hasSelectedEndgame() && !isPhaseTwo;
   const borderColor = isPhaseTwo
     ? "var(--board-phase-two-border)"
     : getBorderColor(total, winOdds);
   return (
     <div
-      className={`board-shell${isPhaseTwo ? " board-shell--phase-two" : ""}`}
+      className={[
+        "board-shell",
+        isPhaseOne ? "board-shell--phase-one" : "",
+        isPhaseTwo ? "board-shell--phase-two" : "",
+      ].filter(Boolean).join(" ")}
       style={{ borderColor }}
     >
       <Chessboard
