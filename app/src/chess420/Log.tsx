@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Brain, { View } from "./Brain";
+import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
 import lichessF, { type LiMove } from "./Lichess";
 import settings from "./Settings";
 import Speedrun from "./Speedrun";
@@ -310,7 +311,10 @@ function EndgameLogRow(props: {
 }
 
 function EndgamePriorityHelpModal(props: { onClose: () => void }) {
-  const help = Brain.getEndgamePriorityHelp();
+  const [selectedEndgameId, updateSelectedEndgameId] = useState(
+    Brain.endgameId
+  );
+  const help = Brain.getEndgamePriorityHelp(selectedEndgameId);
   const { onClose } = props;
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -335,7 +339,27 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
         onClick={(event) => event.stopPropagation()}
       >
         <div className="endgame-priority-modal__header">
-          <h2 id="endgame-priority-modal-title">{help.title}</h2>
+          <div className="endgame-priority-modal__title-group">
+            <h2 id="endgame-priority-modal-title">{help.title}</h2>
+            <select
+              className="endgame-priority-modal__select"
+              value={selectedEndgameId ?? ""}
+              aria-label="select endgame"
+              onChange={(event) =>
+                updateSelectedEndgameId(event.target.value as EndgameId)
+              }
+            >
+              {ENDGAME_OPTIONS.map((endgame) => (
+                <option
+                  key={endgame.id}
+                  value={endgame.id}
+                  disabled={"disabled" in endgame && endgame.disabled}
+                >
+                  {endgame.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <button className="help-close-button" onClick={props.onClose}>
             close
           </button>
@@ -346,7 +370,9 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
             <p>{help.whiteIntro}</p>
             <ol>
               {help.whitePriorities.map((priority) => (
-                <li key={priority}>{priority}</li>
+                <li className={getEndgamePriorityItemClass(priority)} key={priority}>
+                  {priority}
+                </li>
               ))}
             </ol>
           </section>
@@ -355,7 +381,9 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
             <p>{help.blackIntro}</p>
             <ol>
               {help.blackPriorities.map((priority) => (
-                <li key={priority}>{priority}</li>
+                <li className={getEndgamePriorityItemClass(priority)} key={priority}>
+                  {priority}
+                </li>
               ))}
             </ol>
           </section>
@@ -374,6 +402,18 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
     </div>,
     document.body
   );
+}
+
+function getEndgamePriorityItemClass(priority: string): string | undefined {
+  return [
+    "Checkmate immediately when mate is available.",
+    "Keep pieces safe from capture.",
+    "Avoid stalemate.",
+    "Return to the previous full position when a legal reply can recreate it.",
+    "Take a piece if White isn't looking.",
+  ].includes(priority)
+    ? "endgame-priority-item--baseline"
+    : undefined;
 }
 
 export function formatDuration(ms?: number): string {
