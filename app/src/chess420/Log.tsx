@@ -199,10 +199,19 @@ function EndgameLog() {
           <div>correctness</div>
           <div>duration</div>
           <div
-            className="endgame-log-reason-cell endgame-log-reason-cell--button"
+            className="endgame-log-reason-cell endgame-log-reason-cell--button endgame-log-reason-cell--header"
             onClick={() => updateShowPriorityHelp(true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                updateShowPriorityHelp(true);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="show how endgame reasons are chosen"
           >
-            reason
+            <span>reason</span>
           </div>
         </div>
         {logs.map((log, index) => (
@@ -233,7 +242,9 @@ function EndgameLogRow(props: {
     log.endgame_is_correct ?? Brain.isEndgameLogCorrect(log);
   const correctChoices =
     log.endgame_correct_choices ?? Brain.getIdealEndgameWhiteMoves(log.fen).length;
-  const reason = log.endgame_reason ?? Brain.getEndgameReason(log.fen);
+  const reason = Brain.getEndgameReasonText(
+    log.endgame_reason ?? Brain.getEndgameReason(log.fen)
+  );
   const idealChoices = log.ideal_choices ?? log.num_choices;
   const showChoices = log.num_choices !== undefined && log.num_choices > 0;
   const opponentMoveIsIdeal = Brain.isEndgameLogOpponentMoveIdeal(index);

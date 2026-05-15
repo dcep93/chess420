@@ -3426,6 +3426,44 @@ test("endgame priority help explains white best moves and black resistance", () 
   }
 });
 
+test("endgame priority help covers every white reason key", () => {
+  for (const id of [
+    "rook",
+    "queen",
+    "knightAndBishop",
+    "twoBishops",
+  ] as const) {
+    setEndgame(id);
+    const baseEndgameId = Brain.getSelectedBaseEndgameId();
+    const reasonKeys = Brain.getEndgameWhitePriorityReasonKeys(baseEndgameId);
+    const priorities = Brain.getEndgameWhitePriorityLabels(baseEndgameId);
+
+    assert.equal(priorities.length, reasonKeys.length);
+    for (const reason of reasonKeys) {
+      assert.notEqual(
+        Brain.getEndgameWhitePriorityLabel(reason),
+        `${reason}.`,
+        reason,
+      );
+    }
+  }
+});
+
+test("endgame reason text disambiguates terse scoring keys", () => {
+  assert.equal(
+    Brain.getEndgameReasonText("king off edge"),
+    "White king off edge",
+  );
+  assert.equal(
+    Brain.getEndgameReasonText("closer to white"),
+    "rook closer to White king",
+  );
+  assert.equal(
+    Brain.getEndgameReasonText("queen knight move"),
+    "queen a knight move from Black king",
+  );
+});
+
 test("two-bishop priority help explains phase-two terms concretely", () => {
   setEndgame("twoBishops");
   const help = Brain.getEndgamePriorityHelp();

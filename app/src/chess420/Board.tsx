@@ -152,14 +152,14 @@ function SubBoard() {
 }
 
 function getBorderColor(total: number, winOdds: number | null): string {
-  if (Brain.view === View.endgame) return "#6f7882";
+  if (Brain.view === View.endgame) return "#c99c6b";
   if (Brain.isTraversing && winOdds !== null) {
-    if (winOdds > 0.875) return "#d99191";
-    if (winOdds > 0.75) return "#c7a35a";
+    if (winOdds > 0.875) return "#ff9fb0";
+    if (winOdds > 0.75) return "#d8b38a";
   }
   return total <= settings.SCORE_FLUKE_DISCOUNT
-    ? "#b56f5e"
+    ? "#b98d63"
     : total <= settings.UNCOMMON_THRESHOLD
-    ? "#8f8a7c"
-    : "#4f6d5d";
+    ? "#8f7865"
+    : "#c99c6b";
 }

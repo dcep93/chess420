@@ -1268,8 +1268,7 @@ export default class Brain {
     const baseEndgameId = Brain.getSelectedBaseEndgameId();
     return {
       title: `How best moves are chosen: ${endgame.label}`,
-      whiteIntro:
-        "White's best moves are the moves that survive these priorities in order. If several moves are still tied after a priority, they all remain best moves.",
+      whiteIntro: Brain.getEndgameWhitePriorityIntro(baseEndgameId),
       blackIntro:
         "Black uses its own priorities to put up the strongest resistance. Black is not trying to help the mate; it looks for the most stubborn legal reply.",
       whitePriorities: Brain.getEndgameWhitePriorityLabels(baseEndgameId),
@@ -1278,9 +1277,17 @@ export default class Brain {
     };
   }
 
+  static getEndgameWhitePriorityIntro(baseEndgameId: BaseEndgameId): string {
+    if (baseEndgameId === "knightAndBishop") {
+      return "White first uses immediate mates, recognized guide-plan moves, and known mating-net moves when they apply. Otherwise, best moves are the moves that survive these priorities in order; tied moves all remain best moves.";
+    }
+    return "White's best moves are the moves that survive these priorities in order. If several moves are still tied after a priority, they all remain best moves.";
+  }
+
   static getEndgamePriorityNotes(baseEndgameId: BaseEndgameId): string[] {
     if (baseEndgameId === "knightAndBishop") {
       return [
+        "Some guide-plan positions override the general priority list. In those rows, the reason column names the concrete plan step, such as setting up the cage or continuing the W-maneuver.",
         "In known mating-net positions, White may use table moves instead of the general priority list.",
         "Black can have many equally resistant replies when every legal move still stays inside the same mating net.",
         "A key square is the White-king square used when Black is on the edge: your king belongs two king moves from Black (a knight-move gap), on the side that boxes Black toward the bishop-colored corner.",
@@ -1299,72 +1306,11 @@ export default class Brain {
   }
 
   static getEndgameWhitePriorityLabels(baseEndgameId: BaseEndgameId): string[] {
-    if (baseEndgameId === "rook") {
-      return [
-        "Checkmate immediately when mate is available.",
-        "Keep the rook safe from capture.",
-        "Avoid stalemate.",
-        "Establish the rook's box when the position is still phase 1.",
-        "Keep the kings and rook from becoming tangled together.",
-        "Use direct-opposition checks when they force progress.",
-        "Put the rook between the kings when it helps hold the box.",
-        "Avoid giving Black a fresh escape line.",
-        "In phase 2, when the kings are a knight move apart, make a rook waiting move on the cut line.",
-        "Shrink Black's box.",
-        "Bring White's king closer.",
-        "Move the rook toward the useful side of Black's king.",
-        "Keep Black far from the rook.",
-        "Drive Black back off the edge only when that is useful.",
-      ];
-    }
-    if (baseEndgameId === "queen") {
-      return [
-        "Checkmate immediately when mate is available.",
-        "Keep the queen safe from capture.",
-        "Avoid stalemate.",
-        "Build or preserve the corner cage.",
-        "Bring White's king toward the cage.",
-        "Keep the queen off awkward edge squares.",
-        "Use queen moves that control knight-like escape squares.",
-        "Shrink the queen's box around Black's king.",
-        "Keep White's king active near the middle.",
-        "Avoid putting White's king between the queen and Black's king.",
-        "Bring White's king closer.",
-        "Prefer the shorter queen move when everything else is tied.",
-      ];
-    }
-    if (baseEndgameId === "knightAndBishop") {
-      return [
-        "Checkmate immediately when mate is available.",
-        "Avoid stalemate.",
-        "Keep the bishop and knight safe.",
-        "Enter the known mating net when it is available.",
-        "Keep the bishop and knight connected.",
-        "Force Black's king away from the center.",
-        "Limit Black's legal king escapes.",
-        "Drive Black toward the bishop-colored mating corner.",
-        "Move White's king toward the edge key square.",
-        "Avoid king tempi that do not improve coordination.",
-        "Bring White's king closer to Black's king.",
-        "Centralize White's king when no direct king-step progress is available.",
-        "Centralize the minor pieces.",
-      ];
-    }
-    if (baseEndgameId === "twoBishops") {
-      return [
-        "Checkmate immediately when mate is available.",
-        "Avoid stalemate.",
-        "Keep both bishops safe.",
-        "Phase 2: use the specific bishop waiting move when Black is boxed in.",
-        "Phase 2: force every Black reply to give White direct king opposition.",
-        "Phase 2: take direct opposition with White's king.",
-        "Phase 2: minimize Black's worst legal-reply distance to the nearest corner.",
-        "Keep bishops on middle-16 squares: c3 through f6.",
-        "Keep the bishops adjacent, one king move apart.",
-        "Keep White's king off the edge.",
-        "Bring White's king closer.",
-        "Bring the bishops closer to Black's king.",
-      ];
+    const reasonKeys = Brain.getEndgameWhitePriorityReasonKeys(baseEndgameId);
+    if (reasonKeys.length > 0) {
+      return reasonKeys.map((reason) =>
+        Brain.getEndgameWhitePriorityLabel(reason)
+      );
     }
     return [
       "Checkmate immediately when mate is available.",
@@ -1373,6 +1319,91 @@ export default class Brain {
       "Limit Black's king.",
       "Improve White's king and pieces.",
     ];
+  }
+
+  static getEndgameWhitePriorityReasonKeys(
+    baseEndgameId: BaseEndgameId
+  ): string[] {
+    if (baseEndgameId === "rook") {
+      return Brain.getRookWhiteScoreReasons().map(({ reason }) => reason);
+    }
+    if (baseEndgameId === "queen") {
+      return Brain.getQueenWhiteScoreReasons().map(({ reason }) => reason);
+    }
+    if (baseEndgameId === "knightAndBishop") {
+      return Brain.getKnightAndBishopWhiteScoreReasons().map(
+        ({ reason }) => reason
+      );
+    }
+    if (baseEndgameId === "twoBishops") {
+      return Brain.getTwoBishopsWhiteScoreReasons().map(({ reason }) => reason);
+    }
+    return [];
+  }
+
+  static getEndgameWhitePriorityLabel(reason: string): string {
+    return (
+      {
+        mate: "Checkmate immediately when mate is available.",
+        "rook safe": "Keep the rook safe from capture.",
+        "queen safe": "Keep the queen safe from capture.",
+        "minors safe": "Keep the bishop and knight safe.",
+        "bishops safe": "Keep both bishops safe.",
+        "no stalemate": "Avoid stalemate.",
+        "establish box": "Establish the rook's box when the position is still phase 1.",
+        "king rook separated": "Keep White's king and rook out of direct contact.",
+        "direct opposition check": "Use direct-opposition rook checks when they force progress.",
+        "rook between kings": "Put the rook between the kings when it helps hold the box.",
+        "avoid new own line": "When Black is on the edge, avoid newly lining the rook up with White's king.",
+        "rook waiting move": "In phase 2, when the kings are a knight move apart, make a rook waiting move on the cut line.",
+        "rook box size": "Shrink Black's rook box.",
+        "king closer": "Bring White's king closer to Black's king.",
+        "closer to white": "Prefer rook placements closer to White's king than to Black's king.",
+        "maximize black distance": "Keep Black's king far from the rook.",
+        "king off edge": "Keep White's king off the edge.",
+        "corner cage": "Build or preserve the queen's corner cage.",
+        "king to cage": "When the queen has a two-square corner cage, walk White's king toward that cage.",
+        "queen off edge": "Keep the queen off edge squares.",
+        "queen knight move": "Place the queen a knight move from Black's king.",
+        "queen box size": "Shrink the queen's box around Black's king.",
+        "king near middle": "Keep White's king near the middle.",
+        "king not between pieces": "Avoid putting White's king between the queen and Black's king.",
+        "shorter queen move": "Prefer the shorter queen move when everything else is tied.",
+        "enter mating net": "Enter the known knight-and-bishop mating net when it is available.",
+        "bishop and knight connected": "Keep the bishop and knight connected diagonally.",
+        "black king away from center": "Force Black's king away from the center.",
+        "limit black king escapes": "Limit Black's legal king escapes.",
+        "drive king to bishop corner": "Drive Black toward the bishop-colored mating corner.",
+        "king to edge key square": "Move White's king toward the edge key square.",
+        "avoid king tempi": "Avoid king tempi that do not improve coordination.",
+        "bring king closer": "Bring White's king closer to Black's king.",
+        "centralize pieces": "Centralize the minor pieces.",
+        "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
+        "force opponent to take opposition": "Phase 2: force every Black reply to give White direct king opposition.",
+        "take opposition": "Phase 2: take direct opposition with White's king.",
+        "force opponent toward corner": "Phase 2: minimize Black's worst legal-reply distance to the nearest corner.",
+        "bishops in middle 16": "Keep bishops on middle-16 squares: c3 through f6.",
+        "bishops together": "Keep the bishops adjacent, one king move apart.",
+        "king not on edge": "Keep White's king off the edge.",
+        "bishops closer": "Bring the bishops closer to Black's king.",
+      } satisfies Record<string, string>
+    )[reason] ?? `${reason}.`;
+  }
+
+  static getEndgameReasonText(reason: string): string {
+    return (
+      {
+        "closer to white": "rook closer to White king",
+        "maximize black distance": "keep Black far from rook",
+        "king off edge": "White king off edge",
+        "king to cage": "White king toward cage",
+        "queen knight move": "queen a knight move from Black king",
+        "king near middle": "White king near middle",
+        "king closer": "White king closer",
+        "bring king closer": "White king closer",
+        "bishops closer": "bishops closer to Black king",
+      } satisfies Record<string, string>
+    )[reason] ?? reason;
   }
 
   static getEndgameBlackPriorityLabels(baseEndgameId: BaseEndgameId): string[] {
@@ -1391,7 +1422,7 @@ export default class Brain {
     if (baseEndgameId === "queen") {
       return [
         returnPositionPriority,
-        "Take the queen if White leaves it loose.",
+        "Take the queen if White isn't looking.",
         "Head toward the center, where Black has the most room to resist.",
       ];
     }
