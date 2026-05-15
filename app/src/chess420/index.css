@@ -50,7 +50,7 @@
 
 .chess420-shell {
   display: grid;
-  grid-template-columns: minmax(300px, 30rem) minmax(22rem, 1fr);
+  grid-template-columns: minmax(270px, 27rem) minmax(22rem, 1fr);
   gap: 0.75rem;
   align-items: start;
   max-width: 1400px;
@@ -81,7 +81,7 @@
 }
 
 .chess420-board-card {
-  width: min(100%, 30rem);
+  width: min(100%, 27rem);
 }
 
 .chess420-summary-card {
@@ -136,7 +136,7 @@
   font-size: clamp(1.7rem, 2.8vw, 2.45rem);
   font-weight: 400;
   line-height: 0.95;
-  letter-spacing: -0.06em;
+  letter-spacing: 0;
 }
 .controls__subtitle {
   color: var(--text-muted);
@@ -165,9 +165,6 @@
     calc(100% - 0.65rem) 50%;
   background-size: 0.35rem 0.35rem;
   background-repeat: no-repeat;
-}
-.controls .controls__find-loop {
-  width: 100%;
 }
 .controls__status {
   margin-top: 0.35rem;
@@ -722,7 +719,7 @@
     display: contents;
     height: auto;
   }
-  .chess420-board-card { width: min(100%, 24rem); margin: 0 auto; order: 1; }
+  .chess420-board-card { width: min(100%, 21.6rem); margin: 0 auto; order: 1; }
   .chess420-log-card { order: 2; }
   .chess420-summary-card { order: 3; }
   .chess420-controls-card { order: 4; }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Brain, { View } from "./Brain";
 import lichessF, { type LiMove } from "./Lichess";
@@ -200,11 +200,15 @@ function EndgameLog() {
           <div>duration</div>
           <div
             className="endgame-log-reason-cell endgame-log-reason-cell--button endgame-log-reason-cell--header"
-            onClick={() => updateShowPriorityHelp(true)}
+            onClick={(event) => {
+              updateShowPriorityHelp(true);
+              event.currentTarget.blur();
+            }}
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
                 updateShowPriorityHelp(true);
+                event.currentTarget.blur();
               }
             }}
             role="button"
@@ -307,6 +311,20 @@ function EndgameLogRow(props: {
 
 function EndgamePriorityHelpModal(props: { onClose: () => void }) {
   const help = Brain.getEndgamePriorityHelp();
+  const { onClose } = props;
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", closeOnEscape, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", closeOnEscape, { capture: true });
+  }, [onClose]);
+
   return createPortal(
     <div className="endgame-priority-modal-backdrop" onClick={props.onClose}>
       <section

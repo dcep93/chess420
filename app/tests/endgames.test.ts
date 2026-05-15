@@ -442,25 +442,14 @@ test("endgame dropdown is only shown in endgame mode", () => {
   let header = Header();
   assert.equal(hasElementType(header, "select"), true);
   assert.match(textContent(header), /select endgame/);
-  assert.match(textContent(header), /find a loop/);
+  assert.doesNotMatch(textContent(header), /find a loop/);
   assert.doesNotMatch(textContent(header), /home/);
-  assert.equal(
-    findElementsByType(header, "button").find(
-      (button) => textContent(button) === "find a loop",
-    )?.props?.disabled,
-    true,
-  );
 
   Brain.endgameId = "rook";
   header = Header();
   assert.equal(hasElementType(header, "select"), true);
   assert.match(textContent(header), /select endgame/);
-  assert.equal(
-    findElementsByType(header, "button").find(
-      (button) => textContent(button) === "find a loop",
-    )?.props?.disabled,
-    false,
-  );
+  assert.doesNotMatch(textContent(header), /find a loop/);
   assert.match(textContent(header), /Rook \+/);
   assert.match(textContent(header), /Queen \+/);
   assert.match(textContent(header), /Two Bishops \+/);

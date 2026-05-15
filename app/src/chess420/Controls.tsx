@@ -32,13 +32,6 @@ export function Header() {
               </option>
             ))}
           </select>
-          <button
-            className="controls__find-loop"
-            disabled={!Brain.hasSelectedEndgame()}
-            onClick={() => Brain.findEndgameLoop()}
-          >
-            find a loop
-          </button>
         </div>
       ) : null}
     </div>
