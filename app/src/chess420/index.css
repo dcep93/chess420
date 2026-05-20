@@ -280,6 +280,16 @@
   border-color: var(--panel-border-strong);
   transform: translateY(-1px);
 }
+.controls button:disabled,
+.summary-content button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.controls button:disabled:hover,
+.summary-content button:disabled:hover {
+  border-color: var(--button-border);
+  transform: none;
+}
 .controls button {
   height: var(--control-height);
   line-height: 1;
