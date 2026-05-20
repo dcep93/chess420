@@ -297,11 +297,14 @@ function getBorderReason(total: number, winOdds: number | null) {
     if (winOdds > 0.875) return "hot line: strong winning chances here";
     if (winOdds > 0.75) return "promising line: this position is going your way";
   }
-  if (total <= settings.SCORE_FLUKE_DISCOUNT) {
+  if (total <= settings.RARE_THRESHOLD) {
     return `rare line: only ${total} recorded games in this position`;
   }
   if (total <= settings.UNCOMMON_THRESHOLD) {
     return `uncommon line: only ${total} recorded games in this position`;
+  }
+  if (total <= settings.INFREQUENT_THRESHOLD) {
+    return `infrequent line: only ${total} recorded games in this position`;
   }
   return null;
 }

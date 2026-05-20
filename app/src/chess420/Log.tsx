@@ -50,7 +50,7 @@ const titles = [
   },
   {
     f: (move: LiMove) =>
-      `t/${move.total < settings.UNCOMMON_THRESHOLD
+      `t/${move.total < settings.INFREQUENT_THRESHOLD
         ? move.total
         : move.total.toExponential(2)
       }`,

@@ -166,9 +166,11 @@ function getBorderColor(total: number, winOdds: number | null): string {
     if (winOdds > 0.875) return "#ff9fb0";
     if (winOdds > 0.75) return "#d8b38a";
   }
-  return total <= settings.SCORE_FLUKE_DISCOUNT
+  return total <= settings.RARE_THRESHOLD
     ? "#b98d63"
     : total <= settings.UNCOMMON_THRESHOLD
     ? "#8f7865"
+    : total <= settings.INFREQUENT_THRESHOLD
+    ? "#6f6258"
     : "#c99c6b";
 }
