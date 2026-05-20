@@ -111,6 +111,9 @@ function SubBoard() {
   const borderColor = isPhaseTwo
     ? "var(--board-phase-two-border)"
     : getBorderColor(total, winOdds);
+  const clearDragState = () => {
+    setTimeout(() => updateKey((prevKey) => prevKey + 1));
+  };
   return (
     <div
       className={[
@@ -133,6 +136,7 @@ function SubBoard() {
             },
           },
           onPieceDrop: ({ sourceSquare, targetSquare }) => {
+            clearDragState();
             if (!targetSquare) return false;
             updateClicked(null);
             return Brain.moveFromTo(sourceSquare, targetSquare);

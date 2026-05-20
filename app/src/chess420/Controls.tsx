@@ -44,7 +44,14 @@ export function Header() {
 
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
-  const noveltyRef = React.useRef<HTMLButtonElement>(null);
+  const fen = Brain.getState().fen;
+  const [noveltyVersion, updateNoveltyVersion] = React.useState(0);
+  const novelty = React.useMemo(
+    () => Brain.getNovelty(fen),
+    [fen, noveltyVersion]
+  );
+  const refreshNovelty = () => updateNoveltyVersion((version) => version + 1);
+
   return (
     <div className="controls">
       <div className="controls__grid">
@@ -93,13 +100,11 @@ export default function Controls() {
             <button onClick={Brain.redo}>redo</button>
             <button onClick={Brain.playWeighted}>play weighted</button>
             <button
-              ref={noveltyRef}
-              disabled={Brain.getNovelty() === null}
-              onClick={() =>
-                Promise.resolve()
-                  .then(Brain.clearNovelty)
-                  .then(() => (noveltyRef.current!.disabled = true))
-              }
+              disabled={novelty === null}
+              onClick={() => {
+                Brain.clearNovelty();
+                refreshNovelty();
+              }}
             >
               clear novelty
             </button>
@@ -144,7 +149,10 @@ export default function Controls() {
             </button>
             <button
               title={JSON.stringify(StorageW.getSizes(), null, 2)}
-              onClick={Brain.clearStorage}
+              onClick={() => {
+                Brain.clearStorage();
+                refreshNovelty();
+              }}
             >
               clear storage
             </button>

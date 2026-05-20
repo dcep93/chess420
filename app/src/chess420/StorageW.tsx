@@ -54,8 +54,12 @@ export default class StorageW {
 
   static setNovelty(fen: string, content: any) {
     const k = getNoveltyKey(fen);
+    if (content === null) {
+      localStorage.removeItem(k);
+      return;
+    }
     const v = JSON.stringify(content);
-    setTimeout(() => localStorage.setItem(k, v));
+    localStorage.setItem(k, v);
   }
 
   static getLichess(key: string): any {
