@@ -23,6 +23,11 @@ type OptionsType = {
   attempt?: number;
   username?: string;
 };
+type ResolvedOptionsType = {
+  prepareNext: boolean;
+  attempt: number;
+  username: string | undefined;
+};
 
 export const stats = {
   requests: 0,
@@ -161,21 +166,38 @@ export default function lichessF(
         setTimeout(() =>
           moves
             .filter((move: LiMove) => move.prob >= settings.PREPARE_NEXT_RATIO)
-            .forEach((move: LiMove) => {
-              const subFen = Brain.getFen(fen, move.san);
-              lichessF(subFen, {
-                ...options,
-                prepareNext: false,
-                attempt: options.attempt + 1,
-                username: undefined,
-              });
-            }),
+            .forEach((move: LiMove) =>
+              prefetchNextPosition(fen, move.san, options),
+            ),
         );
       return moves;
     })
     .then(releaseTicket);
   promises[key] = p;
   return p;
+}
+
+function prefetchNextPosition(
+  fen: string,
+  san: string,
+  options: ResolvedOptionsType,
+) {
+  const subFen = Brain.getFen(fen, san);
+  const prefetchOptions = {
+    ...options,
+    prepareNext: false,
+    attempt: options.attempt + 1,
+    username: undefined,
+  };
+  void lichessF(subFen, prefetchOptions).then((moves) => {
+    if (!Brain.isMyTurn(subFen)) return;
+    const novelty = Brain.getNovelty(subFen);
+    const bestSan =
+      novelty ??
+      moves.slice().sort((a, b) => b.score - a.score)[0]?.san;
+    if (!bestSan) return;
+    void lichessF(Brain.getFen(subFen, bestSan), prefetchOptions);
+  });
 }
 
 function helper(url: string, attempt: number): Promise<LiMove[]> {
