@@ -62,6 +62,13 @@ type History = {
   states: StateType[];
 };
 
+type NavigationEvent = {
+  button?: number;
+  ctrlKey?: boolean;
+  metaKey?: boolean;
+  preventDefault?: () => void;
+};
+
 type EndgamePiece = {
   color: "w" | "b";
   type: string;
@@ -5086,52 +5093,72 @@ export default class Brain {
 
   //
 
-  static traverse() {
-    window.location.href = `/traverse#${Brain.hash()}`;
+  static shouldOpenInNewTab(event?: NavigationEvent) {
+    return Boolean(event?.metaKey || event?.ctrlKey || event?.button === 1);
   }
 
-  static speedrun() {
-    window.location.href = `/speedrun#${Brain.hash()}`;
-  }
-
-  static traps() {
-    window.location.href = `/traps#${Brain.hash()}`;
-  }
-
-  static endgames() {
-    window.location.href = "/endgames";
-  }
-
-  static selectEndgame(id: EndgameId) {
-    window.location.href = `/endgames/${id}`;
-  }
-
-  static findMistakes(username: string) {
-    if (!username) return alert("no username provided");
-
-    window.location.href = `/lichess/${username}/mistakes#${Brain.hash()}`;
-  }
-
-  static playVs(username: string) {
-    if (!username) return alert("no username provided");
-
-    window.location.href = `/lichess/${username}/vs#${Brain.hash()}`;
-  }
-
-  static importLatestGame(username: string) {
-    if (!username) return alert("no username provided");
-
-    window.location.href = `/lichess/${username}/latest`;
-  }
-
-  static home() {
-    if (Brain.showHelp) return Brain.updateShowHelp(false);
-    if (Brain.view === View.endgame) {
-      window.location.assign("/");
+  static navigate(url: string, event?: NavigationEvent) {
+    if (Brain.shouldOpenInNewTab(event)) {
+      event?.preventDefault?.();
+      window.open(url, "_blank", "noopener,noreferrer");
       return;
     }
+    window.location.assign(url);
+  }
+
+  static traverse(event?: NavigationEvent) {
+    Brain.navigate(`/traverse#${Brain.hash()}`, event);
+  }
+
+  static speedrun(event?: NavigationEvent) {
+    Brain.navigate(`/speedrun#${Brain.hash()}`, event);
+  }
+
+  static traps(event?: NavigationEvent) {
+    Brain.navigate(`/traps#${Brain.hash()}`, event);
+  }
+
+  static endgames(event?: NavigationEvent) {
+    Brain.navigate("/endgames", event);
+  }
+
+  static selectEndgame(id: EndgameId, event?: NavigationEvent) {
+    Brain.navigate(`/endgames/${id}`, event);
+  }
+
+  static findMistakes(username: string, event?: NavigationEvent) {
+    if (!username) return alert("no username provided");
+
+    Brain.navigate(`/lichess/${username}/mistakes#${Brain.hash()}`, event);
+  }
+
+  static playVs(username: string, event?: NavigationEvent) {
+    if (!username) return alert("no username provided");
+
+    Brain.navigate(`/lichess/${username}/vs#${Brain.hash()}`, event);
+  }
+
+  static importLatestGame(username: string, event?: NavigationEvent) {
+    if (!username) return alert("no username provided");
+
+    Brain.navigate(`/lichess/${username}/latest`, event);
+  }
+
+  static home(event?: NavigationEvent) {
+    if (Brain.showHelp) return Brain.updateShowHelp(false);
+    if (Brain.view === View.endgame) {
+      Brain.navigate("/", event);
+      return;
+    }
+    const openInNewTab = Brain.shouldOpenInNewTab(event);
+    event?.preventDefault?.();
     setTimeout(() => {
-      window.location.assign(`/#${Brain.hash()}`);
+      const url = `/#${Brain.hash()}`;
+      if (openInNewTab) {
+        window.open(url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      window.location.assign(url);
       if (Brain.view === undefined) window.location.reload();
     });
   }

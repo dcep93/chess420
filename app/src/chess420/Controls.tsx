@@ -134,16 +134,24 @@ export default function Controls() {
                 title="username"
               />
             </form>
-            <button onClick={() => Brain.playVs(lichessRef.current!.value)}>
+            <button
+              onClick={(event) =>
+                Brain.playVs(lichessRef.current!.value, event)
+              }
+            >
               play vs user
             </button>
             <button
-              onClick={() => Brain.findMistakes(lichessRef.current!.value)}
+              onClick={(event) =>
+                Brain.findMistakes(lichessRef.current!.value, event)
+              }
             >
               find mistakes
             </button>
             <button
-              onClick={() => Brain.importLatestGame(lichessRef.current!.value)}
+              onClick={(event) =>
+                Brain.importLatestGame(lichessRef.current!.value, event)
+              }
             >
               import latest
             </button>
