@@ -804,7 +804,8 @@
   .chess420-log-card { order: 2; }
   .chess420-summary-card { order: 3; }
   .chess420-controls-card { order: 4; }
-  .chess420-log-card { min-height: 16rem; max-height: 38dvh; }
+  .chess420-log-card { min-height: 0; max-height: none; }
+  .log-wrap { height: auto; }
   .chess420-summary-card,
   .chess420-controls-card { overflow: visible; }
   .help-hero {
@@ -836,16 +837,7 @@
   .controls__grid { display: grid; grid-template-columns: 1fr; }
   .controls__section { width: auto; }
   .controls__buttons { grid-template-columns: repeat(2, minmax(0, max-content)); }
-  .log-table { font-size: 0.86rem; }
-  .log-column { padding-left: 0.7rem; }
-  .log-move-index > div,
-  .log-header-row,
-  .log-row { min-height: 1.42rem; }
-  .log-header-cell { font-size: 0.62rem; }
-  .log-row {
-    line-height: 1.12;
-    padding: 0.06rem 0.2rem;
-  }
+  .log-column { padding-left: 0.85rem; }
   .help-shell {
     padding: 0.7rem;
   }
@@ -876,9 +868,4 @@
   .controls { padding: 0.65rem; }
   .summary-content { margin: 0.35rem 0.5rem 0.5rem; }
   .log-table { padding: 0.5rem; }
-  .log-table { font-size: 0.8rem; }
-  .log-column { padding-left: 0.55rem; }
-  .log-move-index > div,
-  .log-header-row,
-  .log-row { min-height: 1.32rem; }
 }
