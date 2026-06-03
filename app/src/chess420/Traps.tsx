@@ -116,9 +116,11 @@ export function fetchTraps(
     now,
     (ts) => {
       ts.forEach((t) => {
-        const found = trapsCache.find((tt) => tt.fen === t.fen);
-        if (found) {
-          found.ratio = Math.max(t.ratio, found.ratio);
+        const foundIndex = trapsCache.findIndex((tt) => tt.fen === t.fen);
+        if (foundIndex >= 0) {
+          if (compareTraps(t, trapsCache[foundIndex]) > 0) {
+            trapsCache[foundIndex] = t;
+          }
         } else {
           trapsCache.push(t);
         }
@@ -133,27 +135,40 @@ export function fetchTraps(
   ).then(
     (ts) =>
       key === now &&
-      updateTraps(ts.sort((a, b) => b.score - a.score).slice(0, numToKeep))
+      updateTraps(getTopTrapsByPrefixFen(ts, numToKeep))
   );
 }
 
-function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
+function compareTraps(a: TrapType, b: TrapType): number {
+  return a.score - b.score || a.ratio * a.m.prob - b.ratio * b.m.prob;
+}
+
+function getTopTrapsByPrefixFen(
+  traps: TrapType[],
+  numToKeep: number
+): TrapType[] {
+  const trapsByFen = new Map<string, TrapType>();
+  traps.forEach((trap) => {
+    const found = trapsByFen.get(trap.fen);
+    if (!found || compareTraps(trap, found) > 0) {
+      trapsByFen.set(trap.fen, trap);
+    }
+  });
+  return Array.from(trapsByFen.values())
+    .sort((a, b) => b.score - a.score)
+    .slice(0, numToKeep);
+}
+
+function getTrapScore(ratio: number, m: LiMove): number {
   const isWhite = Brain.getState().orientationIsWhite;
-  const getMyWinPercentage = (move: LiMove) => (isWhite ? move.ww : 1 - move.ww);
-  const opponentBestMove = moves
-    .filter((move) => move.total >= 100)
-    .sort((a, b) => getMyWinPercentage(a) - getMyWinPercentage(b))[0];
+  const winPercentage = isWhite ? m.ww : 1 - m.ww;
   const opponentLineProbability = ratio * m.prob;
-  const winPercentage = getMyWinPercentage(m);
-  const mistakeGain = opponentBestMove
-    ? Math.max(0, winPercentage - getMyWinPercentage(opponentBestMove))
-    : 0;
-  if (opponentLineProbability < settings.TRAPS_THRESHOLD_ODDS) return 0;
-  return (
-    Math.pow(opponentLineProbability, 0.5) *
-    Math.pow(mistakeGain, 2) *
-    Math.pow(winPercentage, 0.5)
-  );
+  if (
+    opponentLineProbability < settings.TRAPS_THRESHOLD_ODDS ||
+    winPercentage <= 0.5
+  )
+    return 0;
+  return opponentLineProbability * (winPercentage - 0.5);
 }
 
 async function searchTraps(
@@ -196,7 +211,7 @@ async function searchTraps(
     moves
       .filter((move) => move.total >= 100)
       .forEach((m) => {
-        const score = getTrapScore(node.ratio, m, moves);
+        const score = getTrapScore(node.ratio, m);
         const trap = {
           ratio: node.ratio,
           fen: node.fen,
