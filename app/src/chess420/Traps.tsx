@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Brain from "./Brain";
-import lichessF, { type LiMove } from "./Lichess";
+import lichessF, { type LiMove, type LichessRequestBudget } from "./Lichess";
 import settings from "./Settings";
 
 type TrapType = {
@@ -104,6 +104,7 @@ export function fetchTraps(
   const now = ++nextKey;
   key = now;
   const trapsCache: TrapType[] = [];
+  const requestBudget = { remaining: 100 };
   return helper(
     now,
     (ts) => {
@@ -120,7 +121,8 @@ export function fetchTraps(
     },
     fen,
     1,
-    []
+    [],
+    requestBudget
   ).then(
     (ts) =>
       key === now &&
@@ -128,10 +130,22 @@ export function fetchTraps(
   );
 }
 
-function getTrapScore(ratio: number, m: LiMove): number {
+function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
+  const isWhite = Brain.getState().orientationIsWhite;
+  const getMyWinPercentage = (move: LiMove) => (isWhite ? move.ww : 1 - move.ww);
+  const opponentBestMove = moves
+    .filter((move) => move.total >= 100)
+    .sort((a, b) => getMyWinPercentage(a) - getMyWinPercentage(b))[0];
   const lineProbability = ratio * m.prob;
-  const winPercentage = Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww;
-  return Math.pow(lineProbability, 0.5) * Math.pow(winPercentage, 2);
+  const winPercentage = getMyWinPercentage(m);
+  const mistakeGain = opponentBestMove
+    ? Math.max(0, winPercentage - getMyWinPercentage(opponentBestMove))
+    : 0;
+  return (
+    Math.pow(lineProbability, 0.5) *
+    Math.pow(mistakeGain, 2) *
+    Math.pow(winPercentage, 0.5)
+  );
 }
 
 function helper(
@@ -139,13 +153,14 @@ function helper(
   updateTraps: (traps: TrapType[]) => void,
   fen: string,
   ratio: number,
-  sans: string[]
+  sans: string[],
+  requestBudget: LichessRequestBudget
 ): Promise<TrapType[]> {
   // TODO define TRAPS_THRESHOLD_ODDS
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
   if (Brain.isMyTurn(fen)) {
-    return lichessF(fen)
+    return lichessF(fen, { requestBudget })
       .then((moves) =>
         moves.map((m) =>
           helper(
@@ -153,20 +168,21 @@ function helper(
             updateTraps,
             Brain.getFen(fen, m.san),
             ratio,
-            sans.concat(m.san)
+            sans.concat(m.san),
+            requestBudget
           )
         )
       )
       .then((ps) => Promise.all(ps))
       .then((s) => s.flatMap((ss) => ss));
   } else {
-    return lichessF(fen)
+    return lichessF(fen, { requestBudget })
       .then((moves) =>
         moves
           .filter((m) => m.total >= 100)
           .map((m) =>
             Promise.resolve()
-              .then(() => getTrapScore(ratio, m))
+              .then(() => getTrapScore(ratio, m, moves))
               .then((score) => ({
                 ratio,
                 fen,
@@ -183,7 +199,8 @@ function helper(
                       updateTraps,
                       Brain.getFen(fen, m.san),
                       ratio * m.prob,
-                      sans.concat(m.san)
+                      sans.concat(m.san),
+                      requestBudget
                     )
                   )
                   .then((hts) => hts.concat(ts))

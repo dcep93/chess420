@@ -17,16 +17,22 @@ export type LiMove = {
   score: number;
 };
 
+export type LichessRequestBudget = {
+  remaining: number;
+};
+
 const promises: { [key: string]: Promise<LiMove[]> } = {};
 type OptionsType = {
   prepareNext?: boolean;
   attempt?: number;
   username?: string;
+  requestBudget?: LichessRequestBudget;
 };
 type ResolvedOptionsType = {
   prepareNext: boolean;
   attempt: number;
   username: string | undefined;
+  requestBudget?: LichessRequestBudget;
 };
 
 export const stats = {
@@ -115,7 +121,7 @@ export default function lichessF(
   fen: string,
   _options: OptionsType = {},
 ): Promise<LiMove[]> {
-  const options = Object.assign(
+  const options: ResolvedOptionsType = Object.assign(
     {
       prepareNext: false,
       attempt: 0,
@@ -141,7 +147,7 @@ export default function lichessF(
     return pp;
   }
   const p = getTicket()
-    .then(() => helper(url, options.attempt))
+    .then(() => helper(url, options.attempt, options.requestBudget))
     .then((moves) =>
       moves.map((move: LiMove) => ({
         ...move,
@@ -190,7 +196,9 @@ export default function lichessF(
       return moves;
     })
     .then(releaseTicket);
-  promises[key] = p;
+  if (options.requestBudget === undefined) {
+    promises[key] = p;
+  }
   return p;
 }
 
@@ -217,7 +225,11 @@ function prefetchNextPosition(
   });
 }
 
-function helper(url: string, attempt: number): Promise<LiMove[]> {
+function helper(
+  url: string,
+  attempt: number,
+  requestBudget?: LichessRequestBudget,
+): Promise<LiMove[]> {
   if (attempt > settings.MAX_LICHESS_ATTEMPTS) return Promise.resolve([]);
 
   const storedMoves = StorageW.getLichess(url);
@@ -234,6 +246,13 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
       StorageW.setLichess(url, moves);
       return moves;
     });
+  }
+
+  if (requestBudget !== undefined) {
+    if (requestBudget.remaining <= 0) {
+      return Promise.resolve([]);
+    }
+    requestBudget.remaining -= 1;
   }
 
   return Promise.resolve()
@@ -255,7 +274,10 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
           ? Promise.resolve([])
           : new Promise((resolve) =>
               setTimeout(
-                () => helper(url, attempt + 1).then((moves) => resolve(moves)),
+                () =>
+                  helper(url, attempt + 1, requestBudget).then((moves) =>
+                    resolve(moves),
+                  ),
                 1000,
               ),
             ),
