@@ -11,6 +11,13 @@ type TrapType = {
   m: LiMove;
 };
 
+type TrapSearchNode = {
+  fen: string;
+  ratio: number;
+  sans: string[];
+  priority: number;
+};
+
 export default function Traps() {
   const [traps, updateTraps] = useState<TrapType[]>([]);
   const fen = Brain.getState().fen;
@@ -105,7 +112,7 @@ export function fetchTraps(
   key = now;
   const trapsCache: TrapType[] = [];
   const requestBudget = { remaining: 100 };
-  return helper(
+  return searchTraps(
     now,
     (ts) => {
       ts.forEach((t) => {
@@ -149,7 +156,7 @@ function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
   );
 }
 
-async function helper(
+async function searchTraps(
   now: number,
   updateTraps: (traps: TrapType[]) => void,
   fen: string,
@@ -157,51 +164,61 @@ async function helper(
   sans: string[],
   requestBudget: LichessRequestBudget
 ): Promise<TrapType[]> {
-  // TODO define TRAPS_THRESHOLD_ODDS
-  if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
-    return Promise.resolve([]);
-  const moves = (await lichessF(fen, { requestBudget }))
-    .slice()
-    .sort((a, b) => b.total - a.total);
   const traps: TrapType[] = [];
-  if (Brain.isMyTurn(fen)) {
-    for (const m of moves) {
-      traps.push(
-        ...(await helper(
-          now,
-          updateTraps,
-          Brain.getFen(fen, m.san),
-          ratio,
-          sans.concat(m.san),
-          requestBudget
-        ))
-      );
-    }
-    return traps;
-  }
-
-  for (const m of moves.filter((move) => move.total >= 100)) {
-    const score = getTrapScore(ratio, m, moves);
-    const trap = {
-      ratio,
+  const queue: TrapSearchNode[] = [
+    {
       fen,
+      ratio,
       sans,
-      score,
-      m,
-    };
-    const scoredTraps = trap.score > 0 ? [trap] : [];
-    if (scoredTraps.length > 0) updateTraps(scoredTraps);
-    traps.push(
-      ...(await helper(
-        now,
-        updateTraps,
-        Brain.getFen(fen, m.san),
-        ratio * m.prob,
-        sans.concat(m.san),
-        requestBudget
-      )),
-      ...scoredTraps
-    );
+      priority: Number.POSITIVE_INFINITY,
+    },
+  ];
+
+  while (queue.length > 0 && now === key) {
+    queue.sort((a, b) => b.priority - a.priority);
+    const node = queue.shift()!;
+    if (node.ratio < settings.TRAPS_THRESHOLD_ODDS) continue;
+    const moves = (await lichessF(node.fen, { requestBudget }))
+      .slice()
+      .sort((a, b) => b.total - a.total);
+    if (Brain.isMyTurn(node.fen)) {
+      moves.forEach((m) => {
+        queue.push({
+          fen: Brain.getFen(node.fen, m.san),
+          ratio: node.ratio,
+          sans: node.sans.concat(m.san),
+          priority: node.ratio * m.total,
+        });
+      });
+      continue;
+    }
+
+    moves
+      .filter((move) => move.total >= 100)
+      .forEach((m) => {
+        const score = getTrapScore(node.ratio, m, moves);
+        const trap = {
+          ratio: node.ratio,
+          fen: node.fen,
+          sans: node.sans,
+          score,
+          m,
+        };
+        const scoredTraps = trap.score > 0 ? [trap] : [];
+        if (scoredTraps.length > 0) {
+          updateTraps(scoredTraps);
+          traps.push(...scoredTraps);
+        }
+        const nextRatio = node.ratio * m.prob;
+        if (nextRatio >= settings.TRAPS_THRESHOLD_ODDS) {
+          queue.push({
+            fen: Brain.getFen(node.fen, m.san),
+            ratio: nextRatio,
+            sans: node.sans.concat(m.san),
+            priority: nextRatio * m.total,
+          });
+        }
+      });
   }
   return traps;
 }
