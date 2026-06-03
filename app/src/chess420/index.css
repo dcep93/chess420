@@ -232,15 +232,10 @@
   letter-spacing: 0.08em;
   color: var(--text-muted);
 }
-.controls__help-button {
-  width: var(--control-height);
-  height: var(--control-height);
-  padding: 0;
+.controls__section-heading {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  line-height: 1;
+  gap: 0.28rem;
 }
 .controls__request-count {
   color: var(--text-soft);
@@ -310,6 +305,26 @@
 .controls button {
   height: var(--control-height);
   line-height: 1;
+}
+.controls button.controls__help-button {
+  width: auto;
+  height: auto;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  box-shadow: none;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.controls button.controls__help-button:hover {
+  color: var(--text-main);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 .controls input:not([type="checkbox"]),
 .controls select {

@@ -74,15 +74,17 @@ export default function Controls() {
 
         <section className="controls__section">
           <div className="controls__section-top">
-            <h2>Modes</h2>
-            <button
-              className="controls__help-button"
-              onClick={Brain.help}
-              aria-label="help"
-              title="help"
-            >
-              ⓘ
-            </button>
+            <div className="controls__section-heading">
+              <h2>Modes</h2>
+              <button
+                className="controls__help-button"
+                onClick={Brain.help}
+                aria-label="help"
+                title="help"
+              >
+                ⓘ
+              </button>
+            </div>
           </div>
           <div className="controls__buttons controls__buttons--modes">
             <button onClick={Brain.traps}>traps</button>

@@ -148,7 +148,7 @@ function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
   const mistakeGain = opponentBestMove
     ? Math.max(0, winPercentage - getMyWinPercentage(opponentBestMove))
     : 0;
-  if (winPercentage <= 0.5 || mistakeGain <= 0) return 0;
+  if (opponentLineProbability < settings.TRAPS_THRESHOLD_ODDS) return 0;
   return (
     Math.pow(opponentLineProbability, 0.5) *
     Math.pow(mistakeGain, 2) *

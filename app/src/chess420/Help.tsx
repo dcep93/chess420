@@ -38,48 +38,48 @@ export default function Help() {
     {
       title: "What is chess420?",
       content: [
-        "Traditional opening trainers often use a combination of engine analysis and human-curated descriptions to guide their users.\nchess420 uses neither, and intends to supplement other study methods, often by suggesting new lines or adding confidence to your existing repetoire.",
+        "Traditional opening trainers often use engine analysis and human-curated descriptions to guide their users.\nchess420 uses neither. It is meant to supplement other study methods by suggesting new lines and adding confidence to your existing repertoire.",
         <>
-          The primary appeal of chess420 is that outcomes of real lichess games
-          are used to determine the strength of a move, not stockfish analysis
+          The primary appeal of chess420 is that outcomes of real Lichess games
+          are used to determine the strength of a move, not Stockfish analysis
           or a human&apos;s opinion.
-          {"\n"}For example, of non-drawn games above 2000 ELO, the{" "}
+          {"\n"}For example, of non-drawn games above 2000 Elo, the{" "}
           <button
             className="help-link"
             onClick={() => openOpening(bishopsGambitMoves, true)}
           >
             Bishop&apos;s Gambit
           </button>{" "}
-          line of the King&apos;s Gambit wins 55.7% of the time for white,
-          despite stockfish evaluating at -0.9. Perhaps that opening isn&apos;t
+          line of the King&apos;s Gambit wins 55.7% of the time for White,
+          despite Stockfish evaluating at -0.9. Perhaps that opening isn&apos;t
           so bad!
         </>,
-        "Lichess offers similar tools, but chess420 intends to provide value through quizzing the user, remembering your personal repetoire, and a custom scoring strategy independent of stockfish.",
+        "Lichess offers similar tools, but chess420 adds value through quizzing, remembering your personal repertoire, and using a custom scoring strategy independent of Stockfish.",
       ],
     },
     {
       title: "How do I use it?",
       content: [
         "chess420 is a bit nicer on desktop, but should still be useful on mobile.",
-        'You can always make a move on the board or click "play best". If you manually play a move, chess420 will remember this as a novelty, whether or not it\'s the best move in a position.\nThen, chess420 will report statistics about your move and automatically play a weighted move for the opponent, preferring to play more common moves.',
+        'You can always make a move on the board or click "play best". If you manually play a move, chess420 will remember it as a novelty, whether or not it is the best move in the position.\nThen chess420 reports statistics about your move and automatically plays a weighted move for the opponent, preferring common moves.',
         <>
           Personally, I like to idly click &quot;play best&quot; over and over
           again to watch a game play out, and I&apos;ll quiz myself in my head
           along the way.
-          {"\n"}If the best move is different to what I would have played,
+          {"\n"}If the best move is different from what I would have played,
           I&apos;ll either undo and manually play my preferred move as a
           novelty, or I&apos;ll look into that opening - perhaps I want to make
-          a change to my repetoire!{"\n"}Recently this introduced me to the{" "}
+          a change to my repertoire!{"\n"}Recently this introduced me to the{" "}
           <button
             className="help-link"
             onClick={() => openOpening(benkoGambitMoves, false)}
           >
             Benko Gambit
           </button>{" "}
-          as black, which performs quite well!
+          as Black, which performs quite well!
         </>,
-        "Additionally, I'll always import my latest Lichess game after finishing so that I can find out where I went wrong!",
-        "By the way, you can also play out a game to get to a position you want to practice (perhaps with turning off auto reply). Then refresh the page and watch the best moves repeatedly and press enter to start over against different opponent variations. It's a good way to drill a particular opening.",
+        "After a game, import your latest Lichess game to see where the statistical move choices started going against you.",
+        "You can also play out a game to reach a position you want to practice, optionally with auto reply off. Refresh the page, watch the best moves from that position, and press enter to start over against different opponent variations. It is a good way to drill a particular opening.",
       ],
     },
     {
@@ -92,8 +92,8 @@ export default function Help() {
     {
       title: "How is a move's score calculated?",
       content: [
-        "chess420 gives every move a raw score based on how often it wins decisive games and how often it's played. More commonly played moves are rewarded, and very uncommon moves are severely punished.",
-        "After a raw score is calculated, we provide a final score equal to the ratio of the next-best move's raw score, with a cap at 420.",
+        "chess420 gives every move a raw score based on how often it wins decisive games and how often it is played. Common moves are rewarded, and very uncommon moves are heavily discounted.",
+        "After a raw score is calculated, chess420 shows a final score equal to the ratio against the next-best move's raw score, with a cap at 420.",
         <>
           You can check out the code here!
           {"\n"}
@@ -111,22 +111,30 @@ export default function Help() {
     {
       title: "What is a novelty?",
       content: [
-        'chess420 computes the best move in a position based on its score. But if you prefer your own repetoire, you can manually make a move on the board, and your novelty will be remembered.\nNext time you click "best move" in that position, your novelty will be played.',
-        'If you made a mistake or change your mind, you can click "clear novelty" from a position, or click "clear storage" to remove all saved data from all positions (and cached lichess data too).',
+        'chess420 computes the best move in a position based on its score. But if you prefer your own repertoire, you can manually make a move on the board, and your novelty will be remembered.\nNext time you click "play best" in that position, your novelty will be played.',
+        'If you made a mistake or change your mind, click "clear novelty" from that position. Click "clear storage" to remove all saved data from all positions, including cached Lichess data.',
       ],
     },
     {
       title: "What is the speedrun button?",
       content: [
-        "In speedrunning mode, you can see the distribution of moves the are determined to be best, along with how often it is the best move.",
-        "When just starting a new opening, it's a good idea to check these moves.",
+        "Speedrun mode shows the distribution of moves that are determined to be best, along with how often each move is the best move.",
+        "When you are starting a new opening, it is a good way to see which moves deserve early attention.",
+      ],
+    },
+    {
+      title: "What is traps mode?",
+      content: [
+        "Traps mode searches forward from the current position and looks for lines where your opponent is likely to choose a move that improves your result.",
+        "Your own move probabilities are ignored in the trap probability because those choices are under your control. Opponent move probabilities do count, so the table favors lines your opponent is likely to enter if you steer the game there.",
+        "The search is capped at 100 new Lichess requests per run. Within that cap, chess420 prioritizes positions with more recorded games so the search spends time on better-supported lines first.",
       ],
     },
     {
       title: "How do I memorize with traverse manually?",
       content: [
-        "Try it out!",
-        "chess420 will traverse all likely positions from both sides of the board.\nIf a position has less than 1% chance of being reached from your opponent's moves, that line will be marked as complete, and you will go to the next line.",
+        "Traverse manually is for memorizing the positions that are most likely to matter in your repertoire.",
+        "chess420 will traverse likely positions from both sides of the board.\nIf a position has less than 1% chance of being reached from your opponent's moves, that line will be marked as complete, and you will go to the next line.",
         "You can click that you don't know what move to make, or you can play a move on the board.\nIf you didn't play the best move, chess420 will remember that position for you, and you'll go to a new line. Alternatively, you can also save your move as a novelty and keep going.",
         "After going through all positions (usually takes about 15 minutes), chess420 will give you instructions to save this data to your Quizlet account.\nThen you can use Quizlet's tools to help you memorize tricky positions!",
       ],
