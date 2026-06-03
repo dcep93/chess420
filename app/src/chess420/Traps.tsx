@@ -136,19 +136,20 @@ function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
   const opponentBestMove = moves
     .filter((move) => move.total >= 100)
     .sort((a, b) => getMyWinPercentage(a) - getMyWinPercentage(b))[0];
-  const lineProbability = ratio * m.prob;
+  const opponentLineProbability = ratio * m.prob;
   const winPercentage = getMyWinPercentage(m);
   const mistakeGain = opponentBestMove
     ? Math.max(0, winPercentage - getMyWinPercentage(opponentBestMove))
     : 0;
+  if (winPercentage <= 0.5 || mistakeGain <= 0) return 0;
   return (
-    Math.pow(lineProbability, 0.5) *
+    Math.pow(opponentLineProbability, 0.5) *
     Math.pow(mistakeGain, 2) *
     Math.pow(winPercentage, 0.5)
   );
 }
 
-function helper(
+async function helper(
   now: number,
   updateTraps: (traps: TrapType[]) => void,
   fen: string,
@@ -159,55 +160,48 @@ function helper(
   // TODO define TRAPS_THRESHOLD_ODDS
   if (now !== key || ratio < settings.TRAPS_THRESHOLD_ODDS)
     return Promise.resolve([]);
+  const moves = (await lichessF(fen, { requestBudget }))
+    .slice()
+    .sort((a, b) => b.total - a.total);
+  const traps: TrapType[] = [];
   if (Brain.isMyTurn(fen)) {
-    return lichessF(fen, { requestBudget })
-      .then((moves) =>
-        moves.map((m) =>
-          helper(
-            now,
-            updateTraps,
-            Brain.getFen(fen, m.san),
-            ratio,
-            sans.concat(m.san),
-            requestBudget
-          )
-        )
-      )
-      .then((ps) => Promise.all(ps))
-      .then((s) => s.flatMap((ss) => ss));
-  } else {
-    return lichessF(fen, { requestBudget })
-      .then((moves) =>
-        moves
-          .filter((m) => m.total >= 100)
-          .map((m) =>
-            Promise.resolve()
-              .then(() => getTrapScore(ratio, m, moves))
-              .then((score) => ({
-                ratio,
-                fen,
-                sans,
-                score,
-                m,
-              }))
-              .then((ts) =>
-                Promise.resolve()
-                  .then(() => updateTraps([ts]))
-                  .then(() =>
-                    helper(
-                      now,
-                      updateTraps,
-                      Brain.getFen(fen, m.san),
-                      ratio * m.prob,
-                      sans.concat(m.san),
-                      requestBudget
-                    )
-                  )
-                  .then((hts) => hts.concat(ts))
-              )
-          )
-      )
-      .then((ps) => Promise.all(ps))
-      .then((s) => s.flatMap((ss) => ss));
+    for (const m of moves) {
+      traps.push(
+        ...(await helper(
+          now,
+          updateTraps,
+          Brain.getFen(fen, m.san),
+          ratio,
+          sans.concat(m.san),
+          requestBudget
+        ))
+      );
+    }
+    return traps;
   }
+
+  for (const m of moves.filter((move) => move.total >= 100)) {
+    const score = getTrapScore(ratio, m, moves);
+    const trap = {
+      ratio,
+      fen,
+      sans,
+      score,
+      m,
+    };
+    const scoredTraps = trap.score > 0 ? [trap] : [];
+    if (scoredTraps.length > 0) updateTraps(scoredTraps);
+    traps.push(
+      ...(await helper(
+        now,
+        updateTraps,
+        Brain.getFen(fen, m.san),
+        ratio * m.prob,
+        sans.concat(m.san),
+        requestBudget
+      )),
+      ...scoredTraps
+    );
+  }
+  return traps;
 }
