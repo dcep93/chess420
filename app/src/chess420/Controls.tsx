@@ -1,6 +1,7 @@
 import React from "react";
 import Brain, { View } from "./Brain";
 import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
+import { stats, subscribeToLichessStats } from "./Lichess";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 
@@ -45,12 +46,24 @@ export function Header() {
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
   const fen = Brain.getState().fen;
+  const [lichessRequests, updateLichessRequests] = React.useState(
+    stats.requests
+  );
   const [noveltyVersion, updateNoveltyVersion] = React.useState(0);
   const novelty = React.useMemo(
     () => Brain.getNovelty(fen),
     [fen, noveltyVersion]
   );
   const refreshNovelty = () => updateNoveltyVersion((version) => version + 1);
+
+  React.useEffect(() => {
+    const unsubscribe = subscribeToLichessStats(() =>
+      updateLichessRequests(stats.requests)
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="controls">
@@ -62,9 +75,17 @@ export default function Controls() {
         <section className="controls__section">
           <div className="controls__section-top">
             <h2>Modes</h2>
+            <button
+              className="controls__help-button"
+              onClick={Brain.help}
+              aria-label="help"
+              title="help"
+            >
+              ⓘ
+            </button>
           </div>
           <div className="controls__buttons controls__buttons--modes">
-            <button onClick={Brain.help}>help</button>
+            <button onClick={Brain.traps}>traps</button>
             <button onClick={Brain.home}>home</button>
             <button onClick={Brain.speedrun}>cram</button>
             <button onClick={Brain.endgames}>endgames</button>
@@ -114,6 +135,9 @@ export default function Controls() {
         <section className="controls__section">
           <div className="controls__section-top">
             <h2>Lichess</h2>
+            <span className="controls__request-count">
+              {lichessRequests} req
+            </span>
           </div>
           <div className="controls__buttons controls__buttons--lichess">
             <form

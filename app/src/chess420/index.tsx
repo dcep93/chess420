@@ -41,24 +41,27 @@ function Main() {
     [fen: string]: string;
   } | null>(null);
   DoOnce("Main.brain", () => {
-    document.addEventListener("keydown", (e) =>
-      Promise.resolve()
-        .then(
-          () =>
-            ({
-              ArrowUp: Brain.playBest,
-              ArrowDown: Brain.newGame,
-              ArrowLeft: Brain.undo,
-              ArrowRight: Brain.redo,
-              Enter: Brain.startOver,
-              KeyW: Brain.playWeighted,
-              KeyA: Brain.toggleAutoreply,
-              KeyH: Brain.help,
-              Escape: Brain.home,
-            }[e.code])
-        )
-        .then((f) => f && f())
-    );
+    document.addEventListener("keydown", (e) => {
+      const shortcut = {
+        ArrowUp: Brain.playBest,
+        ArrowDown: Brain.newGame,
+        ArrowLeft: Brain.undo,
+        ArrowRight: Brain.redo,
+        Enter: Brain.startOver,
+        KeyW: Brain.playWeighted,
+        KeyA: Brain.toggleAutoreply,
+        KeyH: Brain.help,
+        Escape: Brain.home,
+      }[e.code];
+
+      if (!shortcut) return;
+
+      if (e.code.startsWith("Arrow")) {
+        e.preventDefault();
+      }
+
+      Promise.resolve().then(() => shortcut());
+    });
 
     Brain.setInitialState();
   });

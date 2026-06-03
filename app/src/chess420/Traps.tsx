@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Brain from "./Brain";
 import lichessF, { type LiMove } from "./Lichess";
 import settings from "./Settings";
@@ -13,7 +13,23 @@ type TrapType = {
 
 export default function Traps() {
   const [traps, updateTraps] = useState<TrapType[]>([]);
-  fetchTraps(updateTraps);
+  const fen = Brain.getState().fen;
+
+  useEffect(() => {
+    let isActive = true;
+    updateTraps([]);
+    fetchTraps((nextTraps) => {
+      if (isActive) {
+        updateTraps(nextTraps);
+      }
+    }, fen);
+
+    return () => {
+      isActive = false;
+      key = -1;
+    };
+  }, [fen]);
+
   return <SubTraps traps={traps} />;
 }
 
@@ -78,10 +94,14 @@ function getOpening(trap: TrapType): string {
 }
 
 var key = -1;
+var nextKey = 0;
 
-export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
+export function fetchTraps(
+  updateTraps: (traps: TrapType[]) => void,
+  fen = Brain.getState().fen
+) {
   const numToKeep = 25;
-  const now = Date.now();
+  const now = ++nextKey;
   key = now;
   const trapsCache: TrapType[] = [];
   return helper(
@@ -96,9 +116,9 @@ export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
         }
       });
       trapsCache.sort((a, b) => b.score - a.score).splice(numToKeep);
-      updateTraps(trapsCache);
+      updateTraps(trapsCache.slice());
     },
-    Brain.getState().fen,
+    fen,
     1,
     []
   ).then(
@@ -108,13 +128,10 @@ export function fetchTraps(updateTraps: (traps: TrapType[]) => void) {
   );
 }
 
-function getTrapScore(ratio: number, m: LiMove, moves: LiMove[]): number {
-  const best = moves.sort((a, b) => b.score - a.score)[0];
-  return [
-    Math.pow(m.prob * ratio, 0.2),
-    Math.pow(Brain.getState().orientationIsWhite ? best.ww : 1 - best.ww, 0.2),
-    Math.pow(2 * (Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww), 2),
-  ].reduce((a, b) => a * b, 1);
+function getTrapScore(ratio: number, m: LiMove): number {
+  const lineProbability = ratio * m.prob;
+  const winPercentage = Brain.getState().orientationIsWhite ? m.ww : 1 - m.ww;
+  return Math.pow(lineProbability, 0.5) * Math.pow(winPercentage, 2);
 }
 
 function helper(
@@ -149,7 +166,7 @@ function helper(
           .filter((m) => m.total >= 100)
           .map((m) =>
             Promise.resolve()
-              .then(() => getTrapScore(ratio, m, moves))
+              .then(() => getTrapScore(ratio, m))
               .then((score) => ({
                 ratio,
                 fen,

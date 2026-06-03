@@ -35,6 +35,23 @@ export const stats = {
   failure: 0,
 };
 
+const statsListeners = new Set<() => void>();
+
+export function subscribeToLichessStats(listener: () => void) {
+  statsListeners.add(listener);
+  return () => statsListeners.delete(listener);
+}
+
+function recordLichessRequest() {
+  stats.requests++;
+  statsListeners.forEach((listener) => listener());
+}
+
+function fetchLichess(url: string, init?: RequestInit): Promise<Response> {
+  recordLichessRequest();
+  return fetch(url, init);
+}
+
 export var latestGameCache: {
   sans: string[];
   orientationIsWhite: boolean;
@@ -49,7 +66,7 @@ const LICHESS_PERSONAL_ACCESS_TOKEN = import.meta.env
 console.log({ LICHESS_PERSONAL_ACCESS_TOKEN });
 
 export function getLatestGame(username: string) {
-  return fetch(`https://lichess.org/api/user/${username}/current-game`)
+  return fetchLichess(`https://lichess.org/api/user/${username}/current-game`)
     .then((resp) => resp.text())
     .then((text) =>
       Promise.resolve()
@@ -74,7 +91,7 @@ export function getLatestGame(username: string) {
 }
 
 export function getGameById(gameId: string) {
-  return fetch(`https://lichess.org/game/export/${gameId}`)
+  return fetchLichess(`https://lichess.org/game/export/${gameId}`)
     .then((resp) => resp.text())
     .then((text) =>
       Promise.resolve()
@@ -219,7 +236,6 @@ function helper(url: string, attempt: number): Promise<LiMove[]> {
     });
   }
 
-  stats.requests++;
   return Promise.resolve()
     .then(() => console.log("fetching", attempt, url))
     .then(() => abortableFetch(url))
@@ -322,7 +338,7 @@ async function abortableFetch(url: string): Promise<Response> {
   if (LICHESS_PERSONAL_ACCESS_TOKEN) {
     headers.Authorization = `Bearer ${LICHESS_PERSONAL_ACCESS_TOKEN}`;
   }
-  const response = await fetch(url, {
+  const response = await fetchLichess(url, {
     signal,
     headers,
   });
