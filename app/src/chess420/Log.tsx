@@ -29,11 +29,12 @@ const titles = [
     width: 3.5,
   },
   {
-    f: (move: LiMove) => `s/${move.score > 420 ? 420 : move.score.toFixed(2)}`,
+    f: (move: LiMove, moves: LiMove[]) =>
+      `s${getScoreRank(move, moves)}/${formatScore(move.score)}`,
     text: "score",
     title:
       "ranks a move compared to other options\nbased on how often it is played and how often it wins\na score above 100 means that it's the best move",
-    width: 5.5,
+    width: 7.5,
   },
   {
     f: (move: LiMove) => `ww/${(move.ww * 100).toFixed(1)}%`,
@@ -495,6 +496,16 @@ function getProbRank(move: LiMove, moves: LiMove[]) {
   const sorted = moves.slice().sort((a, b) => b.prob - a.prob);
   const rank = sorted.findIndex((m) => m.san === move.san);
   return rank === -1 ? sorted.length : rank + 1;
+}
+
+function getScoreRank(move: LiMove, moves: LiMove[]) {
+  const sorted = moves.slice().sort((a, b) => b.score - a.score);
+  const rank = sorted.findIndex((m) => m.san === move.san);
+  return rank === -1 ? sorted.length : rank + 1;
+}
+
+function formatScore(score: number) {
+  return score > 420 ? 420 : score.toFixed(2);
 }
 
 function getScoreBackground(score?: number) {
