@@ -30,7 +30,7 @@
       "outgoingEdgeIds": [
         "n0-0-n3"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 7
     },
     {
       "id": "n1",
@@ -38,12 +38,23 @@
       "fen": "8/4k3/4B3/4K3/8/2N5/8/8 w - - 0 1",
       "boardFen": "8/4k3/4B3/4K3/8/2N5/8/8",
       "turn": "w",
-      "x": 242,
+      "x": 484,
       "y": 0,
       "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/8/2N5/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/2N5/8/8_w_-_-_0_1",
-      "boardArrows": [],
-      "outgoingEdgeIds": []
+      "boardArrows": [
+        {
+          "id": "n1-0-n4",
+          "san": "Nd5+",
+          "from": "c3",
+          "to": "d5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n1-0-n4"
+      ],
+      "movesToSuccess": 11
     },
     {
       "id": "n2",
@@ -51,23 +62,23 @@
       "fen": "8/4k3/4B3/4K3/8/1N6/8/8 w - - 0 1",
       "boardFen": "8/4k3/4B3/4K3/8/1N6/8/8",
       "turn": "w",
-      "x": 484,
+      "x": 3146,
       "y": 0,
       "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/8/1N6/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/1N6/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n2-0-n4",
-          "san": "Nc5",
+          "id": "n2-0-n5",
+          "san": "Nd4",
           "from": "b3",
-          "to": "c5",
+          "to": "d4",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n2-0-n4"
+        "n2-0-n5"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 8
     },
     {
       "id": "n3",
@@ -81,14 +92,14 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/2N1B3/4K3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n3-0-n5",
+          "id": "n3-0-n6",
           "san": "Ke8",
           "from": "e7",
           "to": "e8",
           "color": "black"
         },
         {
-          "id": "n3-1-n6",
+          "id": "n3-1-n7",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
@@ -96,37 +107,37 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n3-0-n5",
-        "n3-1-n6"
+        "n3-0-n6",
+        "n3-1-n7"
       ]
     },
     {
       "id": "n4",
-      "key": "8/4k3/4B3/2N1K3/8/8/8/8 b",
-      "fen": "8/4k3/4B3/2N1K3/8/8/8/8 b - - 0 1",
-      "boardFen": "8/4k3/4B3/2N1K3/8/8/8/8",
+      "key": "8/4k3/4B3/3NK3/8/8/8/8 b",
+      "fen": "8/4k3/4B3/3NK3/8/8/8/8 b - - 0 1",
+      "boardFen": "8/4k3/4B3/3NK3/8/8/8/8",
       "turn": "b",
       "x": 484,
       "y": 214,
-      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/2N1K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/2N1K3/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/3NK3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/3NK3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n4-0-n7",
+          "id": "n4-1-n9",
+          "san": "Ke8",
+          "from": "e7",
+          "to": "e8",
+          "color": "black"
+        },
+        {
+          "id": "n4-0-n8",
           "san": "Kd8",
           "from": "e7",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n4-1-n8",
-          "san": "Ke8",
-          "from": "e7",
-          "to": "e8",
-          "color": "black"
-        },
-        {
-          "id": "n4-2-n9",
+          "id": "n4-2-n10",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
@@ -134,13 +145,52 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n4-0-n7",
-        "n4-1-n8",
-        "n4-2-n9"
+        "n4-1-n9",
+        "n4-0-n8",
+        "n4-2-n10"
       ]
     },
     {
       "id": "n5",
+      "key": "8/4k3/4B3/4K3/3N4/8/8/8 b",
+      "fen": "8/4k3/4B3/4K3/3N4/8/8/8 b - - 0 1",
+      "boardFen": "8/4k3/4B3/4K3/3N4/8/8/8",
+      "turn": "b",
+      "x": 3146,
+      "y": 214,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/3N4/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n5-2-n13",
+          "san": "Kf8",
+          "from": "e7",
+          "to": "f8",
+          "color": "black"
+        },
+        {
+          "id": "n5-0-n11",
+          "san": "Kd8",
+          "from": "e7",
+          "to": "d8",
+          "color": "black"
+        },
+        {
+          "id": "n5-1-n12",
+          "san": "Ke8",
+          "from": "e7",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n5-2-n13",
+        "n5-0-n11",
+        "n5-1-n12"
+      ]
+    },
+    {
+      "id": "n6",
       "key": "4k3/8/2N1B3/4K3/8/8/8/8 w",
       "fen": "4k3/8/2N1B3/4K3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2N1B3/4K3/8/8/8/8",
@@ -151,7 +201,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/4K3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n5-0-n10",
+          "id": "n6-0-n14",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -159,12 +209,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n5-0-n10"
+        "n6-0-n14"
       ],
       "movesToSuccess": 3
     },
     {
-      "id": "n6",
+      "id": "n7",
       "key": "5k2/8/2N1B3/4K3/8/8/8/8 w",
       "fen": "5k2/8/2N1B3/4K3/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/2N1B3/4K3/8/8/8/8",
@@ -175,7 +225,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B3/4K3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n6-0-n11",
+          "id": "n7-0-n15",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -183,23 +233,23 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n6-0-n11"
+        "n7-0-n15"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 6
     },
     {
-      "id": "n7",
-      "key": "3k4/8/4B3/2N1K3/8/8/8/8 w",
-      "fen": "3k4/8/4B3/2N1K3/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/8/4B3/2N1K3/8/8/8/8",
+      "id": "n8",
+      "key": "3k4/8/4B3/3NK3/8/8/8/8 w",
+      "fen": "3k4/8/4B3/3NK3/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B3/3NK3/8/8/8/8",
       "turn": "w",
-      "x": 484,
+      "x": 1694,
       "y": 496,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/2N1K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/2N1K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/3NK3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n7-0-n12",
+          "id": "n8-0-n16",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -207,47 +257,119 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n7-0-n12"
+        "n8-0-n16"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 8
     },
     {
-      "id": "n8",
-      "key": "4k3/8/4B3/2N1K3/8/8/8/8 w",
-      "fen": "4k3/8/4B3/2N1K3/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/8/4B3/2N1K3/8/8/8/8",
+      "id": "n9",
+      "key": "4k3/8/4B3/3NK3/8/8/8/8 w",
+      "fen": "4k3/8/4B3/3NK3/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B3/3NK3/8/8/8/8",
       "turn": "w",
-      "x": 726,
+      "x": 484,
       "y": 496,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/2N1K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/2N1K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/3NK3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n8-0-n13",
-          "san": "Nd7",
-          "from": "c5",
-          "to": "d7",
+          "id": "n9-0-n17",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n8-0-n13"
+        "n9-0-n17"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 6
     },
     {
-      "id": "n9",
-      "key": "5k2/8/4B3/2N1K3/8/8/8/8 w",
-      "fen": "5k2/8/4B3/2N1K3/8/8/8/8 w - - 0 1",
-      "boardFen": "5k2/8/4B3/2N1K3/8/8/8/8",
+      "id": "n10",
+      "key": "5k2/8/4B3/3NK3/8/8/8/8 w",
+      "fen": "5k2/8/4B3/3NK3/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/4B3/3NK3/8/8/8/8",
       "turn": "w",
-      "x": 1694,
+      "x": 2178,
       "y": 496,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/2N1K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/2N1K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/3NK3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n9-0-n14",
+          "id": "n10-0-n18",
+          "san": "Nf4",
+          "from": "d5",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n10-0-n18"
+      ],
+      "movesToSuccess": 10
+    },
+    {
+      "id": "n11",
+      "key": "3k4/8/4B3/4K3/3N4/8/8/8 w",
+      "fen": "3k4/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B3/4K3/3N4/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/4K3/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n11-0-n19",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n11-0-n19"
+      ],
+      "movesToSuccess": 7
+    },
+    {
+      "id": "n12",
+      "key": "4k3/8/4B3/4K3/3N4/8/8/8 w",
+      "fen": "4k3/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B3/4K3/3N4/8/8/8",
+      "turn": "w",
+      "x": 4114,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/4K3/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n12-0-n20",
+          "san": "Nc6",
+          "from": "d4",
+          "to": "c6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n12-0-n20"
+      ],
+      "movesToSuccess": 7
+    },
+    {
+      "id": "n13",
+      "key": "5k2/8/4B3/4K3/3N4/8/8/8 w",
+      "fen": "5k2/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/4B3/4K3/3N4/8/8/8",
+      "turn": "w",
+      "x": 3146,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/4K3/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n13-0-n21",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -255,12 +377,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n9-0-n14"
+        "n13-0-n21"
       ],
       "movesToSuccess": 4
     },
     {
-      "id": "n10",
+      "id": "n14",
       "key": "4k3/8/2N1BK2/8/8/8/8/8 b",
       "fen": "4k3/8/2N1BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/2N1BK2/8/8/8/8/8",
@@ -271,7 +393,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n10-0-n15",
+          "id": "n14-0-n22",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -279,11 +401,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n10-0-n15"
+        "n14-0-n22"
       ]
     },
     {
-      "id": "n11",
+      "id": "n15",
       "key": "5k2/8/2N1BK2/8/8/8/8/8 b",
       "fen": "5k2/8/2N1BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/2N1BK2/8/8/8/8/8",
@@ -294,7 +416,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n11-0-n16",
+          "id": "n15-0-n23",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -302,22 +424,22 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n11-0-n16"
+        "n15-0-n23"
       ]
     },
     {
-      "id": "n12",
-      "key": "3k4/8/3KB3/2N5/8/8/8/8 b",
-      "fen": "3k4/8/3KB3/2N5/8/8/8/8 b - - 0 1",
-      "boardFen": "3k4/8/3KB3/2N5/8/8/8/8",
+      "id": "n16",
+      "key": "3k4/8/3KB3/3N4/8/8/8/8 b",
+      "fen": "3k4/8/3KB3/3N4/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/3N4/8/8/8/8",
       "turn": "b",
-      "x": 484,
+      "x": 1694,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/2N5/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/3N4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n12-0-n17",
+          "id": "n16-0-n24",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -325,53 +447,138 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n12-0-n17"
+        "n16-0-n24"
       ]
     },
     {
-      "id": "n13",
-      "key": "4k3/3N4/4B3/4K3/8/8/8/8 b",
-      "fen": "4k3/3N4/4B3/4K3/8/8/8/8 b - - 0 1",
-      "boardFen": "4k3/3N4/4B3/4K3/8/8/8/8",
+      "id": "n17",
+      "key": "4k3/8/3KB3/3N4/8/8/8/8 b",
+      "fen": "4k3/8/3KB3/3N4/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB3/3N4/8/8/8/8",
       "turn": "b",
-      "x": 726,
+      "x": 484,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/3N4/4B3/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/4B3/4K3/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/3N4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n13-1-n19",
+          "id": "n17-1-n26",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n13-0-n18",
-          "san": "Ke7",
+          "id": "n17-0-n25",
+          "san": "Kf8",
           "from": "e8",
-          "to": "e7",
+          "to": "f8",
           "color": "black"
         }
       ],
       "outgoingEdgeIds": [
-        "n13-1-n19",
-        "n13-0-n18"
+        "n17-1-n26",
+        "n17-0-n25"
       ]
     },
     {
-      "id": "n14",
-      "key": "5k2/8/4BK2/2N5/8/8/8/8 b",
-      "fen": "5k2/8/4BK2/2N5/8/8/8/8 b - - 0 1",
-      "boardFen": "5k2/8/4BK2/2N5/8/8/8/8",
+      "id": "n18",
+      "key": "5k2/8/4B3/4K3/5N2/8/8/8 b",
+      "fen": "5k2/8/4B3/4K3/5N2/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/4B3/4K3/5N2/8/8/8",
       "turn": "b",
-      "x": 1694,
+      "x": 2178,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4BK2/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/2N5/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/4K3/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K3/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n14-0-n20",
+          "id": "n18-1-n28",
+          "san": "Ke7",
+          "from": "f8",
+          "to": "e7",
+          "color": "black"
+        },
+        {
+          "id": "n18-2-n29",
+          "san": "Ke8",
+          "from": "f8",
+          "to": "e8",
+          "color": "black"
+        },
+        {
+          "id": "n18-0-n27",
+          "san": "Kg7",
+          "from": "f8",
+          "to": "g7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n18-1-n28",
+        "n18-2-n29",
+        "n18-0-n27"
+      ]
+    },
+    {
+      "id": "n19",
+      "key": "3k4/8/3KB3/8/3N4/8/8/8 b",
+      "fen": "3k4/8/3KB3/8/3N4/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/3N4/8/8/8",
+      "turn": "b",
+      "x": 3872,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/3N4/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n19-0-n30",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n19-0-n30"
+      ]
+    },
+    {
+      "id": "n20",
+      "key": "4k3/8/2N1B3/4K3/8/8/8/8 b",
+      "fen": "4k3/8/2N1B3/4K3/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/2N1B3/4K3/8/8/8/8",
+      "turn": "b",
+      "x": 4114,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/2N1B3/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/4K3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n20-0-n7",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n20-0-n7"
+      ]
+    },
+    {
+      "id": "n21",
+      "key": "5k2/8/4BK2/8/3N4/8/8/8 b",
+      "fen": "5k2/8/4BK2/8/3N4/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/4BK2/8/3N4/8/8/8",
+      "turn": "b",
+      "x": 3146,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4BK2/8/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/8/3N4/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n21-0-n31",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -379,11 +586,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n14-0-n20"
+        "n21-0-n31"
       ]
     },
     {
-      "id": "n15",
+      "id": "n22",
       "key": "5k2/8/2N1BK2/8/8/8/8/8 w",
       "fen": "5k2/8/2N1BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/2N1BK2/8/8/8/8/8",
@@ -394,7 +601,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1BK2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n15-0-n21",
+          "id": "n22-0-n32",
           "san": "Ne5",
           "from": "c6",
           "to": "e5",
@@ -402,12 +609,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n15-0-n21"
+        "n22-0-n32"
       ],
       "movesToSuccess": 2
     },
     {
-      "id": "n16",
+      "id": "n23",
       "key": "4k3/8/2N1BK2/8/8/8/8/8 w",
       "fen": "4k3/8/2N1BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2N1BK2/8/8/8/8/8",
@@ -418,116 +625,212 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1BK2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n16-0-n22",
-          "san": "Bf5",
-          "from": "e6",
+          "id": "n23-0-n33",
+          "san": "Kf5",
+          "from": "f6",
           "to": "f5",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n16-0-n22"
+        "n23-0-n33"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 5
     },
     {
-      "id": "n17",
-      "key": "4k3/8/3KB3/2N5/8/8/8/8 w",
-      "fen": "4k3/8/3KB3/2N5/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/8/3KB3/2N5/8/8/8/8",
+      "id": "n24",
+      "key": "4k3/8/3KB3/3N4/8/8/8/8 w",
+      "fen": "4k3/8/3KB3/3N4/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB3/3N4/8/8/8/8",
       "turn": "w",
-      "x": 484,
+      "x": 1694,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/2N5/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n17-0-n23",
-          "san": "Nd7",
-          "from": "c5",
-          "to": "d7",
+          "id": "n24-0-n34",
+          "san": "Nf4",
+          "from": "d5",
+          "to": "f4",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n17-0-n23"
+        "n24-0-n34"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 7
     },
     {
-      "id": "n18",
-      "key": "8/3Nk3/4B3/4K3/8/8/8/8 w",
-      "fen": "8/3Nk3/4B3/4K3/8/8/8/8 w - - 0 1",
-      "boardFen": "8/3Nk3/4B3/4K3/8/8/8/8",
-      "turn": "w",
-      "x": 1210,
-      "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/8/3Nk3/4B3/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3Nk3/4B3/4K3/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n18-0-n24",
-          "san": "Kd5",
-          "from": "e5",
-          "to": "d5",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n18-0-n24"
-      ],
-      "movesToSuccess": 3
-    },
-    {
-      "id": "n19",
-      "key": "3k4/3N4/4B3/4K3/8/8/8/8 w",
-      "fen": "3k4/3N4/4B3/4K3/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/3N4/4B3/4K3/8/8/8/8",
+      "id": "n25",
+      "key": "5k2/8/3KB3/3N4/8/8/8/8 w",
+      "fen": "5k2/8/3KB3/3N4/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/3KB3/3N4/8/8/8/8",
       "turn": "w",
       "x": 726,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/4B3/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4B3/4K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n19-0-n25",
-          "san": "Kd6",
-          "from": "e5",
-          "to": "d6",
+          "id": "n25-0-n35",
+          "san": "Nf4",
+          "from": "d5",
+          "to": "f4",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n19-0-n25"
+        "n25-0-n35"
+      ],
+      "movesToSuccess": 5
+    },
+    {
+      "id": "n26",
+      "key": "3k4/8/3KB3/3N4/8/8/8/8 w",
+      "fen": "3k4/8/3KB3/3N4/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB3/3N4/8/8/8/8",
+      "turn": "w",
+      "x": 484,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n26-0-n36",
+          "san": "Nb6",
+          "from": "d5",
+          "to": "b6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n26-0-n36"
       ],
       "movesToSuccess": 2
     },
     {
-      "id": "n20",
-      "key": "4k3/8/4BK2/2N5/8/8/8/8 w",
-      "fen": "4k3/8/4BK2/2N5/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/8/4BK2/2N5/8/8/8/8",
+      "id": "n27",
+      "key": "8/6k1/4B3/4K3/5N2/8/8/8 w",
+      "fen": "8/6k1/4B3/4K3/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/6k1/4B3/4K3/5N2/8/8/8",
       "turn": "w",
-      "x": 1694,
+      "x": 2904,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4BK2/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/2N5/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B3/4K3/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n20-0-n26",
-          "san": "Nb7",
-          "from": "c5",
-          "to": "b7",
+          "id": "n27-0-n37",
+          "san": "Kf5",
+          "from": "e5",
+          "to": "f5",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n20-0-n26"
+        "n27-0-n37"
+      ],
+      "movesToSuccess": 9
+    },
+    {
+      "id": "n28",
+      "key": "8/4k3/4B3/4K3/5N2/8/8/8 w",
+      "fen": "8/4k3/4B3/4K3/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/4k3/4B3/4K3/5N2/8/8/8",
+      "turn": "w",
+      "x": 2178,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n28-0-n38",
+          "san": "Ng6+",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n28-0-n38"
+      ],
+      "movesToSuccess": 7
+    },
+    {
+      "id": "n29",
+      "key": "4k3/8/4B3/4K3/5N2/8/8/8 w",
+      "fen": "4k3/8/4B3/4K3/5N2/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B3/4K3/5N2/8/8/8",
+      "turn": "w",
+      "x": 2662,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/4K3/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n29-0-n39",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n29-0-n39"
+      ],
+      "movesToSuccess": 7
+    },
+    {
+      "id": "n30",
+      "key": "4k3/8/3KB3/8/3N4/8/8/8 w",
+      "fen": "4k3/8/3KB3/8/3N4/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB3/8/3N4/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/3N4/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n30-0-n40",
+          "san": "Ne2",
+          "from": "d4",
+          "to": "e2",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n30-0-n40"
+      ],
+      "movesToSuccess": 6
+    },
+    {
+      "id": "n31",
+      "key": "4k3/8/4BK2/8/3N4/8/8/8 w",
+      "fen": "4k3/8/4BK2/8/3N4/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4BK2/8/3N4/8/8/8",
+      "turn": "w",
+      "x": 3146,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4BK2/8/3N4/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/8/3N4/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n31-0-n14",
+          "san": "Nc6",
+          "from": "d4",
+          "to": "c6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n31-0-n14"
       ],
       "movesToSuccess": 3
     },
     {
-      "id": "n21",
+      "id": "n32",
       "key": "5k2/8/4BK2/4N3/8/8/8/8 b",
       "fen": "5k2/8/4BK2/4N3/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/4BK2/4N3/8/8/8/8",
@@ -538,7 +841,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/4N3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n21-0-n27",
+          "id": "n32-0-n41",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -546,107 +849,22 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n21-0-n27"
+        "n32-0-n41"
       ]
     },
     {
-      "id": "n23",
-      "key": "4k3/3N4/3KB3/8/8/8/8/8 b",
-      "fen": "4k3/3N4/3KB3/8/8/8/8/8 b - - 0 1",
-      "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
+      "id": "n33",
+      "key": "4k3/8/2N1B3/5K2/8/8/8/8 b",
+      "fen": "4k3/8/2N1B3/5K2/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/2N1B3/5K2/8/8/8/8",
       "turn": "b",
-      "x": 484,
+      "x": 242,
       "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/2N1B3/5K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/5K2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n23-0-n29",
-          "san": "Kd8",
-          "from": "e8",
-          "to": "d8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n23-0-n29"
-      ]
-    },
-    {
-      "id": "n24",
-      "key": "8/3Nk3/4B3/3K4/8/8/8/8 b",
-      "fen": "8/3Nk3/4B3/3K4/8/8/8/8 b - - 0 1",
-      "boardFen": "8/3Nk3/4B3/3K4/8/8/8/8",
-      "turn": "b",
-      "x": 1210,
-      "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/8/3Nk3/4B3/3K4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3Nk3/4B3/3K4/8/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n24-1-n31",
-          "san": "Ke8",
-          "from": "e7",
-          "to": "e8",
-          "color": "black"
-        },
-        {
-          "id": "n24-0-n30",
-          "san": "Kd8",
-          "from": "e7",
-          "to": "d8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n24-1-n31",
-        "n24-0-n30"
-      ]
-    },
-    {
-      "id": "n25",
-      "key": "3k4/3N4/3KB3/8/8/8/8/8 b",
-      "fen": "3k4/3N4/3KB3/8/8/8/8/8 b - - 0 1",
-      "boardFen": "3k4/3N4/3KB3/8/8/8/8/8",
-      "turn": "b",
-      "x": 726,
-      "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n25-1-n33",
-          "san": "Kc8",
-          "from": "d8",
-          "to": "c8",
-          "color": "black"
-        },
-        {
-          "id": "n25-0-n32",
-          "san": "Ke8",
-          "from": "d8",
-          "to": "e8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n25-1-n33",
-        "n25-0-n32"
-      ]
-    },
-    {
-      "id": "n26",
-      "key": "4k3/1N6/4BK2/8/8/8/8/8 b",
-      "fen": "4k3/1N6/4BK2/8/8/8/8/8 b - - 0 1",
-      "boardFen": "4k3/1N6/4BK2/8/8/8/8/8",
-      "turn": "b",
-      "x": 1694,
-      "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/1N6/4BK2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/1N6/4BK2/8/8/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n26-0-n34",
+          "id": "n33-0-n42",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -654,11 +872,228 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n26-0-n34"
+        "n33-0-n42"
       ]
     },
     {
-      "id": "n27",
+      "id": "n34",
+      "key": "4k3/8/3KB3/8/5N2/8/8/8 b",
+      "fen": "4k3/8/3KB3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 1694,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n34-0-n43",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
+          "color": "black"
+        },
+        {
+          "id": "n34-1-n44",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n34-0-n43",
+        "n34-1-n44"
+      ]
+    },
+    {
+      "id": "n35",
+      "key": "5k2/8/3KB3/8/5N2/8/8/8 b",
+      "fen": "5k2/8/3KB3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/3KB3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 726,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n35-1-n46",
+          "san": "Ke8",
+          "from": "f8",
+          "to": "e8",
+          "color": "black"
+        },
+        {
+          "id": "n35-0-n45",
+          "san": "Kg7",
+          "from": "f8",
+          "to": "g7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n35-1-n46",
+        "n35-0-n45"
+      ]
+    },
+    {
+      "id": "n36",
+      "key": "3k4/8/1N1KB3/8/8/8/8/8 b",
+      "fen": "3k4/8/1N1KB3/8/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/1N1KB3/8/8/8/8/8",
+      "turn": "b",
+      "x": 484,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/1N1KB3/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/1N1KB3/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n36-0-n47",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n36-0-n47"
+      ]
+    },
+    {
+      "id": "n37",
+      "key": "8/6k1/4B3/5K2/5N2/8/8/8 b",
+      "fen": "8/6k1/4B3/5K2/5N2/8/8/8 b - - 0 1",
+      "boardFen": "8/6k1/4B3/5K2/5N2/8/8/8",
+      "turn": "b",
+      "x": 2904,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B3/5K2/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/5K2/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n37-3-n51",
+          "san": "Kh6",
+          "from": "g7",
+          "to": "h6",
+          "color": "black"
+        },
+        {
+          "id": "n37-1-n49",
+          "san": "Kh8",
+          "from": "g7",
+          "to": "h8",
+          "color": "black"
+        },
+        {
+          "id": "n37-2-n50",
+          "san": "Kh7",
+          "from": "g7",
+          "to": "h7",
+          "color": "black"
+        },
+        {
+          "id": "n37-0-n48",
+          "san": "Kf8",
+          "from": "g7",
+          "to": "f8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n37-3-n51",
+        "n37-1-n49",
+        "n37-2-n50",
+        "n37-0-n48"
+      ]
+    },
+    {
+      "id": "n38",
+      "key": "8/4k3/4B1N1/4K3/8/8/8/8 b",
+      "fen": "8/4k3/4B1N1/4K3/8/8/8/8 b - - 0 1",
+      "boardFen": "8/4k3/4B1N1/4K3/8/8/8/8",
+      "turn": "b",
+      "x": 2178,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B1N1/4K3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n38-1-n53",
+          "san": "Ke8",
+          "from": "e7",
+          "to": "e8",
+          "color": "black"
+        },
+        {
+          "id": "n38-0-n52",
+          "san": "Kd8",
+          "from": "e7",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n38-1-n53",
+        "n38-0-n52"
+      ]
+    },
+    {
+      "id": "n39",
+      "key": "4k3/8/4B1N1/4K3/8/8/8/8 b",
+      "fen": "4k3/8/4B1N1/4K3/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/4B1N1/4K3/8/8/8/8",
+      "turn": "b",
+      "x": 2662,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/4K3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n39-0-n52",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n39-0-n52"
+      ]
+    },
+    {
+      "id": "n40",
+      "key": "4k3/8/3KB3/8/8/8/4N3/8 b",
+      "fen": "4k3/8/3KB3/8/8/8/4N3/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB3/8/8/8/4N3/8",
+      "turn": "b",
+      "x": 3872,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/8/8/4N3/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/8/8/4N3/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n40-1-n55",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        },
+        {
+          "id": "n40-0-n54",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n40-1-n55",
+        "n40-0-n54"
+      ]
+    },
+    {
+      "id": "n41",
       "key": "4k3/8/4BK2/4N3/8/8/8/8 w",
       "fen": "4k3/8/4BK2/4N3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4BK2/4N3/8/8/8/8",
@@ -669,7 +1104,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n27-0-n35",
+          "id": "n41-0-n56",
           "san": "Nf7",
           "from": "e5",
           "to": "f7",
@@ -677,148 +1112,348 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n27-0-n35"
+        "n41-0-n56"
       ],
       "movesToSuccess": 1
     },
     {
-      "id": "n29",
-      "key": "3k4/3N4/3KB3/8/8/8/8/8 w",
-      "fen": "3k4/3N4/3KB3/8/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/3N4/3KB3/8/8/8/8/8",
+      "id": "n42",
+      "key": "5k2/8/2N1B3/5K2/8/8/8/8 w",
+      "fen": "5k2/8/2N1B3/5K2/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/2N1B3/5K2/8/8/8/8",
       "turn": "w",
-      "x": 484,
+      "x": 242,
       "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [],
-      "outgoingEdgeIds": [],
-      "terminal": "success",
-      "terminalReason": "prepared",
-      "movesToSuccess": 0
-    },
-    {
-      "id": "n30",
-      "key": "3k4/3N4/4B3/3K4/8/8/8/8 w",
-      "fen": "3k4/3N4/4B3/3K4/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/3N4/4B3/3K4/8/8/8/8",
-      "turn": "w",
-      "x": 1452,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/4B3/3K4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4B3/3K4/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/2N1B3/5K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B3/5K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n30-0-n25",
-          "san": "Kd6",
-          "from": "d5",
-          "to": "d6",
+          "id": "n42-0-n57",
+          "san": "Kg6",
+          "from": "f5",
+          "to": "g6",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n30-0-n25"
+        "n42-0-n57"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 4
     },
     {
-      "id": "n31",
-      "key": "4k3/3N4/4B3/3K4/8/8/8/8 w",
-      "fen": "4k3/3N4/4B3/3K4/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/3N4/4B3/3K4/8/8/8/8",
-      "turn": "w",
-      "x": 1210,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/3N4/4B3/3K4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/4B3/3K4/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n31-0-n23",
-          "san": "Kd6",
-          "from": "d5",
-          "to": "d6",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n31-0-n23"
-      ],
-      "movesToSuccess": 1
-    },
-    {
-      "id": "n32",
-      "key": "4k3/3N4/3KB3/8/8/8/8/8 w",
-      "fen": "4k3/3N4/3KB3/8/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
-      "turn": "w",
-      "x": 968,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n32-0-n37",
-          "san": "Bg8",
-          "from": "e6",
-          "to": "g8",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n32-0-n37"
-      ],
-      "movesToSuccess": 1
-    },
-    {
-      "id": "n33",
-      "key": "2k5/3N4/3KB3/8/8/8/8/8 w",
-      "fen": "2k5/3N4/3KB3/8/8/8/8/8 w - - 0 1",
-      "boardFen": "2k5/3N4/3KB3/8/8/8/8/8",
-      "turn": "w",
-      "x": 726,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/2k5/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n33-0-n38",
-          "san": "Bd5",
-          "from": "e6",
-          "to": "d5",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n33-0-n38"
-      ],
-      "movesToSuccess": 1
-    },
-    {
-      "id": "n34",
-      "key": "5k2/1N6/4BK2/8/8/8/8/8 w",
-      "fen": "5k2/1N6/4BK2/8/8/8/8/8 w - - 0 1",
-      "boardFen": "5k2/1N6/4BK2/8/8/8/8/8",
+      "id": "n43",
+      "key": "5k2/8/3KB3/8/5N2/8/8/8 w",
+      "fen": "5k2/8/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/3KB3/8/5N2/8/8/8",
       "turn": "w",
       "x": 1694,
       "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/1N6/4BK2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/1N6/4BK2/8/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n34-0-n39",
-          "san": "Nd8",
-          "from": "b7",
-          "to": "d8",
+          "id": "n43-0-n58",
+          "san": "Kd7",
+          "from": "d6",
+          "to": "d7",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n34-0-n39"
+        "n43-0-n58"
+      ],
+      "movesToSuccess": 5
+    },
+    {
+      "id": "n44",
+      "key": "3k4/8/3KB3/8/5N2/8/8/8 w",
+      "fen": "3k4/8/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1936,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n44-0-n59",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n44-0-n59"
+      ],
+      "movesToSuccess": 6
+    },
+    {
+      "id": "n45",
+      "key": "8/6k1/3KB3/8/5N2/8/8/8 w",
+      "fen": "8/6k1/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/6k1/3KB3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 968,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/3KB3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n45-0-n60",
+          "san": "Ke7",
+          "from": "d6",
+          "to": "e7",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n45-0-n60"
+      ],
+      "movesToSuccess": 4
+    },
+    {
+      "id": "n46",
+      "key": "4k3/8/3KB3/8/5N2/8/8/8 w",
+      "fen": "4k3/8/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 726,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n46-0-n61",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n46-0-n61"
+      ],
+      "movesToSuccess": 3
+    },
+    {
+      "id": "n47",
+      "key": "4k3/8/1N1KB3/8/8/8/8/8 w",
+      "fen": "4k3/8/1N1KB3/8/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/1N1KB3/8/8/8/8/8",
+      "turn": "w",
+      "x": 484,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/1N1KB3/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/1N1KB3/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n47-0-n62",
+          "san": "Nd7",
+          "from": "b6",
+          "to": "d7",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n47-0-n62"
+      ],
+      "movesToSuccess": 1
+    },
+    {
+      "id": "n48",
+      "key": "5k2/8/4B3/5K2/5N2/8/8/8 w",
+      "fen": "5k2/8/4B3/5K2/5N2/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/4B3/5K2/5N2/8/8/8",
+      "turn": "w",
+      "x": 3630,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/5K2/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n48-0-n63",
+          "san": "Ng6+",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n48-0-n63"
+      ],
+      "movesToSuccess": 8
+    },
+    {
+      "id": "n49",
+      "key": "7k/8/4B3/5K2/5N2/8/8/8 w",
+      "fen": "7k/8/4B3/5K2/5N2/8/8/8 w - - 0 1",
+      "boardFen": "7k/8/4B3/5K2/5N2/8/8/8",
+      "turn": "w",
+      "x": 3146,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/7k/8/4B3/5K2/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//7k/8/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n49-0-n64",
+          "san": "Kf6",
+          "from": "f5",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n49-0-n64"
       ],
       "movesToSuccess": 2
     },
     {
-      "id": "n35",
+      "id": "n50",
+      "key": "8/7k/4B3/5K2/5N2/8/8/8 w",
+      "fen": "8/7k/4B3/5K2/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/7k/4B3/5K2/5N2/8/8/8",
+      "turn": "w",
+      "x": 3388,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/8/7k/4B3/5K2/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/7k/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n50-0-n65",
+          "san": "Kg5",
+          "from": "f5",
+          "to": "g5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n50-0-n65"
+      ],
+      "movesToSuccess": 3
+    },
+    {
+      "id": "n51",
+      "key": "8/8/4B2k/5K2/5N2/8/8/8 w",
+      "fen": "8/8/4B2k/5K2/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/8/4B2k/5K2/5N2/8/8/8",
+      "turn": "w",
+      "x": 2904,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/8/8/4B2k/5K2/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/8/4B2k/5K2/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n51-0-n66",
+          "san": "Kf6",
+          "from": "f5",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n51-0-n66"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n52",
+      "key": "3k4/8/4B1N1/4K3/8/8/8/8 w",
+      "fen": "3k4/8/4B1N1/4K3/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B1N1/4K3/8/8/8/8",
+      "turn": "w",
+      "x": 2420,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B1N1/4K3/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n52-0-n59",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n52-0-n59"
+      ],
+      "movesToSuccess": 6
+    },
+    {
+      "id": "n53",
+      "key": "4k3/8/4B1N1/4K3/8/8/8/8 w",
+      "fen": "4k3/8/4B1N1/4K3/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B1N1/4K3/8/8/8/8",
+      "turn": "w",
+      "x": 2178,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/4K3/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n53-0-n61",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n53-0-n61"
+      ],
+      "movesToSuccess": 3
+    },
+    {
+      "id": "n54",
+      "key": "5k2/8/3KB3/8/8/8/4N3/8 w",
+      "fen": "5k2/8/3KB3/8/8/8/4N3/8 w - - 0 1",
+      "boardFen": "5k2/8/3KB3/8/8/8/4N3/8",
+      "turn": "w",
+      "x": 4114,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/8/8/4N3/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/8/8/4N3/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n54-0-n35",
+          "san": "Nf4",
+          "from": "e2",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n54-0-n35"
+      ],
+      "movesToSuccess": 5
+    },
+    {
+      "id": "n55",
+      "key": "3k4/8/3KB3/8/8/8/4N3/8 w",
+      "fen": "3k4/8/3KB3/8/8/8/4N3/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/8/8/4N3/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/8/8/4N3/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/8/8/4N3/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n55-0-n67",
+          "san": "Nf4",
+          "from": "e2",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n55-0-n67"
+      ],
+      "movesToSuccess": 4
+    },
+    {
+      "id": "n56",
       "key": "4k3/5N2/4BK2/8/8/8/8/8 b",
       "fen": "4k3/5N2/4BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/5N2/4BK2/8/8/8/8/8",
@@ -829,7 +1464,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/5N2/4BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n35-0-n40",
+          "id": "n56-0-n68",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -837,68 +1472,22 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n35-0-n40"
+        "n56-0-n68"
       ]
     },
     {
-      "id": "n37",
-      "key": "4k1B1/3N4/3K4/8/8/8/8/8 b",
-      "fen": "4k1B1/3N4/3K4/8/8/8/8/8 b - - 0 1",
-      "boardFen": "4k1B1/3N4/3K4/8/8/8/8/8",
+      "id": "n57",
+      "key": "5k2/8/2N1B1K1/8/8/8/8/8 b",
+      "fen": "5k2/8/2N1B1K1/8/8/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/2N1B1K1/8/8/8/8/8",
       "turn": "b",
-      "x": 968,
+      "x": 242,
       "y": 1702,
-      "imageUrl": "http://www.fen-to-image.com/image/4k1B1/3N4/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k1B1/3N4/3K4/8/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/2N1B1K1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B1K1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n37-0-n43",
-          "san": "Kd8",
-          "from": "e8",
-          "to": "d8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n37-0-n43"
-      ]
-    },
-    {
-      "id": "n38",
-      "key": "2k5/3N4/3K4/3B4/8/8/8/8 b",
-      "fen": "2k5/3N4/3K4/3B4/8/8/8/8 b - - 0 1",
-      "boardFen": "2k5/3N4/3K4/3B4/8/8/8/8",
-      "turn": "b",
-      "x": 726,
-      "y": 1702,
-      "imageUrl": "http://www.fen-to-image.com/image/2k5/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n38-0-n44",
-          "san": "Kd8",
-          "from": "c8",
-          "to": "d8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n38-0-n44"
-      ]
-    },
-    {
-      "id": "n39",
-      "key": "3N1k2/8/4BK2/8/8/8/8/8 b",
-      "fen": "3N1k2/8/4BK2/8/8/8/8/8 b - - 0 1",
-      "boardFen": "3N1k2/8/4BK2/8/8/8/8/8",
-      "turn": "b",
-      "x": 1694,
-      "y": 1702,
-      "imageUrl": "http://www.fen-to-image.com/image/3N1k2/8/4BK2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3N1k2/8/4BK2/8/8/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n39-0-n45",
+          "id": "n57-0-n69",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -906,17 +1495,279 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n39-0-n45"
+        "n57-0-n69"
       ]
     },
     {
-      "id": "n40",
+      "id": "n58",
+      "key": "5k2/3K4/4B3/8/5N2/8/8/8 b",
+      "fen": "5k2/3K4/4B3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "5k2/3K4/4B3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 1694,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/3K4/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/3K4/4B3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n58-0-n70",
+          "san": "Kg7",
+          "from": "f8",
+          "to": "g7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n58-0-n70"
+      ]
+    },
+    {
+      "id": "n59",
+      "key": "3k4/8/3KB1N1/8/8/8/8/8 b",
+      "fen": "3k4/8/3KB1N1/8/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB1N1/8/8/8/8/8",
+      "turn": "b",
+      "x": 1936,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB1N1/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n59-0-n71",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n59-0-n71"
+      ]
+    },
+    {
+      "id": "n60",
+      "key": "8/4K1k1/4B3/8/5N2/8/8/8 b",
+      "fen": "8/4K1k1/4B3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "8/4K1k1/4B3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 968,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4K1k1/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4K1k1/4B3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n60-2-n74",
+          "san": "Kh6",
+          "from": "g7",
+          "to": "h6",
+          "color": "black"
+        },
+        {
+          "id": "n60-0-n72",
+          "san": "Kh8",
+          "from": "g7",
+          "to": "h8",
+          "color": "black"
+        },
+        {
+          "id": "n60-1-n73",
+          "san": "Kh7",
+          "from": "g7",
+          "to": "h7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n60-2-n74",
+        "n60-0-n72",
+        "n60-1-n73"
+      ]
+    },
+    {
+      "id": "n61",
+      "key": "4k3/8/3KB1N1/8/8/8/8/8 b",
+      "fen": "4k3/8/3KB1N1/8/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB1N1/8/8/8/8/8",
+      "turn": "b",
+      "x": 726,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB1N1/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n61-0-n75",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n61-0-n75"
+      ]
+    },
+    {
+      "id": "n62",
+      "key": "4k3/3N4/3KB3/8/8/8/8/8 b",
+      "fen": "4k3/3N4/3KB3/8/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
+      "turn": "b",
+      "x": 484,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/3N4/3KB3/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n62-0-n76",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n62-0-n76"
+      ]
+    },
+    {
+      "id": "n63",
+      "key": "5k2/8/4B1N1/5K2/8/8/8/8 b",
+      "fen": "5k2/8/4B1N1/5K2/8/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/4B1N1/5K2/8/8/8/8",
+      "turn": "b",
+      "x": 3630,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B1N1/5K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B1N1/5K2/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n63-0-n77",
+          "san": "Kg7",
+          "from": "f8",
+          "to": "g7",
+          "color": "black"
+        },
+        {
+          "id": "n63-1-n78",
+          "san": "Ke8",
+          "from": "f8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n63-0-n77",
+        "n63-1-n78"
+      ]
+    },
+    {
+      "id": "n64",
+      "key": "7k/8/4BK2/8/5N2/8/8/8 b",
+      "fen": "7k/8/4BK2/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "7k/8/4BK2/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 3146,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/7k/8/4BK2/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//7k/8/4BK2/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n64-0-n79",
+          "san": "Kh7",
+          "from": "h8",
+          "to": "h7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n64-0-n79"
+      ]
+    },
+    {
+      "id": "n65",
+      "key": "8/7k/4B3/6K1/5N2/8/8/8 b",
+      "fen": "8/7k/4B3/6K1/5N2/8/8/8 b - - 0 1",
+      "boardFen": "8/7k/4B3/6K1/5N2/8/8/8",
+      "turn": "b",
+      "x": 3388,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/8/7k/4B3/6K1/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/7k/4B3/6K1/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n65-1-n81",
+          "san": "Kg7",
+          "from": "h7",
+          "to": "g7",
+          "color": "black"
+        },
+        {
+          "id": "n65-0-n80",
+          "san": "Kh8",
+          "from": "h7",
+          "to": "h8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n65-1-n81",
+        "n65-0-n80"
+      ]
+    },
+    {
+      "id": "n66",
+      "key": "8/8/4BK1k/8/5N2/8/8/8 b",
+      "fen": "8/8/4BK1k/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "8/8/4BK1k/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 2904,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/8/8/4BK1k/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/8/4BK1k/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n66-0-n79",
+          "san": "Kh7",
+          "from": "h6",
+          "to": "h7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n66-0-n79"
+      ]
+    },
+    {
+      "id": "n67",
+      "key": "3k4/8/3KB3/8/5N2/8/8/8 b",
+      "fen": "3k4/8/3KB3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 3872,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n67-0-n46",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n67-0-n46"
+      ]
+    },
+    {
+      "id": "n68",
       "key": "5k2/5N2/4BK2/8/8/8/8/8 w",
       "fen": "5k2/5N2/4BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/5N2/4BK2/8/8/8/8/8",
       "turn": "w",
       "x": 0,
-      "y": 1916,
+      "y": 1984,
       "imageUrl": "http://www.fen-to-image.com/image/5k2/5N2/4BK2/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//5k2/5N2/4BK2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [],
@@ -926,60 +1777,614 @@
       "movesToSuccess": 0
     },
     {
-      "id": "n43",
-      "key": "3k2B1/3N4/3K4/8/8/8/8/8 w",
-      "fen": "3k2B1/3N4/3K4/8/8/8/8/8 w - - 0 1",
-      "boardFen": "3k2B1/3N4/3K4/8/8/8/8/8",
+      "id": "n69",
+      "key": "4k3/8/2N1B1K1/8/8/8/8/8 w",
+      "fen": "4k3/8/2N1B1K1/8/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/2N1B1K1/8/8/8/8/8",
       "turn": "w",
-      "x": 968,
-      "y": 1916,
-      "imageUrl": "http://www.fen-to-image.com/image/3k2B1/3N4/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k2B1/3N4/3K4/8/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [],
-      "outgoingEdgeIds": [],
-      "terminal": "success",
-      "terminalReason": "prepared",
-      "movesToSuccess": 0
-    },
-    {
-      "id": "n44",
-      "key": "3k4/3N4/3K4/3B4/8/8/8/8 w",
-      "fen": "3k4/3N4/3K4/3B4/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/3N4/3K4/3B4/8/8/8/8",
-      "turn": "w",
-      "x": 726,
-      "y": 1916,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
-      "boardArrows": [],
-      "outgoingEdgeIds": [],
-      "terminal": "success",
-      "terminalReason": "prepared",
-      "movesToSuccess": 0
-    },
-    {
-      "id": "n45",
-      "key": "3Nk3/8/4BK2/8/8/8/8/8 w",
-      "fen": "3Nk3/8/4BK2/8/8/8/8/8 w - - 0 1",
-      "boardFen": "3Nk3/8/4BK2/8/8/8/8/8",
-      "turn": "w",
-      "x": 1694,
-      "y": 1916,
-      "imageUrl": "http://www.fen-to-image.com/image/3Nk3/8/4BK2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3Nk3/8/4BK2/8/8/8/8/8_w_-_-_0_1",
+      "x": 242,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/2N1B1K1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B1K1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n45-0-n35",
-          "san": "Nf7",
-          "from": "d8",
+          "id": "n69-0-n14",
+          "san": "Kf6",
+          "from": "g6",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n69-0-n14"
+      ],
+      "movesToSuccess": 3
+    },
+    {
+      "id": "n70",
+      "key": "8/3K2k1/4B3/8/5N2/8/8/8 w",
+      "fen": "8/3K2k1/4B3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/3K2k1/4B3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1694,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/3K2k1/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/3K2k1/4B3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n70-0-n60",
+          "san": "Ke7",
+          "from": "d7",
+          "to": "e7",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n70-0-n60"
+      ],
+      "movesToSuccess": 4
+    },
+    {
+      "id": "n71",
+      "key": "4k3/8/3KB1N1/8/8/8/8/8 w",
+      "fen": "4k3/8/3KB1N1/8/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB1N1/8/8/8/8/8",
+      "turn": "w",
+      "x": 1936,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB1N1/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n71-0-n82",
+          "san": "Kd5",
+          "from": "d6",
+          "to": "d5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n71-0-n82"
+      ],
+      "movesToSuccess": 5
+    },
+    {
+      "id": "n72",
+      "key": "7k/4K3/4B3/8/5N2/8/8/8 w",
+      "fen": "7k/4K3/4B3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "7k/4K3/4B3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1210,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/7k/4K3/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//7k/4K3/4B3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n72-0-n64",
+          "san": "Kf6",
+          "from": "e7",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n72-0-n64"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n73",
+      "key": "8/4K2k/4B3/8/5N2/8/8/8 w",
+      "fen": "8/4K2k/4B3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/4K2k/4B3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1452,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4K2k/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4K2k/4B3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n73-0-n83",
+          "san": "Kf7",
+          "from": "e7",
           "to": "f7",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n45-0-n35"
+        "n73-0-n83"
+      ],
+      "movesToSuccess": 3
+    },
+    {
+      "id": "n74",
+      "key": "8/4K3/4B2k/8/5N2/8/8/8 w",
+      "fen": "8/4K3/4B2k/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/4K3/4B2k/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 968,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4K3/4B2k/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4K3/4B2k/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n74-0-n66",
+          "san": "Kf6",
+          "from": "e7",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n74-0-n66"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n75",
+      "key": "3k4/8/3KB1N1/8/8/8/8/8 w",
+      "fen": "3k4/8/3KB1N1/8/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB1N1/8/8/8/8/8",
+      "turn": "w",
+      "x": 726,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB1N1/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n75-0-n84",
+          "san": "Ne5",
+          "from": "g6",
+          "to": "e5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n75-0-n84"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n76",
+      "key": "3k4/3N4/3KB3/8/8/8/8/8 w",
+      "fen": "3k4/3N4/3KB3/8/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/3N4/3KB3/8/8/8/8/8",
+      "turn": "w",
+      "x": 484,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/3N4/3KB3/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [],
+      "outgoingEdgeIds": [],
+      "terminal": "success",
+      "terminalReason": "prepared",
+      "movesToSuccess": 0
+    },
+    {
+      "id": "n77",
+      "key": "8/6k1/4B1N1/5K2/8/8/8/8 w",
+      "fen": "8/6k1/4B1N1/5K2/8/8/8/8 w - - 0 1",
+      "boardFen": "8/6k1/4B1N1/5K2/8/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B1N1/5K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B1N1/5K2/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n77-0-n85",
+          "san": "Kg5",
+          "from": "f5",
+          "to": "g5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n77-0-n85"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n78",
+      "key": "4k3/8/4B1N1/5K2/8/8/8/8 w",
+      "fen": "4k3/8/4B1N1/5K2/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B1N1/5K2/8/8/8/8",
+      "turn": "w",
+      "x": 4114,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/5K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/5K2/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n78-0-n39",
+          "san": "Ke5",
+          "from": "f5",
+          "to": "e5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n78-0-n39"
+      ],
+      "movesToSuccess": 7
+    },
+    {
+      "id": "n79",
+      "key": "8/7k/4BK2/8/5N2/8/8/8 w",
+      "fen": "8/7k/4BK2/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/7k/4BK2/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 3146,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/7k/4BK2/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/7k/4BK2/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n79-0-n86",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n79-0-n86"
       ],
       "movesToSuccess": 1
+    },
+    {
+      "id": "n80",
+      "key": "7k/8/4B3/6K1/5N2/8/8/8 w",
+      "fen": "7k/8/4B3/6K1/5N2/8/8/8 w - - 0 1",
+      "boardFen": "7k/8/4B3/6K1/5N2/8/8/8",
+      "turn": "w",
+      "x": 3630,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/7k/8/4B3/6K1/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//7k/8/4B3/6K1/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n80-0-n64",
+          "san": "Kf6",
+          "from": "g5",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n80-0-n64"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n81",
+      "key": "8/6k1/4B3/6K1/5N2/8/8/8 w",
+      "fen": "8/6k1/4B3/6K1/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/6k1/4B3/6K1/5N2/8/8/8",
+      "turn": "w",
+      "x": 3388,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B3/6K1/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/6K1/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n81-0-n85",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n81-0-n85"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n82",
+      "key": "4k3/8/4B1N1/3K4/8/8/8/8 b",
+      "fen": "4k3/8/4B1N1/3K4/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/4B1N1/3K4/8/8/8/8",
+      "turn": "b",
+      "x": 1936,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/3K4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/3K4/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n82-0-n87",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n82-0-n87"
+      ]
+    },
+    {
+      "id": "n83",
+      "key": "8/5K1k/4B3/8/5N2/8/8/8 b",
+      "fen": "8/5K1k/4B3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "8/5K1k/4B3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 1452,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/8/5K1k/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/5K1k/4B3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n83-1-n89",
+          "san": "Kh6",
+          "from": "h7",
+          "to": "h6",
+          "color": "black"
+        },
+        {
+          "id": "n83-0-n88",
+          "san": "Kh8",
+          "from": "h7",
+          "to": "h8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n83-1-n89",
+        "n83-0-n88"
+      ]
+    },
+    {
+      "id": "n84",
+      "key": "3k4/8/3KB3/4N3/8/8/8/8 b",
+      "fen": "3k4/8/3KB3/4N3/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/4N3/8/8/8/8",
+      "turn": "b",
+      "x": 726,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/4N3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/4N3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n84-0-n90",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n84-0-n90"
+      ]
+    },
+    {
+      "id": "n85",
+      "key": "8/6k1/4B1N1/6K1/8/8/8/8 b",
+      "fen": "8/6k1/4B1N1/6K1/8/8/8/8 b - - 0 1",
+      "boardFen": "8/6k1/4B1N1/6K1/8/8/8/8",
+      "turn": "b",
+      "x": 3872,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B1N1/6K1/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B1N1/6K1/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n85-0-n91",
+          "san": "Kh7",
+          "from": "g7",
+          "to": "h7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n85-0-n91"
+      ]
+    },
+    {
+      "id": "n86",
+      "key": "8/7k/4BKN1/8/8/8/8/8 b",
+      "fen": "8/7k/4BKN1/8/8/8/8/8 b - - 0 1",
+      "boardFen": "8/7k/4BKN1/8/8/8/8/8",
+      "turn": "b",
+      "x": 3146,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/8/7k/4BKN1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/7k/4BKN1/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n86-0-n92",
+          "san": "Kh6",
+          "from": "h7",
+          "to": "h6",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n86-0-n92"
+      ]
+    },
+    {
+      "id": "n87",
+      "key": "3k4/8/4B1N1/3K4/8/8/8/8 w",
+      "fen": "3k4/8/4B1N1/3K4/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B1N1/3K4/8/8/8/8",
+      "turn": "w",
+      "x": 1936,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B1N1/3K4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B1N1/3K4/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n87-0-n93",
+          "san": "Kc6",
+          "from": "d5",
+          "to": "c6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n87-0-n93"
+      ],
+      "movesToSuccess": 4
+    },
+    {
+      "id": "n88",
+      "key": "7k/5K2/4B3/8/5N2/8/8/8 w",
+      "fen": "7k/5K2/4B3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "7k/5K2/4B3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1694,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/7k/5K2/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//7k/5K2/4B3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n88-0-n64",
+          "san": "Kf6",
+          "from": "f7",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n88-0-n64"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n89",
+      "key": "8/5K2/4B2k/8/5N2/8/8/8 w",
+      "fen": "8/5K2/4B2k/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/5K2/4B2k/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 1452,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/8/5K2/4B2k/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/5K2/4B2k/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n89-0-n66",
+          "san": "Kf6",
+          "from": "f7",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n89-0-n66"
+      ],
+      "movesToSuccess": 2
+    },
+    {
+      "id": "n90",
+      "key": "4k3/8/3KB3/4N3/8/8/8/8 w",
+      "fen": "4k3/8/3KB3/4N3/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB3/4N3/8/8/8/8",
+      "turn": "w",
+      "x": 726,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/4N3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/4N3/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n90-0-n62",
+          "san": "Nd7",
+          "from": "e5",
+          "to": "d7",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n90-0-n62"
+      ],
+      "movesToSuccess": 1
+    },
+    {
+      "id": "n91",
+      "key": "8/7k/4B1N1/6K1/8/8/8/8 w",
+      "fen": "8/7k/4B1N1/6K1/8/8/8/8 w - - 0 1",
+      "boardFen": "8/7k/4B1N1/6K1/8/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/8/7k/4B1N1/6K1/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/7k/4B1N1/6K1/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n91-0-n86",
+          "san": "Kf6",
+          "from": "g5",
+          "to": "f6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n91-0-n86"
+      ],
+      "movesToSuccess": 1
+    },
+    {
+      "id": "n92",
+      "key": "8/8/4BKNk/8/8/8/8/8 w",
+      "fen": "8/8/4BKNk/8/8/8/8/8 w - - 0 1",
+      "boardFen": "8/8/4BKNk/8/8/8/8/8",
+      "turn": "w",
+      "x": 3146,
+      "y": 2480,
+      "imageUrl": "http://www.fen-to-image.com/image/8/8/4BKNk/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/8/4BKNk/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [],
+      "outgoingEdgeIds": [],
+      "terminal": "success",
+      "terminalReason": "prepared",
+      "movesToSuccess": 0
+    },
+    {
+      "id": "n93",
+      "key": "3k4/8/2K1B1N1/8/8/8/8/8 b",
+      "fen": "3k4/8/2K1B1N1/8/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/2K1B1N1/8/8/8/8/8",
+      "turn": "b",
+      "x": 1936,
+      "y": 2694,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/2K1B1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/2K1B1N1/8/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n93-0-n94",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n93-0-n94"
+      ]
+    },
+    {
+      "id": "n94",
+      "key": "4k3/8/2K1B1N1/8/8/8/8/8 w",
+      "fen": "4k3/8/2K1B1N1/8/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/2K1B1N1/8/8/8/8/8",
+      "turn": "w",
+      "x": 1936,
+      "y": 2908,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/2K1B1N1/8/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/2K1B1N1/8/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n94-0-n61",
+          "san": "Kd6",
+          "from": "c6",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n94-0-n61"
+      ],
+      "movesToSuccess": 3
     }
   ],
   "edges": [
@@ -1003,12 +2408,12 @@
       ]
     },
     {
-      "id": "n2-0-n4",
-      "from": "n2",
+      "id": "n1-0-n4",
+      "from": "n1",
       "to": "n4",
-      "san": "Nc5",
-      "fromSquare": "b3",
-      "toSquare": "c5",
+      "san": "Nd5+",
+      "fromSquare": "c3",
+      "toSquare": "d5",
       "transposition": false,
       "points": [
         {
@@ -1022,9 +2427,28 @@
       ]
     },
     {
-      "id": "n3-0-n5",
-      "from": "n3",
+      "id": "n2-0-n5",
+      "from": "n2",
       "to": "n5",
+      "san": "Nd4",
+      "fromSquare": "b3",
+      "toSquare": "d4",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 150
+        },
+        {
+          "x": 3221,
+          "y": 214
+        }
+      ]
+    },
+    {
+      "id": "n3-0-n6",
+      "from": "n3",
+      "to": "n6",
       "san": "Ke8",
       "fromSquare": "e7",
       "toSquare": "e8",
@@ -1041,9 +2465,9 @@
       ]
     },
     {
-      "id": "n3-1-n6",
+      "id": "n3-1-n7",
       "from": "n3",
-      "to": "n6",
+      "to": "n7",
       "san": "Kf8",
       "fromSquare": "e7",
       "toSquare": "f8",
@@ -1068,9 +2492,9 @@
       ]
     },
     {
-      "id": "n4-0-n7",
+      "id": "n4-0-n8",
       "from": "n4",
-      "to": "n7",
+      "to": "n8",
       "san": "Kd8",
       "fromSquare": "e7",
       "toSquare": "d8",
@@ -1082,14 +2506,22 @@
         },
         {
           "x": 559,
+          "y": 410.2
+        },
+        {
+          "x": 1769,
+          "y": 410.2
+        },
+        {
+          "x": 1769,
           "y": 496
         }
       ]
     },
     {
-      "id": "n4-1-n8",
+      "id": "n4-1-n9",
       "from": "n4",
-      "to": "n8",
+      "to": "n9",
       "san": "Ke8",
       "fromSquare": "e7",
       "toSquare": "e8",
@@ -1101,22 +2533,14 @@
         },
         {
           "x": 559,
-          "y": 410.2
-        },
-        {
-          "x": 801,
-          "y": 410.2
-        },
-        {
-          "x": 801,
           "y": 496
         }
       ]
     },
     {
-      "id": "n4-2-n9",
+      "id": "n4-2-n10",
       "from": "n4",
-      "to": "n9",
+      "to": "n10",
       "san": "Kf8",
       "fromSquare": "e7",
       "toSquare": "f8",
@@ -1131,38 +2555,111 @@
           "y": 410.2
         },
         {
-          "x": 1769,
+          "x": 2253,
           "y": 410.2
         },
         {
-          "x": 1769,
+          "x": 2253,
           "y": 496
         }
       ]
     },
     {
-      "id": "n5-0-n10",
+      "id": "n5-0-n11",
       "from": "n5",
-      "to": "n10",
-      "san": "Kf6",
-      "fromSquare": "e5",
-      "toSquare": "f6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 75,
-          "y": 646
-        },
-        {
-          "x": 75,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n6-0-n11",
-      "from": "n6",
       "to": "n11",
+      "san": "Kd8",
+      "fromSquare": "e7",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 364
+        },
+        {
+          "x": 3221,
+          "y": 410.2
+        },
+        {
+          "x": 3947,
+          "y": 410.2
+        },
+        {
+          "x": 3947,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n5-1-n12",
+      "from": "n5",
+      "to": "n12",
+      "san": "Ke8",
+      "fromSquare": "e7",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 364
+        },
+        {
+          "x": 3221,
+          "y": 410.2
+        },
+        {
+          "x": 4189,
+          "y": 410.2
+        },
+        {
+          "x": 4189,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n5-2-n13",
+      "from": "n5",
+      "to": "n13",
+      "san": "Kf8",
+      "fromSquare": "e7",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 364
+        },
+        {
+          "x": 3221,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n6-0-n14",
+      "from": "n6",
+      "to": "n14",
+      "san": "Kf6",
+      "fromSquare": "e5",
+      "toSquare": "f6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 75,
+          "y": 646
+        },
+        {
+          "x": 75,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n7-0-n15",
+      "from": "n7",
+      "to": "n15",
       "san": "Kf6",
       "fromSquare": "e5",
       "toSquare": "f6",
@@ -1179,9 +2676,28 @@
       ]
     },
     {
-      "id": "n7-0-n12",
-      "from": "n7",
-      "to": "n12",
+      "id": "n8-0-n16",
+      "from": "n8",
+      "to": "n16",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1769,
+          "y": 646
+        },
+        {
+          "x": 1769,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n9-0-n17",
+      "from": "n9",
+      "to": "n17",
       "san": "Kd6",
       "fromSquare": "e5",
       "toSquare": "d6",
@@ -1198,47 +2714,85 @@
       ]
     },
     {
-      "id": "n8-0-n13",
-      "from": "n8",
-      "to": "n13",
-      "san": "Nd7",
-      "fromSquare": "c5",
-      "toSquare": "d7",
+      "id": "n10-0-n18",
+      "from": "n10",
+      "to": "n18",
+      "san": "Nf4",
+      "fromSquare": "d5",
+      "toSquare": "f4",
       "transposition": false,
       "points": [
         {
-          "x": 801,
+          "x": 2253,
           "y": 646
         },
         {
-          "x": 801,
+          "x": 2253,
           "y": 710
         }
       ]
     },
     {
-      "id": "n9-0-n14",
-      "from": "n9",
-      "to": "n14",
+      "id": "n11-0-n19",
+      "from": "n11",
+      "to": "n19",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 646
+        },
+        {
+          "x": 3947,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n12-0-n20",
+      "from": "n12",
+      "to": "n20",
+      "san": "Nc6",
+      "fromSquare": "d4",
+      "toSquare": "c6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4189,
+          "y": 646
+        },
+        {
+          "x": 4189,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n13-0-n21",
+      "from": "n13",
+      "to": "n21",
       "san": "Kf6",
       "fromSquare": "e5",
       "toSquare": "f6",
       "transposition": false,
       "points": [
         {
-          "x": 1769,
+          "x": 3221,
           "y": 646
         },
         {
-          "x": 1769,
+          "x": 3221,
           "y": 710
         }
       ]
     },
     {
-      "id": "n10-0-n15",
-      "from": "n10",
-      "to": "n15",
+      "id": "n14-0-n22",
+      "from": "n14",
+      "to": "n22",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -1255,9 +2809,9 @@
       ]
     },
     {
-      "id": "n11-0-n16",
-      "from": "n11",
-      "to": "n16",
+      "id": "n15-0-n23",
+      "from": "n15",
+      "to": "n23",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -1274,93 +2828,204 @@
       ]
     },
     {
-      "id": "n12-0-n17",
-      "from": "n12",
-      "to": "n17",
+      "id": "n16-0-n24",
+      "from": "n16",
+      "to": "n24",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 559,
+          "x": 1769,
           "y": 860
         },
         {
-          "x": 559,
+          "x": 1769,
           "y": 992
         }
       ]
     },
     {
-      "id": "n13-0-n18",
-      "from": "n13",
-      "to": "n18",
-      "san": "Ke7",
+      "id": "n17-0-n25",
+      "from": "n17",
+      "to": "n25",
+      "san": "Kf8",
       "fromSquare": "e8",
-      "toSquare": "e7",
+      "toSquare": "f8",
       "transposition": false,
       "points": [
         {
-          "x": 801,
+          "x": 559,
           "y": 860
         },
         {
+          "x": 559,
+          "y": 906.2
+        },
+        {
           "x": 801,
           "y": 906.2
         },
         {
-          "x": 1285,
-          "y": 906.2
-        },
-        {
-          "x": 1285,
+          "x": 801,
           "y": 992
         }
       ]
     },
     {
-      "id": "n13-1-n19",
-      "from": "n13",
-      "to": "n19",
+      "id": "n17-1-n26",
+      "from": "n17",
+      "to": "n26",
       "san": "Kd8",
       "fromSquare": "e8",
       "toSquare": "d8",
       "transposition": false,
       "points": [
         {
-          "x": 801,
+          "x": 559,
           "y": 860
         },
         {
-          "x": 801,
+          "x": 559,
           "y": 992
         }
       ]
     },
     {
-      "id": "n14-0-n20",
-      "from": "n14",
-      "to": "n20",
+      "id": "n18-0-n27",
+      "from": "n18",
+      "to": "n27",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2253,
+          "y": 860
+        },
+        {
+          "x": 2253,
+          "y": 906.2
+        },
+        {
+          "x": 2979,
+          "y": 906.2
+        },
+        {
+          "x": 2979,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n18-1-n28",
+      "from": "n18",
+      "to": "n28",
+      "san": "Ke7",
+      "fromSquare": "f8",
+      "toSquare": "e7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2253,
+          "y": 860
+        },
+        {
+          "x": 2253,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n18-2-n29",
+      "from": "n18",
+      "to": "n29",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 1769,
+          "x": 2253,
           "y": 860
         },
         {
-          "x": 1769,
+          "x": 2253,
+          "y": 906.2
+        },
+        {
+          "x": 2737,
+          "y": 906.2
+        },
+        {
+          "x": 2737,
           "y": 992
         }
       ]
     },
     {
-      "id": "n15-0-n21",
-      "from": "n15",
-      "to": "n21",
+      "id": "n19-0-n30",
+      "from": "n19",
+      "to": "n30",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 860
+        },
+        {
+          "x": 3947,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n20-0-n7",
+      "from": "n20",
+      "to": "n7",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4114,
+          "y": 785
+        },
+        {
+          "x": 392,
+          "y": 571
+        }
+      ]
+    },
+    {
+      "id": "n21-0-n31",
+      "from": "n21",
+      "to": "n31",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 860
+        },
+        {
+          "x": 3221,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n22-0-n32",
+      "from": "n22",
+      "to": "n32",
       "san": "Ne5",
       "fromSquare": "c6",
       "toSquare": "e5",
@@ -1377,17 +3042,168 @@
       ]
     },
     {
-      "id": "n16-0-n22",
-      "from": "n16",
-      "to": "n10",
-      "san": "Bf5",
-      "fromSquare": "e6",
+      "id": "n23-0-n33",
+      "from": "n23",
+      "to": "n33",
+      "san": "Kf5",
+      "fromSquare": "f6",
       "toSquare": "f5",
-      "transposition": true,
-      "transpositionKind": "bishopAnchor",
+      "transposition": false,
       "points": [
         {
-          "x": 242,
+          "x": 317,
+          "y": 1142
+        },
+        {
+          "x": 317,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n24-0-n34",
+      "from": "n24",
+      "to": "n34",
+      "san": "Nf4",
+      "fromSquare": "d5",
+      "toSquare": "f4",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1769,
+          "y": 1142
+        },
+        {
+          "x": 1769,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n25-0-n35",
+      "from": "n25",
+      "to": "n35",
+      "san": "Nf4",
+      "fromSquare": "d5",
+      "toSquare": "f4",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 1142
+        },
+        {
+          "x": 801,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n26-0-n36",
+      "from": "n26",
+      "to": "n36",
+      "san": "Nb6",
+      "fromSquare": "d5",
+      "toSquare": "b6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 1142
+        },
+        {
+          "x": 559,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n27-0-n37",
+      "from": "n27",
+      "to": "n37",
+      "san": "Kf5",
+      "fromSquare": "e5",
+      "toSquare": "f5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1142
+        },
+        {
+          "x": 2979,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n28-0-n38",
+      "from": "n28",
+      "to": "n38",
+      "san": "Ng6+",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2253,
+          "y": 1142
+        },
+        {
+          "x": 2253,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n29-0-n39",
+      "from": "n29",
+      "to": "n39",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2737,
+          "y": 1142
+        },
+        {
+          "x": 2737,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n30-0-n40",
+      "from": "n30",
+      "to": "n40",
+      "san": "Ne2",
+      "fromSquare": "d4",
+      "toSquare": "e2",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 1142
+        },
+        {
+          "x": 3947,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n31-0-n14",
+      "from": "n31",
+      "to": "n14",
+      "san": "Nc6",
+      "fromSquare": "d4",
+      "toSquare": "c6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3146,
           "y": 1067
         },
         {
@@ -1397,85 +3213,9 @@
       ]
     },
     {
-      "id": "n17-0-n23",
-      "from": "n17",
-      "to": "n23",
-      "san": "Nd7",
-      "fromSquare": "c5",
-      "toSquare": "d7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 559,
-          "y": 1142
-        },
-        {
-          "x": 559,
-          "y": 1206
-        }
-      ]
-    },
-    {
-      "id": "n18-0-n24",
-      "from": "n18",
-      "to": "n24",
-      "san": "Kd5",
-      "fromSquare": "e5",
-      "toSquare": "d5",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1285,
-          "y": 1142
-        },
-        {
-          "x": 1285,
-          "y": 1206
-        }
-      ]
-    },
-    {
-      "id": "n19-0-n25",
-      "from": "n19",
-      "to": "n25",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 801,
-          "y": 1142
-        },
-        {
-          "x": 801,
-          "y": 1206
-        }
-      ]
-    },
-    {
-      "id": "n20-0-n26",
-      "from": "n20",
-      "to": "n26",
-      "san": "Nb7",
-      "fromSquare": "c5",
-      "toSquare": "b7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1142
-        },
-        {
-          "x": 1769,
-          "y": 1206
-        }
-      ]
-    },
-    {
-      "id": "n21-0-n27",
-      "from": "n21",
-      "to": "n27",
+      "id": "n32-0-n41",
+      "from": "n32",
+      "to": "n41",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -1492,120 +3232,28 @@
       ]
     },
     {
-      "id": "n23-0-n29",
-      "from": "n23",
-      "to": "n29",
-      "san": "Kd8",
+      "id": "n33-0-n42",
+      "from": "n33",
+      "to": "n42",
+      "san": "Kf8",
       "fromSquare": "e8",
-      "toSquare": "d8",
+      "toSquare": "f8",
       "transposition": false,
       "points": [
         {
-          "x": 559,
+          "x": 317,
           "y": 1356
         },
         {
-          "x": 559,
+          "x": 317,
           "y": 1488
         }
       ]
     },
     {
-      "id": "n24-0-n30",
-      "from": "n24",
-      "to": "n30",
-      "san": "Kd8",
-      "fromSquare": "e7",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1285,
-          "y": 1356
-        },
-        {
-          "x": 1285,
-          "y": 1402.2
-        },
-        {
-          "x": 1527,
-          "y": 1402.2
-        },
-        {
-          "x": 1527,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n24-1-n31",
-      "from": "n24",
-      "to": "n31",
-      "san": "Ke8",
-      "fromSquare": "e7",
-      "toSquare": "e8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1285,
-          "y": 1356
-        },
-        {
-          "x": 1285,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n25-0-n32",
-      "from": "n25",
-      "to": "n32",
-      "san": "Ke8",
-      "fromSquare": "d8",
-      "toSquare": "e8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 801,
-          "y": 1356
-        },
-        {
-          "x": 801,
-          "y": 1402.2
-        },
-        {
-          "x": 1043,
-          "y": 1402.2
-        },
-        {
-          "x": 1043,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n25-1-n33",
-      "from": "n25",
-      "to": "n33",
-      "san": "Kc8",
-      "fromSquare": "d8",
-      "toSquare": "c8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 801,
-          "y": 1356
-        },
-        {
-          "x": 801,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n26-0-n34",
-      "from": "n26",
-      "to": "n34",
+      "id": "n34-0-n43",
+      "from": "n34",
+      "to": "n43",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -1622,9 +3270,312 @@
       ]
     },
     {
-      "id": "n27-0-n35",
-      "from": "n27",
-      "to": "n35",
+      "id": "n34-1-n44",
+      "from": "n34",
+      "to": "n44",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1769,
+          "y": 1356
+        },
+        {
+          "x": 1769,
+          "y": 1402.2
+        },
+        {
+          "x": 2011,
+          "y": 1402.2
+        },
+        {
+          "x": 2011,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n35-0-n45",
+      "from": "n35",
+      "to": "n45",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 1356
+        },
+        {
+          "x": 801,
+          "y": 1402.2
+        },
+        {
+          "x": 1043,
+          "y": 1402.2
+        },
+        {
+          "x": 1043,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n35-1-n46",
+      "from": "n35",
+      "to": "n46",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 1356
+        },
+        {
+          "x": 801,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n36-0-n47",
+      "from": "n36",
+      "to": "n47",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 1356
+        },
+        {
+          "x": 559,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n37-0-n48",
+      "from": "n37",
+      "to": "n48",
+      "san": "Kf8",
+      "fromSquare": "g7",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1402.2
+        },
+        {
+          "x": 3705,
+          "y": 1402.2
+        },
+        {
+          "x": 3705,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n37-1-n49",
+      "from": "n37",
+      "to": "n49",
+      "san": "Kh8",
+      "fromSquare": "g7",
+      "toSquare": "h8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1402.2
+        },
+        {
+          "x": 3221,
+          "y": 1402.2
+        },
+        {
+          "x": 3221,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n37-2-n50",
+      "from": "n37",
+      "to": "n50",
+      "san": "Kh7",
+      "fromSquare": "g7",
+      "toSquare": "h7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1402.2
+        },
+        {
+          "x": 3463,
+          "y": 1402.2
+        },
+        {
+          "x": 3463,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n37-3-n51",
+      "from": "n37",
+      "to": "n51",
+      "san": "Kh6",
+      "fromSquare": "g7",
+      "toSquare": "h6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n38-0-n52",
+      "from": "n38",
+      "to": "n52",
+      "san": "Kd8",
+      "fromSquare": "e7",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2253,
+          "y": 1356
+        },
+        {
+          "x": 2253,
+          "y": 1402.2
+        },
+        {
+          "x": 2495,
+          "y": 1402.2
+        },
+        {
+          "x": 2495,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n38-1-n53",
+      "from": "n38",
+      "to": "n53",
+      "san": "Ke8",
+      "fromSquare": "e7",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2253,
+          "y": 1356
+        },
+        {
+          "x": 2253,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n39-0-n52",
+      "from": "n39",
+      "to": "n52",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 2737,
+          "y": 1356
+        },
+        {
+          "x": 2495,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n40-0-n54",
+      "from": "n40",
+      "to": "n54",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 1356
+        },
+        {
+          "x": 3947,
+          "y": 1402.2
+        },
+        {
+          "x": 4189,
+          "y": 1402.2
+        },
+        {
+          "x": 4189,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n40-1-n55",
+      "from": "n40",
+      "to": "n55",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 1356
+        },
+        {
+          "x": 3947,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n41-0-n56",
+      "from": "n41",
+      "to": "n56",
       "san": "Nf7",
       "fromSquare": "e5",
       "toSquare": "f7",
@@ -1641,16 +3592,244 @@
       ]
     },
     {
-      "id": "n30-0-n25",
-      "from": "n30",
-      "to": "n25",
+      "id": "n42-0-n57",
+      "from": "n42",
+      "to": "n57",
+      "san": "Kg6",
+      "fromSquare": "f5",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 317,
+          "y": 1638
+        },
+        {
+          "x": 317,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n43-0-n58",
+      "from": "n43",
+      "to": "n58",
+      "san": "Kd7",
+      "fromSquare": "d6",
+      "toSquare": "d7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1769,
+          "y": 1638
+        },
+        {
+          "x": 1769,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n44-0-n59",
+      "from": "n44",
+      "to": "n59",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 1638
+        },
+        {
+          "x": 2011,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n45-0-n60",
+      "from": "n45",
+      "to": "n60",
+      "san": "Ke7",
+      "fromSquare": "d6",
+      "toSquare": "e7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1043,
+          "y": 1638
+        },
+        {
+          "x": 1043,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n46-0-n61",
+      "from": "n46",
+      "to": "n61",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 1638
+        },
+        {
+          "x": 801,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n47-0-n62",
+      "from": "n47",
+      "to": "n62",
+      "san": "Nd7",
+      "fromSquare": "b6",
+      "toSquare": "d7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 1638
+        },
+        {
+          "x": 559,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n48-0-n63",
+      "from": "n48",
+      "to": "n63",
+      "san": "Ng6+",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3705,
+          "y": 1638
+        },
+        {
+          "x": 3705,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n49-0-n64",
+      "from": "n49",
+      "to": "n64",
+      "san": "Kf6",
+      "fromSquare": "f5",
+      "toSquare": "f6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 1638
+        },
+        {
+          "x": 3221,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n50-0-n65",
+      "from": "n50",
+      "to": "n65",
+      "san": "Kg5",
+      "fromSquare": "f5",
+      "toSquare": "g5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3463,
+          "y": 1638
+        },
+        {
+          "x": 3463,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n51-0-n66",
+      "from": "n51",
+      "to": "n66",
+      "san": "Kf6",
+      "fromSquare": "f5",
+      "toSquare": "f6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1638
+        },
+        {
+          "x": 2979,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n52-0-n59",
+      "from": "n52",
+      "to": "n59",
       "san": "Kd6",
-      "fromSquare": "d5",
+      "fromSquare": "e5",
       "toSquare": "d6",
       "transposition": true,
       "points": [
         {
-          "x": 1452,
+          "x": 2495,
+          "y": 1638
+        },
+        {
+          "x": 2011,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n53-0-n61",
+      "from": "n53",
+      "to": "n61",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 2253,
+          "y": 1638
+        },
+        {
+          "x": 801,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n54-0-n35",
+      "from": "n54",
+      "to": "n35",
+      "san": "Nf4",
+      "fromSquare": "e2",
+      "toSquare": "f4",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4114,
           "y": 1563
         },
         {
@@ -1660,85 +3839,28 @@
       ]
     },
     {
-      "id": "n31-0-n23",
-      "from": "n31",
-      "to": "n23",
-      "san": "Kd6",
-      "fromSquare": "d5",
-      "toSquare": "d6",
-      "transposition": true,
-      "points": [
-        {
-          "x": 1210,
-          "y": 1563
-        },
-        {
-          "x": 634,
-          "y": 1281
-        }
-      ]
-    },
-    {
-      "id": "n32-0-n37",
-      "from": "n32",
-      "to": "n37",
-      "san": "Bg8",
-      "fromSquare": "e6",
-      "toSquare": "g8",
+      "id": "n55-0-n67",
+      "from": "n55",
+      "to": "n67",
+      "san": "Nf4",
+      "fromSquare": "e2",
+      "toSquare": "f4",
       "transposition": false,
       "points": [
         {
-          "x": 1043,
+          "x": 3947,
           "y": 1638
         },
         {
-          "x": 1043,
+          "x": 3947,
           "y": 1702
         }
       ]
     },
     {
-      "id": "n33-0-n38",
-      "from": "n33",
-      "to": "n38",
-      "san": "Bd5",
-      "fromSquare": "e6",
-      "toSquare": "d5",
-      "transposition": false,
-      "points": [
-        {
-          "x": 801,
-          "y": 1638
-        },
-        {
-          "x": 801,
-          "y": 1702
-        }
-      ]
-    },
-    {
-      "id": "n34-0-n39",
-      "from": "n34",
-      "to": "n39",
-      "san": "Nd8",
-      "fromSquare": "b7",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1638
-        },
-        {
-          "x": 1769,
-          "y": 1702
-        }
-      ]
-    },
-    {
-      "id": "n35-0-n40",
-      "from": "n35",
-      "to": "n40",
+      "id": "n56-0-n68",
+      "from": "n56",
+      "to": "n68",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -1750,82 +3872,814 @@
         },
         {
           "x": 75,
-          "y": 1916
+          "y": 1984
         }
       ]
     },
     {
-      "id": "n37-0-n43",
-      "from": "n37",
-      "to": "n43",
-      "san": "Kd8",
-      "fromSquare": "e8",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 1852
-        },
-        {
-          "x": 1043,
-          "y": 1916
-        }
-      ]
-    },
-    {
-      "id": "n38-0-n44",
-      "from": "n38",
-      "to": "n44",
-      "san": "Kd8",
-      "fromSquare": "c8",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 801,
-          "y": 1852
-        },
-        {
-          "x": 801,
-          "y": 1916
-        }
-      ]
-    },
-    {
-      "id": "n39-0-n45",
-      "from": "n39",
-      "to": "n45",
+      "id": "n57-0-n69",
+      "from": "n57",
+      "to": "n69",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
+          "x": 317,
+          "y": 1852
+        },
+        {
+          "x": 317,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n58-0-n70",
+      "from": "n58",
+      "to": "n70",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
           "x": 1769,
           "y": 1852
         },
         {
           "x": 1769,
-          "y": 1916
+          "y": 1984
         }
       ]
     },
     {
-      "id": "n45-0-n35",
-      "from": "n45",
-      "to": "n35",
-      "san": "Nf7",
+      "id": "n59-0-n71",
+      "from": "n59",
+      "to": "n71",
+      "san": "Ke8",
       "fromSquare": "d8",
-      "toSquare": "f7",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 1852
+        },
+        {
+          "x": 2011,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n60-0-n72",
+      "from": "n60",
+      "to": "n72",
+      "san": "Kh8",
+      "fromSquare": "g7",
+      "toSquare": "h8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1043,
+          "y": 1852
+        },
+        {
+          "x": 1043,
+          "y": 1898.2
+        },
+        {
+          "x": 1285,
+          "y": 1898.2
+        },
+        {
+          "x": 1285,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n60-1-n73",
+      "from": "n60",
+      "to": "n73",
+      "san": "Kh7",
+      "fromSquare": "g7",
+      "toSquare": "h7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1043,
+          "y": 1852
+        },
+        {
+          "x": 1043,
+          "y": 1898.2
+        },
+        {
+          "x": 1527,
+          "y": 1898.2
+        },
+        {
+          "x": 1527,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n60-2-n74",
+      "from": "n60",
+      "to": "n74",
+      "san": "Kh6",
+      "fromSquare": "g7",
+      "toSquare": "h6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1043,
+          "y": 1852
+        },
+        {
+          "x": 1043,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n61-0-n75",
+      "from": "n61",
+      "to": "n75",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 1852
+        },
+        {
+          "x": 801,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n62-0-n76",
+      "from": "n62",
+      "to": "n76",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 1852
+        },
+        {
+          "x": 559,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n63-0-n77",
+      "from": "n63",
+      "to": "n77",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3705,
+          "y": 1852
+        },
+        {
+          "x": 3705,
+          "y": 1898.2
+        },
+        {
+          "x": 3947,
+          "y": 1898.2
+        },
+        {
+          "x": 3947,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n63-1-n78",
+      "from": "n63",
+      "to": "n78",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3705,
+          "y": 1852
+        },
+        {
+          "x": 3705,
+          "y": 1898.2
+        },
+        {
+          "x": 4189,
+          "y": 1898.2
+        },
+        {
+          "x": 4189,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n64-0-n79",
+      "from": "n64",
+      "to": "n79",
+      "san": "Kh7",
+      "fromSquare": "h8",
+      "toSquare": "h7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 1852
+        },
+        {
+          "x": 3221,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n65-0-n80",
+      "from": "n65",
+      "to": "n80",
+      "san": "Kh8",
+      "fromSquare": "h7",
+      "toSquare": "h8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3463,
+          "y": 1852
+        },
+        {
+          "x": 3463,
+          "y": 1898.2
+        },
+        {
+          "x": 3705,
+          "y": 1898.2
+        },
+        {
+          "x": 3705,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n65-1-n81",
+      "from": "n65",
+      "to": "n81",
+      "san": "Kg7",
+      "fromSquare": "h7",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3463,
+          "y": 1852
+        },
+        {
+          "x": 3463,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n66-0-n79",
+      "from": "n66",
+      "to": "n79",
+      "san": "Kh7",
+      "fromSquare": "h6",
+      "toSquare": "h7",
+      "transposition": true,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1852
+        },
+        {
+          "x": 3221,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n67-0-n46",
+      "from": "n67",
+      "to": "n46",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3872,
+          "y": 1777
+        },
+        {
+          "x": 876,
+          "y": 1563
+        }
+      ]
+    },
+    {
+      "id": "n69-0-n14",
+      "from": "n69",
+      "to": "n14",
+      "san": "Kf6",
+      "fromSquare": "g6",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 242,
+          "y": 2059
+        },
+        {
+          "x": 150,
+          "y": 785
+        }
+      ]
+    },
+    {
+      "id": "n70-0-n60",
+      "from": "n70",
+      "to": "n60",
+      "san": "Ke7",
+      "fromSquare": "d7",
+      "toSquare": "e7",
       "transposition": true,
       "points": [
         {
           "x": 1694,
-          "y": 1991
+          "y": 2059
         },
         {
-          "x": 150,
+          "x": 1118,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n71-0-n82",
+      "from": "n71",
+      "to": "n82",
+      "san": "Kd5",
+      "fromSquare": "d6",
+      "toSquare": "d5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 2134
+        },
+        {
+          "x": 2011,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n72-0-n64",
+      "from": "n72",
+      "to": "n64",
+      "san": "Kf6",
+      "fromSquare": "e7",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1360,
+          "y": 2059
+        },
+        {
+          "x": 3146,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n73-0-n83",
+      "from": "n73",
+      "to": "n83",
+      "san": "Kf7",
+      "fromSquare": "e7",
+      "toSquare": "f7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1527,
+          "y": 2134
+        },
+        {
+          "x": 1527,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n74-0-n66",
+      "from": "n74",
+      "to": "n66",
+      "san": "Kf6",
+      "fromSquare": "e7",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1118,
+          "y": 2059
+        },
+        {
+          "x": 2904,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n75-0-n84",
+      "from": "n75",
+      "to": "n84",
+      "san": "Ne5",
+      "fromSquare": "g6",
+      "toSquare": "e5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 2134
+        },
+        {
+          "x": 801,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n77-0-n85",
+      "from": "n77",
+      "to": "n85",
+      "san": "Kg5",
+      "fromSquare": "f5",
+      "toSquare": "g5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 2134
+        },
+        {
+          "x": 3947,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n78-0-n39",
+      "from": "n78",
+      "to": "n39",
+      "san": "Ke5",
+      "fromSquare": "f5",
+      "toSquare": "e5",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4114,
+          "y": 2059
+        },
+        {
+          "x": 2812,
+          "y": 1281
+        }
+      ]
+    },
+    {
+      "id": "n79-0-n86",
+      "from": "n79",
+      "to": "n86",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 2134
+        },
+        {
+          "x": 3221,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n80-0-n64",
+      "from": "n80",
+      "to": "n64",
+      "san": "Kf6",
+      "fromSquare": "g5",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3630,
+          "y": 2059
+        },
+        {
+          "x": 3296,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n81-0-n85",
+      "from": "n81",
+      "to": "n85",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3463,
+          "y": 2134
+        },
+        {
+          "x": 3947,
+          "y": 2198
+        }
+      ]
+    },
+    {
+      "id": "n82-0-n87",
+      "from": "n82",
+      "to": "n87",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 2348
+        },
+        {
+          "x": 2011,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n83-0-n88",
+      "from": "n83",
+      "to": "n88",
+      "san": "Kh8",
+      "fromSquare": "h7",
+      "toSquare": "h8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1527,
+          "y": 2348
+        },
+        {
+          "x": 1527,
+          "y": 2394.2
+        },
+        {
+          "x": 1769,
+          "y": 2394.2
+        },
+        {
+          "x": 1769,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n83-1-n89",
+      "from": "n83",
+      "to": "n89",
+      "san": "Kh6",
+      "fromSquare": "h7",
+      "toSquare": "h6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1527,
+          "y": 2348
+        },
+        {
+          "x": 1527,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n84-0-n90",
+      "from": "n84",
+      "to": "n90",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 801,
+          "y": 2348
+        },
+        {
+          "x": 801,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n85-0-n91",
+      "from": "n85",
+      "to": "n91",
+      "san": "Kh7",
+      "fromSquare": "g7",
+      "toSquare": "h7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3947,
+          "y": 2348
+        },
+        {
+          "x": 3947,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n86-0-n92",
+      "from": "n86",
+      "to": "n92",
+      "san": "Kh6",
+      "fromSquare": "h7",
+      "toSquare": "h6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3221,
+          "y": 2348
+        },
+        {
+          "x": 3221,
+          "y": 2480
+        }
+      ]
+    },
+    {
+      "id": "n87-0-n93",
+      "from": "n87",
+      "to": "n93",
+      "san": "Kc6",
+      "fromSquare": "d5",
+      "toSquare": "c6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 2630
+        },
+        {
+          "x": 2011,
+          "y": 2694
+        }
+      ]
+    },
+    {
+      "id": "n88-0-n64",
+      "from": "n88",
+      "to": "n64",
+      "san": "Kf6",
+      "fromSquare": "f7",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1844,
+          "y": 2555
+        },
+        {
+          "x": 3146,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n89-0-n66",
+      "from": "n89",
+      "to": "n66",
+      "san": "Kf6",
+      "fromSquare": "f7",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1602,
+          "y": 2555
+        },
+        {
+          "x": 2904,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n90-0-n62",
+      "from": "n90",
+      "to": "n62",
+      "san": "Nd7",
+      "fromSquare": "e5",
+      "toSquare": "d7",
+      "transposition": true,
+      "points": [
+        {
+          "x": 726,
+          "y": 2555
+        },
+        {
+          "x": 634,
+          "y": 1777
+        }
+      ]
+    },
+    {
+      "id": "n91-0-n86",
+      "from": "n91",
+      "to": "n86",
+      "san": "Kf6",
+      "fromSquare": "g5",
+      "toSquare": "f6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3872,
+          "y": 2555
+        },
+        {
+          "x": 3296,
+          "y": 2273
+        }
+      ]
+    },
+    {
+      "id": "n93-0-n94",
+      "from": "n93",
+      "to": "n94",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 2844
+        },
+        {
+          "x": 2011,
+          "y": 2908
+        }
+      ]
+    },
+    {
+      "id": "n94-0-n61",
+      "from": "n94",
+      "to": "n61",
+      "san": "Kd6",
+      "fromSquare": "c6",
+      "toSquare": "d6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1936,
+          "y": 2983
+        },
+        {
+          "x": 876,
           "y": 1777
         }
       ]
@@ -1836,7 +4690,7 @@
     "nodeHeight": 150,
     "columnGap": 92,
     "rowGap": 64,
-    "width": 1844,
-    "height": 2066
+    "width": 4264,
+    "height": 3058
   }
 }

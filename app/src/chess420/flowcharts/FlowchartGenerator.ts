@@ -23,6 +23,7 @@ type FlowchartConfig = {
   maxNodes: number;
   whiteMoveStrategy: "prepareSearch" | "search" | "endgameHeuristic";
   maxSearchPlies?: number;
+  maxSearchWhiteMoves?: number;
 };
 
 type WorkingNode = Omit<
@@ -42,6 +43,57 @@ type WorkingEdge = Omit<FlowchartEdge, "points"> & {
 };
 
 type WhiteMoveSelector = (fen: string, layer: number) => Move | undefined;
+
+type PrepareSearchOutcome = "success" | "failure" | "horizon" | "cycle" | "escape";
+
+type PrepareSearchDebugSample = {
+  fen: string;
+  san?: string;
+  reason: string;
+  replySan?: string;
+  replyFen?: string;
+  depth?: number;
+};
+
+type PrepareSearchDebugStart = {
+  fen: string;
+  solved: boolean;
+  distance: number | null;
+  san?: string;
+  line: string[];
+};
+
+type PrepareSearchDebugReport = {
+  starts: PrepareSearchDebugStart[];
+  calls: number;
+  memoHits: number;
+  maxDepth: number;
+  outcomeCounts: Record<PrepareSearchOutcome, number>;
+  rankPrunedWhiteCandidates: number;
+  bishopPrunedWhiteCandidates: number;
+  escapedWhiteCandidates: number;
+  rejectedWhiteCandidateSamples: PrepareSearchDebugSample[];
+  escapingBlackReplySamples: PrepareSearchDebugSample[];
+};
+
+type PrepareSearchPolicyNode = {
+  fen: string;
+  turn: "w" | "b";
+  layer: number;
+  terminal?: FlowchartTerminal;
+  children: { san: string; childKey: string }[];
+};
+
+type PrepareSearchPolicy = {
+  nodes: Map<string, PrepareSearchPolicyNode>;
+  distances: Map<string, number>;
+  whiteMoves: Map<string, string>;
+};
+
+const PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT = 80;
+
+let prepareSearchDebugReport: PrepareSearchDebugReport =
+  createPrepareSearchDebugReport();
 
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
@@ -66,7 +118,7 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     failure: getKnightBishopPrepareFailure,
     maxNodes: 1200,
     whiteMoveStrategy: "prepareSearch",
-    maxSearchPlies: 10,
+    maxSearchWhiteMoves: 16,
   },
   knightBishop: {
     id: "knightBishop",
@@ -82,9 +134,37 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
 };
 
 export function generateFlowchart(id: FlowchartId): FlowchartData {
+  if (id === "knightBishopPrepare") {
+    prepareSearchDebugReport = createPrepareSearchDebugReport();
+  }
   return withEndgame(FLOWCHART_CONFIGS[id].endgameId, () =>
     buildFlowchart(FLOWCHART_CONFIGS[id]),
   );
+}
+
+export function getPrepareSearchDebugReport(): PrepareSearchDebugReport {
+  return prepareSearchDebugReport;
+}
+
+function createPrepareSearchDebugReport(): PrepareSearchDebugReport {
+  return {
+    starts: [],
+    calls: 0,
+    memoHits: 0,
+    maxDepth: 0,
+    outcomeCounts: {
+      success: 0,
+      failure: 0,
+      horizon: 0,
+      cycle: 0,
+      escape: 0,
+    },
+    rankPrunedWhiteCandidates: 0,
+    bishopPrunedWhiteCandidates: 0,
+    escapedWhiteCandidates: 0,
+    rejectedWhiteCandidateSamples: [],
+    escapingBlackReplySamples: [],
+  };
 }
 
 export function generateAllFlowcharts(): Record<FlowchartId, FlowchartData> {
@@ -459,96 +539,271 @@ function createSearchWhiteMoveSelector(
 function createPrepareSearchWhiteMoveSelector(
   config: FlowchartConfig,
 ): WhiteMoveSelector {
-  const memo = new Map<string, { distance: number | null; san?: string }>();
-  const visiting = new Set<string>();
-  const maxPlies = config.maxSearchPlies ?? 80;
+  const policy = createPrepareSearchPolicy(config);
 
-  const solve = (
-    fen: string,
-    pliesRemaining: number,
-  ): { distance: number | null; san?: string } => {
+  return (fen) => {
     const normalizedFen = normalizeFen(fen);
-    const turnKey = Brain.boardTurnKey(normalizedFen);
-    const key = `${turnKey} ${pliesRemaining}`;
-    const cached = memo.get(key);
-    if (cached) {
-      return cached;
-    }
-    if (config.success(normalizedFen)) {
-      const result = { distance: 0 };
-      memo.set(key, result);
-      return result;
-    }
-    if (
-      config.failure?.(normalizedFen) ||
-      !Number.isFinite(pliesRemaining) ||
-      pliesRemaining <= 0
-    ) {
-      const result = { distance: null };
-      memo.set(key, result);
-      return result;
-    }
-    if (visiting.has(turnKey)) {
-      return { distance: null };
-    }
-
-    visiting.add(turnKey);
-    const chess = Brain.getChess(normalizedFen);
-    const moves = getPrepareSearchCandidateMoves(
-      normalizedFen,
-      chess.moves({ verbose: true }),
+    return findLegalMoveBySan(
+      fen,
+      policy.whiteMoves.get(Brain.boardTurnKey(normalizedFen)),
     );
-    let result: { distance: number | null; san?: string };
-    if (moves.length === 0) {
-      result = { distance: null };
-    } else if (chess.turn() === "w") {
-      let best: { distance: number; san: string } | undefined;
-      for (const move of moves.slice(0, 24)) {
-        const next = Brain.getChess(normalizedFen);
-        next.move(move.san);
-        const child = solve(next.fen(), pliesRemaining - 1);
-        if (child.distance === null) {
-          continue;
-        }
-        const distance = child.distance + 1;
-        if (!best || distance < best.distance) {
-          best = { distance, san: move.san };
-          if (distance === 1) {
-            break;
-          }
-        }
-      }
-      result = best || { distance: null };
-    } else {
-      let worstDistance = 0;
-      for (const move of moves) {
-        const next = Brain.getChess(normalizedFen);
-        next.move(move.san);
-        const child = solve(next.fen(), pliesRemaining - 1);
-        if (child.distance === null) {
-          result = { distance: null };
-          visiting.delete(turnKey);
-          memo.set(key, result);
-          return result;
-        }
-        worstDistance = Math.max(worstDistance, child.distance);
-      }
-      result = { distance: worstDistance };
-    }
-
-    visiting.delete(turnKey);
-    memo.set(key, result);
-    return result;
-  };
-
-  return (fen, layer = 0) => {
-    const result = solve(normalizeFen(fen), Math.max(0, maxPlies - layer));
-    return findLegalMoveBySan(fen, result.san);
   };
 }
 
+function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy {
+  const nodes = new Map<string, PrepareSearchPolicyNode>();
+  const distances = new Map<string, number>();
+  const whiteMoves = new Map<string, string>();
+  const queue = config.starts.map((fen) => Brain.boardTurnKey(normalizeFen(fen)));
+  const queued = new Set(queue);
+  const fenByKey = new Map(
+    config.starts.map((fen) => [
+      Brain.boardTurnKey(normalizeFen(fen)),
+      normalizeFen(fen),
+    ]),
+  );
+
+  for (let head = 0; head < queue.length; head += 1) {
+    const key = queue[head];
+    const fen = fenByKey.get(key);
+    if (!fen || nodes.has(key)) {
+      continue;
+    }
+    const terminal = getTerminal(fen, config)?.kind;
+    const chess = Brain.getChess(fen);
+    const children: PrepareSearchPolicyNode["children"] = terminal
+      ? []
+      : getPrepareSearchCandidateMoves(fen, chess.moves({ verbose: true })).map(
+          (move) => {
+            const next = Brain.getChess(fen);
+            next.move(move.san);
+            const childFen = normalizeFen(next.fen());
+            const childKey = Brain.boardTurnKey(childFen);
+            fenByKey.set(childKey, childFen);
+            if (!queued.has(childKey)) {
+              queued.add(childKey);
+              queue.push(childKey);
+            }
+            return { san: move.san, childKey };
+          },
+        );
+    nodes.set(key, {
+      fen,
+      turn: chess.turn(),
+      layer: 0,
+      terminal,
+      children,
+    });
+    if (terminal === "success") {
+      distances.set(key, 0);
+    }
+  }
+
+  prepareSearchDebugReport.calls = nodes.size;
+  prepareSearchDebugReport.outcomeCounts.success = [...nodes.values()].filter(
+    (node) => node.terminal === "success",
+  ).length;
+  prepareSearchDebugReport.outcomeCounts.failure = [...nodes.values()].filter(
+    (node) => node.terminal === "failure",
+  ).length;
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    nodes.forEach((node, key) => {
+      if (distances.has(key) || node.terminal || node.children.length === 0) {
+        return;
+      }
+      const childDistances = node.children.map((child) =>
+        distances.get(child.childKey),
+      );
+      if (node.turn === "w") {
+        const solvedChildren = childDistances
+          .map((distance, index) =>
+            distance === undefined
+              ? undefined
+              : { distance: distance + 1, san: node.children[index].san },
+          )
+          .filter(
+            (child): child is { distance: number; san: string } =>
+              child !== undefined,
+          )
+          .sort((a, b) => a.distance - b.distance);
+        const best = solvedChildren[0];
+        if (!best) {
+          return;
+        }
+        distances.set(key, best.distance);
+        whiteMoves.set(key, best.san);
+        changed = true;
+      } else {
+        if (childDistances.some((distance) => distance === undefined)) {
+          return;
+        }
+        distances.set(key, Math.max(...(childDistances as number[])));
+        changed = true;
+      }
+    });
+  }
+
+  addPrepareSearchPolicyDebug(config, { nodes, distances, whiteMoves });
+  return { nodes, distances, whiteMoves };
+}
+
+function addPrepareSearchPolicyDebug(
+  config: FlowchartConfig,
+  policy: PrepareSearchPolicy,
+) {
+  prepareSearchDebugReport.maxDepth = Math.max(
+    ...[...policy.distances.values()],
+    0,
+  );
+  prepareSearchDebugReport.escapedWhiteCandidates = [...policy.nodes.values()]
+    .filter((node) => node.turn === "w")
+    .reduce(
+      (total, node) =>
+        total +
+        node.children.filter((child) => !policy.distances.has(child.childKey))
+          .length,
+      0,
+    );
+  prepareSearchDebugReport.outcomeCounts.escape = [...policy.nodes.values()].filter(
+    (node) =>
+      node.turn === "b" &&
+      !node.terminal &&
+      node.children.some((child) => !policy.distances.has(child.childKey)),
+  ).length;
+
+  policy.nodes.forEach((node) => {
+    if (
+      node.turn !== "b" ||
+      node.terminal ||
+      prepareSearchDebugReport.escapingBlackReplySamples.length >=
+        PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT
+    ) {
+      return;
+    }
+    const escape = node.children.find(
+      (child) => !policy.distances.has(child.childKey),
+    );
+    if (!escape) {
+      return;
+    }
+    addPrepareSearchDebugSample("escapingBlackReplySamples", {
+      fen: node.fen,
+      reason: "black reply escaped forced preparation",
+      replySan: escape.san,
+      replyFen: policy.nodes.get(escape.childKey)?.fen,
+      depth: policy.distances.get(escape.childKey),
+    });
+  });
+
+  config.starts.map(normalizeFen).forEach((fen) => {
+    const key = Brain.boardTurnKey(fen);
+    const distance = policy.distances.get(key);
+    prepareSearchDebugReport.starts.push({
+      fen,
+      solved: distance !== undefined,
+      distance: distance ?? null,
+      san: policy.whiteMoves.get(key),
+      line: getPrepareSearchPolicyLine(key, policy),
+    });
+  });
+}
+
+function getPrepareSearchPolicyLine(
+  startKey: string,
+  policy: PrepareSearchPolicy,
+): string[] {
+  const line: string[] = [];
+  const seen = new Set<string>();
+  let key = startKey;
+  while (!seen.has(key)) {
+    seen.add(key);
+    const node = policy.nodes.get(key);
+    if (!node || node.terminal || node.children.length === 0) {
+      break;
+    }
+    const san =
+      node.turn === "w"
+        ? policy.whiteMoves.get(key)
+        : node.children
+            .map((child) => ({
+              ...child,
+              distance: policy.distances.get(child.childKey),
+            }))
+            .filter(
+              (child): child is {
+                san: string;
+                childKey: string;
+                distance: number;
+              } => child.distance !== undefined,
+            )
+            .sort((a, b) => b.distance - a.distance)[0]?.san;
+    if (!san) {
+      break;
+    }
+    const child = node.children.find((candidate) => candidate.san === san);
+    if (!child) {
+      break;
+    }
+    line.push(san);
+    key = child.childKey;
+  }
+  return line;
+}
+
 function getPrepareSearchCandidateMoves(fen: string, moves: Move[]): Move[] {
-  return orderPrepareSearchMoves(fen, moves);
+  const orderedMoves = orderPrepareSearchMoves(fen, moves);
+  if (Brain.getChess(fen).turn() !== "w") {
+    return orderedMoves;
+  }
+  return orderedMoves.filter((move) => {
+    if (move.piece === "b") {
+      prepareSearchDebugReport.bishopPrunedWhiteCandidates += 1;
+      addPrepareSearchDebugSample("rejectedWhiteCandidateSamples", {
+        fen,
+        san: move.san,
+        reason: "white bishop move pruned",
+      });
+      return false;
+    }
+    const next = Brain.getChess(fen);
+    next.move(move.san);
+    const whiteKing = Brain.findPiece(next.fen(), "w", "k");
+    const bishop = Brain.findPiece(next.fen(), "w", "b");
+    const rejectedPiece = whiteKing && isBelowFourthRank(whiteKing.square)
+      ? "white king"
+      : bishop && isBelowFourthRank(bishop.square)
+      ? "bishop"
+      : undefined;
+    if (!rejectedPiece) {
+      return true;
+    }
+    prepareSearchDebugReport.rankPrunedWhiteCandidates += 1;
+    addPrepareSearchDebugSample("rejectedWhiteCandidateSamples", {
+      fen,
+      san: move.san,
+      reason: `${rejectedPiece} below fourth rank`,
+    });
+    return false;
+  });
+}
+
+function addPrepareSearchDebugSample(
+  key: "rejectedWhiteCandidateSamples" | "escapingBlackReplySamples",
+  sample: PrepareSearchDebugSample,
+) {
+  if (
+    prepareSearchDebugReport[key].length >= PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT
+  ) {
+    return;
+  }
+  prepareSearchDebugReport[key].push(sample);
+}
+
+function isBelowFourthRank(square: Square): boolean {
+  return Brain.squareCoords(square).rank < 3;
 }
 
 function orderPrepareSearchMoves(fen: string, moves: Move[]): Move[] {
@@ -1588,13 +1843,15 @@ function getKnightBishopPrepareSuccess(fen: string): string | undefined {
   const blackKing = Brain.findPiece(fen, "b", "k");
   const whiteKing = Brain.findPiece(fen, "w", "k");
   const knight = Brain.findPiece(fen, "w", "n");
-  if (!blackKing || !whiteKing || !knight) {
+  const bishop = Brain.findPiece(fen, "w", "b");
+  if (!blackKing || !whiteKing || !knight || !bishop) {
     return undefined;
   }
   return Brain.edgeDistance(blackKing.square) === 0 &&
     Brain.edgeDistance(knight.square) > 0 &&
     areSideAdjacent(knight.square, blackKing.square) &&
-    areSideAdjacent(knight.square, whiteKing.square)
+    areSideAdjacent(knight.square, whiteKing.square) &&
+    Brain.sameSquareColor(knight.square, bishop.square)
     ? "prepared"
     : undefined;
 }

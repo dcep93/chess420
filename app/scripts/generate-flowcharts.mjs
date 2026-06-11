@@ -16,6 +16,7 @@ import { dirname } from "node:path";
 import {
   generateAllFlowcharts,
   generateFlowchart,
+  getPrepareSearchDebugReport,
 } from "../src/chess420/flowcharts/FlowchartGenerator";
 import { isFlowchartId } from "../src/chess420/flowcharts/FlowchartTypes";
 
@@ -30,6 +31,14 @@ for (const [id, data] of Object.entries(generated)) {
   const path = \`src/chess420/flowcharts/generated/\${id}.json\`;
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, \`\${JSON.stringify(data, null, 2)}\\n\`);
+}
+if (!flowchartId || flowchartId === "knightBishopPrepare") {
+  const debugPath = ".tmp/prepare-search-debug.json";
+  mkdirSync(dirname(debugPath), { recursive: true });
+  writeFileSync(
+    debugPath,
+    \`\${JSON.stringify(getPrepareSearchDebugReport(), null, 2)}\\n\`,
+  );
 }
 `,
 );
