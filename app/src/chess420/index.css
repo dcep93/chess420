@@ -1032,28 +1032,8 @@
 .flowchart-node {
   position: absolute;
   z-index: 2;
-  width: 168px;
-  min-height: 204px;
-  padding: 8px;
-  border: 1px solid var(--panel-border);
-  background: rgba(20, 15, 12, 0.92);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
-}
-
-.flowchart-node--w {
-  border-color: rgba(232, 206, 171, 0.5);
-}
-
-.flowchart-node--b {
-  border-color: rgba(255, 123, 195, 0.42);
-}
-
-.flowchart-node--success {
-  border-color: rgba(117, 230, 163, 0.72);
-}
-
-.flowchart-node--failure {
-  border-color: rgba(255, 112, 112, 0.74);
+  width: 150px;
+  height: 150px;
 }
 
 .flowchart-board {
@@ -1061,7 +1041,6 @@
   width: 150px;
   height: 150px;
   overflow: hidden;
-  background: #19110e;
 }
 
 .flowchart-board img,
@@ -1082,46 +1061,42 @@
 }
 
 .flowchart-board__arrow {
+  stroke-width: 2.4;
+  stroke-linecap: round;
   opacity: 0.76;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
 }
 
-.flowchart-board__arrow-outline {
-  stroke: rgba(0, 0, 0, 0.82);
-  stroke-width: 4.8;
-  stroke-linecap: round;
-}
-
-.flowchart-board__arrow-line {
-  stroke-width: 2.4;
-  stroke-linecap: round;
-}
-
-.flowchart-board__arrow--white .flowchart-board__arrow-line {
+.flowchart-board__arrow--white {
   stroke: rgba(255, 188, 66, 0.9);
 }
 
-.flowchart-board__arrow--black .flowchart-board__arrow-line {
+.flowchart-board__arrow--black {
   stroke: rgba(255, 188, 66, 0.9);
 }
 
 .flowchart-board__arrows marker path {
   fill: rgba(255, 188, 66, 0.92);
-  stroke: rgba(0, 0, 0, 0.82);
-  stroke-width: 1.2;
-  paint-order: stroke;
 }
 
 .flowchart-node__label {
-  min-height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 0.5rem;
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  display: block;
   color: var(--text-soft);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   text-align: center;
   line-height: 1.15;
+  pointer-events: none;
+}
+
+.flowchart-node__label span:not(:empty) {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  background: rgba(10, 7, 5, 0.72);
+  border-radius: 4px;
 }
 
 .flowchart-index {

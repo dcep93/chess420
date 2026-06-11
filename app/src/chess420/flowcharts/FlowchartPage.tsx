@@ -102,7 +102,12 @@ function FlowchartView({ data }: { data: FlowchartData }) {
             </g>
             <g className="flowchart-edge-labels">
               {data.edges.map((edge) => (
-                <GraphEdgeLabel key={edge.id} edge={edge} source={nodesById.get(edge.from)} />
+                <GraphEdgeLabel
+                  key={edge.id}
+                  edge={edge}
+                  source={nodesById.get(edge.from)}
+                  target={nodesById.get(edge.to)}
+                />
               ))}
             </g>
           </svg>
@@ -134,15 +139,18 @@ function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: stri
 function GraphEdgeLabel({
   edge,
   source,
+  target,
 }: {
   edge: FlowchartEdge;
   source?: FlowchartNode;
+  target?: FlowchartNode;
 }) {
   const placement = getEdgeLabelPlacement(source);
   if (!placement) {
     return null;
   }
-  const labelWidth = Math.max(34, edge.san.length * 8.4 + 14);
+  const label = getEdgeLabel(edge, source, target);
+  const labelWidth = Math.max(34, label.length * 8.4 + 14);
   return (
     <g
       className={
@@ -160,10 +168,21 @@ function GraphEdgeLabel({
         rx="4"
       />
       <text x={placement.x} y={placement.y}>
-        {edge.san}
+        {label}
       </text>
     </g>
   );
+}
+
+function getEdgeLabel(
+  edge: FlowchartEdge,
+  source?: FlowchartNode,
+  target?: FlowchartNode,
+) {
+  if (source?.turn === "b" && target?.movesToSuccess !== undefined) {
+    return `${edge.san} #${target.movesToSuccess}`;
+  }
+  return edge.san;
 }
 
 function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
@@ -178,8 +197,8 @@ function getEdgeLabelPlacement(source?: FlowchartNode) {
     return undefined;
   }
   return {
-    x: source.x + 84,
-    y: source.y + 204 + 18,
+    x: source.x + 75,
+    y: source.y + 150 + 18,
   };
 }
 
@@ -218,8 +237,6 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
       <div className="flowchart-node__label">
         {node.terminal ? (
           <span>{node.terminalReason}</span>
-        ) : node.turn === "w" && node.movesToSuccess !== undefined ? (
-          <span>#{node.movesToSuccess}</span>
         ) : (
           <span aria-hidden="true" />
         )}
@@ -237,40 +254,16 @@ function BoardArrow({
 }) {
   const from = squarePoint(arrow.from);
   const to = squarePoint(arrow.to);
-  const outlineFrom = shortenLineStart(from, to, 3.5);
   return (
-    <g className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}>
-      <line
-        className="flowchart-board__arrow-outline"
-        x1={outlineFrom.x}
-        y1={outlineFrom.y}
-        x2={to.x}
-        y2={to.y}
-      />
-      <line
-        className="flowchart-board__arrow-line"
-        x1={from.x}
-        y1={from.y}
-        x2={to.x}
-        y2={to.y}
-        markerEnd={`url(#${markerId})`}
-      />
-    </g>
+    <line
+      className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
+      x1={from.x}
+      y1={from.y}
+      x2={to.x}
+      y2={to.y}
+      markerEnd={`url(#${markerId})`}
+    />
   );
-}
-
-function shortenLineStart(
-  from: { x: number; y: number },
-  to: { x: number; y: number },
-  amount: number,
-) {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  const length = Math.hypot(dx, dy) || 1;
-  return {
-    x: from.x + (dx / length) * amount,
-    y: from.y + (dy / length) * amount,
-  };
 }
 
 function squarePoint(square: string) {

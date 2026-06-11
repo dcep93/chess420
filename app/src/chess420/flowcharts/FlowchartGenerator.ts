@@ -39,8 +39,8 @@ type WorkingEdge = Omit<FlowchartEdge, "points"> & {
   points?: FlowchartPoint[];
 };
 
-const NODE_WIDTH = 168;
-const NODE_HEIGHT = 204;
+const NODE_WIDTH = 150;
+const NODE_HEIGHT = 150;
 const COLUMN_GAP = 58;
 const ROW_GAP = 84;
 const BOARD_IMAGE_ORIGIN = "http://fen-to-image.com";
