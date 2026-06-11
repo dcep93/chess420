@@ -546,6 +546,8 @@ test("generated flowcharts have renderable cached data", () => {
         assert.ok(distance <= distances[index - 1], node.fen);
       });
     });
+
+    assertFlowchartSpineLayout(data);
   });
 
   FLOWCHART_DATA.knightBishop.nodes.forEach((node) => {
@@ -556,6 +558,57 @@ test("generated flowcharts have renderable cached data", () => {
     }
   });
 });
+
+function assertFlowchartSpineLayout(
+  data: (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA],
+) {
+  const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
+  const edgesById = new Map(data.edges.map((edge) => [edge.id, edge]));
+  const incomingEdges = new Map<string, typeof data.edges>();
+  data.edges.forEach((edge) => {
+    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
+  });
+
+  if (data.id === "knightBishop") {
+    const start = data.nodes.find((node) => node.fen === data.starts[0]);
+    assert.ok(start);
+    const spineX = start.x;
+    const seen = new Set<string>();
+    let node = start;
+    while (node && !seen.has(node.id)) {
+      seen.add(node.id);
+      assert.equal(node.x, spineX, node.fen);
+      const edgeId = node.outgoingEdgeIds[0];
+      const edge = edgeId ? edgesById.get(edgeId) : undefined;
+      node = edge ? nodesById.get(edge.to) : undefined;
+    }
+  }
+
+  data.edges.forEach((edge) => {
+    const source = nodesById.get(edge.from);
+    const target = nodesById.get(edge.to);
+    assert.ok(source);
+    assert.ok(target);
+    if (target.y <= source.y) {
+      return;
+    }
+
+    const isPrimaryContinuation = source.outgoingEdgeIds[0] === edge.id;
+    const targetHasMultipleParents = (incomingEdges.get(target.id) || []).length > 1;
+    if (isPrimaryContinuation) {
+      assert.ok(
+        source.x === target.x || edge.transposition || targetHasMultipleParents,
+        `${data.id} primary edge ${edge.id} should stay straight or rejoin`,
+      );
+      return;
+    }
+
+    assert.ok(
+      target.x > source.x || edge.transposition || targetHasMultipleParents,
+      `${data.id} shortcut edge ${edge.id} should branch right or rejoin`,
+    );
+  });
+}
 
 function getFlowchartDistanceSortValue(
   node:

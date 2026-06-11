@@ -39,6 +39,13 @@ type WorkingEdge = Omit<FlowchartEdge, "points"> & {
   points?: FlowchartPoint[];
 };
 
+type LayoutLine = {
+  column: number;
+  nodes: WorkingNode[];
+  startLayer: number;
+  endLayer: number;
+};
+
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
 const COLUMN_GAP = 58;
@@ -201,7 +208,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
     title: config.title,
     endgameId: config.endgameId,
     starts: config.starts.map(normalizeFen),
-    nodes: orderedNodes.map(({ layer: _layer, ...node }) => node),
+    nodes: orderedNodes.map(toFlowchartNode),
     edges: orderedEdges.map((edge) => ({
       ...edge,
       points: edge.points || [],
@@ -214,6 +221,26 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
       width: layoutWidth,
       height: layoutHeight,
     },
+  };
+}
+
+function toFlowchartNode(node: WorkingNode): FlowchartNode {
+  return {
+    id: node.id,
+    key: node.key,
+    fen: node.fen,
+    boardFen: node.boardFen,
+    turn: node.turn,
+    x: node.x,
+    y: node.y,
+    imageUrl: node.imageUrl,
+    playUrl: node.playUrl,
+    boardArrows: node.boardArrows,
+    outgoingEdgeIds: node.outgoingEdgeIds,
+    referenceTo: node.referenceTo,
+    terminal: node.terminal,
+    terminalReason: node.terminalReason,
+    movesToSuccess: node.movesToSuccess,
   };
 }
 
@@ -618,62 +645,85 @@ function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
 
 function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
-  const incomingEdges = new Map<string, WorkingEdge[]>();
   const outgoingEdges = new Map<string, WorkingEdge[]>();
+  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
   edges.forEach((edge) => {
-    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
     outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
   });
 
-  const layers = new Map<number, WorkingNode[]>();
-  [...nodes.values()].forEach((node) => {
-    const layer = layers.get(node.layer) || [];
-    layer.push(node);
-    layers.set(node.layer, layer);
-  });
-
   const columnByNode = new Map<string, number>();
-  const orderedLayers = [...layers.entries()]
-    .sort(([a], [b]) => a - b)
-    .map(([layerIndex, layerNodes]) => {
-      const shouldGroupByWhitePlan =
-        layerNodes.filter((node) => node.turn === "w").length >
-        layerNodes.length / 2;
+  const lines: LayoutLine[] = [];
+  const lineByNode = new Map<string, LayoutLine>();
+  const branchQueue: Array<{
+    node: WorkingNode;
+    minimumColumn: number;
+  }> = [];
 
-      layerNodes.sort((a, b) =>
-          compareLayerNodes(
-            a,
-            b,
-            nodesById,
-            incomingEdges,
-            outgoingEdges,
-            shouldGroupByWhitePlan,
-          ),
-        );
-
-      layerNodes.forEach((node, columnIndex) => {
-        columnByNode.set(node.id, columnIndex);
-      });
-
-      return [layerIndex, layerNodes] as const;
-    });
-
-  orderedLayers.forEach(([layerIndex, layerNodes], layerPosition) => {
-    const previousLayerNodes = orderedLayers[layerPosition - 1]?.[1];
-    if (previousLayerNodes) {
-      addRightSideColumnGaps(
-        layerNodes,
-        previousLayerNodes,
-        outgoingEdges,
-        columnByNode,
-      );
+  const createLine = (startNode: WorkingNode, minimumColumn: number) => {
+    if (lineByNode.has(startNode.id)) {
+      return;
     }
 
-    layerNodes.forEach((node) => {
-      const columnIndex = columnByNode.get(node.id) || 0;
-      node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
-      node.y = layerIndex * (NODE_HEIGHT + ROW_GAP);
+    const line: LayoutLine = {
+      column: 0,
+      nodes: [],
+      startLayer: startNode.layer,
+      endLayer: startNode.layer,
+    };
+    let node: WorkingNode | undefined = startNode;
+
+    while (node && !lineByNode.has(node.id)) {
+      line.nodes.push(node);
+      lineByNode.set(node.id, line);
+      line.startLayer = Math.min(line.startLayer, node.layer);
+      line.endLayer = Math.max(line.endLayer, node.layer);
+
+      const lineNode = node;
+      const primaryEdge = getPrimaryLayoutEdge(lineNode, edgesById, outgoingEdges);
+      const branchEdges =
+        lineNode.turn === "b"
+          ? getLayoutEdges(lineNode, edgesById).filter(
+              (edge) => edge.id !== primaryEdge?.id,
+            )
+          : [];
+      branchEdges.forEach((edge) => {
+        const child = nodesById.get(edge.to);
+        if (child && !lineByNode.has(child.id)) {
+          branchQueue.push({ node: child, minimumColumn: 0 });
+        }
+      });
+
+      const child = primaryEdge ? nodesById.get(primaryEdge.to) : undefined;
+      node = child && !lineByNode.has(child.id) ? child : undefined;
+    }
+
+    line.column = allocateLayoutColumn(lines, line, minimumColumn);
+    lines.push(line);
+    line.nodes.forEach((lineNode) => {
+      columnByNode.set(lineNode.id, line.column);
     });
+
+    branchQueue.forEach((branch) => {
+      if (line.nodes.some((lineNode) => hasEdgeTo(lineNode, branch.node, outgoingEdges))) {
+        branch.minimumColumn = Math.max(branch.minimumColumn, line.column + 1);
+      }
+    });
+  };
+
+  const roots = [...nodes.values()]
+    .filter((node) => node.layer === 0)
+    .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+  roots.forEach((root) => createLine(root, 0));
+
+  for (let index = 0; index < branchQueue.length; index += 1) {
+    const branch = branchQueue[index];
+    createLine(branch.node, branch.minimumColumn);
+  }
+
+  nodes.forEach((node) => {
+    const columnIndex = columnByNode.get(node.id) ?? 0;
+    node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
+    node.y = node.layer * (NODE_HEIGHT + ROW_GAP);
   });
 
   edges.forEach((edge) => {
@@ -697,7 +747,9 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
     };
     const bendY = parentBottom.y + ROW_GAP * EDGE_BEND_FROM_PARENT_RATIO;
     edge.points =
-      child.y > parent.y
+      child.y > parent.y && parentBottom.x === childTop.x
+        ? [parentBottom, childTop]
+        : child.y > parent.y
         ? [
             parentBottom,
             { x: parentBottom.x, y: bendY },
@@ -708,40 +760,39 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
   });
 }
 
-function addRightSideColumnGaps(
-  layerNodes: WorkingNode[],
-  previousLayerNodes: WorkingNode[],
+function getPrimaryLayoutEdge(
+  node: WorkingNode,
+  edgesById: Map<string, WorkingEdge>,
   outgoingEdges: Map<string, WorkingEdge[]>,
-  columnByNode: Map<string, number>,
 ) {
-  const previousByColumn = new Map<number, WorkingNode>();
-  previousLayerNodes.forEach((node) => {
-    previousByColumn.set(columnByNode.get(node.id) || 0, node);
-  });
+  const edgeId = node.outgoingEdgeIds[0];
+  return edgeId ? edgesById.get(edgeId) : outgoingEdges.get(node.id)?.[0];
+}
 
-  const occupiedColumns = new Set(
-    layerNodes.map((node) => columnByNode.get(node.id) || 0),
-  );
+function getLayoutEdges(
+  node: WorkingNode,
+  edgesById: Map<string, WorkingEdge>,
+) {
+  return node.outgoingEdgeIds
+    .map((edgeId) => edgesById.get(edgeId))
+    .filter((edge): edge is WorkingEdge => edge !== undefined);
+}
 
-  for (let index = layerNodes.length - 1; index >= 0; index -= 1) {
-    const node = layerNodes[index];
-    const column = columnByNode.get(node.id) || 0;
-    if (!previousByColumn.has(column + 1)) {
-      break;
+function allocateLayoutColumn(
+  lines: LayoutLine[],
+  line: LayoutLine,
+  minimumColumn: number,
+) {
+  for (let column = minimumColumn; ; column += 1) {
+    const collides = lines.some(
+      (other) =>
+        other.column === column &&
+        line.startLayer <= other.endLayer &&
+        line.endLayer >= other.startLayer,
+    );
+    if (!collides) {
+      return column;
     }
-
-    const directlyAbove = previousByColumn.get(column);
-    if (directlyAbove && hasEdgeTo(directlyAbove, node, outgoingEdges)) {
-      break;
-    }
-
-    if (occupiedColumns.has(column + 1)) {
-      break;
-    }
-
-    occupiedColumns.delete(column);
-    columnByNode.set(node.id, column + 1);
-    occupiedColumns.add(column + 1);
   }
 }
 
@@ -751,84 +802,6 @@ function hasEdgeTo(
   outgoingEdges: Map<string, WorkingEdge[]>,
 ) {
   return (outgoingEdges.get(parent.id) || []).some((edge) => edge.to === child.id);
-}
-
-function compareLayerNodes(
-  a: WorkingNode,
-  b: WorkingNode,
-  nodesById: Map<string, WorkingNode>,
-  incomingEdges: Map<string, WorkingEdge[]>,
-  outgoingEdges: Map<string, WorkingEdge[]>,
-  shouldGroupByWhitePlan: boolean,
-): number {
-  const aPlan = getNodePlanKey(a, outgoingEdges);
-  const bPlan = getNodePlanKey(b, outgoingEdges);
-  const aAnchor = getNodeAnchor(a, nodesById, incomingEdges);
-  const bAnchor = getNodeAnchor(b, nodesById, incomingEdges);
-  const distanceOrder =
-    getNodeDistanceSortValue(b) - getNodeDistanceSortValue(a);
-  if (shouldGroupByWhitePlan) {
-    return (
-      aAnchor - bAnchor ||
-      distanceOrder ||
-      aPlan.localeCompare(bPlan) ||
-      a.id.localeCompare(b.id, undefined, { numeric: true })
-    );
-  }
-  return (
-    aAnchor - bAnchor ||
-    distanceOrder ||
-    getIncomingMoveKey(a, incomingEdges).localeCompare(
-      getIncomingMoveKey(b, incomingEdges),
-    ) ||
-    aPlan.localeCompare(bPlan) ||
-    a.id.localeCompare(b.id, undefined, { numeric: true })
-  );
-}
-
-function getNodeDistanceSortValue(node: WorkingNode) {
-  if (node.terminal === "success") {
-    return 0;
-  }
-  return node.movesToSuccess ?? Number.NEGATIVE_INFINITY;
-}
-
-function getNodeAnchor(
-  node: WorkingNode,
-  nodesById: Map<string, WorkingNode>,
-  incomingEdges: Map<string, WorkingEdge[]>,
-): number {
-  const parents = (incomingEdges.get(node.id) || [])
-    .map((edge) => nodesById.get(edge.from))
-    .filter((parent): parent is WorkingNode => parent !== undefined);
-  if (parents.length === 0) {
-    return Number(node.id.slice(1));
-  }
-  return (
-    parents.reduce((sum, parent) => sum + parent.x / (NODE_WIDTH + COLUMN_GAP), 0) /
-    parents.length
-  );
-}
-
-function getNodePlanKey(
-  node: WorkingNode,
-  outgoingEdges: Map<string, WorkingEdge[]>,
-): string {
-  const edge = outgoingEdges.get(node.id)?.[0];
-  if (node.turn === "w" && edge) {
-    return edge.san;
-  }
-  return node.terminal || node.referenceTo || "";
-}
-
-function getIncomingMoveKey(
-  node: WorkingNode,
-  incomingEdges: Map<string, WorkingEdge[]>,
-): string {
-  return (incomingEdges.get(node.id) || [])
-    .map((edge) => edge.san)
-    .sort()
-    .join(" ");
 }
 
 function getKnightBishopPrepareSuccess(fen: string): string | undefined {
