@@ -1061,22 +1061,20 @@
 }
 
 .flowchart-board__arrow {
-  stroke-width: 2.4;
-  stroke-linecap: round;
   opacity: 0.76;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
 }
 
-.flowchart-board__arrow--white {
-  stroke: rgba(255, 188, 66, 0.9);
+.flowchart-board__arrow-fill {
+  fill: rgba(255, 188, 66, 0.9);
 }
 
-.flowchart-board__arrow--black {
-  stroke: rgba(255, 188, 66, 0.9);
-}
-
-.flowchart-board__arrows marker path {
-  fill: rgba(255, 188, 66, 0.92);
+.flowchart-board__arrow-outline {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.92);
+  stroke-width: 0.72;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .flowchart-node__label {

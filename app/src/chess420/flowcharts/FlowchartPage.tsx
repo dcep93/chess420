@@ -282,22 +282,8 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
         <div className="flowchart-board">
           <img src={node.imageUrl} alt="" loading="lazy" />
           <svg viewBox="0 0 100 100" className="flowchart-board__arrows" aria-hidden="true">
-            <defs>
-              <marker
-                id={`${node.id}-board-arrow`}
-                viewBox="0 0 10 10"
-                refX="8"
-                refY="5"
-                markerWidth="7"
-                markerHeight="7"
-                markerUnits="userSpaceOnUse"
-                orient="auto-start-reverse"
-              >
-                <path d="M 0 0 L 10 5 L 0 10 z" />
-              </marker>
-            </defs>
             {node.boardArrows.map((arrow) => (
-              <BoardArrow key={arrow.id} arrow={arrow} markerId={`${node.id}-board-arrow`} />
+              <BoardArrow key={arrow.id} arrow={arrow} />
             ))}
           </svg>
         </div>
@@ -313,25 +299,84 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
   );
 }
 
-function BoardArrow({
-  arrow,
-  markerId,
-}: {
-  arrow: FlowchartBoardArrow;
-  markerId: string;
-}) {
+function BoardArrow({ arrow }: { arrow: FlowchartBoardArrow }) {
   const from = squarePoint(arrow.from);
   const to = squarePoint(arrow.to);
+  const shape = getBoardArrowShape(from, to);
   return (
-    <line
-      className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
-      x1={from.x}
-      y1={from.y}
-      x2={to.x}
-      y2={to.y}
-      markerEnd={`url(#${markerId})`}
-    />
+    <g className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}>
+      <polygon className="flowchart-board__arrow-fill" points={shape.fillPoints} />
+      <path className="flowchart-board__arrow-outline" d={shape.outlinePath} />
+    </g>
   );
+}
+
+const BOARD_ARROW_SHAFT_WIDTH = 3;
+const BOARD_ARROW_HEAD_LENGTH = 8;
+const BOARD_ARROW_HEAD_WIDTH = 9;
+
+function getBoardArrowShape(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const unit = { x: dx / length, y: dy / length };
+  const perpendicular = { x: -unit.y, y: unit.x };
+  const headLength = Math.min(BOARD_ARROW_HEAD_LENGTH, length * 0.45);
+  const headBase = {
+    x: to.x - unit.x * headLength,
+    y: to.y - unit.y * headLength,
+  };
+  const shaftHalfWidth = BOARD_ARROW_SHAFT_WIDTH / 2;
+  const headHalfWidth = BOARD_ARROW_HEAD_WIDTH / 2;
+  const tailLeft = offsetPoint(from, perpendicular, shaftHalfWidth);
+  const shaftLeft = offsetPoint(headBase, perpendicular, shaftHalfWidth);
+  const headLeft = offsetPoint(headBase, perpendicular, headHalfWidth);
+  const headRight = offsetPoint(headBase, perpendicular, -headHalfWidth);
+  const shaftRight = offsetPoint(headBase, perpendicular, -shaftHalfWidth);
+  const tailRight = offsetPoint(from, perpendicular, -shaftHalfWidth);
+  const fillPoints = [
+    tailLeft,
+    shaftLeft,
+    headLeft,
+    to,
+    headRight,
+    shaftRight,
+    tailRight,
+  ];
+  return {
+    fillPoints: fillPoints.map(formatPoint).join(" "),
+    outlinePath: [
+      `M ${formatPoint(tailLeft)}`,
+      `L ${formatPoint(shaftLeft)}`,
+      `L ${formatPoint(headLeft)}`,
+      `L ${formatPoint(to)}`,
+      `L ${formatPoint(headRight)}`,
+      `L ${formatPoint(shaftRight)}`,
+      `L ${formatPoint(tailRight)}`,
+    ].join(" "),
+  };
+}
+
+function offsetPoint(
+  point: { x: number; y: number },
+  vector: { x: number; y: number },
+  amount: number,
+) {
+  return {
+    x: point.x + vector.x * amount,
+    y: point.y + vector.y * amount,
+  };
+}
+
+function formatPoint(point: { x: number; y: number }) {
+  return `${roundSvg(point.x)},${roundSvg(point.y)}`;
+}
+
+function roundSvg(value: number) {
+  return Number(value.toFixed(3));
 }
 
 function squarePoint(square: string) {
