@@ -13,7 +13,7 @@
       "boardFen": "7k/8/5K2/6N1/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/7k/8/5K2/6N1/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//7k/8/5K2/6N1/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//7k/8/5K2/6N1/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n0-0-n1",
@@ -37,7 +37,7 @@
       "boardFen": "7k/5N2/5K2/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/7k/5N2/5K2/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//7k/5N2/5K2/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//7k/5N2/5K2/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n1-0-n2",
@@ -60,7 +60,7 @@
       "boardFen": "6k1/5N2/5K2/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/6k1/5N2/5K2/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//6k1/5N2/5K2/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//6k1/5N2/5K2/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n2-0-n3",
@@ -84,7 +84,7 @@
       "boardFen": "6k1/5N2/5KB1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/6k1/5N2/5KB1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//6k1/5N2/5KB1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//6k1/5N2/5KB1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n3-0-n4",
@@ -107,7 +107,7 @@
       "boardFen": "5k2/5N2/5KB1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/5k2/5N2/5KB1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/5N2/5KB1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//5k2/5N2/5KB1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n4-0-n5",
@@ -131,7 +131,7 @@
       "boardFen": "5k2/5N1B/5K2/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/5k2/5N1B/5K2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/5N1B/5K2/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//5k2/5N1B/5K2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n5-0-n6",
@@ -154,7 +154,7 @@
       "boardFen": "4k3/5N1B/5K2/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/5N1B/5K2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/5N1B/5K2/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/5N1B/5K2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n6-0-n7",
@@ -178,7 +178,7 @@
       "boardFen": "4k3/7B/5K2/4N3/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/7B/5K2/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/7B/5K2/4N3/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/7B/5K2/4N3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n7-0-n8",
@@ -209,7 +209,7 @@
       "boardFen": "5k2/7B/5K2/4N3/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/5k2/7B/5K2/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/7B/5K2/4N3/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//5k2/7B/5K2/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n8-0-n10",
@@ -233,7 +233,7 @@
       "boardFen": "3k4/7B/5K2/4N3/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/7B/5K2/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/7B/5K2/4N3/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/7B/5K2/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n9-0-n11",
@@ -257,7 +257,7 @@
       "boardFen": "5k2/3N3B/5K2/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/5k2/3N3B/5K2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/3N3B/5K2/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//5k2/3N3B/5K2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n10-0-n12",
@@ -280,7 +280,7 @@
       "boardFen": "3k4/7B/4K3/4N3/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/7B/4K3/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/7B/4K3/4N3/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/7B/4K3/4N3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n11-0-n13",
@@ -319,7 +319,7 @@
       "boardFen": "4k3/3N3B/5K2/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N3B/5K2/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N3B/5K2/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N3B/5K2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n12-0-n16",
@@ -343,7 +343,7 @@
       "boardFen": "4k3/7B/4K3/4N3/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/7B/4K3/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/7B/4K3/4N3/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/7B/4K3/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n13-0-n16",
@@ -367,7 +367,7 @@
       "boardFen": "8/2k4B/4K3/4N3/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2k4B/4K3/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2k4B/4K3/4N3/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2k4B/4K3/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n14-0-n17",
@@ -391,7 +391,7 @@
       "boardFen": "2k5/7B/4K3/4N3/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/7B/4K3/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/7B/4K3/4N3/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/7B/4K3/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n15-0-n18",
@@ -415,7 +415,7 @@
       "boardFen": "4k3/3N3B/4K3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N3B/4K3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N3B/4K3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n16-0-n19",
@@ -438,7 +438,7 @@
       "boardFen": "8/2kN3B/4K3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN3B/4K3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN3B/4K3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n17-0-n20",
@@ -485,7 +485,7 @@
       "boardFen": "2k5/3N3B/4K3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N3B/4K3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N3B/4K3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n18-0-n19",
@@ -524,7 +524,7 @@
       "boardFen": "3k4/3N3B/4K3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N3B/4K3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N3B/4K3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n19-0-n24",
@@ -548,7 +548,7 @@
       "boardFen": "2k5/3N3B/4K3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N3B/4K3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N3B/4K3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n20-0-n25",
@@ -572,7 +572,7 @@
       "boardFen": "8/3N3B/2k1K3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/3N3B/2k1K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N3B/2k1K3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N3B/2k1K3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n21-0-n26",
@@ -596,7 +596,7 @@
       "boardFen": "8/1k1N3B/4K3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N3B/4K3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N3B/4K3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n22-0-n27",
@@ -620,7 +620,7 @@
       "boardFen": "8/2kN3B/4K3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN3B/4K3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN3B/4K3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN3B/4K3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n23-0-n28",
@@ -644,7 +644,7 @@
       "boardFen": "3k4/3N3B/3K4/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N3B/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N3B/3K4/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N3B/3K4/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n24-0-n29",
@@ -675,7 +675,7 @@
       "boardFen": "2k5/3N4/4K3/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n25-0-n31",
@@ -706,7 +706,7 @@
       "boardFen": "8/3N4/2k1K3/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/3N4/2k1K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N4/2k1K3/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N4/2k1K3/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n26-0-n33",
@@ -737,7 +737,7 @@
       "boardFen": "8/1k1N4/4K3/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n27-0-n35",
@@ -792,7 +792,7 @@
       "boardFen": "8/2kN4/4K3/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n28-0-n39",
@@ -823,7 +823,7 @@
       "boardFen": "4k3/3N3B/3K4/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N3B/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N3B/3K4/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N3B/3K4/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n29-0-n40",
@@ -847,7 +847,7 @@
       "boardFen": "2k5/3N3B/3K4/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N3B/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N3B/3K4/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N3B/3K4/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n30-0-n41",
@@ -871,7 +871,7 @@
       "boardFen": "3k4/3N4/4K3/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4K3/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/4K3/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n31-0-n42",
@@ -895,7 +895,7 @@
       "boardFen": "8/2kN4/4K3/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n32-0-n43",
@@ -919,7 +919,7 @@
       "boardFen": "8/1k1N4/4K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n33-0-n44",
@@ -943,7 +943,7 @@
       "boardFen": "8/2kN4/4K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n34-0-n45",
@@ -967,7 +967,7 @@
       "boardFen": "k7/3N4/4K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n35-0-n46",
@@ -991,7 +991,7 @@
       "boardFen": "2k5/3N4/4K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n36-0-n47",
@@ -1015,7 +1015,7 @@
       "boardFen": "8/3N4/2k1K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/3N4/2k1K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N4/2k1K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N4/2k1K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n37-0-n48",
@@ -1039,7 +1039,7 @@
       "boardFen": "8/k2N4/4K3/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/4K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/4K3/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n38-0-n49",
@@ -1063,7 +1063,7 @@
       "boardFen": "2k5/3N4/4K3/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n39-0-n50",
@@ -1087,7 +1087,7 @@
       "boardFen": "4k3/3N4/3K2B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n40-0-n51",
@@ -1110,7 +1110,7 @@
       "boardFen": "2k5/7B/3K4/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/7B/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/7B/3K4/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/7B/3K4/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n41-0-n52",
@@ -1141,7 +1141,7 @@
       "boardFen": "3k4/3N4/3K4/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n42-0-n54",
@@ -1172,7 +1172,7 @@
       "boardFen": "8/2kN4/4K3/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n43-0-n56",
@@ -1203,7 +1203,7 @@
       "boardFen": "8/1k1N4/3K4/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n44-0-n58",
@@ -1242,7 +1242,7 @@
       "boardFen": "8/2kN4/4K3/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 452,
@@ -1256,7 +1256,7 @@
       "boardFen": "k7/3N4/3K4/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n46-0-n61",
@@ -1287,7 +1287,7 @@
       "boardFen": "2k5/3N4/4K3/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 678,
@@ -1301,7 +1301,7 @@
       "boardFen": "8/3N4/2k1K3/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/3N4/2k1K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N4/2k1K3/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N4/2k1K3/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n48-0-n62",
@@ -1332,7 +1332,7 @@
       "boardFen": "8/k2N4/3K4/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n49-0-n58",
@@ -1363,7 +1363,7 @@
       "boardFen": "2k5/3N4/3K4/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n50-0-n64",
@@ -1386,7 +1386,7 @@
       "boardFen": "3k4/3N4/3K2B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K2B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K2B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n51-0-n65",
@@ -1410,7 +1410,7 @@
       "boardFen": "3k4/7B/3K4/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/7B/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/7B/3K4/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/7B/3K4/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n52-0-n65",
@@ -1434,7 +1434,7 @@
       "boardFen": "1k6/7B/3K4/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/7B/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/7B/3K4/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/7B/3K4/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n53-0-n66",
@@ -1458,7 +1458,7 @@
       "boardFen": "4k3/3N4/3K4/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n54-0-n67",
@@ -1482,7 +1482,7 @@
       "boardFen": "2k5/3N4/3K4/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n55-0-n68",
@@ -1506,7 +1506,7 @@
       "boardFen": "2k5/3N4/4K3/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n56-0-n68",
@@ -1530,7 +1530,7 @@
       "boardFen": "3k4/3N4/4K3/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n57-0-n69",
@@ -1554,7 +1554,7 @@
       "boardFen": "k7/3N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n58-0-n70",
@@ -1578,7 +1578,7 @@
       "boardFen": "2k5/3N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n59-0-n71",
@@ -1602,7 +1602,7 @@
       "boardFen": "8/k2N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n60-0-n72",
@@ -1626,7 +1626,7 @@
       "boardFen": "8/1k1N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n61-0-n73",
@@ -1650,7 +1650,7 @@
       "boardFen": "8/1k1N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n62-0-n73",
@@ -1674,7 +1674,7 @@
       "boardFen": "8/2kN4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n63-0-n74",
@@ -1698,7 +1698,7 @@
       "boardFen": "3k4/3N4/3K4/8/4B3/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/8/4B3/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n64-0-n75",
@@ -1722,7 +1722,7 @@
       "boardFen": "3k4/8/3K2B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/8/3K2B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3K2B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/8/3K2B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n65-0-n76",
@@ -1745,7 +1745,7 @@
       "boardFen": "1k6/7B/2K5/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/7B/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/7B/2K5/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/7B/2K5/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n66-0-n77",
@@ -1784,7 +1784,7 @@
       "boardFen": "4k3/3N4/3K2B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 904,
@@ -1798,7 +1798,7 @@
       "boardFen": "2k5/3N4/3K4/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n68-0-n80",
@@ -1821,7 +1821,7 @@
       "boardFen": "3k4/3N4/3K4/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n69-0-n81",
@@ -1852,7 +1852,7 @@
       "boardFen": "k7/3N4/2K5/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/2K5/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/2K5/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/2K5/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n70-0-n83",
@@ -1875,7 +1875,7 @@
       "boardFen": "2k5/3N4/3K4/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 226,
@@ -1889,7 +1889,7 @@
       "boardFen": "8/k1KN4/8/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n72-0-n84",
@@ -1912,7 +1912,7 @@
       "boardFen": "8/1k1N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n73-0-n85",
@@ -1951,7 +1951,7 @@
       "boardFen": "8/2kN4/4K3/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n74-0-n88",
@@ -1990,7 +1990,7 @@
       "boardFen": "3k4/3N4/3K2B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n75-0-n91",
@@ -2013,7 +2013,7 @@
       "boardFen": "2k5/8/3K2B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/8/3K2B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n76-0-n92",
@@ -2037,7 +2037,7 @@
       "boardFen": "2k5/7B/2K5/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/7B/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/7B/2K5/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/7B/2K5/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n77-0-n93",
@@ -2061,7 +2061,7 @@
       "boardFen": "8/k6B/2K5/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k6B/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k6B/2K5/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k6B/2K5/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n78-0-n94",
@@ -2085,7 +2085,7 @@
       "boardFen": "k7/7B/2K5/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/7B/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/7B/2K5/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/7B/2K5/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n79-0-n95",
@@ -2109,7 +2109,7 @@
       "boardFen": "3k4/3N4/3K4/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n80-0-n96",
@@ -2133,7 +2133,7 @@
       "boardFen": "4k3/3N4/3K4/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n81-0-n97",
@@ -2157,7 +2157,7 @@
       "boardFen": "2k5/3N4/3K4/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n82-0-n98",
@@ -2181,7 +2181,7 @@
       "boardFen": "8/k2N4/2K5/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/2K5/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/2K5/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/2K5/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n83-0-n99",
@@ -2205,7 +2205,7 @@
       "boardFen": "k7/2KN4/8/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/8/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/8/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/8/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n84-0-n100",
@@ -2229,7 +2229,7 @@
       "boardFen": "k7/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n85-0-n101",
@@ -2253,7 +2253,7 @@
       "boardFen": "2k5/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n86-0-n102",
@@ -2277,7 +2277,7 @@
       "boardFen": "8/k2N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n87-0-n103",
@@ -2301,7 +2301,7 @@
       "boardFen": "2k5/3N4/4K3/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n88-0-n104",
@@ -2325,7 +2325,7 @@
       "boardFen": "3k4/3N4/4K3/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/4K3/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n89-0-n105",
@@ -2349,7 +2349,7 @@
       "boardFen": "8/1k1N4/4K3/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n90-0-n106",
@@ -2373,7 +2373,7 @@
       "boardFen": "2k5/3N4/3K2B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K2B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K2B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n91-0-n107",
@@ -2397,7 +2397,7 @@
       "boardFen": "2k5/5B2/3K4/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/5B2/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/5B2/3K4/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/5B2/3K4/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n92-0-n108",
@@ -2428,7 +2428,7 @@
       "boardFen": "2k5/1N5B/2K5/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N5B/2K5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N5B/2K5/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N5B/2K5/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n93-0-n110",
@@ -2451,7 +2451,7 @@
       "boardFen": "8/k7/2K5/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k7/2K5/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k7/2K5/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k7/2K5/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n94-0-n111",
@@ -2482,7 +2482,7 @@
       "boardFen": "k7/7B/1K6/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/7B/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/7B/1K6/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/7B/1K6/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n95-0-n113",
@@ -2505,7 +2505,7 @@
       "boardFen": "3k4/3N1B2/3K4/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N1B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n96-0-n114",
@@ -2528,7 +2528,7 @@
       "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n97-0-n115",
@@ -2551,7 +2551,7 @@
       "boardFen": "2k5/3N4/3K4/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 904,
@@ -2565,7 +2565,7 @@
       "boardFen": "8/k2N4/2K5/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/2K5/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/2K5/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/2K5/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n99-0-n116",
@@ -2588,7 +2588,7 @@
       "boardFen": "k7/2K5/8/2N5/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/8/2N5/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/8/2N5/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/8/2N5/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n100-0-n117",
@@ -2611,7 +2611,7 @@
       "boardFen": "k7/2KN4/8/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/8/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/8/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n101-0-n118",
@@ -2634,7 +2634,7 @@
       "boardFen": "2k5/3N4/3K4/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 678,
@@ -2648,7 +2648,7 @@
       "boardFen": "8/k1KN4/8/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n103-0-n119",
@@ -2671,7 +2671,7 @@
       "boardFen": "2k5/3N4/4K3/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n104-0-n120",
@@ -2710,7 +2710,7 @@
       "boardFen": "3k4/3N4/3K4/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n105-0-n123",
@@ -2741,7 +2741,7 @@
       "boardFen": "8/1k1N4/4K3/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n106-0-n125",
@@ -2796,7 +2796,7 @@
       "boardFen": "2k5/8/3K2B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/8/3K2B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/8/3K2B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/8/3K2B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n107-0-n130",
@@ -2827,7 +2827,7 @@
       "boardFen": "3k4/5B2/3K4/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/5B2/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/5B2/3K4/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/5B2/3K4/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n108-0-n132",
@@ -2851,7 +2851,7 @@
       "boardFen": "1k6/5B2/3K4/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/5B2/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/5B2/3K4/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/5B2/3K4/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n109-0-n133",
@@ -2875,7 +2875,7 @@
       "boardFen": "1k6/1N5B/2K5/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N5B/2K5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N5B/2K5/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N5B/2K5/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n110-0-n134",
@@ -2899,7 +2899,7 @@
       "boardFen": "k7/8/2K5/2N2B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/2K5/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/2K5/2N2B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/2K5/2N2B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n111-0-n135",
@@ -2923,7 +2923,7 @@
       "boardFen": "1k6/8/2K5/2N2B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/2K5/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/2K5/2N2B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/2K5/2N2B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n112-0-n136",
@@ -2947,7 +2947,7 @@
       "boardFen": "1k6/7B/1K6/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/7B/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/7B/1K6/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/7B/1K6/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n113-0-n136",
@@ -2971,7 +2971,7 @@
       "boardFen": "2k5/3N1B2/3K4/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N1B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N1B2/3K4/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N1B2/3K4/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n114-0-n137",
@@ -2995,7 +2995,7 @@
       "boardFen": "3k4/3N4/3KB3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3KB3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n115-0-n138",
@@ -3019,7 +3019,7 @@
       "boardFen": "k7/3N4/2K5/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/2K5/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/2K5/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/2K5/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n116-0-n139",
@@ -3043,7 +3043,7 @@
       "boardFen": "8/k1K5/8/2N5/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/8/2N5/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/8/2N5/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/8/2N5/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n117-0-n140",
@@ -3067,7 +3067,7 @@
       "boardFen": "8/k1KN4/8/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n118-0-n141",
@@ -3091,7 +3091,7 @@
       "boardFen": "k7/2KN4/8/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/8/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/8/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n119-0-n142",
@@ -3115,7 +3115,7 @@
       "boardFen": "3k4/3N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n120-0-n143",
@@ -3139,7 +3139,7 @@
       "boardFen": "8/2kN4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4068,
@@ -3154,7 +3154,7 @@
       "boardFen": "8/1k1N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 3842,
@@ -3169,7 +3169,7 @@
       "boardFen": "4k3/3N4/3K4/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n123-0-n144",
@@ -3193,7 +3193,7 @@
       "boardFen": "2k5/3N4/3K4/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n124-0-n145",
@@ -3217,7 +3217,7 @@
       "boardFen": "k7/3N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n125-0-n146",
@@ -3241,7 +3241,7 @@
       "boardFen": "2k5/3N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n126-0-n147",
@@ -3265,7 +3265,7 @@
       "boardFen": "8/2kN4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4294,
@@ -3280,7 +3280,7 @@
       "boardFen": "8/3N4/2k1K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/3N4/2k1K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N4/2k1K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N4/2k1K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n128-0-n148",
@@ -3304,7 +3304,7 @@
       "boardFen": "8/k2N4/4K3/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/4K3/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/4K3/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n129-0-n149",
@@ -3328,7 +3328,7 @@
       "boardFen": "3k4/8/3K2B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/8/3K2B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n130-0-n150",
@@ -3352,7 +3352,7 @@
       "boardFen": "1k6/8/3K2B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/3K2B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/3K2B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n131-0-n151",
@@ -3376,7 +3376,7 @@
       "boardFen": "3k4/1N3B2/3K4/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/1N3B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/1N3B2/3K4/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/1N3B2/3K4/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n132-0-n152",
@@ -3399,7 +3399,7 @@
       "boardFen": "1k6/8/3KB3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/3KB3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/3KB3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/3KB3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n133-0-n153",
@@ -3430,7 +3430,7 @@
       "boardFen": "1k6/1N5B/1K6/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N5B/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N5B/1K6/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N5B/1K6/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n134-0-n155",
@@ -3461,7 +3461,7 @@
       "boardFen": "k7/8/2K1B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/2K1B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/2K1B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/2K1B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n135-0-n157",
@@ -3492,7 +3492,7 @@
       "boardFen": "1k6/8/1K6/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n136-0-n159",
@@ -3515,7 +3515,7 @@
       "boardFen": "2k5/5B2/3K4/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/5B2/3K4/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/5B2/3K4/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/5B2/3K4/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4294,
@@ -3529,7 +3529,7 @@
       "boardFen": "3k4/3N1B2/3K4/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N1B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2034,
@@ -3543,7 +3543,7 @@
       "boardFen": "k7/2KN4/8/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/8/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/8/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2712,
@@ -3557,7 +3557,7 @@
       "boardFen": "8/k1K5/8/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/8/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/8/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/8/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n140-0-n160",
@@ -3580,7 +3580,7 @@
       "boardFen": "8/k1KN4/8/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n141-0-n161",
@@ -3603,7 +3603,7 @@
       "boardFen": "k7/2K5/1N6/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/1N6/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/1N6/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/1N6/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n142-0-n162",
@@ -3626,7 +3626,7 @@
       "boardFen": "3k4/3N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n143-0-n163",
@@ -3657,7 +3657,7 @@
       "boardFen": "4k3/3N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n144-0-n165",
@@ -3680,7 +3680,7 @@
       "boardFen": "2k5/3N4/3K4/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n145-0-n166",
@@ -3711,7 +3711,7 @@
       "boardFen": "k7/3N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n146-0-n168",
@@ -3742,7 +3742,7 @@
       "boardFen": "2k5/3N4/4K3/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/4K3/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/4K3/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n147-0-n170",
@@ -3773,7 +3773,7 @@
       "boardFen": "8/3N4/2k1K3/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/3N4/2k1K3/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3N4/2k1K3/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/3N4/2k1K3/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 452,
@@ -3787,7 +3787,7 @@
       "boardFen": "8/k2N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n149-0-n172",
@@ -3818,7 +3818,7 @@
       "boardFen": "3k4/1N6/3K2B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/1N6/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/1N6/3K2B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/1N6/3K2B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n150-0-n173",
@@ -3841,7 +3841,7 @@
       "boardFen": "1k6/8/2K3B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/2K3B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/2K3B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/2K3B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n151-0-n174",
@@ -3880,7 +3880,7 @@
       "boardFen": "2k5/1N3B2/3K4/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N3B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N3B2/3K4/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N3B2/3K4/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n152-0-n177",
@@ -3904,7 +3904,7 @@
       "boardFen": "8/k7/3KB3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k7/3KB3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k7/3KB3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k7/3KB3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n153-0-n178",
@@ -3928,7 +3928,7 @@
       "boardFen": "k7/8/3KB3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/3KB3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/3KB3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/3KB3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n154-0-n179",
@@ -3952,7 +3952,7 @@
       "boardFen": "2k5/1N5B/1K6/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N5B/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N5B/1K6/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N5B/1K6/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n155-0-n180",
@@ -3976,7 +3976,7 @@
       "boardFen": "k7/1N5B/1K6/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/1N5B/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/1N5B/1K6/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/1N5B/1K6/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n156-0-n181",
@@ -4000,7 +4000,7 @@
       "boardFen": "1k6/8/2K1B3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/2K1B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/2K1B3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/2K1B3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n157-0-n182",
@@ -4024,7 +4024,7 @@
       "boardFen": "8/k7/2K1B3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k7/2K1B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k7/2K1B3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k7/2K1B3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n158-0-n183",
@@ -4048,7 +4048,7 @@
       "boardFen": "k7/8/1K6/2N2B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K6/2N2B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K6/2N2B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n159-0-n184",
@@ -4072,7 +4072,7 @@
       "boardFen": "k7/2K5/8/2N2B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/8/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/8/2N2B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/8/2N2B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n160-0-n185",
@@ -4096,7 +4096,7 @@
       "boardFen": "k7/2KN4/8/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/8/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/8/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/8/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n161-0-n186",
@@ -4120,7 +4120,7 @@
       "boardFen": "8/k1K5/1N6/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/1N6/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/1N6/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/1N6/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n162-0-n187",
@@ -4144,7 +4144,7 @@
       "boardFen": "4k3/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n163-0-n188",
@@ -4168,7 +4168,7 @@
       "boardFen": "2k5/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4294,
@@ -4183,7 +4183,7 @@
       "boardFen": "3k4/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n165-0-n189",
@@ -4207,7 +4207,7 @@
       "boardFen": "3k4/3N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n166-0-n190",
@@ -4231,7 +4231,7 @@
       "boardFen": "8/1k1N4/3K4/8/8/3B4/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/8/8/3B4/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 3842,
@@ -4246,7 +4246,7 @@
       "boardFen": "8/1k1N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n168-0-n191",
@@ -4270,7 +4270,7 @@
       "boardFen": "8/k2N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4520,
@@ -4285,7 +4285,7 @@
       "boardFen": "3k4/3N4/4K3/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/4K3/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 3616,
@@ -4300,7 +4300,7 @@
       "boardFen": "8/2kN4/4K3/3B4/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/3B4/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/3B4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n171-0-n192",
@@ -4324,7 +4324,7 @@
       "boardFen": "k7/3N4/3K4/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 4068,
@@ -4339,7 +4339,7 @@
       "boardFen": "2k5/1N6/3K2B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/3K2B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/3K2B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n173-0-n193",
@@ -4363,7 +4363,7 @@
       "boardFen": "2k5/8/2K3B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/8/2K3B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/8/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/8/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n174-0-n193",
@@ -4387,7 +4387,7 @@
       "boardFen": "8/k7/2K3B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k7/2K3B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k7/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k7/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n175-0-n194",
@@ -4411,7 +4411,7 @@
       "boardFen": "k7/8/2K3B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/2K3B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/2K3B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n176-0-n195",
@@ -4435,7 +4435,7 @@
       "boardFen": "2k5/1N3B2/2K5/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N3B2/2K5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N3B2/2K5/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N3B2/2K5/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n177-0-n196",
@@ -4458,7 +4458,7 @@
       "boardFen": "8/k1K5/4B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/4B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/4B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/4B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n178-0-n197",
@@ -4481,7 +4481,7 @@
       "boardFen": "k7/8/2K1B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/2K1B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/2K1B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/2K1B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2486,
@@ -4495,7 +4495,7 @@
       "boardFen": "2k5/1N6/1K6/5B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/1K6/5B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/1K6/5B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/1K6/5B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n180-0-n198",
@@ -4518,7 +4518,7 @@
       "boardFen": "k7/7B/1K6/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/7B/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/7B/1K6/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/7B/1K6/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 3842,
@@ -4532,7 +4532,7 @@
       "boardFen": "1k6/8/1K2B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n182-0-n199",
@@ -4555,7 +4555,7 @@
       "boardFen": "8/k2B4/2K5/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k2B4/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2B4/2K5/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2B4/2K5/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n183-0-n200",
@@ -4586,7 +4586,7 @@
       "boardFen": "k7/8/1K2B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n184-0-n202",
@@ -4609,7 +4609,7 @@
       "boardFen": "k7/8/1K6/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n185-0-n203",
@@ -4632,7 +4632,7 @@
       "boardFen": "k7/2K5/1N6/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/1N6/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/1N6/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/1N6/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n186-0-n204",
@@ -4655,7 +4655,7 @@
       "boardFen": "2N5/k1K5/8/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2N5/k1K5/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2N5/k1K5/8/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2N5/k1K5/8/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n187-0-n205",
@@ -4678,7 +4678,7 @@
       "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/4k3/3N4/3KB3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 904,
@@ -4692,7 +4692,7 @@
       "boardFen": "3k4/3N1B2/3K4/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N1B2/3K4/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N1B2/3K4/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 1356,
@@ -4706,7 +4706,7 @@
       "boardFen": "3k4/3N4/3K2B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/3k4/3N4/3K2B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//3k4/3N4/3K2B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 1582,
@@ -4720,7 +4720,7 @@
       "boardFen": "8/1k1N4/3K4/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/1k1N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/1k1N4/3K4/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/1k1N4/3K4/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n191-0-n206",
@@ -4759,7 +4759,7 @@
       "boardFen": "8/2kN4/4K3/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/2kN4/4K3/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/2kN4/4K3/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 452,
@@ -4773,7 +4773,7 @@
       "boardFen": "2k5/1N6/2K3B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/2K3B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/2K3B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/2K3B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n193-0-n209",
@@ -4796,7 +4796,7 @@
       "boardFen": "8/k1K5/6B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/6B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/6B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/6B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n194-0-n210",
@@ -4819,7 +4819,7 @@
       "boardFen": "k7/8/1K4B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K4B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K4B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K4B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n195-0-n211",
@@ -4842,7 +4842,7 @@
       "boardFen": "1k6/1N3B2/2K5/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N3B2/2K5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N3B2/2K5/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N3B2/2K5/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n196-0-n212",
@@ -4866,7 +4866,7 @@
       "boardFen": "k7/2K5/4B3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/4B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/4B3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/4B3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n197-0-n213",
@@ -4890,7 +4890,7 @@
       "boardFen": "1k6/1N6/1K6/5B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N6/1K6/5B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N6/1K6/5B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N6/1K6/5B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n198-0-n214",
@@ -4914,7 +4914,7 @@
       "boardFen": "k7/8/1K2B3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K2B3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K2B3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n199-0-n215",
@@ -4938,7 +4938,7 @@
       "boardFen": "k7/3B4/2K5/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3B4/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3B4/2K5/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3B4/2K5/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n200-0-n215",
@@ -4962,7 +4962,7 @@
       "boardFen": "1k6/3B4/2K5/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/3B4/2K5/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/3B4/2K5/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/3B4/2K5/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n201-0-n216",
@@ -4986,7 +4986,7 @@
       "boardFen": "1k6/8/1K2B3/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K2B3/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K2B3/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n202-0-n217",
@@ -5010,7 +5010,7 @@
       "boardFen": "1k6/8/1K6/2N2B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K6/2N2B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K6/2N2B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n203-0-n218",
@@ -5034,7 +5034,7 @@
       "boardFen": "8/k1K5/1N6/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k1K5/1N6/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1K5/1N6/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1K5/1N6/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n204-0-n219",
@@ -5058,7 +5058,7 @@
       "boardFen": "k1N5/2K5/8/8/2B5/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k1N5/2K5/8/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k1N5/2K5/8/8/2B5/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k1N5/2K5/8/8/2B5/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n205-0-n220",
@@ -5082,7 +5082,7 @@
       "boardFen": "k7/3N4/3K4/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n206-0-n221",
@@ -5106,7 +5106,7 @@
       "boardFen": "2k5/3N4/3K4/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/3N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/3N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2260,
@@ -5121,7 +5121,7 @@
       "boardFen": "8/k2N4/3K4/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k2N4/3K4/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k2N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k2N4/3K4/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n208-0-n222",
@@ -5145,7 +5145,7 @@
       "boardFen": "1k6/1N6/2K3B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N6/2K3B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N6/2K3B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N6/2K3B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n209-0-n223",
@@ -5169,7 +5169,7 @@
       "boardFen": "k7/2K5/6B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/2K5/6B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2K5/6B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2K5/6B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n210-0-n224",
@@ -5193,7 +5193,7 @@
       "boardFen": "1k6/8/1K4B1/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K4B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K4B1/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K4B1/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n211-0-n225",
@@ -5217,7 +5217,7 @@
       "boardFen": "1k6/1N3B2/1K6/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N3B2/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N3B2/1K6/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N3B2/1K6/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n212-0-n226",
@@ -5248,7 +5248,7 @@
       "boardFen": "k7/8/1K2B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 1356,
@@ -5262,7 +5262,7 @@
       "boardFen": "1k6/8/1K6/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2486,
@@ -5276,7 +5276,7 @@
       "boardFen": "k7/3B4/1K6/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/3B4/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3B4/1K6/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3B4/1K6/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n215-0-n228",
@@ -5299,7 +5299,7 @@
       "boardFen": "1k6/3B4/1K6/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/3B4/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/3B4/1K6/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/3B4/1K6/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n216-0-n229",
@@ -5322,7 +5322,7 @@
       "boardFen": "1k6/8/NK2B3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/NK2B3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/NK2B3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/NK2B3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n217-0-n230",
@@ -5345,7 +5345,7 @@
       "boardFen": "1k6/8/NK6/5B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/NK6/5B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/NK6/5B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/NK6/5B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n218-0-n231",
@@ -5368,7 +5368,7 @@
       "boardFen": "2N5/k1K5/8/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2N5/k1K5/8/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2N5/k1K5/8/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2N5/k1K5/8/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n219-0-n232",
@@ -5391,7 +5391,7 @@
       "boardFen": "k1N5/2K5/8/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k1N5/2K5/8/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k1N5/2K5/8/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k1N5/2K5/8/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 226,
@@ -5406,7 +5406,7 @@
       "boardFen": "k7/3N4/3K4/8/2B5/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/3N4/3K4/8/2B5/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3N4/3K4/8/2B5/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 0,
@@ -5420,7 +5420,7 @@
       "boardFen": "8/k1KN4/8/1B6/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/1B6/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/1B6/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 1808,
@@ -5434,7 +5434,7 @@
       "boardFen": "1k6/1N6/1K4B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N6/1K4B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N6/1K4B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N6/1K4B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n223-0-n233",
@@ -5465,7 +5465,7 @@
       "boardFen": "k7/2KN4/6B1/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/2KN4/6B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/2KN4/6B1/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/2KN4/6B1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n224-0-n235",
@@ -5488,7 +5488,7 @@
       "boardFen": "1k6/8/1K6/2N2B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K6/2N2B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K6/2N2B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 678,
@@ -5502,7 +5502,7 @@
       "boardFen": "2k5/1N3B2/1K6/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N3B2/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N3B2/1K6/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N3B2/1K6/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n226-0-n236",
@@ -5526,7 +5526,7 @@
       "boardFen": "k7/1N3B2/1K6/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/1N3B2/1K6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/1N3B2/1K6/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/1N3B2/1K6/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n227-0-n237",
@@ -5550,7 +5550,7 @@
       "boardFen": "1k6/3B4/1K6/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/3B4/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/3B4/1K6/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/3B4/1K6/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n228-0-n238",
@@ -5574,7 +5574,7 @@
       "boardFen": "k7/3B4/1K6/2N5/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3B4/1K6/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3B4/1K6/2N5/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3B4/1K6/2N5/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n229-0-n239",
@@ -5598,7 +5598,7 @@
       "boardFen": "k7/8/NK2B3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/NK2B3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/NK2B3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/NK2B3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n230-0-n240",
@@ -5622,7 +5622,7 @@
       "boardFen": "k7/8/NK6/5B2/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/8/NK6/5B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/NK6/5B2/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/NK6/5B2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n231-0-n241",
@@ -5646,7 +5646,7 @@
       "boardFen": "k1N5/2K5/8/1B6/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k1N5/2K5/8/1B6/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k1N5/2K5/8/1B6/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k1N5/2K5/8/1B6/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n232-0-n242",
@@ -5670,7 +5670,7 @@
       "boardFen": "2k5/1N6/1K4B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/1K4B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/1K4B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/1K4B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n233-0-n243",
@@ -5694,7 +5694,7 @@
       "boardFen": "k7/1N6/1K4B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/1N6/1K4B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/1N6/1K4B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/1N6/1K4B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n234-0-n244",
@@ -5718,7 +5718,7 @@
       "boardFen": "8/k1KN4/6B1/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/6B1/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/6B1/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/6B1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n235-0-n245",
@@ -5742,7 +5742,7 @@
       "boardFen": "2k5/1N6/1K2B3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/1K2B3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/1K2B3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/1K2B3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n236-0-n246",
@@ -5765,7 +5765,7 @@
       "boardFen": "k7/1N6/1K2B3/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/1N6/1K2B3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/1N6/1K2B3/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/1N6/1K2B3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n237-0-n246",
@@ -5788,7 +5788,7 @@
       "boardFen": "1k6/3B4/NK6/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/3B4/NK6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/3B4/NK6/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/3B4/NK6/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
           "id": "n238-0-n247",
@@ -5811,7 +5811,7 @@
       "boardFen": "k7/8/1K2B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 904,
@@ -5825,7 +5825,7 @@
       "boardFen": "k7/8/NK6/3B4/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/NK6/3B4/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/NK6/3B4/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/NK6/3B4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 452,
@@ -5840,7 +5840,7 @@
       "boardFen": "k7/8/NK6/8/4B3/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/NK6/8/4B3/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/NK6/8/4B3/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/NK6/8/4B3/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 678,
@@ -5855,7 +5855,7 @@
       "boardFen": "k1N5/2K5/2B5/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k1N5/2K5/2B5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k1N5/2K5/2B5/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k1N5/2K5/2B5/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 0,
@@ -5870,7 +5870,7 @@
       "boardFen": "2k5/1N6/1K6/5B2/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/2k5/1N6/1K6/5B2/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//2k5/1N6/1K6/5B2/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//2k5/1N6/1K6/5B2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 1582,
@@ -5884,7 +5884,7 @@
       "boardFen": "k7/8/1K4B1/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/1K4B1/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/1K4B1/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/1K4B1/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 2034,
@@ -5898,7 +5898,7 @@
       "boardFen": "8/k1KN4/8/8/8/3B4/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/8/k1KN4/8/8/8/3B4/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/k1KN4/8/8/8/3B4/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//8/k1KN4/8/8/8/3B4/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 226,
@@ -5912,7 +5912,7 @@
       "boardFen": "1k6/1N6/1K2B3/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/1k6/1N6/1K2B3/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/1N6/1K2B3/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/1N6/1K2B3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n246-0-n248",
@@ -5936,7 +5936,7 @@
       "boardFen": "k7/3B4/NK6/8/8/8/8/8",
       "turn": "w",
       "imageUrl": "http://fen-to-image.com/image/k7/3B4/NK6/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/3B4/NK6/8/8/8/8/8_w_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/3B4/NK6/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
           "id": "n247-0-n249",
@@ -5960,7 +5960,7 @@
       "boardFen": "1k6/8/1K2B3/2N5/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/1k6/8/1K2B3/2N5/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//1k6/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//1k6/8/1K2B3/2N5/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 226,
@@ -5974,7 +5974,7 @@
       "boardFen": "k7/8/NKB5/8/8/8/8/8",
       "turn": "b",
       "imageUrl": "http://fen-to-image.com/image/k7/8/NKB5/8/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//k7/8/NKB5/8/8/8/8/8_b_-_-_0_1",
+      "playUrl": "/endgames/knightAndBishop+#w//k7/8/NKB5/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [],
       "outgoingEdgeIds": [],
       "x": 0,

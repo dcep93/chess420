@@ -980,13 +980,23 @@
   z-index: 1;
 }
 
-.flowchart-edge path {
+.flowchart-edge__gap {
+  fill: none;
+  stroke: #0d0907;
+  stroke-width: 11;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.flowchart-edge__line {
   fill: none;
   stroke: rgba(232, 206, 171, 0.92);
   stroke-width: 3;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
 }
 
-.flowchart-edge--transposition path {
+.flowchart-edge--transposition .flowchart-edge__line {
   stroke: rgba(255, 123, 195, 0.62);
   stroke-width: 1.7;
   stroke-dasharray: 5 7;
@@ -1072,22 +1082,34 @@
 }
 
 .flowchart-board__arrow {
-  stroke-width: 2.4;
-  stroke-linecap: round;
   opacity: 0.76;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
 }
 
-.flowchart-board__arrow--white {
+.flowchart-board__arrow-outline {
+  stroke: rgba(0, 0, 0, 0.82);
+  stroke-width: 4.8;
+  stroke-linecap: round;
+}
+
+.flowchart-board__arrow-line {
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.flowchart-board__arrow--white .flowchart-board__arrow-line {
   stroke: rgba(255, 188, 66, 0.9);
 }
 
-.flowchart-board__arrow--black {
+.flowchart-board__arrow--black .flowchart-board__arrow-line {
   stroke: rgba(255, 188, 66, 0.9);
 }
 
 .flowchart-board__arrows marker path {
   fill: rgba(255, 188, 66, 0.92);
+  stroke: rgba(0, 0, 0, 0.82);
+  stroke-width: 1.2;
+  paint-order: stroke;
 }
 
 .flowchart-node__label {

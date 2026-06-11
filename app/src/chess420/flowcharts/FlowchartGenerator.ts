@@ -15,6 +15,7 @@ type FlowchartConfig = {
   id: FlowchartId;
   title: string;
   endgameId: EndgameId;
+  playEndgameId: EndgameId;
   starts: string[];
   success: (fen: string) => string | undefined;
   failure?: (fen: string) => string | undefined;
@@ -49,6 +50,7 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     id: "knightBishopPrepare",
     title: "Knight and Bishop: Prepare",
     endgameId: "knightAndBishop+",
+    playEndgameId: "knightAndBishop",
     starts: [
       "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
       "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
@@ -64,8 +66,10 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     id: "knightBishop",
     title: "Knight and Bishop: Mate",
     endgameId: "knightAndBishop",
+    playEndgameId: "knightAndBishop+",
     starts: ["7k/8/5K2/6N1/4B3/8/8/8 w - - 42 22"],
     success: (fen) => (Brain.getChess(fen).isCheckmate() ? "checkmate" : undefined),
+    failure: getKnightBishopMateFailure,
     maxNodes: 3000,
     whiteMoveStrategy: "endgameHeuristic",
   },
@@ -230,7 +234,7 @@ function getOrCreateNode(
     boardFen: Brain.boardKey(fen),
     turn: Brain.getChess(fen).turn(),
     imageUrl: `${BOARD_IMAGE_ORIGIN}/image/${Brain.boardKey(fen)}`,
-    playUrl: `/endgames/${config.endgameId}#w//${fen.replaceAll(" ", "_")}`,
+    playUrl: `/endgames/${config.playEndgameId}#w//${fen.replaceAll(" ", "_")}`,
     boardArrows: [],
     outgoingEdgeIds: [],
     x: 0,
@@ -640,8 +644,7 @@ function getKnightBishopPrepareSuccess(fen: string): string | undefined {
 
 function getKnightBishopPrepareFailure(fen: string): string | undefined {
   const chess = Brain.getChess(fen);
-  const blackKing = Brain.findPiece(fen, "b", "k");
-  if (blackKing && Brain.squareCoords(blackKing.square).rank === 4) {
+  if (blackKingReachedFifthRank(fen)) {
     return "black king reached the fifth rank";
   }
   if (chess.isCheckmate()) {
@@ -651,6 +654,17 @@ function getKnightBishopPrepareFailure(fen: string): string | undefined {
     return "stalemate before preparation";
   }
   return undefined;
+}
+
+function getKnightBishopMateFailure(fen: string): string | undefined {
+  return blackKingReachedFifthRank(fen)
+    ? "black king reached the fifth rank"
+    : undefined;
+}
+
+function blackKingReachedFifthRank(fen: string): boolean {
+  const blackKing = Brain.findPiece(fen, "b", "k");
+  return Boolean(blackKing && Brain.squareCoords(blackKing.square).rank === 4);
 }
 
 function areSideAdjacent(a: Square, b: Square): boolean {

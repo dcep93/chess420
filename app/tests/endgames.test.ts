@@ -454,6 +454,10 @@ test("generated flowcharts have renderable cached data", () => {
   Object.values(FLOWCHART_DATA).forEach((data) => {
     const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
     const edgeIds = new Set(data.edges.map((edge) => edge.id));
+    const playEndgameId =
+      data.id === "knightBishopPrepare"
+        ? "knightAndBishop"
+        : "knightAndBishop+";
 
     data.starts.forEach((start) => {
       assert.ok(
@@ -466,7 +470,7 @@ test("generated flowcharts have renderable cached data", () => {
       assert.equal(node.imageUrl, `http://fen-to-image.com/image/${node.boardFen}`);
       assert.equal(
         node.playUrl,
-        `/endgames/${data.endgameId}#w//${node.fen.replaceAll(" ", "_")}`,
+        `/endgames/${playEndgameId}#w//${node.fen.replaceAll(" ", "_")}`,
       );
       node.outgoingEdgeIds.forEach((edgeId) => assert.ok(edgeIds.has(edgeId)));
 
@@ -509,10 +513,13 @@ test("generated flowcharts have renderable cached data", () => {
     });
   });
 
-  assert.equal(
-    FLOWCHART_DATA.knightBishop.nodes.some((node) => node.terminal === "failure"),
-    false,
-  );
+  FLOWCHART_DATA.knightBishop.nodes.forEach((node) => {
+    const blackKing = Brain.findPiece(node.fen, "b", "k");
+    if (blackKing && Brain.squareCoords(blackKing.square).rank === 4) {
+      assert.equal(node.terminal, "failure", node.fen);
+      assert.equal(node.terminalReason, "black king reached the fifth rank");
+    }
+  });
 });
 
 test("endgame dropdown is only shown in endgame mode", () => {
