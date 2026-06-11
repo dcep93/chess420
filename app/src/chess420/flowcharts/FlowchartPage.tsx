@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Brain from "../Brain";
 import { FLOWCHART_DATA } from "./flowchartData";
 import {
@@ -35,14 +36,24 @@ function FlowchartIndex() {
 }
 
 function FlowchartView({ data }: { data: FlowchartData }) {
+  const [isTiny, setIsTiny] = useState(false);
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
+  const scale = isTiny ? TINY_FLOWCHART_SCALE : 1;
   return (
     <main className="flowchart-page" data-bs-theme="dark">
       <header className="flowchart-header">
         <a href="/flowchart">Flowcharts</a>
         <h1>{data.title}</h1>
-        <span>
+        <label className="flowchart-scale-toggle">
+          <input
+            type="checkbox"
+            checked={isTiny}
+            onChange={(event) => setIsTiny(event.currentTarget.checked)}
+          />
+          <span>17%</span>
+        </label>
+        <span className="flowchart-header__count">
           {data.nodes.length} positions / {data.edges.length} moves
         </span>
       </header>
@@ -50,74 +61,85 @@ function FlowchartView({ data }: { data: FlowchartData }) {
         <div
           className="flowchart-canvas"
           style={{
-            width: data.layout.width,
-            height: data.layout.height,
+            width: data.layout.width * scale,
+            height: data.layout.height * scale,
           }}
         >
-          <svg
-            className="flowchart-edges"
-            width={data.layout.width}
-            height={data.layout.height}
-            viewBox={`0 0 ${data.layout.width} ${data.layout.height}`}
-            aria-hidden="true"
+          <div
+            className="flowchart-canvas__content"
+            style={{
+              width: data.layout.width,
+              height: data.layout.height,
+              transform: `scale(${scale})`,
+            }}
           >
-            <defs>
-              <marker
-                id={`${data.id}-edge-arrow`}
-                viewBox="0 0 10 10"
-                refX="8"
-                refY="5"
-                markerWidth="3"
-                markerHeight="3"
-                orient="auto-start-reverse"
-              >
-                <path className="flowchart-edge__head" d="M 0 0 L 10 5 L 0 10 z" />
-              </marker>
-              <marker
-                id={`${data.id}-transposition-arrow`}
-                viewBox="0 0 10 10"
-                refX="8"
-                refY="5"
-                markerWidth="4"
-                markerHeight="4"
-                orient="auto-start-reverse"
-              >
-                <path
-                  className="flowchart-edge__head flowchart-edge__head--transposition"
-                  d="M 0 0 L 10 5 L 0 10 z"
-                />
-              </marker>
-            </defs>
-            <g className="flowchart-edge-paths">
-              {orderEdgesForDrawing(data.edges).map((edge) => (
-                <GraphEdgePath
-                  key={edge.id}
-                  edge={edge}
-                  markerId={
-                    edge.transposition
-                      ? `${data.id}-transposition-arrow`
-                      : `${data.id}-edge-arrow`
-                  }
-                />
-              ))}
-            </g>
-            <g className="flowchart-edge-labels">
-              {data.edges.map((edge) => (
-                <GraphEdgeLabel
-                  key={edge.id}
-                  placement={edgeLabelPlacements.get(edge.id)}
-                />
-              ))}
-            </g>
-          </svg>
-          {data.nodes.map((node) => (
-            <FlowchartNodeCard key={node.id} node={node} />
-          ))}
+            <svg
+              className="flowchart-edges"
+              width={data.layout.width}
+              height={data.layout.height}
+              viewBox={`0 0 ${data.layout.width} ${data.layout.height}`}
+              aria-hidden="true"
+            >
+              <defs>
+                <marker
+                  id={`${data.id}-edge-arrow`}
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="3"
+                  markerHeight="3"
+                  orient="auto-start-reverse"
+                >
+                  <path className="flowchart-edge__head" d="M 0 0 L 10 5 L 0 10 z" />
+                </marker>
+                <marker
+                  id={`${data.id}-transposition-arrow`}
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="4"
+                  markerHeight="4"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    className="flowchart-edge__head flowchart-edge__head--transposition"
+                    d="M 0 0 L 10 5 L 0 10 z"
+                  />
+                </marker>
+              </defs>
+              <g className="flowchart-edge-paths">
+                {orderEdgesForDrawing(data.edges).map((edge) => (
+                  <GraphEdgePath
+                    key={edge.id}
+                    edge={edge}
+                    markerId={
+                      edge.transposition
+                        ? `${data.id}-transposition-arrow`
+                        : `${data.id}-edge-arrow`
+                    }
+                  />
+                ))}
+              </g>
+              <g className="flowchart-edge-labels">
+                {data.edges.map((edge) => (
+                  <GraphEdgeLabel
+                    key={edge.id}
+                    placement={edgeLabelPlacements.get(edge.id)}
+                  />
+                ))}
+              </g>
+            </svg>
+            {data.nodes.map((node) => (
+              <FlowchartNodeCard key={node.id} node={node} />
+            ))}
+          </div>
         </div>
       </div>
     </main>
   );
 }
+
+const TINY_FLOWCHART_SCALE = 0.17;
 
 function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: string }) {
   const points = edge.points;
@@ -176,6 +198,7 @@ function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
 const EDGE_LABEL_HEIGHT = 21;
 const EDGE_LABEL_GAP = 3;
 const EDGE_LABEL_ARROWHEAD_CLEARANCE = 24;
+const FLOWCHART_NODE_WIDTH = 150;
 const FLOWCHART_NODE_HEIGHT = 150;
 
 function getEdgeLabel(
@@ -195,6 +218,7 @@ function getEdgeLabelPlacements(
 ) {
   const placed: EdgeLabelPlacement[] = [];
   const placements = new Map<string, EdgeLabelPlacement>();
+  const nodeBounds = [...nodesById.values()].map(getFlowchartNodeBounds);
   const candidates = edges
     .map((edge, index) => {
       const source = nodesById.get(edge.from);
@@ -224,7 +248,7 @@ function getEdgeLabelPlacements(
     );
 
   candidates.forEach((candidate) => {
-    const placement = getBestEdgeLabelPlacement(candidate, placed);
+    const placement = getBestEdgeLabelPlacement(candidate, placed, nodeBounds);
     placed.push(placement);
     placements.set(placement.edge.id, placement);
   });
@@ -239,6 +263,7 @@ function getEdgeLabelWidth(label: string) {
 function getBestEdgeLabelPlacement(
   candidate: EdgeLabelPlacement & { index: number },
   placed: EdgeLabelPlacement[],
+  nodeBounds: FlowchartBounds[],
 ): EdgeLabelPlacement {
   const minY = candidate.minY ?? Number.NEGATIVE_INFINITY;
   const maxY = candidate.maxY ?? Number.POSITIVE_INFINITY;
@@ -254,7 +279,7 @@ function getBestEdgeLabelPlacement(
   };
   const laneStep = EDGE_LABEL_HEIGHT + EDGE_LABEL_GAP;
   const laneOffsets = [0];
-  for (let index = 1; index <= 8; index += 1) {
+  for (let index = 1; index <= 24; index += 1) {
     laneOffsets.push(-index * laneStep, index * laneStep);
   }
 
@@ -264,7 +289,10 @@ function getBestEdgeLabelPlacement(
       continue;
     }
     placement.y = y;
-    if (!placed.some((other) => doEdgeLabelsOverlap(placement, other))) {
+    if (
+      !placed.some((other) => doEdgeLabelsOverlap(placement, other)) &&
+      !nodeBounds.some((bounds) => doEdgeLabelOverlapBounds(placement, bounds))
+    ) {
       return placement;
     }
   }
@@ -274,11 +302,36 @@ function getBestEdgeLabelPlacement(
 }
 
 function doEdgeLabelsOverlap(a: EdgeLabelPlacement, b: EdgeLabelPlacement) {
+  return doEdgeLabelOverlapBounds(a, {
+    left: b.x - b.labelWidth / 2,
+    right: b.x + b.labelWidth / 2,
+    top: b.y - EDGE_LABEL_HEIGHT / 2,
+    bottom: b.y + EDGE_LABEL_HEIGHT / 2,
+  });
+}
+
+type FlowchartBounds = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
+
+function getFlowchartNodeBounds(node: FlowchartNode): FlowchartBounds {
+  return {
+    left: node.x,
+    right: node.x + FLOWCHART_NODE_WIDTH,
+    top: node.y,
+    bottom: node.y + FLOWCHART_NODE_HEIGHT,
+  };
+}
+
+function doEdgeLabelOverlapBounds(label: EdgeLabelPlacement, bounds: FlowchartBounds) {
   return (
-    a.x - a.labelWidth / 2 < b.x + b.labelWidth / 2 &&
-    a.x + a.labelWidth / 2 > b.x - b.labelWidth / 2 &&
-    a.y - EDGE_LABEL_HEIGHT / 2 < b.y + EDGE_LABEL_HEIGHT / 2 &&
-    a.y + EDGE_LABEL_HEIGHT / 2 > b.y - EDGE_LABEL_HEIGHT / 2
+    label.x - label.labelWidth / 2 < bounds.right &&
+    label.x + label.labelWidth / 2 > bounds.left &&
+    label.y - EDGE_LABEL_HEIGHT / 2 < bounds.bottom &&
+    label.y + EDGE_LABEL_HEIGHT / 2 > bounds.top
   );
 }
 

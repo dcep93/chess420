@@ -957,7 +957,24 @@
   text-decoration: none;
 }
 
-.flowchart-header span {
+.flowchart-scale-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.flowchart-scale-toggle input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--accent-cyan);
+}
+
+.flowchart-header__count {
   margin-left: auto;
   font-size: 0.88rem;
   white-space: nowrap;
@@ -975,6 +992,11 @@
   position: relative;
   min-width: 100%;
   min-height: 100%;
+}
+
+.flowchart-canvas__content {
+  position: relative;
+  transform-origin: top left;
 }
 
 .flowchart-edges {

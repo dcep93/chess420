@@ -48,14 +48,14 @@ type LayoutLine = {
 };
 
 type LayoutOptions = {
-  extendLeftSpine: boolean;
   insertBranchColumns: boolean;
 };
 
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
 const COLUMN_GAP = 92;
-const ROW_GAP = 132;
+const ROW_GAP = 64;
+const ELBOW_ROW_GAP = 132;
 const EDGE_BEND_FROM_PARENT_RATIO = 0.35;
 const INSERT_BRANCH_COLUMNS_THROUGH_LAYER = 12;
 const BOARD_IMAGE_ORIGIN = "http://fen-to-image.com";
@@ -110,7 +110,7 @@ export function generateAllFlowcharts(): Record<FlowchartId, FlowchartData> {
 }
 
 export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
-  const previousRowPitch = data.layout.nodeHeight + data.layout.rowGap;
+  const rows = [...new Set(data.nodes.map((node) => node.y))].sort((a, b) => a - b);
   const nodes = new Map(
     data.nodes.map((node) => [
       node.id,
@@ -118,7 +118,7 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
         ...node,
         boardArrows: [...node.boardArrows],
         outgoingEdgeIds: [...node.outgoingEdgeIds],
-        layer: Math.round(node.y / previousRowPitch),
+        layer: rows.indexOf(node.y),
       },
     ]),
   );
@@ -132,11 +132,10 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
     transposition: edge.transposition,
   }));
 
+  collapseReferenceNodes(nodes, edges);
+  assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignLayoutWithReferences(nodes, edges, {
-    extendLeftSpine: data.id === "knightBishop",
-    insertBranchColumns: data.id === "knightBishop",
-  });
+  assignLayout(nodes, edges, { insertBranchColumns: data.id === "knightBishop" });
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -212,10 +211,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
         config,
         node.layer + 1,
       );
-      const child =
-        childAlreadyKnown && cachedChild.layer < node.layer
-          ? createReferenceNode(nodes, cachedChild, node.layer + 1)
-          : cachedChild;
+      const child = cachedChild;
       const transposition = childAlreadyKnown;
       const edgeId = `${node.id}-${moveIndex}-${child.id}`;
       const edge: WorkingEdge = {
@@ -243,11 +239,9 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   }
 
   assignSuccessDistances(nodes, edges);
+  assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignLayoutWithReferences(nodes, edges, {
-    extendLeftSpine: config.id === "knightBishop",
-    insertBranchColumns: config.id === "knightBishop",
-  });
+  assignLayout(nodes, edges, { insertBranchColumns: config.id === "knightBishop" });
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -334,26 +328,6 @@ function getOrCreateNode(
       : {}),
   };
   nodes.set(key, node);
-  return node;
-}
-
-function createReferenceNode(
-  nodes: Map<string, WorkingNode>,
-  target: WorkingNode,
-  layer: number,
-): WorkingNode {
-  const node: WorkingNode = {
-    ...target,
-    id: `n${nodes.size}`,
-    boardArrows: [],
-    outgoingEdgeIds: [],
-    referenceTo: target.id,
-    terminal: undefined,
-    terminalReason: undefined,
-    movesToSuccess: undefined,
-    layer,
-  };
-  nodes.set(`reference:${node.id}`, node);
   return node;
 }
 
@@ -700,164 +674,126 @@ function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
   return edge;
 }
 
-function assignLayoutWithReferences(
-  nodes: Map<string, WorkingNode>,
-  edges: WorkingEdge[],
-  options: LayoutOptions,
-) {
-  for (let pass = 0; pass < 8; pass += 1) {
-    assignLayout(nodes, edges, options);
-    const materialized = materializeLeftRejoinReferences(nodes, edges);
-    const extended = options.extendLeftSpine
-      ? extendLeftSpineReferences(nodes, edges)
-      : false;
-    if (!materialized && !extended) {
-      return;
-    }
-  }
-  assignLayout(nodes, edges, options);
-}
-
-function extendLeftSpineReferences(
+function collapseReferenceNodes(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
 ) {
-  const roots = [...nodes.values()]
-    .filter((node) => node.layer === 0)
-    .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
-  const root = roots[0];
-  if (!root || root.x !== 0) {
-    return false;
-  }
-
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
-  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
-  const maxLayer = Math.max(...[...nodes.values()].map((candidate) => candidate.layer));
-  let node: WorkingNode | undefined = root;
-  const seen = new Set<string>();
-  const seenReferenceTargets = new Set<string>();
-  let changed = false;
-
-  while (node && !seen.has(node.id) && node.layer < maxLayer) {
-    seen.add(node.id);
-    const edgeId = node.outgoingEdgeIds[0];
-    if (edgeId) {
-      node = nodesById.get(edgesById.get(edgeId)?.to || "");
-      continue;
-    }
-
-    const referenceTarget = node.referenceTo
-      ? nodesById.get(node.referenceTo)
-      : undefined;
-    const targetEdgeId = referenceTarget?.outgoingEdgeIds[0];
-    const targetEdge = targetEdgeId ? edgesById.get(targetEdgeId) : undefined;
-    const targetChild = targetEdge ? nodesById.get(targetEdge.to) : undefined;
-    if (!referenceTarget || !targetEdge || !targetChild) {
-      break;
-    }
-    if (seenReferenceTargets.has(referenceTarget.id)) {
-      break;
-    }
-    seenReferenceTargets.add(referenceTarget.id);
-
-    const child = createLayoutReferenceNode(nodes, targetChild, node.layer + 1);
-    const edge = createLayoutReferenceEdge(node, child, targetEdge);
-    edges.push(edge);
-    edgesById.set(edge.id, edge);
-    nodesById.set(child.id, child);
-    node.outgoingEdgeIds = [edge.id];
-    node.boardArrows = [
-      {
-        id: edge.id,
-        san: edge.san,
-        from: edge.fromSquare,
-        to: edge.toSquare,
-        color: node.turn === "w" ? "white" : "black",
-      },
-    ];
-    node = child;
-    changed = true;
+  const referenceIds = new Set(
+    [...nodes.values()]
+      .filter((node) => node.referenceTo)
+      .map((node) => node.id),
+  );
+  if (referenceIds.size === 0) {
+    return;
   }
 
-  return changed;
-}
-
-function createLayoutReferenceEdge(
-  parent: WorkingNode,
-  child: WorkingNode,
-  targetEdge: WorkingEdge,
-): WorkingEdge {
-  return {
-    id: `${parent.id}-spine-${child.id}`,
-    from: parent.id,
-    to: child.id,
-    san: targetEdge.san,
-    fromSquare: targetEdge.fromSquare,
-    toSquare: targetEdge.toSquare,
-    transposition: true,
+  const resolveReferenceId = (id: string) => {
+    let node = nodesById.get(id);
+    const seen = new Set<string>();
+    while (node?.referenceTo && !seen.has(node.id)) {
+      seen.add(node.id);
+      node = nodesById.get(node.referenceTo);
+    }
+    return node?.id || id;
   };
+
+  for (const [key, node] of nodes) {
+    if (node.referenceTo) {
+      nodes.delete(key);
+    }
+  }
+
+  let writeIndex = 0;
+  edges.forEach((edge) => {
+    if (referenceIds.has(edge.from)) {
+      return;
+    }
+    const originalTo = edge.to;
+    const to = resolveReferenceId(originalTo);
+    if (to === edge.from) {
+      return;
+    }
+    edge.to = to;
+    if (referenceIds.has(originalTo) || to !== originalTo) {
+      edge.transposition = true;
+    }
+    edges[writeIndex] = edge;
+    writeIndex += 1;
+  });
+  edges.length = writeIndex;
+
+  nodes.forEach((node) => {
+    node.referenceTo = undefined;
+    node.outgoingEdgeIds = [];
+    node.boardArrows = [];
+  });
+  edges.forEach((edge) => {
+    const node = nodesById.get(edge.from);
+    if (!node || !nodes.has(edge.from)) {
+      return;
+    }
+    node.outgoingEdgeIds.push(edge.id);
+    node.boardArrows.push({
+      id: edge.id,
+      san: edge.san,
+      from: edge.fromSquare,
+      to: edge.toSquare,
+      color: node.turn === "w" ? "white" : "black",
+    });
+  });
 }
 
-function materializeLeftRejoinReferences(
+function assignTranspositionOwners(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
 ) {
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
-  const leftEdges = edges.filter((edge) => {
-    const parent = nodesById.get(edge.from);
-    const child = nodesById.get(edge.to);
-    return Boolean(parent && child && child.y > parent.y && child.x < parent.x);
+  const incomingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    if (nodesById.has(edge.from) && nodesById.has(edge.to)) {
+      incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
+    }
   });
 
-  leftEdges.forEach((edge) => {
-    const parent = nodesById.get(edge.from);
-    const target = nodesById.get(edge.to);
-    if (!parent || !target) {
+  nodes.forEach((node) => {
+    const incoming = incomingEdges.get(node.id) || [];
+    if (
+      node.layer === 0 ||
+      incoming.length === 0 ||
+      incoming.some((edge) => !edge.transposition)
+    ) {
       return;
     }
-    const reference = createLayoutReferenceNode(
-      nodes,
-      target,
-      parent.layer + 1,
-    );
-    edge.to = reference.id;
-    edge.transposition = true;
-  });
 
-  return leftEdges.length > 0;
+    const owner = incoming
+      .filter((edge) => {
+        const source = nodesById.get(edge.from);
+        return source !== undefined && source.layer < node.layer;
+      })
+      .sort((a, b) => comparePotentialOwnerEdges(a, b, node, nodesById))[0];
+    if (owner) {
+      owner.transposition = false;
+    }
+  });
 }
 
-function createLayoutReferenceNode(
-  nodes: Map<string, WorkingNode>,
+function comparePotentialOwnerEdges(
+  a: WorkingEdge,
+  b: WorkingEdge,
   target: WorkingNode,
-  layer: number,
+  nodesById: Map<string, WorkingNode>,
 ) {
-  const id = getNextFlowchartNodeId(nodes);
-  const node: WorkingNode = {
-    ...target,
-    id,
-    key: `reference:${id}`,
-    boardArrows: [],
-    outgoingEdgeIds: [],
-    referenceTo: target.referenceTo || target.id,
-    terminal: undefined,
-    terminalReason: undefined,
-    movesToSuccess: target.movesToSuccess,
-    x: 0,
-    y: 0,
-    layer,
-  };
-  nodes.set(node.key, node);
-  return node;
-}
-
-function getNextFlowchartNodeId(nodes: Map<string, WorkingNode>) {
-  const nextNumber =
-    Math.max(
-      -1,
-      ...[...nodes.values()].map((node) => Number(node.id.slice(1))),
-    ) + 1;
-  return `n${nextNumber}`;
+  const sourceA = getNodeById(nodesById, a.from);
+  const sourceB = getNodeById(nodesById, b.from);
+  const layerGapA = target.layer - sourceA.layer;
+  const layerGapB = target.layer - sourceB.layer;
+  return (
+    layerGapA - layerGapB ||
+    Math.abs(sourceA.x - target.x) - Math.abs(sourceB.x - target.x) ||
+    a.san.localeCompare(b.san) ||
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
 }
 
 function assignLayout(
@@ -962,7 +898,11 @@ function assignLayout(
   nodes.forEach((node) => {
     const columnIndex = columnByNode.get(node.id) ?? 0;
     node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
-    node.y = node.layer * (NODE_HEIGHT + ROW_GAP);
+  });
+
+  const rowYByLayer = getLayoutRowYByLayer(nodes, edges, nodesById);
+  nodes.forEach((node) => {
+    node.y = rowYByLayer.get(node.layer) ?? 0;
   });
 
   edges.forEach((edge) => {
@@ -984,7 +924,8 @@ function assignLayout(
       x: child.x + (child.x >= parent.x ? 0 : NODE_WIDTH),
       y: child.y + NODE_HEIGHT / 2,
     };
-    const bendY = parentBottom.y + ROW_GAP * EDGE_BEND_FROM_PARENT_RATIO;
+    const verticalGap = Math.max(0, child.y - parentBottom.y);
+    const bendY = parentBottom.y + verticalGap * EDGE_BEND_FROM_PARENT_RATIO;
     edge.points =
       edge.transposition
         ? child.y > parent.y
@@ -1001,6 +942,36 @@ function assignLayout(
           ]
         : [parentSide, childSide];
   });
+}
+
+function getLayoutRowYByLayer(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+  nodesById: Map<string, WorkingNode>,
+) {
+  const maxLayer = Math.max(0, ...[...nodes.values()].map((node) => node.layer));
+  const gapAfterLayer = Array.from({ length: maxLayer }, () => ROW_GAP);
+  edges.forEach((edge) => {
+    if (edge.transposition) {
+      return;
+    }
+    const parent = nodesById.get(edge.from);
+    const child = nodesById.get(edge.to);
+    if (!parent || !child || child.layer !== parent.layer + 1) {
+      return;
+    }
+    if (parent.x + NODE_WIDTH / 2 !== child.x + NODE_WIDTH / 2) {
+      gapAfterLayer[parent.layer] = ELBOW_ROW_GAP;
+    }
+  });
+
+  let y = 0;
+  const yByLayer = new Map<number, number>([[0, y]]);
+  for (let layer = 0; layer < maxLayer; layer += 1) {
+    y += NODE_HEIGHT + gapAfterLayer[layer];
+    yByLayer.set(layer + 1, y);
+  }
+  return yByLayer;
 }
 
 function getPrimaryLayoutEdge(

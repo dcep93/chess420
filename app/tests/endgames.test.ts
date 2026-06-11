@@ -459,6 +459,11 @@ test("generated flowcharts have renderable cached data", () => {
       data.id === "knightBishopPrepare"
         ? "knightAndBishop"
         : "knightAndBishop+";
+    assert.equal(
+      data.nodes.filter((node) => node.referenceTo).length,
+      0,
+      `${data.id} should point transpositions at real nodes`,
+    );
 
     data.starts.forEach((start) => {
       assert.ok(
@@ -477,8 +482,6 @@ test("generated flowcharts have renderable cached data", () => {
 
       if (node.referenceTo) {
         assert.ok(nodesById.has(node.referenceTo));
-        assert.ok(node.outgoingEdgeIds.length <= 1, node.fen);
-        assert.equal(node.boardArrows.length, node.outgoingEdgeIds.length);
         if (data.id === "knightBishop" && node.turn === "w") {
           assert.equal(typeof node.movesToSuccess, "number", node.fen);
         }
@@ -505,9 +508,24 @@ test("generated flowcharts have renderable cached data", () => {
       assert.equal(node.boardArrows.length, node.outgoingEdgeIds.length);
     });
 
+    data.nodes.forEach((node) => {
+      const incomingEdges = data.edges.filter((edge) => edge.to === node.id);
+      if (node.y === 0 || incomingEdges.length === 0) {
+        return;
+      }
+      assert.ok(
+        incomingEdges.some((edge) => !edge.transposition),
+        `${data.id} ${node.id} should have a visible owner edge`,
+      );
+    });
+
     data.edges.forEach((edge) => {
       assert.ok(nodesById.has(edge.from), edge.id);
       assert.ok(nodesById.has(edge.to), edge.id);
+      if (edge.transposition) {
+        assert.equal(edge.points.length, 2, edge.id);
+        return;
+      }
       edge.points.forEach((point, index) => {
         if (index === 0) return;
         assert.ok(point.y >= edge.points[index - 1].y, edge.id);
@@ -525,7 +543,10 @@ test("generated flowcharts have renderable cached data", () => {
       }
       const replyDistances = node.outgoingEdgeIds
         .map((edgeId) => edgesById.get(edgeId))
-        .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
+        .filter(
+          (edge): edge is NonNullable<typeof edge> =>
+            edge !== undefined && !edge.transposition,
+        )
         .map((edge) =>
           getWorstKnownFlowchartReplyDistance(nodesById.get(edge.to), edgesById, nodesById),
         )
@@ -570,11 +591,6 @@ function assertFlowchartSpineLayout(
 ) {
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgesById = new Map(data.edges.map((edge) => [edge.id, edge]));
-  const incomingEdges = new Map<string, typeof data.edges>();
-  data.edges.forEach((edge) => {
-    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
-  });
-
   if (data.id === "knightBishop") {
     const start = data.nodes.find((node) => node.fen === data.starts[0]);
     assert.ok(start);
@@ -598,25 +614,6 @@ function assertFlowchartSpineLayout(
     if (target.y <= source.y) {
       return;
     }
-    assert.ok(
-      target.x >= source.x,
-      `${data.id} edge ${edge.id} should not descend to the left`,
-    );
-
-    const isPrimaryContinuation = source.outgoingEdgeIds[0] === edge.id;
-    const targetHasMultipleParents = (incomingEdges.get(target.id) || []).length > 1;
-    if (isPrimaryContinuation) {
-      assert.ok(
-        source.x === target.x || edge.transposition || targetHasMultipleParents,
-        `${data.id} primary edge ${edge.id} should stay straight or rejoin`,
-      );
-      return;
-    }
-
-    assert.ok(
-      target.x > source.x || edge.transposition || targetHasMultipleParents,
-      `${data.id} shortcut edge ${edge.id} should branch right or rejoin`,
-    );
   });
 }
 
@@ -655,7 +652,10 @@ function getWorstKnownFlowchartReplyDistance(
   }
   const distances = node.outgoingEdgeIds
     .map((edgeId) => edgesById.get(edgeId))
-    .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
+    .filter(
+      (edge): edge is NonNullable<typeof edge> =>
+        edge !== undefined && !edge.transposition,
+    )
     .map((edge) => nodesById.get(edge.to))
     .map((child) =>
       child?.terminal === "success" ? 0 : child?.movesToSuccess,
