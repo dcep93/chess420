@@ -50,10 +50,10 @@ export default function Controls() {
     stats.requests
   );
   const [noveltyVersion, updateNoveltyVersion] = React.useState(0);
-  const novelty = React.useMemo(
-    () => Brain.getNovelty(fen),
-    [fen, noveltyVersion]
-  );
+  const novelty = React.useMemo(() => {
+    void noveltyVersion;
+    return Brain.getNovelty(fen);
+  }, [fen, noveltyVersion]);
   const refreshNovelty = () => updateNoveltyVersion((version) => version + 1);
 
   React.useEffect(() => {

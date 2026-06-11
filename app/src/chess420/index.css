@@ -131,6 +131,11 @@
     inset 0 0 0 2px rgba(255, 246, 214, 0.2);
 }
 
+.board-shell [role="button"]:focus,
+.board-shell [role="button"]:focus-visible {
+  outline: none;
+}
+
 .controls {
   padding: 0.72rem;
   display: grid;

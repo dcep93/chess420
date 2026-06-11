@@ -47,11 +47,14 @@ function SubBoard() {
     const wasMyTurn =
       state.startingFen !== undefined &&
       Brain.isMyTurn(state.startingFen, state.orientationIsWhite);
+    const isOptimisticMove =
+      instantFen !== null && state.fen === instantFen;
     if (
       isUndo ||
       !state.startingFen ||
       state.startingFen === fen ||
-      wasMyTurn
+      wasMyTurn ||
+      isOptimisticMove
     ) {
       updateFen(state.fen);
     } else {
@@ -105,6 +108,9 @@ function SubBoard() {
     const frame = requestAnimationFrame(() => updateInstantFen(null));
     return () => cancelAnimationFrame(frame);
   }, [instantFen, state.fen]);
+  useEffect(() => {
+    updateClicked(null);
+  }, [state.fen]);
 
   const legalTargets = useMemo(
     () => getLegalTargets(fen, prevClicked),
@@ -165,6 +171,7 @@ function SubBoard() {
         isPhaseOne ? "board-shell--phase-one" : "",
         isPhaseTwo ? "board-shell--phase-two" : "",
       ].filter(Boolean).join(" ")}
+      onPointerUpCapture={blurBoardFocus}
       style={{ borderColor }}
     >
       <Chessboard
@@ -178,6 +185,9 @@ function SubBoard() {
           squareStyles,
           canDragPiece: ({ square }) => isSelectablePiece(square),
           onPieceDrag: ({ square }) => {
+            if (square) selectSquare(square);
+          },
+          onPieceClick: ({ square }) => {
             if (square) selectSquare(square);
           },
           onPieceDrop: ({ sourceSquare, targetSquare }) => {
@@ -231,11 +241,33 @@ function getMoveFen(
   targetSquare: string
 ): string | null {
   const chess = Brain.getChess(fen);
-  const move = chess.move({
-    from: sourceSquare as Square,
-    to: targetSquare as Square,
-  });
+  const move = safeMove(chess, sourceSquare, targetSquare);
   return move ? chess.fen() : null;
+}
+
+function safeMove(
+  chess: ReturnType<typeof Brain.getChess>,
+  sourceSquare: string,
+  targetSquare: string
+) {
+  try {
+    return chess.move({
+      from: sourceSquare as Square,
+      to: targetSquare as Square,
+    });
+  } catch {
+    return null;
+  }
+}
+
+function blurBoardFocus() {
+  const activeElement = document.activeElement;
+  if (
+    activeElement instanceof HTMLElement &&
+    activeElement.closest(".board-shell")
+  ) {
+    activeElement.blur();
+  }
 }
 
 function getSquareStyles(

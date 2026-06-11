@@ -141,6 +141,8 @@ type EdgeLabelPlacement = {
   labelWidth: number;
   x: number;
   y: number;
+  minY?: number;
+  maxY?: number;
 };
 
 function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
@@ -173,7 +175,8 @@ function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
 
 const EDGE_LABEL_HEIGHT = 21;
 const EDGE_LABEL_GAP = 3;
-const EDGE_LABEL_ARROWHEAD_CLEARANCE = 10;
+const EDGE_LABEL_ARROWHEAD_CLEARANCE = 24;
+const FLOWCHART_NODE_HEIGHT = 150;
 
 function getEdgeLabel(
   edge: FlowchartEdge,
@@ -196,7 +199,7 @@ function getEdgeLabelPlacements(
     .map((edge, index) => {
       const source = nodesById.get(edge.from);
       const target = nodesById.get(edge.to);
-      const base = getEdgeLabelBasePlacement(edge, target);
+      const base = getEdgeLabelBasePlacement(edge, source, target);
       if (!base) {
         return undefined;
       }
@@ -220,11 +223,8 @@ function getEdgeLabelPlacements(
         a.index - b.index,
     );
 
-  candidates.forEach(({ index: _index, ...candidate }) => {
-    const placement = { ...candidate };
-    while (placed.some((other) => doEdgeLabelsOverlap(placement, other))) {
-      placement.y -= EDGE_LABEL_HEIGHT + EDGE_LABEL_GAP;
-    }
+  candidates.forEach((candidate) => {
+    const placement = getBestEdgeLabelPlacement(candidate, placed);
     placed.push(placement);
     placements.set(placement.edge.id, placement);
   });
@@ -234,6 +234,43 @@ function getEdgeLabelPlacements(
 
 function getEdgeLabelWidth(label: string) {
   return Math.max(34, label.length * 8.4 + 14);
+}
+
+function getBestEdgeLabelPlacement(
+  candidate: EdgeLabelPlacement & { index: number },
+  placed: EdgeLabelPlacement[],
+): EdgeLabelPlacement {
+  const minY = candidate.minY ?? Number.NEGATIVE_INFINITY;
+  const maxY = candidate.maxY ?? Number.POSITIVE_INFINITY;
+  const preferredY = clamp(candidate.y, minY, maxY);
+  const placement = {
+    edge: candidate.edge,
+    label: candidate.label,
+    labelWidth: candidate.labelWidth,
+    x: candidate.x,
+    y: preferredY,
+    minY: candidate.minY,
+    maxY: candidate.maxY,
+  };
+  const laneStep = EDGE_LABEL_HEIGHT + EDGE_LABEL_GAP;
+  const laneOffsets = [0];
+  for (let index = 1; index <= 8; index += 1) {
+    laneOffsets.push(-index * laneStep, index * laneStep);
+  }
+
+  for (const offset of laneOffsets) {
+    const y = preferredY + offset;
+    if (y < minY || y > maxY) {
+      continue;
+    }
+    placement.y = y;
+    if (!placed.some((other) => doEdgeLabelsOverlap(placement, other))) {
+      return placement;
+    }
+  }
+
+  placement.y = preferredY;
+  return placement;
 }
 
 function doEdgeLabelsOverlap(a: EdgeLabelPlacement, b: EdgeLabelPlacement) {
@@ -252,16 +289,32 @@ function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
   });
 }
 
-function getEdgeLabelBasePlacement(edge: FlowchartEdge, target?: FlowchartNode) {
-  if (!target) {
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getEdgeLabelBasePlacement(
+  edge: FlowchartEdge,
+  source?: FlowchartNode,
+  target?: FlowchartNode,
+) {
+  if (!source || !target) {
     return undefined;
   }
   const end = edge.points[edge.points.length - 1];
   const previous = edge.points[edge.points.length - 2];
   if (end && previous && end.y > previous.y) {
+    const labelHalfHeight = EDGE_LABEL_HEIGHT / 2;
+    const minY =
+      source.y + FLOWCHART_NODE_HEIGHT + labelHalfHeight + EDGE_LABEL_GAP;
+    const maxY = target.y - labelHalfHeight - EDGE_LABEL_ARROWHEAD_CLEARANCE;
+    const preferredY =
+      target.y - labelHalfHeight - EDGE_LABEL_ARROWHEAD_CLEARANCE;
     return {
       x: end.x,
-      y: (previous.y + end.y - EDGE_LABEL_ARROWHEAD_CLEARANCE) / 2,
+      y: minY <= maxY ? clamp(preferredY, minY, maxY) : (previous.y + end.y) / 2,
+      minY,
+      maxY,
     };
   }
   return {
