@@ -169,21 +169,16 @@ function getEdgeLabelPlacement(points: FlowchartEdge["points"]) {
   if (points.length < 2) {
     return undefined;
   }
-  const segments = points.slice(1).map((point, index) => {
-    const previous = points[index];
-    const dx = point.x - previous.x;
-    const dy = point.y - previous.y;
-    return {
-      start: previous,
-      end: point,
-      length: Math.hypot(dx, dy),
-      horizontal: Math.abs(dx) >= Math.abs(dy),
-    };
-  });
-  const segment = segments.sort((a, b) => b.length - a.length)[0];
-  const x = (segment.start.x + segment.end.x) / 2;
-  const y = (segment.start.y + segment.end.y) / 2;
-  return segment.horizontal ? { x, y: y - 16 } : { x: x + 28, y };
+  const end = points[points.length - 1];
+  const previous = points[points.length - 2];
+  const isDownwardArrow = end.y > previous.y;
+  if (isDownwardArrow) {
+    return { x: end.x, y: end.y - 34 };
+  }
+  return {
+    x: (previous.x + end.x) / 2,
+    y: (previous.y + end.y) / 2 - 16,
+  };
 }
 
 function FlowchartNodeCard({ node }: { node: FlowchartNode }) {

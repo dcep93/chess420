@@ -474,6 +474,12 @@ function assignSuccessDistances(
 
 function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const incomingEdges = new Map<string, WorkingEdge[]>();
+  const outgoingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
+    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
+  });
 
   const layers = new Map<number, WorkingNode[]>();
   [...nodes.values()].forEach((node) => {
@@ -482,14 +488,29 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
     layers.set(node.layer, layer);
   });
 
-  [...layers.entries()].forEach(([layerIndex, layerNodes]) => {
-    layerNodes
-      .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
-      .forEach((node, columnIndex) => {
-        node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
-        node.y = layerIndex * (NODE_HEIGHT + ROW_GAP);
-      });
-  });
+  [...layers.entries()]
+    .sort(([a], [b]) => a - b)
+    .forEach(([layerIndex, layerNodes]) => {
+      const shouldGroupByWhitePlan =
+        layerNodes.filter((node) => node.turn === "w").length >
+        layerNodes.length / 2;
+
+      layerNodes
+        .sort((a, b) =>
+          compareLayerNodes(
+            a,
+            b,
+            nodesById,
+            incomingEdges,
+            outgoingEdges,
+            shouldGroupByWhitePlan,
+          ),
+        )
+        .forEach((node, columnIndex) => {
+          node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
+          node.y = layerIndex * (NODE_HEIGHT + ROW_GAP);
+        });
+    });
 
   edges.forEach((edge) => {
     const parent = nodesById.get(edge.from)!;
@@ -520,6 +541,73 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
           ]
         : [parentSide, childSide];
   });
+}
+
+function compareLayerNodes(
+  a: WorkingNode,
+  b: WorkingNode,
+  nodesById: Map<string, WorkingNode>,
+  incomingEdges: Map<string, WorkingEdge[]>,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+  shouldGroupByWhitePlan: boolean,
+): number {
+  const aPlan = getNodePlanKey(a, outgoingEdges);
+  const bPlan = getNodePlanKey(b, outgoingEdges);
+  const aAnchor = getNodeAnchor(a, nodesById, incomingEdges);
+  const bAnchor = getNodeAnchor(b, nodesById, incomingEdges);
+  if (shouldGroupByWhitePlan) {
+    return (
+      aPlan.localeCompare(bPlan) ||
+      aAnchor - bAnchor ||
+      a.id.localeCompare(b.id, undefined, { numeric: true })
+    );
+  }
+  return (
+    aAnchor - bAnchor ||
+    getIncomingMoveKey(a, incomingEdges).localeCompare(
+      getIncomingMoveKey(b, incomingEdges),
+    ) ||
+    aPlan.localeCompare(bPlan) ||
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
+}
+
+function getNodeAnchor(
+  node: WorkingNode,
+  nodesById: Map<string, WorkingNode>,
+  incomingEdges: Map<string, WorkingEdge[]>,
+): number {
+  const parents = (incomingEdges.get(node.id) || [])
+    .map((edge) => nodesById.get(edge.from))
+    .filter((parent): parent is WorkingNode => parent !== undefined);
+  if (parents.length === 0) {
+    return Number(node.id.slice(1));
+  }
+  return (
+    parents.reduce((sum, parent) => sum + parent.x / (NODE_WIDTH + COLUMN_GAP), 0) /
+    parents.length
+  );
+}
+
+function getNodePlanKey(
+  node: WorkingNode,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+): string {
+  const edge = outgoingEdges.get(node.id)?.[0];
+  if (node.turn === "w" && edge) {
+    return edge.san;
+  }
+  return node.terminal || node.referenceTo || "";
+}
+
+function getIncomingMoveKey(
+  node: WorkingNode,
+  incomingEdges: Map<string, WorkingEdge[]>,
+): string {
+  return (incomingEdges.get(node.id) || [])
+    .map((edge) => edge.san)
+    .sort()
+    .join(" ");
 }
 
 function getKnightBishopPrepareSuccess(fen: string): string | undefined {
