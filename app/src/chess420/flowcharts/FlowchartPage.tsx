@@ -69,11 +69,33 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                 markerHeight="4"
                 orient="auto-start-reverse"
               >
-                <path d="M 0 0 L 10 5 L 0 10 z" />
+                <path className="flowchart-edge__head" d="M 0 0 L 10 5 L 0 10 z" />
+              </marker>
+              <marker
+                id={`${data.id}-transposition-arrow`}
+                viewBox="0 0 10 10"
+                refX="8"
+                refY="5"
+                markerWidth="4"
+                markerHeight="4"
+                orient="auto-start-reverse"
+              >
+                <path
+                  className="flowchart-edge__head flowchart-edge__head--transposition"
+                  d="M 0 0 L 10 5 L 0 10 z"
+                />
               </marker>
             </defs>
             {data.edges.map((edge) => (
-              <GraphEdge key={edge.id} edge={edge} markerId={`${data.id}-edge-arrow`} />
+              <GraphEdge
+                key={edge.id}
+                edge={edge}
+                markerId={
+                  edge.transposition
+                    ? `${data.id}-transposition-arrow`
+                    : `${data.id}-edge-arrow`
+                }
+              />
             ))}
           </svg>
           {data.nodes.map((node) => (
@@ -94,11 +116,21 @@ function GraphEdge({ edge, markerId }: { edge: FlowchartEdge; markerId: string }
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
   const middle = points[Math.floor(points.length / 2)];
+  const label = edge.transposition ? `repeat ${edge.san}` : edge.san;
+  const labelWidth = Math.max(36, label.length * 8.4 + 14);
   return (
     <g className={edge.transposition ? "flowchart-edge flowchart-edge--transposition" : "flowchart-edge"}>
       <path d={d} markerEnd={`url(#${markerId})`} />
+      <rect
+        className="flowchart-edge__label-bg"
+        x={middle.x - labelWidth / 2}
+        y={middle.y - 24}
+        width={labelWidth}
+        height="21"
+        rx="4"
+      />
       <text x={middle.x} y={middle.y - 6}>
-        {edge.san}
+        {label}
       </text>
     </g>
   );
@@ -127,7 +159,7 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
                 markerUnits="userSpaceOnUse"
                 orient="auto-start-reverse"
               >
-                <path className="flowchart-board__arrow-head" d="M 0 0 L 10 5 L 0 10 z" />
+                <path d="M 0 0 L 10 5 L 0 10 z" />
               </marker>
             </defs>
             {node.boardArrows.map((arrow) => (
@@ -161,23 +193,14 @@ function BoardArrow({
   const from = squarePoint(arrow.from);
   const to = squarePoint(arrow.to);
   return (
-    <g>
-      <line
-        className="flowchart-board__arrow-shadow"
-        x1={from.x}
-        y1={from.y}
-        x2={to.x}
-        y2={to.y}
-      />
-      <line
-        className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
-        x1={from.x}
-        y1={from.y}
-        x2={to.x}
-        y2={to.y}
-        markerEnd={`url(#${markerId})`}
-      />
-    </g>
+    <line
+      className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
+      x1={from.x}
+      y1={from.y}
+      x2={to.x}
+      y2={to.y}
+      markerEnd={`url(#${markerId})`}
+    />
   );
 }
 
