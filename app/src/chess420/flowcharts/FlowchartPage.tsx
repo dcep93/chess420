@@ -311,9 +311,9 @@ function BoardArrow({ arrow }: { arrow: FlowchartBoardArrow }) {
   );
 }
 
-const BOARD_ARROW_SHAFT_WIDTH = 3;
+const BOARD_ARROW_SHAFT_WIDTH = 2.1;
 const BOARD_ARROW_HEAD_LENGTH = 8;
-const BOARD_ARROW_HEAD_WIDTH = 9;
+const BOARD_ARROW_HEAD_WIDTH = 6.4;
 
 function getBoardArrowShape(
   from: { x: number; y: number },
