@@ -982,13 +982,14 @@
 
 .flowchart-edge path {
   fill: none;
-  stroke: rgba(232, 206, 171, 0.88);
-  stroke-width: 2.6;
+  stroke: rgba(232, 206, 171, 0.92);
+  stroke-width: 3;
 }
 
 .flowchart-edge--transposition path {
-  stroke: rgba(255, 123, 195, 0.86);
-  stroke-dasharray: 8 6;
+  stroke: rgba(255, 123, 195, 0.62);
+  stroke-width: 1.7;
+  stroke-dasharray: 5 7;
 }
 
 .flowchart-edge__head {
@@ -996,7 +997,7 @@
 }
 
 .flowchart-edge__head--transposition {
-  fill: rgba(255, 123, 195, 0.96);
+  fill: rgba(255, 123, 195, 0.72);
 }
 
 .flowchart-edge__label-bg {
@@ -1005,11 +1006,11 @@
   stroke-width: 1;
 }
 
-.flowchart-edge--transposition .flowchart-edge__label-bg {
+.flowchart-edge-label--transposition .flowchart-edge__label-bg {
   stroke: rgba(255, 123, 195, 0.62);
 }
 
-.flowchart-edge text {
+.flowchart-edge-label text {
   fill: rgba(255, 255, 255, 0.94);
   font-size: 0.76rem;
   font-weight: 650;

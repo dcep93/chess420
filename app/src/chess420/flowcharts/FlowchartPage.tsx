@@ -65,8 +65,8 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                 viewBox="0 0 10 10"
                 refX="8"
                 refY="5"
-                markerWidth="4"
-                markerHeight="4"
+                markerWidth="3"
+                markerHeight="3"
                 orient="auto-start-reverse"
               >
                 <path className="flowchart-edge__head" d="M 0 0 L 10 5 L 0 10 z" />
@@ -86,17 +86,24 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                 />
               </marker>
             </defs>
-            {data.edges.map((edge) => (
-              <GraphEdge
-                key={edge.id}
-                edge={edge}
-                markerId={
-                  edge.transposition
-                    ? `${data.id}-transposition-arrow`
-                    : `${data.id}-edge-arrow`
-                }
-              />
-            ))}
+            <g className="flowchart-edge-paths">
+              {orderEdgesForDrawing(data.edges).map((edge) => (
+                <GraphEdgePath
+                  key={edge.id}
+                  edge={edge}
+                  markerId={
+                    edge.transposition
+                      ? `${data.id}-transposition-arrow`
+                      : `${data.id}-edge-arrow`
+                  }
+                />
+              ))}
+            </g>
+            <g className="flowchart-edge-labels">
+              {data.edges.map((edge) => (
+                <GraphEdgeLabel key={edge.id} edge={edge} />
+              ))}
+            </g>
           </svg>
           {data.nodes.map((node) => (
             <FlowchartNodeCard key={node.id} node={node} />
@@ -107,7 +114,7 @@ function FlowchartView({ data }: { data: FlowchartData }) {
   );
 }
 
-function GraphEdge({ edge, markerId }: { edge: FlowchartEdge; markerId: string }) {
+function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: string }) {
   const points = edge.points;
   if (points.length < 2) {
     return null;
@@ -115,25 +122,68 @@ function GraphEdge({ edge, markerId }: { edge: FlowchartEdge; markerId: string }
   const d = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
-  const middle = points[Math.floor(points.length / 2)];
-  const label = edge.transposition ? `repeat ${edge.san}` : edge.san;
-  const labelWidth = Math.max(36, label.length * 8.4 + 14);
   return (
     <g className={edge.transposition ? "flowchart-edge flowchart-edge--transposition" : "flowchart-edge"}>
       <path d={d} markerEnd={`url(#${markerId})`} />
+    </g>
+  );
+}
+
+function GraphEdgeLabel({ edge }: { edge: FlowchartEdge }) {
+  const placement = getEdgeLabelPlacement(edge.points);
+  if (!placement) {
+    return null;
+  }
+  const labelWidth = Math.max(34, edge.san.length * 8.4 + 14);
+  return (
+    <g
+      className={
+        edge.transposition
+          ? "flowchart-edge-label flowchart-edge-label--transposition"
+          : "flowchart-edge-label"
+      }
+    >
       <rect
         className="flowchart-edge__label-bg"
-        x={middle.x - labelWidth / 2}
-        y={middle.y - 24}
+        x={placement.x - labelWidth / 2}
+        y={placement.y - 10.5}
         width={labelWidth}
         height="21"
         rx="4"
       />
-      <text x={middle.x} y={middle.y - 6}>
-        {label}
+      <text x={placement.x} y={placement.y}>
+        {edge.san}
       </text>
     </g>
   );
+}
+
+function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
+  return [...edges].sort((a, b) => {
+    if (a.transposition === b.transposition) return 0;
+    return a.transposition ? -1 : 1;
+  });
+}
+
+function getEdgeLabelPlacement(points: FlowchartEdge["points"]) {
+  if (points.length < 2) {
+    return undefined;
+  }
+  const segments = points.slice(1).map((point, index) => {
+    const previous = points[index];
+    const dx = point.x - previous.x;
+    const dy = point.y - previous.y;
+    return {
+      start: previous,
+      end: point,
+      length: Math.hypot(dx, dy),
+      horizontal: Math.abs(dx) >= Math.abs(dy),
+    };
+  });
+  const segment = segments.sort((a, b) => b.length - a.length)[0];
+  const x = (segment.start.x + segment.end.x) / 2;
+  const y = (segment.start.y + segment.end.y) / 2;
+  return segment.horizontal ? { x, y: y - 16 } : { x: x + 28, y };
 }
 
 function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
