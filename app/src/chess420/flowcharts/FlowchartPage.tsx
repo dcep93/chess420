@@ -37,8 +37,11 @@ function FlowchartIndex() {
 
 function FlowchartView({ data }: { data: FlowchartData }) {
   const [isTiny, setIsTiny] = useState(false);
+  const [hoveredTransposition, setHoveredTransposition] =
+    useState<FlowchartEdge | null>(null);
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
+  const highlightedNodeRoles = getHighlightedNodeRoles(hoveredTransposition);
   const scale = isTiny ? TINY_FLOWCHART_SCALE : 1;
   return (
     <main className="flowchart-page" data-bs-theme="dark">
@@ -112,10 +115,17 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                   <GraphEdgePath
                     key={edge.id}
                     edge={edge}
+                    isHighlighted={edge.id === hoveredTransposition?.id}
                     markerId={
                       edge.transposition
                         ? `${data.id}-transposition-arrow`
                         : `${data.id}-edge-arrow`
+                    }
+                    onHoverChange={
+                      edge.transposition
+                        ? (isHovered) =>
+                            setHoveredTransposition(isHovered ? edge : null)
+                        : undefined
                     }
                   />
                 ))}
@@ -130,7 +140,11 @@ function FlowchartView({ data }: { data: FlowchartData }) {
               </g>
             </svg>
             {data.nodes.map((node) => (
-              <FlowchartNodeCard key={node.id} node={node} />
+              <FlowchartNodeCard
+                key={node.id}
+                node={node}
+                highlightRole={highlightedNodeRoles.get(node.id)}
+              />
             ))}
           </div>
         </div>
@@ -141,7 +155,29 @@ function FlowchartView({ data }: { data: FlowchartData }) {
 
 const TINY_FLOWCHART_SCALE = 0.17;
 
-function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: string }) {
+type HighlightedNodeRole = "parent" | "child";
+
+function getHighlightedNodeRoles(edge: FlowchartEdge | null) {
+  const roles = new Map<string, HighlightedNodeRole>();
+  if (!edge) {
+    return roles;
+  }
+  roles.set(edge.from, "parent");
+  roles.set(edge.to, "child");
+  return roles;
+}
+
+function GraphEdgePath({
+  edge,
+  markerId,
+  isHighlighted,
+  onHoverChange,
+}: {
+  edge: FlowchartEdge;
+  markerId: string;
+  isHighlighted: boolean;
+  onHoverChange?: (isHovered: boolean) => void;
+}) {
   const points = edge.points;
   if (points.length < 2) {
     return null;
@@ -150,7 +186,23 @@ function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: stri
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
   return (
-    <g className={edge.transposition ? "flowchart-edge flowchart-edge--transposition" : "flowchart-edge"}>
+    <g
+      data-edge-id={edge.id}
+      data-edge-from={edge.from}
+      data-edge-to={edge.to}
+      className={[
+        "flowchart-edge",
+        edge.transposition ? "flowchart-edge--transposition" : "",
+        edge.transpositionKind === "bishopAnchor"
+          ? "flowchart-edge--bishop-anchor"
+          : "",
+        isHighlighted ? "flowchart-edge--highlighted" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      onMouseEnter={() => onHoverChange?.(true)}
+      onMouseLeave={() => onHoverChange?.(false)}
+    >
       <path className="flowchart-edge__gap" d={d} />
       <path className="flowchart-edge__line" d={d} markerEnd={`url(#${markerId})`} />
     </g>
@@ -207,7 +259,7 @@ function getEdgeLabel(
   target?: FlowchartNode,
 ) {
   if (source?.turn === "b" && target?.movesToSuccess !== undefined) {
-    return `${edge.san} #${target.movesToSuccess}`;
+    return `${edge.san} $${target.movesToSuccess}`;
   }
   return edge.san;
 }
@@ -396,11 +448,19 @@ function getEdgeLabelBasePlacement(
   };
 }
 
-function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
+function FlowchartNodeCard({
+  node,
+  highlightRole,
+}: {
+  node: FlowchartNode;
+  highlightRole?: HighlightedNodeRole;
+}) {
   return (
     <article
       className={`flowchart-node flowchart-node--${node.turn}${
         node.terminal ? ` flowchart-node--${node.terminal}` : ""
+      }${
+        highlightRole ? ` flowchart-node--highlight-${highlightRole}` : ""
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
     >

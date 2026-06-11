@@ -5,6 +5,7 @@ import { build } from "esbuild";
 
 const entry = resolve(".tmp/generate-flowcharts-entry.ts");
 const outfile = resolve(".tmp/generate-flowcharts.mjs");
+const flowchartId = process.argv[2];
 
 mkdirSync(dirname(entry), { recursive: true });
 writeFileSync(
@@ -12,9 +13,19 @@ writeFileSync(
   `
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { generateAllFlowcharts } from "../src/chess420/flowcharts/FlowchartGenerator";
+import {
+  generateAllFlowcharts,
+  generateFlowchart,
+} from "../src/chess420/flowcharts/FlowchartGenerator";
+import { isFlowchartId } from "../src/chess420/flowcharts/FlowchartTypes";
 
-const generated = generateAllFlowcharts();
+const flowchartId = process.argv[2];
+if (flowchartId && !isFlowchartId(flowchartId)) {
+  throw new Error(\`Unknown flowchart id: \${flowchartId}\`);
+}
+const generated = flowchartId
+  ? { [flowchartId]: generateFlowchart(flowchartId) }
+  : generateAllFlowcharts();
 for (const [id, data] of Object.entries(generated)) {
   const path = \`src/chess420/flowcharts/generated/\${id}.json\`;
   mkdirSync(dirname(path), { recursive: true });
@@ -37,8 +48,12 @@ await build({
   },
 });
 
-const result = spawnSync(process.execPath, [outfile], {
-  stdio: "inherit",
-});
+const result = spawnSync(
+  process.execPath,
+  flowchartId ? [outfile, flowchartId] : [outfile],
+  {
+    stdio: "inherit",
+  },
+);
 
 process.exit(result.status ?? 1);

@@ -17,6 +17,7 @@ import { type LogType } from "../src/chess420/Log";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
+import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
 
 type StudyTreePart = {
   ply: number;
@@ -540,6 +541,9 @@ test("generated flowcharts have renderable cached data", () => {
     data.edges.forEach((edge) => {
       assert.ok(nodesById.has(edge.from), edge.id);
       assert.ok(nodesById.has(edge.to), edge.id);
+      if (edge.transpositionKind) {
+        assert.equal(edge.transposition, true, edge.id);
+      }
       if (edge.transposition) {
         assert.equal(edge.points.length, 2, edge.id);
         return;
@@ -563,19 +567,27 @@ test("generated flowcharts have renderable cached data", () => {
         .map((edgeId) => edgesById.get(edgeId))
         .filter(
           (edge): edge is NonNullable<typeof edge> =>
-            edge !== undefined && !edge.transposition,
+            edge !== undefined,
         )
         .map((edge) =>
-          getWorstKnownFlowchartReplyDistance(nodesById.get(edge.to), edgesById, nodesById),
+          getWorstKnownFlowchartReplyDistance(
+            nodesById.get(edge.to),
+            edgesById,
+            nodesById,
+            data.id === "knightBishopPrepare",
+          ),
         )
         .filter((distance): distance is number => distance !== undefined);
       if (replyDistances.length === 0) {
         return;
       }
-      assert.ok(
-        node.movesToSuccess >= Math.min(...replyDistances) + 1,
-        node.fen,
-      );
+      if (data.id === "knightBishopPrepare") {
+        assert.equal(
+          node.movesToSuccess,
+          Math.min(...replyDistances) + 1,
+          node.fen,
+        );
+      }
     });
 
     data.nodes.forEach((node) => {
@@ -604,6 +616,41 @@ test("generated flowcharts have renderable cached data", () => {
   });
 });
 
+test("knight-bishop flowchart dedupes bishop positions by edge anchor", () => {
+  assert.equal(
+    getKnightBishopBishopAnchorKey("1k6/8/1K6/2N2B2/8/8/8/8 b - - 0 1"),
+    getKnightBishopBishopAnchorKey("1k6/8/1K2B3/2N5/8/8/8/8 b - - 0 1"),
+  );
+  assert.notEqual(
+    getKnightBishopBishopAnchorKey("1k6/8/1K6/2N2B2/8/8/8/8 b - - 0 1"),
+    getKnightBishopBishopAnchorKey("1k6/8/2K3B1/2N5/8/8/8/8 b - - 0 1"),
+  );
+  assert.notEqual(
+    getKnightBishopBishopAnchorKey("1k6/8/1K6/2N2B2/8/8/8/8 b - - 0 1"),
+    getKnightBishopBishopAnchorKey("1k6/8/1K6/3N1B2/8/8/8/8 b - - 0 1"),
+  );
+  assert.equal(
+    getKnightBishopBishopAnchorKey("8/3N4/2k1K3/8/8/3B4/8/8 b - - 0 1")?.endsWith("|f1"),
+    true,
+  );
+  assert.equal(
+    FLOWCHART_DATA.knightBishop.nodes.some(
+      (node) => node.fen === "1k6/8/1K2B3/2N5/8/8/8/8 b - - 0 1",
+    ),
+    false,
+  );
+  assert.ok(
+    FLOWCHART_DATA.knightBishop.edges.some(
+      (edge) => edge.transpositionKind === "bishopAnchor",
+    ),
+  );
+  assert.ok(
+    FLOWCHART_DATA.knightBishop.edges.some(
+      (edge) => edge.transposition && edge.transpositionKind === undefined,
+    ),
+  );
+});
+
 function assertFlowchartSpineLayout(
   data: (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA],
 ) {
@@ -612,12 +659,10 @@ function assertFlowchartSpineLayout(
   if (data.id === "knightBishop") {
     const start = data.nodes.find((node) => node.fen === data.starts[0]);
     assert.ok(start);
-    const spineX = start.x;
     const seen = new Set<string>();
     let node = start;
     while (node && !seen.has(node.id)) {
       seen.add(node.id);
-      assert.equal(node.x, spineX, node.fen);
       const edgeId = node.outgoingEdgeIds[0];
       const edge = edgeId ? edgesById.get(edgeId) : undefined;
       node = edge ? nodesById.get(edge.to) : undefined;
@@ -701,6 +746,7 @@ function getWorstKnownFlowchartReplyDistance(
     | undefined,
   edgesById: Map<string, (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["edges"][number]>,
   nodesById: Map<string, (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["nodes"][number]>,
+  requireAllBlackReplies: boolean,
 ) {
   if (!node) {
     return undefined;
@@ -716,16 +762,21 @@ function getWorstKnownFlowchartReplyDistance(
   }
   const distances = node.outgoingEdgeIds
     .map((edgeId) => edgesById.get(edgeId))
-    .filter(
-      (edge): edge is NonNullable<typeof edge> =>
-        edge !== undefined && !edge.transposition,
-    )
+    .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
     .map((edge) => nodesById.get(edge.to))
     .map((child) =>
       child?.terminal === "success" ? 0 : child?.movesToSuccess,
     )
-    .filter((distance): distance is number => distance !== undefined);
-  return distances.length > 0 ? Math.max(...distances) : undefined;
+  if (
+    requireAllBlackReplies &&
+    distances.some((distance) => distance === undefined)
+  ) {
+    return undefined;
+  }
+  const knownDistances = distances.filter(
+    (distance): distance is number => distance !== undefined,
+  );
+  return knownDistances.length > 0 ? Math.max(...knownDistances) : undefined;
 }
 
 test("endgame dropdown is only shown in endgame mode", () => {

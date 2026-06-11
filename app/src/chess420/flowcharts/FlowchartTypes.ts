@@ -23,6 +23,8 @@ export type FlowchartBoardArrow = {
   color: "white" | "black";
 };
 
+export type FlowchartTranspositionKind = "exact" | "bishopAnchor";
+
 export type FlowchartEdge = {
   id: string;
   from: string;
@@ -32,6 +34,7 @@ export type FlowchartEdge = {
   toSquare: Square;
   points: FlowchartPoint[];
   transposition: boolean;
+  transpositionKind?: FlowchartTranspositionKind;
 };
 
 export type FlowchartNode = {

@@ -9,6 +9,7 @@ import {
   type FlowchartNode,
   type FlowchartPoint,
   type FlowchartTerminal,
+  type FlowchartTranspositionKind,
 } from "./FlowchartTypes";
 
 type FlowchartConfig = {
@@ -20,7 +21,7 @@ type FlowchartConfig = {
   success: (fen: string) => string | undefined;
   failure?: (fen: string) => string | undefined;
   maxNodes: number;
-  whiteMoveStrategy: "prepareHeuristic" | "search" | "endgameHeuristic";
+  whiteMoveStrategy: "prepareSearch" | "search" | "endgameHeuristic";
   maxSearchPlies?: number;
 };
 
@@ -33,11 +34,14 @@ type WorkingNode = Omit<
   x: number;
   y: number;
   layer: number;
+  referenceKind?: FlowchartTranspositionKind;
 };
 
 type WorkingEdge = Omit<FlowchartEdge, "points"> & {
   points?: FlowchartPoint[];
 };
+
+type WhiteMoveSelector = (fen: string, layer: number) => Move | undefined;
 
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
@@ -61,8 +65,8 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     success: getKnightBishopPrepareSuccess,
     failure: getKnightBishopPrepareFailure,
     maxNodes: 1200,
-    whiteMoveStrategy: "prepareHeuristic",
-    maxSearchPlies: 32,
+    whiteMoveStrategy: "prepareSearch",
+    maxSearchPlies: 10,
   },
   knightBishop: {
     id: "knightBishop",
@@ -76,12 +80,6 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     whiteMoveStrategy: "endgameHeuristic",
   },
 };
-
-const KNIGHT_BISHOP_PREPARE_START_KEYS = new Set(
-  FLOWCHART_CONFIGS.knightBishopPrepare.starts.map((fen) =>
-    Brain.boardTurnKey(normalizeFen(fen)),
-  ),
-);
 
 export function generateFlowchart(id: FlowchartId): FlowchartData {
   return withEndgame(FLOWCHART_CONFIGS[id].endgameId, () =>
@@ -117,9 +115,17 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
     fromSquare: edge.fromSquare,
     toSquare: edge.toSquare,
     transposition: edge.transposition,
+    transpositionKind: edge.transpositionKind,
   }));
 
+  assignBishopAnchorEquivalentReferences(
+    nodes,
+    edges,
+    data.id,
+    new Set(data.starts.map((fen) => Brain.boardTurnKey(fen))),
+  );
   collapseReferenceNodes(nodes, edges);
+  pruneUnreachableNodes(nodes, edges, data.starts);
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
   assignLayout(nodes, edges);
@@ -160,9 +166,9 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   const edges: WorkingEdge[] = [];
   const queue: string[] = [];
   const expanded = new Set<string>();
-  const selectWhiteMove =
-    config.whiteMoveStrategy === "prepareHeuristic"
-      ? selectPrepareWhiteMove
+  const selectWhiteMove: WhiteMoveSelector =
+    config.whiteMoveStrategy === "prepareSearch"
+      ? createPrepareSearchWhiteMoveSelector(config)
       : config.whiteMoveStrategy === "search"
       ? createSearchWhiteMoveSelector(config)
       : selectEndgameHeuristicWhiteMove;
@@ -183,7 +189,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
     expanded.add(node.id);
 
     const chess = Brain.getChess(node.fen);
-    const moves = getFlowchartMoves(node.fen, selectWhiteMove);
+    const moves = getFlowchartMoves(node.fen, node.layer, selectWhiteMove);
     moves.forEach((move, moveIndex) => {
       const nextChess = Brain.getChess(node.fen);
       const result = nextChess.move(move.san);
@@ -225,7 +231,15 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
     });
   }
 
-  assignSuccessDistances(nodes, edges);
+  assignBishopAnchorEquivalentReferences(
+    nodes,
+    edges,
+    config.id,
+    new Set(config.starts.map((fen) => Brain.boardTurnKey(normalizeFen(fen)))),
+  );
+  collapseReferenceNodes(nodes, edges);
+  pruneUnreachableNodes(nodes, edges, config.starts.map(normalizeFen));
+  assignSuccessDistances(nodes, edges, config.id === "knightBishopPrepare");
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
   assignLayout(nodes, edges);
@@ -335,14 +349,15 @@ function getTerminal(
 
 function getFlowchartMoves(
   fen: string,
-  selectWhiteMove: (fen: string) => Move | undefined,
+  layer: number,
+  selectWhiteMove: WhiteMoveSelector,
 ): Move[] {
   const chess = Brain.getChess(fen);
   if (chess.turn() === "b") {
     return chess.moves({ verbose: true });
   }
 
-  const selected = selectWhiteMove(fen);
+  const selected = selectWhiteMove(fen, layer);
   return selected ? [selected] : [];
 }
 
@@ -356,21 +371,9 @@ function selectEndgameHeuristicWhiteMove(fen: string): Move | undefined {
   );
 }
 
-function selectPrepareWhiteMove(fen: string): Move | undefined {
-  const chess = Brain.getChess(fen);
-  const legalVerboseMoves = chess.moves({ verbose: true });
-  if (KNIGHT_BISHOP_PREPARE_START_KEYS.has(Brain.boardTurnKey(fen))) {
-    return (
-      legalVerboseMoves.find((move) => move.san === "Bc4") ||
-      selectEndgameHeuristicWhiteMove(fen)
-    );
-  }
-  return selectEndgameHeuristicWhiteMove(fen);
-}
-
 function createSearchWhiteMoveSelector(
   config: FlowchartConfig,
-): (fen: string) => Move | undefined {
+): WhiteMoveSelector {
   const memo = new Map<string, { distance: number | null; san?: string }>();
   const visiting = new Set<string>();
 
@@ -453,9 +456,226 @@ function createSearchWhiteMoveSelector(
   };
 }
 
+function createPrepareSearchWhiteMoveSelector(
+  config: FlowchartConfig,
+): WhiteMoveSelector {
+  const memo = new Map<string, { distance: number | null; san?: string }>();
+  const visiting = new Set<string>();
+  const maxPlies = config.maxSearchPlies ?? 80;
+
+  const solve = (
+    fen: string,
+    pliesRemaining: number,
+  ): { distance: number | null; san?: string } => {
+    const normalizedFen = normalizeFen(fen);
+    const turnKey = Brain.boardTurnKey(normalizedFen);
+    const key = `${turnKey} ${pliesRemaining}`;
+    const cached = memo.get(key);
+    if (cached) {
+      return cached;
+    }
+    if (config.success(normalizedFen)) {
+      const result = { distance: 0 };
+      memo.set(key, result);
+      return result;
+    }
+    if (
+      config.failure?.(normalizedFen) ||
+      !Number.isFinite(pliesRemaining) ||
+      pliesRemaining <= 0
+    ) {
+      const result = { distance: null };
+      memo.set(key, result);
+      return result;
+    }
+    if (visiting.has(turnKey)) {
+      return { distance: null };
+    }
+
+    visiting.add(turnKey);
+    const chess = Brain.getChess(normalizedFen);
+    const moves = getPrepareSearchCandidateMoves(
+      normalizedFen,
+      chess.moves({ verbose: true }),
+    );
+    let result: { distance: number | null; san?: string };
+    if (moves.length === 0) {
+      result = { distance: null };
+    } else if (chess.turn() === "w") {
+      let best: { distance: number; san: string } | undefined;
+      for (const move of moves.slice(0, 24)) {
+        const next = Brain.getChess(normalizedFen);
+        next.move(move.san);
+        const child = solve(next.fen(), pliesRemaining - 1);
+        if (child.distance === null) {
+          continue;
+        }
+        const distance = child.distance + 1;
+        if (!best || distance < best.distance) {
+          best = { distance, san: move.san };
+          if (distance === 1) {
+            break;
+          }
+        }
+      }
+      result = best || { distance: null };
+    } else {
+      let worstDistance = 0;
+      for (const move of moves) {
+        const next = Brain.getChess(normalizedFen);
+        next.move(move.san);
+        const child = solve(next.fen(), pliesRemaining - 1);
+        if (child.distance === null) {
+          result = { distance: null };
+          visiting.delete(turnKey);
+          memo.set(key, result);
+          return result;
+        }
+        worstDistance = Math.max(worstDistance, child.distance);
+      }
+      result = { distance: worstDistance };
+    }
+
+    visiting.delete(turnKey);
+    memo.set(key, result);
+    return result;
+  };
+
+  return (fen, layer = 0) => {
+    const result = solve(normalizeFen(fen), Math.max(0, maxPlies - layer));
+    return findLegalMoveBySan(fen, result.san);
+  };
+}
+
+function getPrepareSearchCandidateMoves(fen: string, moves: Move[]): Move[] {
+  return orderPrepareSearchMoves(fen, moves);
+}
+
+function orderPrepareSearchMoves(fen: string, moves: Move[]): Move[] {
+  const turn = Brain.getChess(fen).turn();
+  return moves
+    .map((move, index) => {
+      const next = Brain.getChess(fen);
+      next.move(move.san);
+      return {
+        move,
+        index,
+        score: getPrepareSearchPositionScore(next.fen()),
+      };
+    })
+    .sort((a, b) =>
+      turn === "w"
+        ? a.score - b.score || a.index - b.index
+        : b.score - a.score || a.index - b.index,
+    )
+    .map(({ move }) => move);
+}
+
+function getPrepareSearchPositionScore(fen: string): number {
+  const blackKing = Brain.findPiece(fen, "b", "k");
+  const whiteKing = Brain.findPiece(fen, "w", "k");
+  const knight = Brain.findPiece(fen, "w", "n");
+  const bishop = Brain.findPiece(fen, "w", "b");
+  if (!blackKing || !whiteKing || !knight || !bishop) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  const blackKingEdgeDistance = Brain.edgeDistance(blackKing.square);
+  const knightEdgePenalty = Brain.edgeDistance(knight.square) === 0 ? 4 : 0;
+  const colorPenalty = Brain.sameSquareColor(knight.square, bishop.square) ? 0 : 3;
+  return (
+    blackKingEdgeDistance * 20 +
+    sideAdjacencyDistance(knight.square, blackKing.square) * 4 +
+    sideAdjacencyDistance(knight.square, whiteKing.square) * 4 +
+    sideAdjacencyDistance(whiteKing.square, blackKing.square) +
+    knightEdgePenalty +
+    colorPenalty
+  );
+}
+
+function sideAdjacencyDistance(a: Square, b: Square): number {
+  const aCoords = Brain.squareCoords(a);
+  const bCoords = Brain.squareCoords(b);
+  const fileDistance = Math.abs(aCoords.file - bCoords.file);
+  const rankDistance = Math.abs(aCoords.rank - bCoords.rank);
+  return areSideAdjacent(a, b)
+    ? 0
+    : Math.min(
+        Math.abs(fileDistance - 1) + rankDistance,
+        fileDistance + Math.abs(rankDistance - 1),
+      );
+}
+
+function findLegalMoveBySan(fen: string, san?: string): Move | undefined {
+  if (!san) {
+    return undefined;
+  }
+  return Brain.getChess(fen)
+    .moves({ verbose: true })
+    .find((move) => move.san === san);
+}
+
 function normalizeFen(fen: string): string {
   const [board, turn] = fen.split(" ");
   return `${board} ${turn} - - 0 1`;
+}
+
+export function getKnightBishopBishopAnchorKey(fen: string): string | undefined {
+  const blackKing = Brain.findPiece(fen, "b", "k");
+  const whiteKing = Brain.findPiece(fen, "w", "k");
+  const knight = Brain.findPiece(fen, "w", "n");
+  const bishop = Brain.findPiece(fen, "w", "b");
+  const anchor = bishop ? getBishopEdgeAnchor(bishop.square) : undefined;
+  if (!blackKing || !whiteKing || !knight || !anchor) {
+    return undefined;
+  }
+  return [
+    Brain.getChess(fen).turn(),
+    blackKing.square,
+    whiteKing.square,
+    knight.square,
+    anchor,
+  ].join("|");
+}
+
+function getBishopEdgeAnchor(square: Square): Square | undefined {
+  const bishop = Brain.squareCoords(square);
+  const edgeSquares = [
+    { fileDelta: -1, rankDelta: 1, priority: 0 },
+    { fileDelta: 1, rankDelta: -1, priority: 1 },
+    { fileDelta: 1, rankDelta: 1, priority: 2 },
+    { fileDelta: -1, rankDelta: -1, priority: 3 },
+  ]
+    .map((direction) => {
+      let file = bishop.file;
+      let rank = bishop.rank;
+      while (
+        file + direction.fileDelta >= 0 &&
+        file + direction.fileDelta <= 7 &&
+        rank + direction.rankDelta >= 0 &&
+        rank + direction.rankDelta <= 7
+      ) {
+        file += direction.fileDelta;
+        rank += direction.rankDelta;
+        if (rank === 0 || rank === 7) {
+          return {
+            square: squareFromCoords(file, rank),
+            priority: direction.priority,
+          };
+        }
+      }
+      return undefined;
+    })
+    .filter(
+      (candidate): candidate is { square: Square; priority: number } =>
+        candidate !== undefined,
+    )
+    .sort((a, b) => a.priority - b.priority);
+  return edgeSquares[0]?.square;
+}
+
+function squareFromCoords(file: number, rank: number): Square {
+  return `${String.fromCharCode("a".charCodeAt(0) + file)}${rank + 1}` as Square;
 }
 
 function getNodeById(nodes: Map<string, WorkingNode>, id: string): WorkingNode {
@@ -469,7 +689,91 @@ function getNodeById(nodes: Map<string, WorkingNode>, id: string): WorkingNode {
 function assignSuccessDistances(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
+  requireAllBlackReplies: boolean,
 ) {
+  if (!requireAllBlackReplies) {
+    assignRelaxedSuccessDistances(nodes, edges);
+    return;
+  }
+
+  nodes.forEach((node) => {
+    node.movesToSuccess = undefined;
+  });
+
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const outgoingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
+  });
+
+  const distances = new Map<string, number>();
+  nodes.forEach((node) => {
+    if (node.terminal === "success") {
+      distances.set(node.id, 0);
+    }
+  });
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    nodes.forEach((node) => {
+      if (node.terminal) {
+        return;
+      }
+      const nodeEdges = outgoingEdges.get(node.id) || [];
+      if (nodeEdges.length === 0) {
+        return;
+      }
+
+      const childDistances = nodeEdges.map((edge) =>
+        getKnownFlowchartDistance(nodesById.get(edge.to), distances),
+      );
+      const knownChildDistances = childDistances.filter(
+        (distance): distance is number => distance !== undefined,
+      );
+      if (
+        knownChildDistances.length === 0 ||
+        (requireAllBlackReplies &&
+          node.turn === "b" &&
+          knownChildDistances.length !== childDistances.length)
+      ) {
+        return;
+      }
+      const nextDistance =
+        node.turn === "w"
+          ? Math.min(...knownChildDistances) + 1
+          : Math.max(...knownChildDistances);
+      if (distances.get(node.id) === nextDistance) {
+        return;
+      }
+      distances.set(node.id, nextDistance);
+      changed = true;
+    });
+  }
+
+  nodes.forEach((node) => {
+    const movesToSuccess = distances.get(node.id);
+    if (node.turn === "w" && movesToSuccess !== undefined) {
+      node.movesToSuccess = movesToSuccess;
+    }
+  });
+}
+
+function getKnownFlowchartDistance(
+  node: WorkingNode | undefined,
+  distances: Map<string, number>,
+): number | undefined {
+  return node ? distances.get(node.id) : undefined;
+}
+
+function assignRelaxedSuccessDistances(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+) {
+  nodes.forEach((node) => {
+    node.movesToSuccess = undefined;
+  });
+
   const incomingEdges = new Map<string, WorkingEdge[]>();
   const referenceIncoming = new Map<string, WorkingNode[]>();
   edges.forEach((edge) => {
@@ -522,69 +826,12 @@ function assignSuccessDistances(
     });
   }
 
-  enforceWorstKnownBlackReplyDistances(nodes, edges, distances);
-
   nodes.forEach((node) => {
     const movesToSuccess = distances.get(node.id);
     if (node.turn === "w" && movesToSuccess !== undefined) {
       node.movesToSuccess = movesToSuccess;
     }
   });
-}
-
-function enforceWorstKnownBlackReplyDistances(
-  nodes: Map<string, WorkingNode>,
-  edges: WorkingEdge[],
-  distances: Map<string, number>,
-) {
-  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
-  const outgoingEdges = new Map<string, WorkingEdge[]>();
-  edges.forEach((edge) => {
-    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
-  });
-
-  let changed = true;
-  while (changed) {
-    changed = false;
-    nodes.forEach((node) => {
-      if (node.turn !== "w" || node.terminal) {
-        return;
-      }
-      const nextDistances = (outgoingEdges.get(node.id) || [])
-        .map((edge) =>
-          getWorstKnownBlackReplyDistance(
-            getNodeById(nodesById, edge.to),
-            outgoingEdges,
-            distances,
-          ),
-        )
-        .filter((distance): distance is number => distance !== undefined);
-      if (nextDistances.length === 0) {
-        return;
-      }
-      const distance = Math.min(...nextDistances) + 1;
-      const current = distances.get(node.id);
-      if (current !== undefined && current >= distance) {
-        return;
-      }
-      distances.set(node.id, distance);
-      changed = true;
-    });
-  }
-}
-
-function getWorstKnownBlackReplyDistance(
-  node: WorkingNode,
-  outgoingEdges: Map<string, WorkingEdge[]>,
-  distances: Map<string, number>,
-): number | undefined {
-  if (node.turn !== "b" || node.terminal) {
-    return distances.get(node.id);
-  }
-  const childDistances = (outgoingEdges.get(node.id) || [])
-    .map((edge) => distances.get(edge.to))
-    .filter((distance): distance is number => distance !== undefined);
-  return childDistances.length > 0 ? Math.max(...childDistances) : undefined;
 }
 
 function orderNodeMovesByDistance(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
@@ -661,6 +908,126 @@ function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
   return edge;
 }
 
+function assignBishopAnchorEquivalentReferences(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+  flowchartId: FlowchartId,
+  startKeys: Set<string>,
+) {
+  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
+  const incomingEdges = new Map<string, WorkingEdge[]>();
+  const outgoingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
+    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
+  });
+  const buckets = new Map<string, WorkingNode[]>();
+  nodes.forEach((node) => {
+    const blackKing = Brain.findPiece(node.fen, "b", "k");
+    if (
+      node.terminal ||
+      node.turn !== "b" ||
+      !blackKing ||
+      Brain.edgeDistance(blackKing.square) !== 0 ||
+      startKeys.has(node.key)
+    ) {
+      return;
+    }
+    const anchorKey = getKnightBishopBishopAnchorKey(node.fen);
+    if (!anchorKey) {
+      return;
+    }
+    const key = [
+      flowchartId,
+      anchorKey,
+      getOutgoingSanSignature(node, edgesById),
+    ].join("|");
+    buckets.set(key, [...(buckets.get(key) || []), node]);
+  });
+
+  buckets.forEach((bucket) => {
+    if (bucket.length <= 1) {
+      return;
+    }
+    const ordered = [...bucket].sort(compareNodesForBishopAnchorRepresentative);
+    const representative = ordered[0];
+    ordered.slice(1).forEach((node) => {
+      if (
+        wouldBishopAnchorReferenceCreateCycle(
+          representative,
+          node,
+          incomingEdges,
+          outgoingEdges,
+        )
+      ) {
+        return;
+      }
+      node.referenceTo = representative.id;
+      node.referenceKind = "bishopAnchor";
+    });
+  });
+}
+
+function wouldBishopAnchorReferenceCreateCycle(
+  representative: WorkingNode,
+  duplicate: WorkingNode,
+  incomingEdges: Map<string, WorkingEdge[]>,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+) {
+  return (incomingEdges.get(duplicate.id) || []).some((edge) => {
+    return (
+      edge.from !== representative.id &&
+      canReachFlowchartNode(representative.id, edge.from, outgoingEdges)
+    );
+  });
+}
+
+function canReachFlowchartNode(
+  from: string,
+  to: string,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+) {
+  const seen = new Set<string>();
+  const queue = [from];
+  for (let head = 0; head < queue.length; head += 1) {
+    const id = queue[head];
+    if (id === to) {
+      return true;
+    }
+    if (seen.has(id)) {
+      continue;
+    }
+    seen.add(id);
+    (outgoingEdges.get(id) || []).forEach((edge) => {
+      if (!seen.has(edge.to)) {
+        queue.push(edge.to);
+      }
+    });
+  }
+  return false;
+}
+
+function getOutgoingSanSignature(
+  node: WorkingNode,
+  edgesById: Map<string, WorkingEdge>,
+) {
+  return node.outgoingEdgeIds
+    .map((edgeId) => edgesById.get(edgeId)?.san)
+    .filter((san): san is string => san !== undefined)
+    .sort((a, b) => a.localeCompare(b))
+    .join(",");
+}
+
+function compareNodesForBishopAnchorRepresentative(
+  a: WorkingNode,
+  b: WorkingNode,
+) {
+  return (
+    a.layer - b.layer ||
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
+}
+
 function collapseReferenceNodes(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
@@ -675,14 +1042,19 @@ function collapseReferenceNodes(
     return;
   }
 
-  const resolveReferenceId = (id: string) => {
+  const resolveReference = (id: string): {
+    id: string;
+    kind?: FlowchartTranspositionKind;
+  } => {
     let node = nodesById.get(id);
     const seen = new Set<string>();
+    let kind: FlowchartTranspositionKind | undefined;
     while (node?.referenceTo && !seen.has(node.id)) {
       seen.add(node.id);
+      kind = node.referenceKind || kind;
       node = nodesById.get(node.referenceTo);
     }
-    return node?.id || id;
+    return { id: node?.id || id, kind };
   };
 
   for (const [key, node] of nodes) {
@@ -690,6 +1062,7 @@ function collapseReferenceNodes(
       nodes.delete(key);
     }
   }
+  const liveNodeIds = new Set([...nodes.values()].map((node) => node.id));
 
   let writeIndex = 0;
   edges.forEach((edge) => {
@@ -697,13 +1070,15 @@ function collapseReferenceNodes(
       return;
     }
     const originalTo = edge.to;
-    const to = resolveReferenceId(originalTo);
+    const reference = resolveReference(originalTo);
+    const to = reference.id;
     if (to === edge.from) {
       return;
     }
     edge.to = to;
     if (referenceIds.has(originalTo) || to !== originalTo) {
       edge.transposition = true;
+      edge.transpositionKind = reference.kind || edge.transpositionKind;
     }
     edges[writeIndex] = edge;
     writeIndex += 1;
@@ -717,7 +1092,72 @@ function collapseReferenceNodes(
   });
   edges.forEach((edge) => {
     const node = nodesById.get(edge.from);
-    if (!node || !nodes.has(edge.from)) {
+    if (!node || !liveNodeIds.has(node.id)) {
+      return;
+    }
+    node.outgoingEdgeIds.push(edge.id);
+    node.boardArrows.push({
+      id: edge.id,
+      san: edge.san,
+      from: edge.fromSquare,
+      to: edge.toSquare,
+      color: node.turn === "w" ? "white" : "black",
+    });
+  });
+}
+
+function pruneUnreachableNodes(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+  starts: string[],
+) {
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const nodesByKey = new Map([...nodes.values()].map((node) => [node.key, node]));
+  const outgoingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
+  });
+
+  const reachableIds = new Set<string>();
+  const queue = starts
+    .map((fen) => nodesByKey.get(Brain.boardTurnKey(fen))?.id)
+    .filter((id): id is string => id !== undefined);
+  for (let head = 0; head < queue.length; head += 1) {
+    const id = queue[head];
+    if (reachableIds.has(id)) {
+      continue;
+    }
+    reachableIds.add(id);
+    (outgoingEdges.get(id) || []).forEach((edge) => {
+      if (nodesById.has(edge.to) && !reachableIds.has(edge.to)) {
+        queue.push(edge.to);
+      }
+    });
+  }
+
+  for (const [key, node] of nodes) {
+    if (!reachableIds.has(node.id)) {
+      nodes.delete(key);
+    }
+  }
+  const liveNodeIds = new Set([...nodes.values()].map((node) => node.id));
+
+  let writeIndex = 0;
+  edges.forEach((edge) => {
+    if (reachableIds.has(edge.from) && reachableIds.has(edge.to)) {
+      edges[writeIndex] = edge;
+      writeIndex += 1;
+    }
+  });
+  edges.length = writeIndex;
+
+  nodes.forEach((node) => {
+    node.outgoingEdgeIds = [];
+    node.boardArrows = [];
+  });
+  edges.forEach((edge) => {
+    const node = nodesById.get(edge.from);
+    if (!node || !liveNodeIds.has(node.id)) {
       return;
     }
     node.outgoingEdgeIds.push(edge.id);
@@ -1148,21 +1588,27 @@ function getKnightBishopPrepareSuccess(fen: string): string | undefined {
   const blackKing = Brain.findPiece(fen, "b", "k");
   const whiteKing = Brain.findPiece(fen, "w", "k");
   const knight = Brain.findPiece(fen, "w", "n");
-  const bishop = Brain.findPiece(fen, "w", "b");
-  if (!blackKing || !whiteKing || !knight || !bishop) {
+  if (!blackKing || !whiteKing || !knight) {
     return undefined;
   }
   return Brain.edgeDistance(blackKing.square) === 0 &&
     Brain.edgeDistance(knight.square) > 0 &&
     areSideAdjacent(knight.square, blackKing.square) &&
-    areSideAdjacent(knight.square, whiteKing.square) &&
-    Brain.sameSquareColor(knight.square, bishop.square)
+    areSideAdjacent(knight.square, whiteKing.square)
     ? "prepared"
     : undefined;
 }
 
 function getKnightBishopPrepareFailure(fen: string): string | undefined {
   const chess = Brain.getChess(fen);
+  if (
+    !Brain.findPiece(fen, "b", "k") ||
+    !Brain.findPiece(fen, "w", "k") ||
+    !Brain.findPiece(fen, "w", "n") ||
+    !Brain.findPiece(fen, "w", "b")
+  ) {
+    return "piece captured before preparation";
+  }
   if (blackKingReachedFifthRank(fen)) {
     return "black king reached the fifth rank";
   }

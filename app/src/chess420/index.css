@@ -1003,8 +1003,16 @@
   position: absolute;
   inset: 0;
   overflow: visible;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 1;
+}
+
+.flowchart-edge {
+  pointer-events: none;
+}
+
+.flowchart-edge--transposition {
+  pointer-events: auto;
 }
 
 .flowchart-edge__gap {
@@ -1026,7 +1034,21 @@
 .flowchart-edge--transposition .flowchart-edge__line {
   stroke: rgba(255, 123, 195, 0.62);
   stroke-width: 1.7;
+}
+
+.flowchart-edge--bishop-anchor .flowchart-edge__line {
   stroke-dasharray: 5 7;
+}
+
+.flowchart-edge--transposition .flowchart-edge__gap,
+.flowchart-edge--transposition .flowchart-edge__line {
+  cursor: default;
+  pointer-events: stroke;
+}
+
+.flowchart-edge--transposition.flowchart-edge--highlighted .flowchart-edge__line {
+  stroke: rgba(255, 123, 195, 0.98);
+  stroke-width: 2.8;
 }
 
 .flowchart-edge__head {
@@ -1056,11 +1078,28 @@
   dominant-baseline: middle;
 }
 
+.flowchart-edge-label {
+  pointer-events: none;
+}
+
 .flowchart-node {
   position: absolute;
   z-index: 2;
   width: 150px;
   height: 150px;
+}
+
+.flowchart-node--highlight-parent,
+.flowchart-node--highlight-child {
+  z-index: 3;
+}
+
+.flowchart-node--highlight-parent .flowchart-board {
+  box-shadow: 0 0 0 3px rgba(232, 206, 171, 0.96), 0 0 18px rgba(232, 206, 171, 0.36);
+}
+
+.flowchart-node--highlight-child .flowchart-board {
+  box-shadow: 0 0 0 3px rgba(255, 123, 195, 0.96), 0 0 18px rgba(255, 123, 195, 0.38);
 }
 
 .flowchart-node__id {
