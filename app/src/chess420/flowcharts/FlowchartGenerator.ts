@@ -48,6 +48,7 @@ type LayoutLine = {
 };
 
 type LayoutOptions = {
+  extendLeftSpine: boolean;
   insertBranchColumns: boolean;
 };
 
@@ -131,7 +132,11 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
     transposition: edge.transposition,
   }));
 
-  assignLayout(nodes, edges, { insertBranchColumns: data.id === "knightBishop" });
+  orderNodeMovesByDistance(nodes, edges);
+  assignLayoutWithReferences(nodes, edges, {
+    extendLeftSpine: data.id === "knightBishop",
+    insertBranchColumns: data.id === "knightBishop",
+  });
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -239,7 +244,10 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
 
   assignSuccessDistances(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignLayout(nodes, edges, { insertBranchColumns: config.id === "knightBishop" });
+  assignLayoutWithReferences(nodes, edges, {
+    extendLeftSpine: config.id === "knightBishop",
+    insertBranchColumns: config.id === "knightBishop",
+  });
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -663,8 +671,8 @@ function compareEdgesByTargetDistance(
   nodesById: Map<string, WorkingNode>,
 ) {
   return (
-    getEdgeTargetDistanceSortValue(b, nodesById) -
-      getEdgeTargetDistanceSortValue(a, nodesById) ||
+    getEdgeTargetDistanceSortValue(a, nodesById) -
+      getEdgeTargetDistanceSortValue(b, nodesById) ||
     a.san.localeCompare(b.san) ||
     a.id.localeCompare(b.id, undefined, { numeric: true })
   );
@@ -676,12 +684,12 @@ function getEdgeTargetDistanceSortValue(
 ) {
   const target = nodesById.get(edge.to);
   if (!target) {
-    return Number.NEGATIVE_INFINITY;
+    return Number.POSITIVE_INFINITY;
   }
   if (target.terminal === "success") {
     return 0;
   }
-  return target.movesToSuccess ?? Number.NEGATIVE_INFINITY;
+  return target.movesToSuccess ?? Number.POSITIVE_INFINITY;
 }
 
 function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
@@ -690,6 +698,166 @@ function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
     throw new Error(`Missing flowchart edge ${id}`);
   }
   return edge;
+}
+
+function assignLayoutWithReferences(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+  options: LayoutOptions,
+) {
+  for (let pass = 0; pass < 8; pass += 1) {
+    assignLayout(nodes, edges, options);
+    const materialized = materializeLeftRejoinReferences(nodes, edges);
+    const extended = options.extendLeftSpine
+      ? extendLeftSpineReferences(nodes, edges)
+      : false;
+    if (!materialized && !extended) {
+      return;
+    }
+  }
+  assignLayout(nodes, edges, options);
+}
+
+function extendLeftSpineReferences(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+) {
+  const roots = [...nodes.values()]
+    .filter((node) => node.layer === 0)
+    .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+  const root = roots[0];
+  if (!root || root.x !== 0) {
+    return false;
+  }
+
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
+  const maxLayer = Math.max(...[...nodes.values()].map((candidate) => candidate.layer));
+  let node: WorkingNode | undefined = root;
+  const seen = new Set<string>();
+  const seenReferenceTargets = new Set<string>();
+  let changed = false;
+
+  while (node && !seen.has(node.id) && node.layer < maxLayer) {
+    seen.add(node.id);
+    const edgeId = node.outgoingEdgeIds[0];
+    if (edgeId) {
+      node = nodesById.get(edgesById.get(edgeId)?.to || "");
+      continue;
+    }
+
+    const referenceTarget = node.referenceTo
+      ? nodesById.get(node.referenceTo)
+      : undefined;
+    const targetEdgeId = referenceTarget?.outgoingEdgeIds[0];
+    const targetEdge = targetEdgeId ? edgesById.get(targetEdgeId) : undefined;
+    const targetChild = targetEdge ? nodesById.get(targetEdge.to) : undefined;
+    if (!referenceTarget || !targetEdge || !targetChild) {
+      break;
+    }
+    if (seenReferenceTargets.has(referenceTarget.id)) {
+      break;
+    }
+    seenReferenceTargets.add(referenceTarget.id);
+
+    const child = createLayoutReferenceNode(nodes, targetChild, node.layer + 1);
+    const edge = createLayoutReferenceEdge(node, child, targetEdge);
+    edges.push(edge);
+    edgesById.set(edge.id, edge);
+    nodesById.set(child.id, child);
+    node.outgoingEdgeIds = [edge.id];
+    node.boardArrows = [
+      {
+        id: edge.id,
+        san: edge.san,
+        from: edge.fromSquare,
+        to: edge.toSquare,
+        color: node.turn === "w" ? "white" : "black",
+      },
+    ];
+    node = child;
+    changed = true;
+  }
+
+  return changed;
+}
+
+function createLayoutReferenceEdge(
+  parent: WorkingNode,
+  child: WorkingNode,
+  targetEdge: WorkingEdge,
+): WorkingEdge {
+  return {
+    id: `${parent.id}-spine-${child.id}`,
+    from: parent.id,
+    to: child.id,
+    san: targetEdge.san,
+    fromSquare: targetEdge.fromSquare,
+    toSquare: targetEdge.toSquare,
+    transposition: true,
+  };
+}
+
+function materializeLeftRejoinReferences(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+) {
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const leftEdges = edges.filter((edge) => {
+    const parent = nodesById.get(edge.from);
+    const child = nodesById.get(edge.to);
+    return Boolean(parent && child && child.y > parent.y && child.x < parent.x);
+  });
+
+  leftEdges.forEach((edge) => {
+    const parent = nodesById.get(edge.from);
+    const target = nodesById.get(edge.to);
+    if (!parent || !target) {
+      return;
+    }
+    const reference = createLayoutReferenceNode(
+      nodes,
+      target,
+      parent.layer + 1,
+    );
+    edge.to = reference.id;
+    edge.transposition = true;
+  });
+
+  return leftEdges.length > 0;
+}
+
+function createLayoutReferenceNode(
+  nodes: Map<string, WorkingNode>,
+  target: WorkingNode,
+  layer: number,
+) {
+  const id = getNextFlowchartNodeId(nodes);
+  const node: WorkingNode = {
+    ...target,
+    id,
+    key: `reference:${id}`,
+    boardArrows: [],
+    outgoingEdgeIds: [],
+    referenceTo: target.referenceTo || target.id,
+    terminal: undefined,
+    terminalReason: undefined,
+    movesToSuccess: target.movesToSuccess,
+    x: 0,
+    y: 0,
+    layer,
+  };
+  nodes.set(node.key, node);
+  return node;
+}
+
+function getNextFlowchartNodeId(nodes: Map<string, WorkingNode>) {
+  const nextNumber =
+    Math.max(
+      -1,
+      ...[...nodes.values()].map((node) => Number(node.id.slice(1))),
+    ) + 1;
+  return `n${nextNumber}`;
 }
 
 function assignLayout(

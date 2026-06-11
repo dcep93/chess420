@@ -477,7 +477,8 @@ test("generated flowcharts have renderable cached data", () => {
 
       if (node.referenceTo) {
         assert.ok(nodesById.has(node.referenceTo));
-        assert.equal(node.outgoingEdgeIds.length, 0);
+        assert.ok(node.outgoingEdgeIds.length <= 1, node.fen);
+        assert.equal(node.boardArrows.length, node.outgoingEdgeIds.length);
         if (data.id === "knightBishop" && node.turn === "w") {
           assert.equal(typeof node.movesToSuccess, "number", node.fen);
         }
@@ -514,7 +515,12 @@ test("generated flowcharts have renderable cached data", () => {
     });
 
     data.nodes.forEach((node) => {
-      if (node.turn !== "w" || node.movesToSuccess === undefined || node.terminal) {
+      if (
+        node.referenceTo ||
+        node.turn !== "w" ||
+        node.movesToSuccess === undefined ||
+        node.terminal
+      ) {
         return;
       }
       const replyDistances = node.outgoingEdgeIds
@@ -543,7 +549,7 @@ test("generated flowcharts have renderable cached data", () => {
         .map((edge) => getFlowchartDistanceSortValue(nodesById.get(edge.to)));
       distances.forEach((distance, index) => {
         if (index === 0) return;
-        assert.ok(distance <= distances[index - 1], node.fen);
+        assert.ok(distance >= distances[index - 1], node.fen);
       });
     });
 
@@ -592,6 +598,10 @@ function assertFlowchartSpineLayout(
     if (target.y <= source.y) {
       return;
     }
+    assert.ok(
+      target.x >= source.x,
+      `${data.id} edge ${edge.id} should not descend to the left`,
+    );
 
     const isPrimaryContinuation = source.outgoingEdgeIds[0] === edge.id;
     const targetHasMultipleParents = (incomingEdges.get(target.id) || []).length > 1;
@@ -616,12 +626,12 @@ function getFlowchartDistanceSortValue(
     | undefined,
 ) {
   if (!node) {
-    return Number.NEGATIVE_INFINITY;
+    return Number.POSITIVE_INFINITY;
   }
   if (node.terminal === "success") {
     return 0;
   }
-  return node.movesToSuccess ?? Number.NEGATIVE_INFINITY;
+  return node.movesToSuccess ?? Number.POSITIVE_INFINITY;
 }
 
 function getWorstKnownFlowchartReplyDistance(
@@ -632,6 +642,9 @@ function getWorstKnownFlowchartReplyDistance(
   nodesById: Map<string, (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["nodes"][number]>,
 ) {
   if (!node) {
+    return undefined;
+  }
+  if (node.referenceTo) {
     return undefined;
   }
   if (node.terminal === "success") {
