@@ -173,6 +173,7 @@ function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
 
 const EDGE_LABEL_HEIGHT = 21;
 const EDGE_LABEL_GAP = 3;
+const EDGE_LABEL_ARROWHEAD_CLEARANCE = 10;
 
 function getEdgeLabel(
   edge: FlowchartEdge,
@@ -195,7 +196,7 @@ function getEdgeLabelPlacements(
     .map((edge, index) => {
       const source = nodesById.get(edge.from);
       const target = nodesById.get(edge.to);
-      const base = getEdgeLabelBasePlacement(target);
+      const base = getEdgeLabelBasePlacement(edge, target);
       if (!base) {
         return undefined;
       }
@@ -251,9 +252,17 @@ function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
   });
 }
 
-function getEdgeLabelBasePlacement(target?: FlowchartNode) {
+function getEdgeLabelBasePlacement(edge: FlowchartEdge, target?: FlowchartNode) {
   if (!target) {
     return undefined;
+  }
+  const end = edge.points[edge.points.length - 1];
+  const previous = edge.points[edge.points.length - 2];
+  if (end && previous && end.y > previous.y) {
+    return {
+      x: end.x,
+      y: (previous.y + end.y - EDGE_LABEL_ARROWHEAD_CLEARANCE) / 2,
+    };
   }
   return {
     x: target.x + 75,
