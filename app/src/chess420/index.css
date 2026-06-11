@@ -1102,28 +1102,28 @@
 .flowchart-move-tooltip {
   position: absolute;
   z-index: 8;
-  width: min(300px, 72vw);
-  padding: 0.58rem 0.68rem;
-  transform: translate(-50%, -100%);
+  box-sizing: border-box;
+  padding: 0.45rem 0.5rem;
   border: 1px solid rgba(255, 211, 120, 0.72);
   border-radius: 6px;
   background: rgba(16, 11, 7, 0.97);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
   color: rgba(255, 255, 255, 0.94);
-  line-height: 1.25;
+  line-height: 1.18;
+  overflow: auto;
   pointer-events: none;
 }
 
 .flowchart-move-tooltip__move {
   margin-bottom: 0.25rem;
   color: rgba(255, 220, 150, 0.98);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 760;
 }
 
 .flowchart-move-tooltip__reason {
   color: rgba(244, 234, 219, 0.92);
-  font-size: 0.76rem;
+  font-size: 0.63rem;
 }
 
 .flowchart-node {

@@ -326,6 +326,8 @@ function MoveReasonTooltip({ placement }: { placement: EdgeLabelPlacement | null
       style={{
         left: placement.tooltipX,
         top: placement.tooltipY,
+        width: FLOWCHART_NODE_WIDTH,
+        height: FLOWCHART_NODE_HEIGHT,
       }}
     >
       <div className="flowchart-move-tooltip__move">{placement.label}</div>
@@ -393,8 +395,8 @@ function getEdgeLabelPlacements(
         label,
         labelWidth: getEdgeLabelWidth(label),
         moveReason: source?.turn === "w" ? source.moveReason : undefined,
-        tooltipX: target ? target.x + FLOWCHART_NODE_WIDTH / 2 : base.x,
-        tooltipY: target ? target.y + FLOWCHART_NODE_HEIGHT / 2 : base.y,
+        tooltipX: target ? target.x : base.x,
+        tooltipY: target ? target.y : base.y,
         x: base.x,
         y: base.y,
       };
