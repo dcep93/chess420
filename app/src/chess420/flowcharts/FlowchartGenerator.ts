@@ -476,12 +476,69 @@ function assignSuccessDistances(
     });
   }
 
+  enforceWorstKnownBlackReplyDistances(nodes, edges, distances);
+
   nodes.forEach((node) => {
     const movesToSuccess = distances.get(node.id);
     if (node.turn === "w" && movesToSuccess !== undefined) {
       node.movesToSuccess = movesToSuccess;
     }
   });
+}
+
+function enforceWorstKnownBlackReplyDistances(
+  nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
+  distances: Map<string, number>,
+) {
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const outgoingEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
+  });
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    nodes.forEach((node) => {
+      if (node.turn !== "w" || node.terminal) {
+        return;
+      }
+      const nextDistances = (outgoingEdges.get(node.id) || [])
+        .map((edge) =>
+          getWorstKnownBlackReplyDistance(
+            getNodeById(nodesById, edge.to),
+            outgoingEdges,
+            distances,
+          ),
+        )
+        .filter((distance): distance is number => distance !== undefined);
+      if (nextDistances.length === 0) {
+        return;
+      }
+      const distance = Math.min(...nextDistances) + 1;
+      const current = distances.get(node.id);
+      if (current !== undefined && current >= distance) {
+        return;
+      }
+      distances.set(node.id, distance);
+      changed = true;
+    });
+  }
+}
+
+function getWorstKnownBlackReplyDistance(
+  node: WorkingNode,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+  distances: Map<string, number>,
+): number | undefined {
+  if (node.turn !== "b" || node.terminal) {
+    return distances.get(node.id);
+  }
+  const childDistances = (outgoingEdges.get(node.id) || [])
+    .map((edge) => distances.get(edge.to))
+    .filter((distance): distance is number => distance !== undefined);
+  return childDistances.length > 0 ? Math.max(...childDistances) : undefined;
 }
 
 function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {

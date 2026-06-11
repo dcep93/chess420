@@ -453,6 +453,7 @@ test("flowchart routes are handled", () => {
 test("generated flowcharts have renderable cached data", () => {
   Object.values(FLOWCHART_DATA).forEach((data) => {
     const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
+    const edgesById = new Map(data.edges.map((edge) => [edge.id, edge]));
     const edgeIds = new Set(data.edges.map((edge) => edge.id));
     const playEndgameId =
       data.id === "knightBishopPrepare"
@@ -511,6 +512,26 @@ test("generated flowcharts have renderable cached data", () => {
         assert.ok(point.y >= edge.points[index - 1].y, edge.id);
       });
     });
+
+    data.nodes.forEach((node) => {
+      if (node.turn !== "w" || node.movesToSuccess === undefined || node.terminal) {
+        return;
+      }
+      const replyDistances = node.outgoingEdgeIds
+        .map((edgeId) => edgesById.get(edgeId))
+        .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
+        .map((edge) =>
+          getWorstKnownFlowchartReplyDistance(nodesById.get(edge.to), edgesById, nodesById),
+        )
+        .filter((distance): distance is number => distance !== undefined);
+      if (replyDistances.length === 0) {
+        return;
+      }
+      assert.ok(
+        node.movesToSuccess >= Math.min(...replyDistances) + 1,
+        node.fen,
+      );
+    });
   });
 
   FLOWCHART_DATA.knightBishop.nodes.forEach((node) => {
@@ -521,6 +542,33 @@ test("generated flowcharts have renderable cached data", () => {
     }
   });
 });
+
+function getWorstKnownFlowchartReplyDistance(
+  node:
+    | (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["nodes"][number]
+    | undefined,
+  edgesById: Map<string, (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["edges"][number]>,
+  nodesById: Map<string, (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["nodes"][number]>,
+) {
+  if (!node) {
+    return undefined;
+  }
+  if (node.terminal === "success") {
+    return 0;
+  }
+  if (node.turn !== "b") {
+    return node.movesToSuccess;
+  }
+  const distances = node.outgoingEdgeIds
+    .map((edgeId) => edgesById.get(edgeId))
+    .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
+    .map((edge) => nodesById.get(edge.to))
+    .map((child) =>
+      child?.terminal === "success" ? 0 : child?.movesToSuccess,
+    )
+    .filter((distance): distance is number => distance !== undefined);
+  return distances.length > 0 ? Math.max(...distances) : undefined;
+}
 
 test("endgame dropdown is only shown in endgame mode", () => {
   Brain.view = View.speedrun;
