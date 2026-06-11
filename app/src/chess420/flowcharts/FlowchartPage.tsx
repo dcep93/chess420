@@ -36,6 +36,7 @@ function FlowchartIndex() {
 
 function FlowchartView({ data }: { data: FlowchartData }) {
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
+  const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
   return (
     <main className="flowchart-page" data-bs-theme="dark">
       <header className="flowchart-header">
@@ -104,9 +105,7 @@ function FlowchartView({ data }: { data: FlowchartData }) {
               {data.edges.map((edge) => (
                 <GraphEdgeLabel
                   key={edge.id}
-                  edge={edge}
-                  source={nodesById.get(edge.from)}
-                  target={nodesById.get(edge.to)}
+                  placement={edgeLabelPlacements.get(edge.id)}
                 />
               ))}
             </g>
@@ -136,21 +135,19 @@ function GraphEdgePath({ edge, markerId }: { edge: FlowchartEdge; markerId: stri
   );
 }
 
-function GraphEdgeLabel({
-  edge,
-  source,
-  target,
-}: {
+type EdgeLabelPlacement = {
   edge: FlowchartEdge;
-  source?: FlowchartNode;
-  target?: FlowchartNode;
-}) {
-  const placement = getEdgeLabelPlacement(source);
+  label: string;
+  labelWidth: number;
+  x: number;
+  y: number;
+};
+
+function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
   if (!placement) {
     return null;
   }
-  const label = getEdgeLabel(edge, source, target);
-  const labelWidth = Math.max(34, label.length * 8.4 + 14);
+  const { edge, label, labelWidth } = placement;
   return (
     <g
       className={
@@ -162,9 +159,9 @@ function GraphEdgeLabel({
       <rect
         className="flowchart-edge__label-bg"
         x={placement.x - labelWidth / 2}
-        y={placement.y - 10.5}
+        y={placement.y - EDGE_LABEL_HEIGHT / 2}
         width={labelWidth}
-        height="21"
+        height={EDGE_LABEL_HEIGHT}
         rx="4"
       />
       <text x={placement.x} y={placement.y}>
@@ -173,6 +170,9 @@ function GraphEdgeLabel({
     </g>
   );
 }
+
+const EDGE_LABEL_HEIGHT = 21;
+const EDGE_LABEL_GAP = 3;
 
 function getEdgeLabel(
   edge: FlowchartEdge,
@@ -185,6 +185,65 @@ function getEdgeLabel(
   return edge.san;
 }
 
+function getEdgeLabelPlacements(
+  edges: FlowchartEdge[],
+  nodesById: Map<string, FlowchartNode>,
+) {
+  const placed: EdgeLabelPlacement[] = [];
+  const placements = new Map<string, EdgeLabelPlacement>();
+  const candidates = edges
+    .map((edge, index) => {
+      const source = nodesById.get(edge.from);
+      const target = nodesById.get(edge.to);
+      const base = getEdgeLabelBasePlacement(target);
+      if (!base) {
+        return undefined;
+      }
+      const label = getEdgeLabel(edge, source, target);
+      return {
+        edge,
+        index,
+        label,
+        labelWidth: getEdgeLabelWidth(label),
+        x: base.x,
+        y: base.y,
+      };
+    })
+    .filter((candidate): candidate is EdgeLabelPlacement & { index: number } =>
+      candidate !== undefined,
+    )
+    .sort(
+      (a, b) =>
+        a.y - b.y ||
+        a.x - b.x ||
+        a.index - b.index,
+    );
+
+  candidates.forEach(({ index: _index, ...candidate }) => {
+    const placement = { ...candidate };
+    while (placed.some((other) => doEdgeLabelsOverlap(placement, other))) {
+      placement.y -= EDGE_LABEL_HEIGHT + EDGE_LABEL_GAP;
+    }
+    placed.push(placement);
+    placements.set(placement.edge.id, placement);
+  });
+
+  return placements;
+}
+
+function getEdgeLabelWidth(label: string) {
+  return Math.max(34, label.length * 8.4 + 14);
+}
+
+function doEdgeLabelsOverlap(a: EdgeLabelPlacement, b: EdgeLabelPlacement) {
+  return (
+    a.x - a.labelWidth / 2 < b.x + b.labelWidth / 2 &&
+    a.x + a.labelWidth / 2 > b.x - b.labelWidth / 2 &&
+    a.y - EDGE_LABEL_HEIGHT / 2 < b.y + EDGE_LABEL_HEIGHT / 2 &&
+    a.y + EDGE_LABEL_HEIGHT / 2 > b.y - EDGE_LABEL_HEIGHT / 2
+  );
+}
+
 function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
   return [...edges].sort((a, b) => {
     if (a.transposition === b.transposition) return 0;
@@ -192,13 +251,13 @@ function orderEdgesForDrawing(edges: FlowchartEdge[]): FlowchartEdge[] {
   });
 }
 
-function getEdgeLabelPlacement(source?: FlowchartNode) {
-  if (!source) {
+function getEdgeLabelBasePlacement(target?: FlowchartNode) {
+  if (!target) {
     return undefined;
   }
   return {
-    x: source.x + 75,
-    y: source.y + 150 + 18,
+    x: target.x + 75,
+    y: target.y - 18,
   };
 }
 

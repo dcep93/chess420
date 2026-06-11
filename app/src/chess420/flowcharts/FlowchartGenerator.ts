@@ -43,6 +43,7 @@ const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
 const COLUMN_GAP = 58;
 const ROW_GAP = 84;
+const EDGE_BEND_FROM_PARENT_RATIO = 0.35;
 const BOARD_IMAGE_ORIGIN = "http://fen-to-image.com";
 
 export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
@@ -542,12 +543,13 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
       x: child.x + (child.x >= parent.x ? 0 : NODE_WIDTH),
       y: child.y + NODE_HEIGHT / 2,
     };
+    const bendY = parentBottom.y + ROW_GAP * EDGE_BEND_FROM_PARENT_RATIO;
     edge.points =
       child.y > parent.y
         ? [
             parentBottom,
-            { x: parentBottom.x, y: parentBottom.y + ROW_GAP / 2 },
-            { x: childTop.x, y: parentBottom.y + ROW_GAP / 2 },
+            { x: parentBottom.x, y: bendY },
+            { x: childTop.x, y: bendY },
             childTop,
           ]
         : [parentSide, childSide];
