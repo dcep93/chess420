@@ -53,6 +53,7 @@ export type FlowchartNode = {
   terminal?: FlowchartTerminal;
   terminalReason?: string;
   movesToSuccess?: number;
+  moveReason?: string;
 };
 
 export type FlowchartData = {

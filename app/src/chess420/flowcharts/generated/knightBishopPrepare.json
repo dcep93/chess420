@@ -30,7 +30,8 @@
       "outgoingEdgeIds": [
         "n0-0-n3"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Jump the knight to the active c6 outpost with check, forcing Black to stay on the back rank while White starts building the handoff cage."
     },
     {
       "id": "n1",
@@ -54,7 +55,8 @@
       "outgoingEdgeIds": [
         "n1-0-n4"
       ],
-      "movesToSuccess": 11
+      "movesToSuccess": 11,
+      "moveReason": "Use the forcing knight check to enter the longer preparation route; from d5 the knight can pivot through f4 and g6 while the king holds the center."
     },
     {
       "id": "n2",
@@ -78,7 +80,8 @@
       "outgoingEdgeIds": [
         "n2-0-n5"
       ],
-      "movesToSuccess": 8
+      "movesToSuccess": 8,
+      "moveReason": "Centralize the knight to d4 so it can reach c6 or the f5/e2 transfer squares without dropping the king or bishop below the fourth rank."
     },
     {
       "id": "n3",
@@ -211,7 +214,8 @@
       "outgoingEdgeIds": [
         "n6-0-n14"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Step the king to f6 so the knight on c6 and bishop on e6 can keep Black boxed while White approaches the final side-adjacent shape."
     },
     {
       "id": "n7",
@@ -235,7 +239,8 @@
       "outgoingEdgeIds": [
         "n7-0-n15"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Bring the king closer to the trapped king; with Black already on f8, White needs king pressure before the knight can finish the handoff."
     },
     {
       "id": "n8",
@@ -259,7 +264,8 @@
       "outgoingEdgeIds": [
         "n8-0-n16"
       ],
-      "movesToSuccess": 8
+      "movesToSuccess": 8,
+      "moveReason": "Move into opposition on d6, taking the key square beside the knight so Black cannot use the d-file to loosen the cage."
     },
     {
       "id": "n9",
@@ -283,7 +289,8 @@
       "outgoingEdgeIds": [
         "n9-0-n17"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Take d6 to keep the knight protected and to prepare a direct finish if Black stays on the back rank."
     },
     {
       "id": "n10",
@@ -307,7 +314,8 @@
       "outgoingEdgeIds": [
         "n10-0-n18"
       ],
-      "movesToSuccess": 10
+      "movesToSuccess": 10,
+      "moveReason": "Retreat the knight to f4 to preserve the bishop color parity and start the g6 triangulation route against Black's f8 defense."
     },
     {
       "id": "n11",
@@ -331,7 +339,8 @@
       "outgoingEdgeIds": [
         "n11-0-n19"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Bring the king to d6, using the knight on d4 as a shield while White takes the opposition squares around d8."
     },
     {
       "id": "n12",
@@ -355,7 +364,8 @@
       "outgoingEdgeIds": [
         "n12-0-n20"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Send the knight to c6 to check the king's escape squares and reconnect with the standard prepared pattern."
     },
     {
       "id": "n13",
@@ -379,7 +389,8 @@
       "outgoingEdgeIds": [
         "n13-0-n21"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Use the king move to f6 to cut off e7 and g7, making the knight transfer to c6 or f5 safe."
     },
     {
       "id": "n14",
@@ -611,7 +622,8 @@
       "outgoingEdgeIds": [
         "n22-0-n32"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move the knight to e5 so it can jump to f7 and complete the same-color prepared shape next move."
     },
     {
       "id": "n23",
@@ -635,7 +647,8 @@
       "outgoingEdgeIds": [
         "n23-0-n33"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "The black king is restricted, so White can freely triangulate with the king to achieve the preferred parity before the knight finishes."
     },
     {
       "id": "n24",
@@ -659,7 +672,8 @@
       "outgoingEdgeIds": [
         "n24-0-n34"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Shift the knight to f4 to keep the d6 king active while setting up the g6 and e2 transfer motifs."
     },
     {
       "id": "n25",
@@ -683,7 +697,8 @@
       "outgoingEdgeIds": [
         "n25-0-n35"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Use the knight retreat to f4 to keep the position won against the f8 defense and preserve the bishop's color anchor."
     },
     {
       "id": "n26",
@@ -707,7 +722,8 @@
       "outgoingEdgeIds": [
         "n26-0-n36"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Jump to b6 to cover d7 and force Black into the final edge pattern; the king on d6 already controls the cage."
     },
     {
       "id": "n27",
@@ -731,7 +747,8 @@
       "outgoingEdgeIds": [
         "n27-0-n37"
       ],
-      "movesToSuccess": 9
+      "movesToSuccess": 9,
+      "moveReason": "Improve the king to f5 before moving the knight; White must keep Black boxed while preparing the g6 check."
     },
     {
       "id": "n28",
@@ -755,7 +772,8 @@
       "outgoingEdgeIds": [
         "n28-0-n38"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Check from g6 to drive Black back to the edge and place the knight on the same color complex as the bishop."
     },
     {
       "id": "n29",
@@ -779,7 +797,8 @@
       "outgoingEdgeIds": [
         "n29-0-n39"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Move the knight to g6 without check because Black is already contained; this sets up king triangulation around f5 and e5."
     },
     {
       "id": "n30",
@@ -803,7 +822,8 @@
       "outgoingEdgeIds": [
         "n30-0-n40"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Transfer the knight through e2 so it can return to f4 with the right color and without blocking the king on d6."
     },
     {
       "id": "n31",
@@ -827,7 +847,8 @@
       "outgoingEdgeIds": [
         "n31-0-n14"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Put the knight back on c6, restoring the familiar cage with the king on f6 ready to finish."
     },
     {
       "id": "n32",
@@ -1114,7 +1135,8 @@
       "outgoingEdgeIds": [
         "n41-0-n56"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "This is the direct handoff: the knight reaches f7, side-adjacent to both kings and matching the bishop's square color."
     },
     {
       "id": "n42",
@@ -1138,7 +1160,8 @@
       "outgoingEdgeIds": [
         "n42-0-n57"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Continue the triangulation from n23; the king steps to g6 to keep Black restricted while preserving the move parity White needs."
     },
     {
       "id": "n43",
@@ -1162,7 +1185,8 @@
       "outgoingEdgeIds": [
         "n43-0-n58"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Move the king to d7 to take the last flight squares and force Black into a back-rank response."
     },
     {
       "id": "n44",
@@ -1186,7 +1210,8 @@
       "outgoingEdgeIds": [
         "n44-0-n59"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Send the knight to g6 so it can return through e5 or f4 while the king on d6 keeps Black boxed."
     },
     {
       "id": "n45",
@@ -1210,7 +1235,8 @@
       "outgoingEdgeIds": [
         "n45-0-n60"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Use the king to approach from e7, keeping Black away from the bishop and setting up the final knight placement."
     },
     {
       "id": "n46",
@@ -1234,7 +1260,8 @@
       "outgoingEdgeIds": [
         "n46-0-n61"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Move the knight to g6 because the king already owns d6; the knight now has the right color route back to the edge cage."
     },
     {
       "id": "n47",
@@ -1258,7 +1285,8 @@
       "outgoingEdgeIds": [
         "n47-0-n62"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Finish immediately with the knight on d7, adjacent to both kings and on the bishop's color."
     },
     {
       "id": "n48",
@@ -1282,7 +1310,8 @@
       "outgoingEdgeIds": [
         "n48-0-n63"
       ],
-      "movesToSuccess": 8
+      "movesToSuccess": 8,
+      "moveReason": "Check from g6 to gain time and force Black toward the corner before White walks the king into the final net."
     },
     {
       "id": "n49",
@@ -1306,7 +1335,8 @@
       "outgoingEdgeIds": [
         "n49-0-n64"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move the king to f6 to keep the h-file king trapped and prepare the knight's final return to g6."
     },
     {
       "id": "n50",
@@ -1330,7 +1360,8 @@
       "outgoingEdgeIds": [
         "n50-0-n65"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Step to g5 to shoulder the king on h7 and keep the knight's route to g6 available."
     },
     {
       "id": "n51",
@@ -1354,7 +1385,8 @@
       "outgoingEdgeIds": [
         "n51-0-n66"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Return the king to f6, keeping Black on h6 boxed while preserving the same-color knight finish."
     },
     {
       "id": "n52",
@@ -1378,7 +1410,8 @@
       "outgoingEdgeIds": [
         "n52-0-n59"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Bring the king to d6 so the advanced knight on g6 has support and Black cannot escape through e7."
     },
     {
       "id": "n53",
@@ -1402,7 +1435,8 @@
       "outgoingEdgeIds": [
         "n53-0-n61"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Take d6 to hold the center; with the knight already on g6, White only needs to convert the edge cage."
     },
     {
       "id": "n54",
@@ -1426,7 +1460,8 @@
       "outgoingEdgeIds": [
         "n54-0-n35"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Bring the knight back to f4, restoring the working color and setting up the final g6 or e2 route."
     },
     {
       "id": "n55",
@@ -1450,7 +1485,8 @@
       "outgoingEdgeIds": [
         "n55-0-n67"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Use f4 as the knight's transfer square; it keeps Black boxed while avoiding a premature wrong-color finish."
     },
     {
       "id": "n56",
@@ -1798,7 +1834,8 @@
       "outgoingEdgeIds": [
         "n69-0-n14"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Move the king back to f6 to maintain opposition; the knight on c6 is already close to the final pattern."
     },
     {
       "id": "n70",
@@ -1822,7 +1859,8 @@
       "outgoingEdgeIds": [
         "n70-0-n60"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Step to e7 to cut off Black's king from the bishop and force it toward the prepared back-rank cage."
     },
     {
       "id": "n71",
@@ -1846,7 +1884,8 @@
       "outgoingEdgeIds": [
         "n71-0-n82"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Triangulate with the king to d5, changing the move order while the knight on g6 keeps Black restricted."
     },
     {
       "id": "n72",
@@ -1870,7 +1909,8 @@
       "outgoingEdgeIds": [
         "n72-0-n64"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move to f6, taking the h-file king's escape squares and preparing the knight to return with correct parity."
     },
     {
       "id": "n73",
@@ -1894,7 +1934,8 @@
       "outgoingEdgeIds": [
         "n73-0-n83"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Use Kf7 to keep contact with the h7 king and prevent Black from slipping out of the edge net."
     },
     {
       "id": "n74",
@@ -1918,7 +1959,8 @@
       "outgoingEdgeIds": [
         "n74-0-n66"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Return to f6 so the king holds h6 in the box while the knight remains ready to finish."
     },
     {
       "id": "n75",
@@ -1942,7 +1984,8 @@
       "outgoingEdgeIds": [
         "n75-0-n84"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Bring the knight to e5, the final transfer square before Nd7 completes the prepared shape."
     },
     {
       "id": "n76",
@@ -1982,7 +2025,8 @@
       "outgoingEdgeIds": [
         "n77-0-n85"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move to g5 to keep Black's king confined on g7 while preserving the knight's same-color landing square."
     },
     {
       "id": "n78",
@@ -2006,7 +2050,8 @@
       "outgoingEdgeIds": [
         "n78-0-n39"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Continue the triangulation by stepping to e5; White is adjusting king parity while Black remains restricted."
     },
     {
       "id": "n79",
@@ -2030,7 +2075,8 @@
       "outgoingEdgeIds": [
         "n79-0-n86"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Finish with Ng6: the knight is adjacent to both kings and matches the bishop's square color."
     },
     {
       "id": "n80",
@@ -2054,7 +2100,8 @@
       "outgoingEdgeIds": [
         "n80-0-n64"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Return the king to f6 to keep the h8 king boxed and make the knight's g6 finish decisive."
     },
     {
       "id": "n81",
@@ -2078,7 +2125,8 @@
       "outgoingEdgeIds": [
         "n81-0-n85"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move the knight to g6, tightening the cage before the king finishes the opposition pattern."
     },
     {
       "id": "n82",
@@ -2225,7 +2273,8 @@
       "outgoingEdgeIds": [
         "n87-0-n93"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Step to c6 to triangulate from the d-file and force Black back into the final Nd7 handoff."
     },
     {
       "id": "n88",
@@ -2249,7 +2298,8 @@
       "outgoingEdgeIds": [
         "n88-0-n64"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Move to f6, keeping the h8 king on the edge and preserving the knight's direct route to g6."
     },
     {
       "id": "n89",
@@ -2273,7 +2323,8 @@
       "outgoingEdgeIds": [
         "n89-0-n66"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Return to f6 to hold the h6 king in place and avoid giving up the edge cage."
     },
     {
       "id": "n90",
@@ -2297,7 +2348,8 @@
       "outgoingEdgeIds": [
         "n90-0-n62"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Finish with Nd7: the knight becomes side-adjacent to both kings on the bishop's color."
     },
     {
       "id": "n91",
@@ -2321,7 +2373,8 @@
       "outgoingEdgeIds": [
         "n91-0-n86"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Move the king to f6 so the knight on g6 and bishop on e6 lock the final h-file cage."
     },
     {
       "id": "n92",
@@ -2384,7 +2437,8 @@
       "outgoingEdgeIds": [
         "n94-0-n61"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Return to d6, keeping the king close enough to support the final Nd7 or Ng6 handoff."
     }
   ],
   "edges": [

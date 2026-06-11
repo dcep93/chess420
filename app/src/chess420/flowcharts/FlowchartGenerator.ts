@@ -95,6 +95,63 @@ const PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT = 80;
 let prepareSearchDebugReport: PrepareSearchDebugReport =
   createPrepareSearchDebugReport();
 
+const KNIGHT_BISHOP_PREPARE_MOVE_REASONS: Record<string, string> = {
+  n0: "Jump the knight to the active c6 outpost with check, forcing Black to stay on the back rank while White starts building the handoff cage.",
+  n1: "Use the forcing knight check to enter the longer preparation route; from d5 the knight can pivot through f4 and g6 while the king holds the center.",
+  n2: "Centralize the knight to d4 so it can reach c6 or the f5/e2 transfer squares without dropping the king or bishop below the fourth rank.",
+  n6: "Step the king to f6 so the knight on c6 and bishop on e6 can keep Black boxed while White approaches the final side-adjacent shape.",
+  n7: "Bring the king closer to the trapped king; with Black already on f8, White needs king pressure before the knight can finish the handoff.",
+  n8: "Move into opposition on d6, taking the key square beside the knight so Black cannot use the d-file to loosen the cage.",
+  n9: "Take d6 to keep the knight protected and to prepare a direct finish if Black stays on the back rank.",
+  n10: "Retreat the knight to f4 to preserve the bishop color parity and start the g6 triangulation route against Black's f8 defense.",
+  n11: "Bring the king to d6, using the knight on d4 as a shield while White takes the opposition squares around d8.",
+  n12: "Send the knight to c6 to check the king's escape squares and reconnect with the standard prepared pattern.",
+  n13: "Use the king move to f6 to cut off e7 and g7, making the knight transfer to c6 or f5 safe.",
+  n22: "Move the knight to e5 so it can jump to f7 and complete the same-color prepared shape next move.",
+  n23: "The black king is restricted, so White can freely triangulate with the king to achieve the preferred parity before the knight finishes.",
+  n24: "Shift the knight to f4 to keep the d6 king active while setting up the g6 and e2 transfer motifs.",
+  n25: "Use the knight retreat to f4 to keep the position won against the f8 defense and preserve the bishop's color anchor.",
+  n26: "Jump to b6 to cover d7 and force Black into the final edge pattern; the king on d6 already controls the cage.",
+  n27: "Improve the king to f5 before moving the knight; White must keep Black boxed while preparing the g6 check.",
+  n28: "Check from g6 to drive Black back to the edge and place the knight on the same color complex as the bishop.",
+  n29: "Move the knight to g6 without check because Black is already contained; this sets up king triangulation around f5 and e5.",
+  n30: "Transfer the knight through e2 so it can return to f4 with the right color and without blocking the king on d6.",
+  n31: "Put the knight back on c6, restoring the familiar cage with the king on f6 ready to finish.",
+  n41: "This is the direct handoff: the knight reaches f7, side-adjacent to both kings and matching the bishop's square color.",
+  n42: "Continue the triangulation from n23; the king steps to g6 to keep Black restricted while preserving the move parity White needs.",
+  n43: "Move the king to d7 to take the last flight squares and force Black into a back-rank response.",
+  n44: "Send the knight to g6 so it can return through e5 or f4 while the king on d6 keeps Black boxed.",
+  n45: "Use the king to approach from e7, keeping Black away from the bishop and setting up the final knight placement.",
+  n46: "Move the knight to g6 because the king already owns d6; the knight now has the right color route back to the edge cage.",
+  n47: "Finish immediately with the knight on d7, adjacent to both kings and on the bishop's color.",
+  n48: "Check from g6 to gain time and force Black toward the corner before White walks the king into the final net.",
+  n49: "Move the king to f6 to keep the h-file king trapped and prepare the knight's final return to g6.",
+  n50: "Step to g5 to shoulder the king on h7 and keep the knight's route to g6 available.",
+  n51: "Return the king to f6, keeping Black on h6 boxed while preserving the same-color knight finish.",
+  n52: "Bring the king to d6 so the advanced knight on g6 has support and Black cannot escape through e7.",
+  n53: "Take d6 to hold the center; with the knight already on g6, White only needs to convert the edge cage.",
+  n54: "Bring the knight back to f4, restoring the working color and setting up the final g6 or e2 route.",
+  n55: "Use f4 as the knight's transfer square; it keeps Black boxed while avoiding a premature wrong-color finish.",
+  n69: "Move the king back to f6 to maintain opposition; the knight on c6 is already close to the final pattern.",
+  n70: "Step to e7 to cut off Black's king from the bishop and force it toward the prepared back-rank cage.",
+  n71: "Triangulate with the king to d5, changing the move order while the knight on g6 keeps Black restricted.",
+  n72: "Move to f6, taking the h-file king's escape squares and preparing the knight to return with correct parity.",
+  n73: "Use Kf7 to keep contact with the h7 king and prevent Black from slipping out of the edge net.",
+  n74: "Return to f6 so the king holds h6 in the box while the knight remains ready to finish.",
+  n75: "Bring the knight to e5, the final transfer square before Nd7 completes the prepared shape.",
+  n77: "Move to g5 to keep Black's king confined on g7 while preserving the knight's same-color landing square.",
+  n78: "Continue the triangulation by stepping to e5; White is adjusting king parity while Black remains restricted.",
+  n79: "Finish with Ng6: the knight is adjacent to both kings and matches the bishop's square color.",
+  n80: "Return the king to f6 to keep the h8 king boxed and make the knight's g6 finish decisive.",
+  n81: "Move the knight to g6, tightening the cage before the king finishes the opposition pattern.",
+  n87: "Step to c6 to triangulate from the d-file and force Black back into the final Nd7 handoff.",
+  n88: "Move to f6, keeping the h8 king on the edge and preserving the knight's direct route to g6.",
+  n89: "Return to f6 to hold the h6 king in place and avoid giving up the edge cage.",
+  n90: "Finish with Nd7: the knight becomes side-adjacent to both kings on the bishop's color.",
+  n91: "Move the king to f6 so the knight on g6 and bishop on e6 lock the final h-file cage.",
+  n94: "Return to d6, keeping the king close enough to support the final Nd7 or Ng6 handoff.",
+};
+
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
 const COLUMN_GAP = 92;
@@ -208,6 +265,7 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
   pruneUnreachableNodes(nodes, edges, data.starts);
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
+  assignPrepareMoveReasons(nodes, data.id);
   assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
@@ -322,6 +380,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   assignSuccessDistances(nodes, edges, config.id === "knightBishopPrepare");
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
+  assignPrepareMoveReasons(nodes, config.id);
   assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
@@ -373,6 +432,7 @@ function toFlowchartNode(node: WorkingNode): FlowchartNode {
     terminal: node.terminal,
     terminalReason: node.terminalReason,
     movesToSuccess: node.movesToSuccess,
+    moveReason: node.moveReason,
   };
 }
 
@@ -1126,6 +1186,36 @@ function orderNodeMovesByDistance(nodes: Map<string, WorkingNode>, edges: Workin
     }
     return a.id.localeCompare(b.id, undefined, { numeric: true });
   });
+}
+
+function assignPrepareMoveReasons(
+  nodes: Map<string, WorkingNode>,
+  flowchartId: FlowchartId,
+) {
+  nodes.forEach((node) => {
+    node.moveReason = undefined;
+  });
+  if (flowchartId !== "knightBishopPrepare") {
+    return;
+  }
+
+  const missingReasons: string[] = [];
+  nodes.forEach((node) => {
+    if (node.turn !== "w" || node.terminal || node.outgoingEdgeIds.length === 0) {
+      return;
+    }
+    const reason = KNIGHT_BISHOP_PREPARE_MOVE_REASONS[node.id];
+    if (!reason) {
+      missingReasons.push(`${node.id} ${node.fen}`);
+      return;
+    }
+    node.moveReason = reason;
+  });
+  if (missingReasons.length > 0) {
+    throw new Error(
+      `Missing knightBishopPrepare move reasons:\n${missingReasons.join("\n")}`,
+    );
+  }
 }
 
 function compareEdgesByTargetDistance(

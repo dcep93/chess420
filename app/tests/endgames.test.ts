@@ -662,6 +662,27 @@ test("knight-bishop prepare start positions all have forced routes", () => {
   });
 });
 
+test("knight-bishop prepare white moves explain their purpose", () => {
+  FLOWCHART_DATA.knightBishopPrepare.nodes.forEach((node) => {
+    if (node.turn !== "w" || node.terminal || node.outgoingEdgeIds.length === 0) {
+      return;
+    }
+    assert.equal(typeof node.moveReason, "string", node.id);
+    assert.ok(node.moveReason.length > 24, node.id);
+  });
+
+  assert.match(
+    FLOWCHART_DATA.knightBishopPrepare.nodes.find((node) => node.id === "n23")
+      ?.moveReason || "",
+    /triangulate.*preferred parity/i,
+  );
+  assert.match(
+    FLOWCHART_DATA.knightBishopPrepare.nodes.find((node) => node.id === "n42")
+      ?.moveReason || "",
+    /Continue the triangulation from n23/i,
+  );
+});
+
 function assertFlowchartSpineLayout(
   data: (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA],
 ) {

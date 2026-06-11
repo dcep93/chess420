@@ -455,6 +455,7 @@ function FlowchartNodeCard({
   node: FlowchartNode;
   highlightRole?: HighlightedNodeRole;
 }) {
+  const nodeTitle = getFlowchartNodeTitle(node);
   return (
     <article
       className={`flowchart-node flowchart-node--${node.turn}${
@@ -463,6 +464,7 @@ function FlowchartNodeCard({
         highlightRole ? ` flowchart-node--highlight-${highlightRole}` : ""
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
+      title={nodeTitle}
     >
       <span className="flowchart-node__id">{node.id}</span>
       <a href={node.playUrl} target="_blank" rel="noreferrer" aria-label={node.fen}>
@@ -484,6 +486,16 @@ function FlowchartNodeCard({
       </div>
     </article>
   );
+}
+
+function getFlowchartNodeTitle(node: FlowchartNode) {
+  if (node.moveReason && node.boardArrows[0]) {
+    return `${node.id}: ${node.boardArrows[0].san}. ${node.moveReason}`;
+  }
+  if (node.terminalReason) {
+    return `${node.id}: ${node.terminalReason}`;
+  }
+  return node.id;
 }
 
 function BoardArrow({ arrow }: { arrow: FlowchartBoardArrow }) {
