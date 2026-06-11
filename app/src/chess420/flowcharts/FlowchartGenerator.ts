@@ -182,6 +182,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   }
 
   assignSuccessDistances(nodes, edges);
+  orderNodeMovesByDistance(nodes, edges);
   assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
@@ -541,6 +542,80 @@ function getWorstKnownBlackReplyDistance(
   return childDistances.length > 0 ? Math.max(...childDistances) : undefined;
 }
 
+function orderNodeMovesByDistance(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
+  const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
+  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
+  const orderedEdgeIdsByNode = new Map<string, string[]>();
+
+  nodes.forEach((node) => {
+    if (node.outgoingEdgeIds.length <= 1) {
+      return;
+    }
+    const orderedEdgeIds = [...node.outgoingEdgeIds].sort((a, b) =>
+      compareEdgesByTargetDistance(
+        getEdgeById(edgesById, a),
+        getEdgeById(edgesById, b),
+        nodesById,
+      ),
+    );
+    orderedEdgeIdsByNode.set(node.id, orderedEdgeIds);
+    node.outgoingEdgeIds = orderedEdgeIds;
+    const arrowByEdgeId = new Map(node.boardArrows.map((arrow) => [arrow.id, arrow]));
+    node.boardArrows = orderedEdgeIds
+      .map((edgeId) => arrowByEdgeId.get(edgeId))
+      .filter((arrow): arrow is FlowchartBoardArrow => arrow !== undefined);
+  });
+
+  const edgeIndexById = new Map<string, number>();
+  orderedEdgeIdsByNode.forEach((edgeIds) => {
+    edgeIds.forEach((edgeId, index) => edgeIndexById.set(edgeId, index));
+  });
+  edges.sort((a, b) => {
+    if (a.from === b.from) {
+      return (
+        (edgeIndexById.get(a.id) ?? 0) -
+        (edgeIndexById.get(b.id) ?? 0)
+      );
+    }
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  });
+}
+
+function compareEdgesByTargetDistance(
+  a: WorkingEdge,
+  b: WorkingEdge,
+  nodesById: Map<string, WorkingNode>,
+) {
+  return (
+    getEdgeTargetDistanceSortValue(b, nodesById) -
+      getEdgeTargetDistanceSortValue(a, nodesById) ||
+    a.san.localeCompare(b.san) ||
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
+}
+
+function getEdgeTargetDistanceSortValue(
+  edge: WorkingEdge,
+  nodesById: Map<string, WorkingNode>,
+) {
+  const target = nodesById.get(edge.to);
+  if (!target) {
+    return Number.NEGATIVE_INFINITY;
+  }
+  if (target.terminal === "success") {
+    return 0;
+  }
+  return target.movesToSuccess ?? Number.NEGATIVE_INFINITY;
+}
+
+function getEdgeById(edgesById: Map<string, WorkingEdge>, id: string) {
+  const edge = edgesById.get(id);
+  if (!edge) {
+    throw new Error(`Missing flowchart edge ${id}`);
+  }
+  return edge;
+}
+
 function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
   const incomingEdges = new Map<string, WorkingEdge[]>();
@@ -690,21 +765,32 @@ function compareLayerNodes(
   const bPlan = getNodePlanKey(b, outgoingEdges);
   const aAnchor = getNodeAnchor(a, nodesById, incomingEdges);
   const bAnchor = getNodeAnchor(b, nodesById, incomingEdges);
+  const distanceOrder =
+    getNodeDistanceSortValue(b) - getNodeDistanceSortValue(a);
   if (shouldGroupByWhitePlan) {
     return (
-      aPlan.localeCompare(bPlan) ||
       aAnchor - bAnchor ||
+      distanceOrder ||
+      aPlan.localeCompare(bPlan) ||
       a.id.localeCompare(b.id, undefined, { numeric: true })
     );
   }
   return (
     aAnchor - bAnchor ||
+    distanceOrder ||
     getIncomingMoveKey(a, incomingEdges).localeCompare(
       getIncomingMoveKey(b, incomingEdges),
     ) ||
     aPlan.localeCompare(bPlan) ||
     a.id.localeCompare(b.id, undefined, { numeric: true })
   );
+}
+
+function getNodeDistanceSortValue(node: WorkingNode) {
+  if (node.terminal === "success") {
+    return 0;
+  }
+  return node.movesToSuccess ?? Number.NEGATIVE_INFINITY;
 }
 
 function getNodeAnchor(

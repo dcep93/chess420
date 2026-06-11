@@ -532,6 +532,20 @@ test("generated flowcharts have renderable cached data", () => {
         node.fen,
       );
     });
+
+    data.nodes.forEach((node) => {
+      if (node.turn !== "b" || node.outgoingEdgeIds.length <= 1) {
+        return;
+      }
+      const distances = node.outgoingEdgeIds
+        .map((edgeId) => edgesById.get(edgeId))
+        .filter((edge): edge is NonNullable<typeof edge> => edge !== undefined)
+        .map((edge) => getFlowchartDistanceSortValue(nodesById.get(edge.to)));
+      distances.forEach((distance, index) => {
+        if (index === 0) return;
+        assert.ok(distance <= distances[index - 1], node.fen);
+      });
+    });
   });
 
   FLOWCHART_DATA.knightBishop.nodes.forEach((node) => {
@@ -542,6 +556,20 @@ test("generated flowcharts have renderable cached data", () => {
     }
   });
 });
+
+function getFlowchartDistanceSortValue(
+  node:
+    | (typeof FLOWCHART_DATA)[keyof typeof FLOWCHART_DATA]["nodes"][number]
+    | undefined,
+) {
+  if (!node) {
+    return Number.NEGATIVE_INFINITY;
+  }
+  if (node.terminal === "success") {
+    return 0;
+  }
+  return node.movesToSuccess ?? Number.NEGATIVE_INFINITY;
+}
 
 function getWorstKnownFlowchartReplyDistance(
   node:
