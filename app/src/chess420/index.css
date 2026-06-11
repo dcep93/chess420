@@ -1068,7 +1068,7 @@
 }
 
 .flowchart-board__arrow--black {
-  stroke: rgba(65, 169, 255, 0.88);
+  stroke: rgba(255, 188, 66, 0.9);
 }
 
 .flowchart-board__arrows marker path {
