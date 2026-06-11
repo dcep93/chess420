@@ -473,6 +473,9 @@ test("generated flowcharts have renderable cached data", () => {
       if (node.referenceTo) {
         assert.ok(nodesById.has(node.referenceTo));
         assert.equal(node.outgoingEdgeIds.length, 0);
+        if (data.id === "knightBishop" && node.turn === "w") {
+          assert.equal(typeof node.movesToSuccess, "number", node.fen);
+        }
         return;
       }
       if (node.terminal) {
@@ -481,7 +484,9 @@ test("generated flowcharts have renderable cached data", () => {
       }
       if (node.turn === "w") {
         assert.ok(node.outgoingEdgeIds.length <= 1, node.fen);
-        if (node.movesToSuccess !== undefined) {
+        if (data.id === "knightBishop") {
+          assert.equal(typeof node.movesToSuccess, "number", node.fen);
+        } else if (node.movesToSuccess !== undefined) {
           assert.equal(typeof node.movesToSuccess, "number", node.fen);
         }
       } else {
@@ -2297,6 +2302,14 @@ test("knight-bishop lookup patches forced re-entry holes", () => {
       }
     }
   }
+});
+
+test("knight-bishop mating net chooses bb5 in b7 d6 cage", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/1k1N4/3K4/8/2B5/8/8/8 w - - 96 49";
+
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bb5"]);
+  assert.equal(Brain.getEndgameReason(fen), "take away c6");
 });
 
 test("knight-bishop lookup includes bishop d5 branch", () => {

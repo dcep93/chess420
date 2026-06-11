@@ -2055,6 +2055,9 @@ export default class Brain {
     if (matches("b7", "e6", "h7", "d7")) {
       return move("h7", "d3", "build the cage");
     }
+    if (matches("b7", "d6", "c4", "d7")) {
+      return move("c4", "b5", "take away c6");
+    }
     if (matches("c7", "e6", "c4", "d7")) {
       return move("c4", "b5", "take away c6");
     }

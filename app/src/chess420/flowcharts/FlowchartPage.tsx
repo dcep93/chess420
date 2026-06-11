@@ -214,9 +214,7 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
         </div>
       </a>
       <div className="flowchart-node__label">
-        {node.referenceTo ? (
-          <span>repeat</span>
-        ) : node.terminal ? (
+        {node.terminal ? (
           <span>{node.terminalReason}</span>
         ) : node.turn === "w" && node.movesToSuccess !== undefined ? (
           <span>{node.movesToSuccess} white moves</span>

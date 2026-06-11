@@ -419,54 +419,61 @@ function assignSuccessDistances(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
 ) {
-  const edgeMap = new Map<string, WorkingEdge>(
-    edges.map((edge) => [edge.id, edge]),
-  );
-  const memo = new Map<string, number | null>();
-  const visiting = new Set<string>();
+  const incomingEdges = new Map<string, WorkingEdge[]>();
+  const referenceIncoming = new Map<string, WorkingNode[]>();
+  edges.forEach((edge) => {
+    incomingEdges.set(edge.to, [...(incomingEdges.get(edge.to) || []), edge]);
+  });
+  nodes.forEach((node) => {
+    if (node.referenceTo) {
+      referenceIncoming.set(node.referenceTo, [
+        ...(referenceIncoming.get(node.referenceTo) || []),
+        node,
+      ]);
+    }
+  });
 
-  const distance = (node: WorkingNode): number | null => {
-    if (memo.has(node.id)) {
-      return memo.get(node.id)!;
-    }
-    if (node.terminal === "success") {
-      memo.set(node.id, 0);
-      return 0;
-    }
-    if (node.terminal === "failure" || node.outgoingEdgeIds.length === 0) {
-      memo.set(node.id, null);
-      return null;
-    }
-    if (visiting.has(node.id)) {
-      return null;
-    }
+  const distances = new Map<string, number>();
+  const queue: WorkingNode[] = [];
 
-    visiting.add(node.id);
-    const childDistances = node.outgoingEdgeIds.map((edgeId) => {
-      const edge = edgeMap.get(edgeId);
-      if (!edge) {
-        throw new Error(`Missing flowchart edge ${edgeId}`);
-      }
-      return distance(getNodeById(nodes, edge.to));
-    });
-    visiting.delete(node.id);
-
-    const successfulDistances = childDistances.filter(
-      (value): value is number => value !== null,
-    );
-    const result =
-      successfulDistances.length === 0
-        ? null
-        : node.turn === "w"
-          ? Math.min(...successfulDistances) + 1
-          : Math.max(...successfulDistances);
-    memo.set(node.id, result);
-    return result;
+  const relax = (node: WorkingNode, distance: number) => {
+    const current = distances.get(node.id);
+    if (current !== undefined && current <= distance) {
+      return;
+    }
+    distances.set(node.id, distance);
+    queue.push(node);
   };
 
   nodes.forEach((node) => {
-    const movesToSuccess = distance(node);
-    if (node.turn === "w" && movesToSuccess !== null) {
+    if (node.terminal === "success") {
+      relax(node, 0);
+    }
+  });
+
+  while (queue.length > 0) {
+    let bestIndex = 0;
+    for (let index = 1; index < queue.length; index += 1) {
+      if (distances.get(queue[index].id)! < distances.get(queue[bestIndex].id)!) {
+        bestIndex = index;
+      }
+    }
+    const [node] = queue.splice(bestIndex, 1);
+    const nodeDistance = distances.get(node.id)!;
+
+    (referenceIncoming.get(node.id) || []).forEach((referenceNode) => {
+      relax(referenceNode, nodeDistance);
+    });
+
+    (incomingEdges.get(node.id) || []).forEach((edge) => {
+      const parent = getNodeById(nodes, edge.from);
+      relax(parent, nodeDistance + (parent.turn === "w" ? 1 : 0));
+    });
+  }
+
+  nodes.forEach((node) => {
+    const movesToSuccess = distances.get(node.id);
+    if (node.turn === "w" && movesToSuccess !== undefined) {
       node.movesToSuccess = movesToSuccess;
     }
   });
