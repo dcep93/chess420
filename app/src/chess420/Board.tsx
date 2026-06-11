@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { type Square } from "chess.js";
+import { flushSync } from "react-dom";
 import { Chessboard } from "react-chessboard";
 import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
@@ -7,12 +9,10 @@ import settings from "./Settings";
 
 export default function Board() {
   return (
-    <div className="board-wrap">
-      <div className="board-ratio-frame">
-        <div className="board-ratio-spacer"></div>
-        <div className="board-absolute-layer">
-          <SubBoard />
-        </div>
+    <div className="board-ratio-frame">
+      <div className="board-ratio-spacer"></div>
+      <div className="board-absolute-layer">
+        <SubBoard />
       </div>
     </div>
   );
@@ -25,7 +25,8 @@ function SubBoard() {
   const [total, updateTotal] = useState(-1);
   const [winOdds, updateWinOdds] = useState<number | null>(null);
   const [fen, updateFen] = useState("");
-  const [key, updateKey] = useState(0);
+  const [instantFen, updateInstantFen] = useState<string | null>(null);
+  const [boardKey, updateBoardKey] = useState(0);
   const lastLogCount = useRef<number | null>(null);
   const state = Brain.getState();
   const now = Date.now();
@@ -55,7 +56,6 @@ function SubBoard() {
       updateFen(state.fen);
     } else {
       updateFen(state.startingFen);
-      updateKey((prevKey) => prevKey + 1);
       setTimeout(() => updateFen(state.fen), replyDelayMs);
     }
     if (isEndgame) {
@@ -100,7 +100,54 @@ function SubBoard() {
     state.logs.length,
     state.orientationIsWhite,
   ]);
+  useEffect(() => {
+    if (!instantFen || state.fen !== instantFen) return;
+    const frame = requestAnimationFrame(() => updateInstantFen(null));
+    return () => cancelAnimationFrame(frame);
+  }, [instantFen, state.fen]);
+
+  const legalTargets = useMemo(
+    () => getLegalTargets(fen, prevClicked),
+    [fen, prevClicked]
+  );
+  const squareStyles = useMemo(
+    () => getSquareStyles(prevClicked, legalTargets),
+    [prevClicked, legalTargets]
+  );
+  const isSelectablePiece = (square: string | null) =>
+    square ? canSelectPiece(fen, square) : false;
+  const selectSquare = (square: string) => {
+    updateClicked(isSelectablePiece(square) ? square : null);
+  };
+  const resetDragState = () => {
+    requestAnimationFrame(() => updateBoardKey((key) => key + 1));
+  };
+  const moveFromTo = (
+    sourceSquare: string,
+    targetSquare: string,
+    shouldSnap: boolean
+  ) => {
+    const nextFen = getMoveFen(fen, sourceSquare, targetSquare);
+    if (!nextFen) return false;
+    const updateOptimisticPosition = () => {
+      updateClicked(null);
+      if (shouldSnap) updateInstantFen(nextFen);
+      updateFen(nextFen);
+    };
+    if (isEndgame && shouldSnap) {
+      flushSync(updateOptimisticPosition);
+    } else {
+      updateOptimisticPosition();
+    }
+    const didMove = Brain.moveFromTo(sourceSquare, targetSquare);
+    if (!didMove) {
+      updateInstantFen(null);
+      updateFen(Brain.getState().fen);
+    }
+    return didMove;
+  };
   if (!fen) return null;
+  const shouldSnapMove = instantFen === fen;
   const position =
     Brain.view === View.endgame && !Brain.hasSelectedEndgame() ? {} : fen;
   const isPhaseTwo =
@@ -111,9 +158,6 @@ function SubBoard() {
   const borderColor = isPhaseTwo
     ? "var(--board-phase-two-border)"
     : getBorderColor(total, winOdds);
-  const clearDragState = () => {
-    setTimeout(() => updateKey((prevKey) => prevKey + 1));
-  };
   return (
     <div
       className={[
@@ -124,40 +168,98 @@ function SubBoard() {
       style={{ borderColor }}
     >
       <Chessboard
-        key={key}
+        key={boardKey}
         options={{
           showNotation: false,
-          animationDurationInMs,
+          animationDurationInMs: shouldSnapMove ? 0 : animationDurationInMs,
+          showAnimations: !shouldSnapMove,
           boardOrientation: state.orientationIsWhite ? "white" : "black",
           position,
-          squareStyles: {
-            [prevClicked || ""]: {
-              background: "rgba(255, 255, 0)",
-            },
+          squareStyles,
+          canDragPiece: ({ square }) => isSelectablePiece(square),
+          onPieceDrag: ({ square }) => {
+            if (square) selectSquare(square);
           },
           onPieceDrop: ({ sourceSquare, targetSquare }) => {
-            clearDragState();
-            if (!targetSquare) return false;
             updateClicked(null);
-            return Brain.moveFromTo(sourceSquare, targetSquare);
+            if (!targetSquare || targetSquare === sourceSquare) {
+              resetDragState();
+              return false;
+            }
+            const didMove = moveFromTo(sourceSquare, targetSquare, isEndgame);
+            if (!didMove) resetDragState();
+            return didMove;
           },
           onSquareClick: ({ square }) => {
             if (prevClicked === null) {
-              updateClicked(square);
+              selectSquare(square);
             } else if (prevClicked === square) {
               updateClicked(null);
             } else {
-              if (Brain.moveFromTo(prevClicked, square)) {
-                updateClicked(null);
-              } else {
-                updateClicked(square);
-              }
+              if (moveFromTo(prevClicked, square, true)) return;
+              selectSquare(square);
             }
           },
         }}
       />
     </div>
   );
+}
+
+function canSelectPiece(fen: string, square: string): boolean {
+  if (!fen) return false;
+  if (Brain.view === View.endgame && !Brain.hasSelectedEndgame()) return false;
+  const chess = Brain.getChess(fen);
+  const piece = chess.get(square as Square);
+  return piece !== undefined && piece.color === chess.turn();
+}
+
+function getLegalTargets(fen: string, square: string | null) {
+  const targets = new Map<string, { isCapture: boolean }>();
+  if (!square || !canSelectPiece(fen, square)) return targets;
+  Brain.getChess(fen)
+    .moves({ square: square as Square, verbose: true })
+    .forEach((move) => {
+      targets.set(move.to, { isCapture: move.captured !== undefined });
+    });
+  return targets;
+}
+
+function getMoveFen(
+  fen: string,
+  sourceSquare: string,
+  targetSquare: string
+): string | null {
+  const chess = Brain.getChess(fen);
+  const move = chess.move({
+    from: sourceSquare as Square,
+    to: targetSquare as Square,
+  });
+  return move ? chess.fen() : null;
+}
+
+function getSquareStyles(
+  selectedSquare: string | null,
+  legalTargets: Map<string, { isCapture: boolean }>
+): Record<string, React.CSSProperties> {
+  const styles: Record<string, React.CSSProperties> = {};
+  if (selectedSquare) {
+    styles[selectedSquare] = {
+      background: "rgba(255, 255, 0, 0.42)",
+    };
+  }
+  legalTargets.forEach(({ isCapture }, square) => {
+    styles[square] = isCapture
+      ? {
+          boxShadow: "inset 0 0 0 0.34rem rgba(20, 15, 12, 0.26)",
+          borderRadius: "50%",
+        }
+      : {
+          background:
+            "radial-gradient(circle, rgba(20, 15, 12, 0.32) 0 18%, transparent 19%)",
+        };
+  });
+  return styles;
 }
 
 function getBorderColor(total: number, winOdds: number | null): string {

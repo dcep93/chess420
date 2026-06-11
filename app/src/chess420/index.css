@@ -98,7 +98,6 @@
   overflow: hidden;
 }
 
-.board-wrap { opacity: 0.94; padding: 0.75rem; }
 .board-ratio-frame { position: relative; display: flex; width: 100%; }
 .board-ratio-spacer { margin-top: 100%; }
 .board-absolute-layer { position: absolute; inset: 0; display: flex; }
@@ -884,7 +883,6 @@
 
 @media (max-width: 520px) {
   .chess420-app { padding: 0.4rem; }
-  .board-wrap { padding: 0.45rem; }
   .controls, .log-table { padding: 0.6rem; }
   .controls__grid { display: grid; grid-template-columns: 1fr; }
   .controls__section { width: auto; }
@@ -915,7 +913,6 @@
 
 @media (max-width: 360px) {
   .chess420-app { padding: 0.25rem; }
-  .board-wrap { padding: 0.3rem; }
   .board-shell { border-width: 0.65rem; }
   .controls { padding: 0.65rem; }
   .summary-content { margin: 0.35rem 0.5rem 0.5rem; }
