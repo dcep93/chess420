@@ -1056,23 +1056,36 @@
   pointer-events: none;
 }
 
-.flowchart-board__arrow {
-  stroke-width: 2.4;
+.flowchart-board__arrow,
+.flowchart-board__arrow-shadow {
   stroke-linecap: round;
-  opacity: 0.76;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
 
+.flowchart-board__arrow {
+  stroke-width: 2.6;
+  opacity: 0.96;
+}
+
+.flowchart-board__arrow-shadow {
+  stroke: rgba(16, 11, 8, 0.7);
+  stroke-width: 5;
+  opacity: 0.72;
+}
+
 .flowchart-board__arrow--white {
-  stroke: rgba(255, 188, 66, 0.9);
+  stroke: rgba(255, 183, 48, 0.98);
 }
 
 .flowchart-board__arrow--black {
-  stroke: rgba(255, 188, 66, 0.9);
+  stroke: rgba(255, 183, 48, 0.98);
 }
 
-.flowchart-board__arrows marker path {
-  fill: rgba(255, 188, 66, 0.92);
+.flowchart-board__arrow-head {
+  fill: rgba(255, 183, 48, 0.98);
+  stroke: rgba(16, 11, 8, 0.7);
+  stroke-width: 1.25;
+  paint-order: stroke;
 }
 
 .flowchart-node__label {

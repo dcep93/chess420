@@ -127,7 +127,7 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
                 markerUnits="userSpaceOnUse"
                 orient="auto-start-reverse"
               >
-                <path d="M 0 0 L 10 5 L 0 10 z" />
+                <path className="flowchart-board__arrow-head" d="M 0 0 L 10 5 L 0 10 z" />
               </marker>
             </defs>
             {node.boardArrows.map((arrow) => (
@@ -161,14 +161,23 @@ function BoardArrow({
   const from = squarePoint(arrow.from);
   const to = squarePoint(arrow.to);
   return (
-    <line
-      className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
-      x1={from.x}
-      y1={from.y}
-      x2={to.x}
-      y2={to.y}
-      markerEnd={`url(#${markerId})`}
-    />
+    <g>
+      <line
+        className="flowchart-board__arrow-shadow"
+        x1={from.x}
+        y1={from.y}
+        x2={to.x}
+        y2={to.y}
+      />
+      <line
+        className={`flowchart-board__arrow flowchart-board__arrow--${arrow.color}`}
+        x1={from.x}
+        y1={from.y}
+        x2={to.x}
+        y2={to.y}
+        markerEnd={`url(#${markerId})`}
+      />
+    </g>
   );
 }
 
