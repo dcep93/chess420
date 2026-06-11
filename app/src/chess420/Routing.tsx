@@ -1,5 +1,6 @@
 import Brain, { View } from "./Brain";
 import { isEndgameId } from "./Endgames";
+import { isFlowchartId } from "./flowcharts/FlowchartTypes";
 
 export function assignBrainRoute(pathname: string): boolean {
   const pathParts = pathname.replace(/\/$/, "").split("/");
@@ -55,6 +56,21 @@ export function assignBrainRoute(pathname: string): boolean {
         return false;
       }
       Brain.endgameId = pathParts[2];
+      break;
+    }
+    case "flowchart": {
+      Brain.view = View.flowchart;
+      if (pathParts.length === 2) {
+        Brain.flowchartId = undefined;
+        break;
+      }
+      if (pathParts.length > 3) {
+        return false;
+      }
+      if (pathParts[2] !== undefined && !isFlowchartId(pathParts[2])) {
+        return false;
+      }
+      Brain.flowchartId = pathParts[2];
       break;
     }
     case undefined:

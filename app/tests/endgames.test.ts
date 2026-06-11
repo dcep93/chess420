@@ -15,6 +15,7 @@ import {
 import { type LogType } from "../src/chess420/Log";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
+import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
 
 type StudyTreePart = {
   ply: number;
@@ -431,6 +432,82 @@ test("selected and invalid endgame routes are handled", () => {
   assert.equal(assignBrainRoute("/endgames/nope"), false);
   assert.equal(assignBrainRoute("/endgames/twoKnightsVsPawn"), false);
   assert.equal(assignBrainRoute("/endgames/twoKnightsVsPawn+"), false);
+});
+
+test("flowchart routes are handled", () => {
+  assert.equal(assignBrainRoute("/flowchart"), true);
+  assert.equal(Brain.view, View.flowchart);
+  assert.equal(Brain.flowchartId, undefined);
+
+  assert.equal(assignBrainRoute("/flowchart/knightBishopPrepare"), true);
+  assert.equal(Brain.view, View.flowchart);
+  assert.equal(Brain.flowchartId, "knightBishopPrepare");
+
+  assert.equal(assignBrainRoute("/flowchart/knightBishop"), true);
+  assert.equal(Brain.flowchartId, "knightBishop");
+
+  assert.equal(assignBrainRoute("/flowchart/nope"), false);
+  assert.equal(assignBrainRoute("/flowchart/knightBishop/extra"), false);
+});
+
+test("generated flowcharts have renderable cached data", () => {
+  Object.values(FLOWCHART_DATA).forEach((data) => {
+    const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
+    const edgeIds = new Set(data.edges.map((edge) => edge.id));
+
+    data.starts.forEach((start) => {
+      assert.ok(
+        data.nodes.some((node) => node.fen === start),
+        `${data.id} includes ${start}`,
+      );
+    });
+
+    data.nodes.forEach((node) => {
+      assert.equal(node.imageUrl, `http://fen-to-image.com/image/${node.boardFen}`);
+      assert.equal(
+        node.playUrl,
+        `/endgames/${data.endgameId}#w//${node.fen.replaceAll(" ", "_")}`,
+      );
+      node.outgoingEdgeIds.forEach((edgeId) => assert.ok(edgeIds.has(edgeId)));
+
+      if (node.referenceTo) {
+        assert.ok(nodesById.has(node.referenceTo));
+        assert.equal(node.outgoingEdgeIds.length, 0);
+        return;
+      }
+      if (node.terminal) {
+        assert.equal(node.outgoingEdgeIds.length, 0);
+        return;
+      }
+      if (node.turn === "w") {
+        assert.ok(node.outgoingEdgeIds.length <= 1, node.fen);
+        if (node.movesToSuccess !== undefined) {
+          assert.equal(typeof node.movesToSuccess, "number", node.fen);
+        }
+      } else {
+        assert.equal(
+          node.outgoingEdgeIds.length,
+          Brain.getChess(node.fen).moves().length,
+          node.fen,
+        );
+      }
+      assert.equal(node.boardArrows.length, node.outgoingEdgeIds.length);
+    });
+
+    data.edges.forEach((edge) => {
+      assert.ok(nodesById.has(edge.from), edge.id);
+      assert.ok(nodesById.has(edge.to), edge.id);
+      edge.points.forEach((point, index) => {
+        if (index === 0) return;
+        assert.ok(point.y >= edge.points[index - 1].y, edge.id);
+      });
+    });
+  });
+
+  assert.equal(
+    FLOWCHART_DATA.knightBishop.nodes.some((node) => node.terminal === "failure"),
+    false,
+  );
 });
 
 test("endgame dropdown is only shown in endgame mode", () => {

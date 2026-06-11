@@ -14,6 +14,8 @@ import Summary from "./Summary";
 import "./index.css";
 import recorded_sha from "./recorded_sha";
 
+const FlowchartPage = React.lazy(() => import("./flowcharts/FlowchartPage"));
+
 export function AssignBrainIdkWhyIHaveToDoThis(): boolean {
   return assignBrainRoute(window.location.pathname);
 }
@@ -66,6 +68,13 @@ function Main() {
     Brain.setInitialState();
   });
   if (Brain.showHelp) return <Help />;
+  if (Brain.view === View.flowchart) {
+    return (
+      <React.Suspense fallback={<div className="flowchart-page" />}>
+        <FlowchartPage />
+      </React.Suspense>
+    );
+  }
   const fen = Brain.getState()?.fen;
   if (!fen) return null;
   return <SubMain fen={fen} />;

@@ -264,6 +264,7 @@ export enum View {
   speedrun,
   traps,
   endgame,
+  flowchart,
 }
 
 export default class Brain {
@@ -286,6 +287,7 @@ export default class Brain {
   static view: View;
   static lichessUsername?: string;
   static endgameId: EndgameId | undefined = undefined;
+  static flowchartId: string | undefined = undefined;
   static readonly ENDGAME_PICKER_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
   static readonly KNIGHT_AND_BISHOP_LOOKUP_ENTRIES: KnightAndBishopLookupEntry[] = [
     {
