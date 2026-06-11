@@ -492,7 +492,7 @@ test("generated flowcharts have renderable cached data", () => {
     });
 
     data.nodes.forEach((node) => {
-      assert.equal(node.imageUrl, `http://fen-to-image.com/image/${node.boardFen}`);
+      assert.equal(node.imageUrl, `http://www.fen-to-image.com/image/${node.boardFen}`);
       assert.equal(
         node.playUrl,
         `/endgames/${playEndgameId}#w//${node.fen.replaceAll(" ", "_")}`,

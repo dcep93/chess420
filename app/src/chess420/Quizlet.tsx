@@ -36,7 +36,7 @@ export default function quizletF(t: TraverseType) {
         term_def: `${movePairs.map((ms) => ms.join(" ")).join("\n")}\n${
           r.opening
         }\n${(r.odds * 100).toFixed(2)}%`,
-        term_def_image_url: `http://fen-to-image.com/image/${
+        term_def_image_url: `http://www.fen-to-image.com/image/${
           r.orientationIsWhite ? fen : fen.split("").reverse().join("")
         }`,
       } as { [k: string]: string };

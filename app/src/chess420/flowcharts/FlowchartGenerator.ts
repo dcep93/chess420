@@ -49,7 +49,7 @@ const COLUMN_GAP = 92;
 const ROW_GAP = 64;
 const ELBOW_ROW_GAP = 132;
 const EDGE_BEND_FROM_PARENT_RATIO = 0.35;
-const BOARD_IMAGE_ORIGIN = "http://fen-to-image.com";
+const BOARD_IMAGE_ORIGIN = "http://www.fen-to-image.com";
 
 export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
   knightBishopPrepare: {
