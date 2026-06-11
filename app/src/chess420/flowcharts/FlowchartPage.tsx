@@ -39,9 +39,12 @@ function FlowchartView({ data }: { data: FlowchartData }) {
   const [isTiny, setIsTiny] = useState(false);
   const [hoveredTransposition, setHoveredTransposition] =
     useState<FlowchartEdge | null>(null);
+  const [activeMoveTooltip, setActiveMoveTooltip] =
+    useState<MoveTooltipState | null>(null);
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
   const highlightedNodeRoles = getHighlightedNodeRoles(hoveredTransposition);
+  const activeMoveTooltipPlacement = activeMoveTooltip?.placement ?? null;
   const scale = isTiny ? TINY_FLOWCHART_SCALE : 1;
   return (
     <main className="flowchart-page" data-bs-theme="dark">
@@ -135,10 +138,31 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                   <GraphEdgeLabel
                     key={edge.id}
                     placement={edgeLabelPlacements.get(edge.id)}
+                    isActive={activeMoveTooltipPlacement?.edge.id === edge.id}
+                    onTooltipHoverStart={(placement) => {
+                      setActiveMoveTooltip((current) =>
+                        current?.pinned ? current : { placement, pinned: false },
+                      );
+                    }}
+                    onTooltipHoverEnd={(placement) => {
+                      setActiveMoveTooltip((current) =>
+                        current?.pinned || current?.placement.edge.id !== placement.edge.id
+                          ? current
+                          : null,
+                      );
+                    }}
+                    onTooltipToggle={(placement) => {
+                      setActiveMoveTooltip((current) =>
+                        current?.pinned && current.placement.edge.id === placement.edge.id
+                          ? null
+                          : { placement, pinned: true },
+                      );
+                    }}
                   />
                 ))}
               </g>
             </svg>
+            <MoveReasonTooltip placement={activeMoveTooltipPlacement} />
             {data.nodes.map((node) => (
               <FlowchartNodeCard
                 key={node.id}
@@ -213,24 +237,69 @@ type EdgeLabelPlacement = {
   edge: FlowchartEdge;
   label: string;
   labelWidth: number;
+  moveReason: string | undefined;
+  tooltipX: number;
+  tooltipY: number;
   x: number;
   y: number;
   minY?: number;
   maxY?: number;
 };
 
-function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
+type MoveTooltipState = {
+  placement: EdgeLabelPlacement;
+  pinned: boolean;
+};
+
+function GraphEdgeLabel({
+  placement,
+  isActive,
+  onTooltipHoverStart,
+  onTooltipHoverEnd,
+  onTooltipToggle,
+}: {
+  placement?: EdgeLabelPlacement;
+  isActive: boolean;
+  onTooltipHoverStart: (placement: EdgeLabelPlacement) => void;
+  onTooltipHoverEnd: (placement: EdgeLabelPlacement) => void;
+  onTooltipToggle: (placement: EdgeLabelPlacement) => void;
+}) {
   if (!placement) {
     return null;
   }
-  const { edge, label, labelWidth } = placement;
+  const { edge, label, labelWidth, moveReason } = placement;
   return (
     <g
-      className={
+      className={[
         edge.transposition
           ? "flowchart-edge-label flowchart-edge-label--transposition"
-          : "flowchart-edge-label"
+          : "flowchart-edge-label",
+        moveReason ? "flowchart-edge-label--interactive" : "",
+        isActive ? "flowchart-edge-label--active" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      role={moveReason ? "button" : undefined}
+      tabIndex={moveReason ? 0 : undefined}
+      data-edge-id={edge.id}
+      data-edge-from={edge.from}
+      data-edge-to={edge.to}
+      aria-label={
+        moveReason ? `${label}. ${moveReason}` : undefined
       }
+      onPointerEnter={() => (moveReason ? onTooltipHoverStart(placement) : undefined)}
+      onPointerLeave={() =>
+        moveReason ? onTooltipHoverEnd(placement) : undefined
+      }
+      onFocus={() => (moveReason ? onTooltipHoverStart(placement) : undefined)}
+      onBlur={() => (moveReason ? onTooltipHoverEnd(placement) : undefined)}
+      onClick={(event) => {
+        if (!moveReason) {
+          return;
+        }
+        event.stopPropagation();
+        onTooltipToggle(placement);
+      }}
     >
       <rect
         className="flowchart-edge__label-bg"
@@ -244,6 +313,24 @@ function GraphEdgeLabel({ placement }: { placement?: EdgeLabelPlacement }) {
         {label}
       </text>
     </g>
+  );
+}
+
+function MoveReasonTooltip({ placement }: { placement: EdgeLabelPlacement | null }) {
+  if (!placement?.moveReason) {
+    return null;
+  }
+  return (
+    <div
+      className="flowchart-move-tooltip"
+      style={{
+        left: placement.tooltipX,
+        top: placement.tooltipY,
+      }}
+    >
+      <div className="flowchart-move-tooltip__move">{placement.label}</div>
+      <div className="flowchart-move-tooltip__reason">{placement.moveReason}</div>
+    </div>
   );
 }
 
@@ -305,6 +392,9 @@ function getEdgeLabelPlacements(
         index,
         label,
         labelWidth: getEdgeLabelWidth(label),
+        moveReason: source?.turn === "w" ? source.moveReason : undefined,
+        tooltipX: target ? target.x + FLOWCHART_NODE_WIDTH / 2 : base.x,
+        tooltipY: target ? target.y + FLOWCHART_NODE_HEIGHT / 2 : base.y,
         x: base.x,
         y: base.y,
       };
@@ -344,6 +434,9 @@ function getBestEdgeLabelPlacement(
     edge: candidate.edge,
     label: candidate.label,
     labelWidth: candidate.labelWidth,
+    moveReason: candidate.moveReason,
+    tooltipX: candidate.tooltipX,
+    tooltipY: candidate.tooltipY,
     x: candidate.x,
     y: preferredY,
     minY: candidate.minY,
@@ -455,7 +548,6 @@ function FlowchartNodeCard({
   node: FlowchartNode;
   highlightRole?: HighlightedNodeRole;
 }) {
-  const nodeTitle = getFlowchartNodeTitle(node);
   return (
     <article
       className={`flowchart-node flowchart-node--${node.turn}${
@@ -464,7 +556,6 @@ function FlowchartNodeCard({
         highlightRole ? ` flowchart-node--highlight-${highlightRole}` : ""
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
-      title={nodeTitle}
     >
       <span className="flowchart-node__id">{node.id}</span>
       <a href={node.playUrl} target="_blank" rel="noreferrer" aria-label={node.fen}>
@@ -486,16 +577,6 @@ function FlowchartNodeCard({
       </div>
     </article>
   );
-}
-
-function getFlowchartNodeTitle(node: FlowchartNode) {
-  if (node.moveReason && node.boardArrows[0]) {
-    return `${node.id}: ${node.boardArrows[0].san}. ${node.moveReason}`;
-  }
-  if (node.terminalReason) {
-    return `${node.id}: ${node.terminalReason}`;
-  }
-  return node.id;
 }
 
 function BoardArrow({ arrow }: { arrow: FlowchartBoardArrow }) {
