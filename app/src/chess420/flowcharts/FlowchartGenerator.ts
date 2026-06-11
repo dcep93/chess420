@@ -39,25 +39,12 @@ type WorkingEdge = Omit<FlowchartEdge, "points"> & {
   points?: FlowchartPoint[];
 };
 
-type LayoutLine = {
-  column: number;
-  nodes: WorkingNode[];
-  startLayer: number;
-  endLayer: number;
-  parent?: LayoutLine;
-};
-
-type LayoutOptions = {
-  insertBranchColumns: boolean;
-};
-
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 150;
 const COLUMN_GAP = 92;
 const ROW_GAP = 64;
 const ELBOW_ROW_GAP = 132;
 const EDGE_BEND_FROM_PARENT_RATIO = 0.35;
-const INSERT_BRANCH_COLUMNS_THROUGH_LAYER = 12;
 const BOARD_IMAGE_ORIGIN = "http://fen-to-image.com";
 
 export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
@@ -135,7 +122,7 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
   collapseReferenceNodes(nodes, edges);
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignLayout(nodes, edges, { insertBranchColumns: data.id === "knightBishop" });
+  assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -241,7 +228,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   assignSuccessDistances(nodes, edges);
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignLayout(nodes, edges, { insertBranchColumns: config.id === "knightBishop" });
+  assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
     a.id.localeCompare(b.id, undefined, { numeric: true }),
@@ -796,104 +783,69 @@ function comparePotentialOwnerEdges(
   );
 }
 
-function assignLayout(
-  nodes: Map<string, WorkingNode>,
-  edges: WorkingEdge[],
-  options: LayoutOptions,
-) {
+function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
   const nodesById = new Map([...nodes.values()].map((node) => [node.id, node]));
-  const outgoingEdges = new Map<string, WorkingEdge[]>();
   const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
-  edges.forEach((edge) => {
-    outgoingEdges.set(edge.from, [...(outgoingEdges.get(edge.from) || []), edge]);
-  });
 
   const columnByNode = new Map<string, number>();
-  const lines: LayoutLine[] = [];
-  const lineByNode = new Map<string, LayoutLine>();
-  const branchQueue: Array<{
-    node: WorkingNode;
-    source: WorkingNode;
-    siblingOffset: number;
-    minimumColumn: number;
-  }> = [];
-
-  const createLine = (
-    startNode: WorkingNode,
-    minimumColumn: number,
-    parent?: LayoutLine,
-  ) => {
-    if (lineByNode.has(startNode.id)) {
+  const incomingOwnerEdges = new Map<string, WorkingEdge[]>();
+  const ownerChildEdges = new Map<string, WorkingEdge[]>();
+  edges.forEach((edge) => {
+    const parent = nodesById.get(edge.from);
+    const child = nodesById.get(edge.to);
+    if (!parent || !child || edge.transposition || child.layer <= parent.layer) {
       return;
     }
-
-    const line: LayoutLine = {
-      column: 0,
-      nodes: [],
-      startLayer: startNode.layer,
-      endLayer: startNode.layer,
-      parent,
-    };
-    let node: WorkingNode | undefined = startNode;
-
-    while (node && !lineByNode.has(node.id)) {
-      line.nodes.push(node);
-      lineByNode.set(node.id, line);
-      line.startLayer = Math.min(line.startLayer, node.layer);
-      line.endLayer = Math.max(line.endLayer, node.layer);
-
-      const lineNode = node;
-      const primaryEdge = getPrimaryLayoutEdge(lineNode, edgesById, outgoingEdges);
-      const branchEdges =
-        lineNode.turn === "b"
-          ? getLayoutEdges(lineNode, edgesById).filter(
-              (edge) => edge.id !== primaryEdge?.id,
-            )
-          : [];
-      branchEdges.forEach((edge, index) => {
-        const child = nodesById.get(edge.to);
-        if (child && !lineByNode.has(child.id)) {
-          branchQueue.push({
-            node: child,
-            source: lineNode,
-            siblingOffset: index + 1,
-            minimumColumn: 0,
-          });
-        }
-      });
-
-      const child = primaryEdge ? nodesById.get(primaryEdge.to) : undefined;
-      node = child && !lineByNode.has(child.id) ? child : undefined;
-    }
-
-    line.column =
-      options.insertBranchColumns &&
-      line.startLayer <= INSERT_BRANCH_COLUMNS_THROUGH_LAYER
-      ? insertLayoutLine(lines, line, minimumColumn)
-      : allocateLayoutColumn(lines, line, minimumColumn);
-    lines.push(line);
-  };
-
-  const roots = [...nodes.values()]
-    .filter((node) => node.layer === 0)
-    .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
-  roots.forEach((root) => createLine(root, 0));
-
-  for (let index = 0; index < branchQueue.length; index += 1) {
-    const branch = branchQueue[index];
-    const sourceLine = lineByNode.get(branch.source.id);
-    const minimumColumn = Math.max(
-      branch.minimumColumn,
-      (sourceLine?.column ?? 0) + branch.siblingOffset,
-    );
-    createLine(branch.node, minimumColumn, sourceLine);
-  }
-
-  lines.forEach((line) => {
-    line.nodes.forEach((node) => {
-      columnByNode.set(node.id, line.column);
-    });
+    incomingOwnerEdges.set(child.id, [
+      ...(incomingOwnerEdges.get(child.id) || []),
+      edge,
+    ]);
   });
+  nodes.forEach((node) => {
+    ownerChildEdges.set(
+      node.id,
+      getLayoutEdges(node, edgesById).filter((edge) => {
+        const child = nodesById.get(edge.to);
+        return Boolean(child && !edge.transposition && child.layer === node.layer + 1);
+      }),
+    );
+  });
+
+  const nodesByLayer = new Map<number, WorkingNode[]>();
+  nodes.forEach((node) => {
+    nodesByLayer.set(node.layer, [...(nodesByLayer.get(node.layer) || []), node]);
+  });
+
+  const rootNodes = nodesByLayer.get(0) || [];
+  rootNodes.sort(compareNodesForLayout);
+  rootNodes.forEach((node, index) => {
+    columnByNode.set(node.id, index);
+  });
+
+  placeChildrenFromParentColumns(
+    nodesByLayer,
+    ownerChildEdges,
+    incomingOwnerEdges,
+    nodesById,
+    columnByNode,
+  );
+  for (let pass = 0; pass < 3; pass += 1) {
+    alignParentsWithChildSpans(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+    separateOverlappingLayoutColumns(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+    placeChildrenFromParentColumns(
+      nodesByLayer,
+      ownerChildEdges,
+      incomingOwnerEdges,
+      nodesById,
+      columnByNode,
+    );
+    separateOverlappingLayoutColumns(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+  }
+  alignParentsWithChildSpans(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+  enforceOwnerEdgeOrder(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+  separateOverlappingLayoutColumns(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+  enforceOwnerEdgeOrder(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
+  separateOverlappingLayoutColumns(nodesByLayer, ownerChildEdges, nodesById, columnByNode);
 
   nodes.forEach((node) => {
     const columnIndex = columnByNode.get(node.id) ?? 0;
@@ -944,6 +896,204 @@ function assignLayout(
   });
 }
 
+function placeChildrenFromParentColumns(
+  nodesByLayer: Map<number, WorkingNode[]>,
+  ownerChildEdges: Map<string, WorkingEdge[]>,
+  incomingOwnerEdges: Map<string, WorkingEdge[]>,
+  nodesById: Map<string, WorkingNode>,
+  columnByNode: Map<string, number>,
+) {
+  const maxLayer = Math.max(0, ...[...nodesByLayer.keys()]);
+  for (let layer = 0; layer < maxLayer; layer += 1) {
+    const parents = [...(nodesByLayer.get(layer) || [])].sort((a, b) => {
+      return (
+        (columnByNode.get(a.id) ?? 0) - (columnByNode.get(b.id) ?? 0) ||
+        compareNodesForLayout(a, b)
+      );
+    });
+    const nextLayerNodes = nodesByLayer.get(layer + 1) || [];
+    const assignedChildren = new Set<string>();
+    let nextColumn = 0;
+
+    parents.forEach((parent) => {
+      const children = (ownerChildEdges.get(parent.id) || [])
+        .map((edge) => nodesById.get(edge.to))
+        .filter((child): child is WorkingNode =>
+          Boolean(child && child.layer === layer + 1 && !assignedChildren.has(child.id)),
+        );
+      if (children.length === 0) {
+        return;
+      }
+      const startColumn = Math.max(nextColumn, columnByNode.get(parent.id) ?? 0);
+      children.forEach((child, index) => {
+        columnByNode.set(child.id, startColumn + index);
+        assignedChildren.add(child.id);
+      });
+      nextColumn = startColumn + children.length;
+    });
+
+    nextLayerNodes
+      .filter((node) => !assignedChildren.has(node.id))
+      .sort((a, b) => {
+        const ownerA = incomingOwnerEdges.get(a.id)?.[0];
+        const ownerB = incomingOwnerEdges.get(b.id)?.[0];
+        return (
+          (columnByNode.get(ownerA?.from || "") ?? Number.POSITIVE_INFINITY) -
+            (columnByNode.get(ownerB?.from || "") ?? Number.POSITIVE_INFINITY) ||
+          compareNodesForLayout(a, b)
+        );
+      })
+      .forEach((node) => {
+        const owner = incomingOwnerEdges.get(node.id)?.[0];
+        const ownerColumn = columnByNode.get(owner?.from || "") ?? nextColumn;
+        const column = Math.max(nextColumn, ownerColumn);
+        columnByNode.set(node.id, column);
+        nextColumn = column + 1;
+      });
+  }
+}
+
+function alignParentsWithChildSpans(
+  nodesByLayer: Map<number, WorkingNode[]>,
+  ownerChildEdges: Map<string, WorkingEdge[]>,
+  nodesById: Map<string, WorkingNode>,
+  columnByNode: Map<string, number>,
+) {
+  const maxLayer = Math.max(0, ...[...nodesByLayer.keys()]);
+  for (let layer = maxLayer - 1; layer >= 0; layer -= 1) {
+    let nextColumn = 0;
+    [...(nodesByLayer.get(layer) || [])]
+      .sort((a, b) => {
+        return (
+          (columnByNode.get(a.id) ?? 0) - (columnByNode.get(b.id) ?? 0) ||
+          compareNodesForLayout(a, b)
+        );
+      })
+      .forEach((node) => {
+        const childColumns = (ownerChildEdges.get(node.id) || [])
+          .map((edge) => nodesById.get(edge.to))
+          .filter((child): child is WorkingNode =>
+            Boolean(child && child.layer === node.layer + 1),
+          )
+          .map((child) => columnByNode.get(child.id))
+          .filter((column): column is number => column !== undefined)
+          .sort((a, b) => a - b);
+        if (childColumns.length === 0) {
+          const column = Math.max(nextColumn, columnByNode.get(node.id) ?? 0);
+          columnByNode.set(node.id, column);
+          nextColumn = column + 1;
+          return;
+        }
+
+        const column = Math.max(nextColumn, childColumns[0]);
+        if (column > childColumns[0]) {
+          const delta = column - childColumns[0];
+          (ownerChildEdges.get(node.id) || []).forEach((edge) => {
+            const child = nodesById.get(edge.to);
+            if (child && child.layer === node.layer + 1) {
+              shiftOwnedLayoutSubtree(child, delta, ownerChildEdges, nodesById, columnByNode);
+            }
+          });
+          childColumns.forEach((childColumn, index) => {
+            childColumns[index] = childColumn + delta;
+          });
+        }
+        columnByNode.set(node.id, column);
+        nextColumn = Math.max(column + 1, childColumns[childColumns.length - 1] + 1);
+      });
+  }
+}
+
+function separateOverlappingLayoutColumns(
+  nodesByLayer: Map<number, WorkingNode[]>,
+  ownerChildEdges: Map<string, WorkingEdge[]>,
+  nodesById: Map<string, WorkingNode>,
+  columnByNode: Map<string, number>,
+) {
+  const maxLayer = Math.max(0, ...[...nodesByLayer.keys()]);
+  for (let layer = 0; layer <= maxLayer; layer += 1) {
+    let nextColumn = 0;
+    [...(nodesByLayer.get(layer) || [])]
+      .sort((a, b) => {
+        return (
+          (columnByNode.get(a.id) ?? 0) - (columnByNode.get(b.id) ?? 0) ||
+          compareNodesForLayout(a, b)
+        );
+      })
+      .forEach((node) => {
+        const column = columnByNode.get(node.id) ?? 0;
+        if (column < nextColumn) {
+          shiftOwnedLayoutSubtree(
+            node,
+            nextColumn - column,
+            ownerChildEdges,
+            nodesById,
+            columnByNode,
+          );
+        }
+        nextColumn = (columnByNode.get(node.id) ?? nextColumn) + 1;
+      });
+  }
+}
+
+function enforceOwnerEdgeOrder(
+  nodesByLayer: Map<number, WorkingNode[]>,
+  ownerChildEdges: Map<string, WorkingEdge[]>,
+  nodesById: Map<string, WorkingNode>,
+  columnByNode: Map<string, number>,
+) {
+  const maxLayer = Math.max(0, ...[...nodesByLayer.keys()]);
+  for (let layer = 0; layer < maxLayer; layer += 1) {
+    let nextColumn = 0;
+    [...(nodesByLayer.get(layer) || [])]
+      .sort((a, b) => {
+        return (
+          (columnByNode.get(a.id) ?? 0) - (columnByNode.get(b.id) ?? 0) ||
+          compareNodesForLayout(a, b)
+        );
+      })
+      .forEach((node) => {
+        (ownerChildEdges.get(node.id) || []).forEach((edge) => {
+          const child = nodesById.get(edge.to);
+          if (!child || child.layer !== layer + 1) {
+            return;
+          }
+          const minimumColumn = Math.max(
+            nextColumn,
+            columnByNode.get(node.id) ?? 0,
+          );
+          const childColumn = columnByNode.get(child.id) ?? minimumColumn;
+          if (childColumn < minimumColumn) {
+            shiftOwnedLayoutSubtree(
+              child,
+              minimumColumn - childColumn,
+              ownerChildEdges,
+              nodesById,
+              columnByNode,
+            );
+          }
+          nextColumn = (columnByNode.get(child.id) ?? minimumColumn) + 1;
+        });
+      });
+  }
+}
+
+function shiftOwnedLayoutSubtree(
+  node: WorkingNode,
+  delta: number,
+  ownerChildEdges: Map<string, WorkingEdge[]>,
+  nodesById: Map<string, WorkingNode>,
+  columnByNode: Map<string, number>,
+) {
+  columnByNode.set(node.id, (columnByNode.get(node.id) ?? 0) + delta);
+  (ownerChildEdges.get(node.id) || []).forEach((edge) => {
+    const child = nodesById.get(edge.to);
+    if (child && child.layer === node.layer + 1) {
+      shiftOwnedLayoutSubtree(child, delta, ownerChildEdges, nodesById, columnByNode);
+    }
+  });
+}
+
 function getLayoutRowYByLayer(
   nodes: Map<string, WorkingNode>,
   edges: WorkingEdge[],
@@ -974,15 +1124,6 @@ function getLayoutRowYByLayer(
   return yByLayer;
 }
 
-function getPrimaryLayoutEdge(
-  node: WorkingNode,
-  edgesById: Map<string, WorkingEdge>,
-  outgoingEdges: Map<string, WorkingEdge[]>,
-) {
-  const edgeId = node.outgoingEdgeIds[0];
-  return edgeId ? edgesById.get(edgeId) : outgoingEdges.get(node.id)?.[0];
-}
-
 function getLayoutEdges(
   node: WorkingNode,
   edgesById: Map<string, WorkingEdge>,
@@ -992,45 +1133,11 @@ function getLayoutEdges(
     .filter((edge): edge is WorkingEdge => edge !== undefined);
 }
 
-function insertLayoutLine(
-  lines: LayoutLine[],
-  line: LayoutLine,
-  minimumColumn: number,
-) {
-  const overlappingLines = lines.filter((other) => doLayoutLinesOverlap(line, other));
-  overlappingLines
-    .filter((other) => other.column >= minimumColumn)
-    .sort((a, b) => b.column - a.column)
-    .forEach((other) => {
-      shiftLayoutLineWithChildren(lines, other);
-    });
-  return minimumColumn;
-}
-
-function shiftLayoutLineWithChildren(lines: LayoutLine[], line: LayoutLine) {
-  line.column += 1;
-  lines
-    .filter((candidate) => candidate.parent === line)
-    .forEach((childLine) => shiftLayoutLineWithChildren(lines, childLine));
-}
-
-function allocateLayoutColumn(
-  lines: LayoutLine[],
-  line: LayoutLine,
-  minimumColumn: number,
-) {
-  for (let column = minimumColumn; ; column += 1) {
-    const collides = lines.some(
-      (other) => other.column === column && doLayoutLinesOverlap(line, other),
-    );
-    if (!collides) {
-      return column;
-    }
-  }
-}
-
-function doLayoutLinesOverlap(a: LayoutLine, b: LayoutLine) {
-  return a.startLayer <= b.endLayer && a.endLayer >= b.startLayer;
+function compareNodesForLayout(a: WorkingNode, b: WorkingNode) {
+  return (
+    a.layer - b.layer ||
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
 }
 
 function getKnightBishopPrepareSuccess(fen: string): string | undefined {

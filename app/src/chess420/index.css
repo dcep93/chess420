@@ -1063,6 +1063,22 @@
   height: 150px;
 }
 
+.flowchart-node__id {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 2;
+  padding: 0.05rem 0.28rem;
+  background: rgba(10, 7, 5, 0.76);
+  border: 1px solid rgba(238, 219, 189, 0.54);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.1;
+  pointer-events: none;
+}
+
 .flowchart-board {
   position: relative;
   width: 150px;

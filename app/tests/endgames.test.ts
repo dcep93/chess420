@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { type Square } from "chess.js";
 
+import { getLastMoveSquares } from "../src/chess420/Board";
 import Brain, { View } from "../src/chess420/Brain";
 import { Header } from "../src/chess420/Controls";
 import {
@@ -450,6 +451,23 @@ test("flowchart routes are handled", () => {
   assert.equal(assignBrainRoute("/flowchart/knightBishop/extra"), false);
 });
 
+test("board last-move highlights follow the displayed position", () => {
+  const startFen = Brain.getFen();
+  const afterWhiteFen = Brain.getFen(startFen, "e4");
+  const afterBlackFen = Brain.getFen(afterWhiteFen, "e5");
+  const logs: LogType[] = [{ fen: startFen, san: "e4", opponent_san: "e5" }];
+
+  assert.deepEqual(getLastMoveSquares(afterWhiteFen, logs), {
+    from: "e2",
+    to: "e4",
+  });
+  assert.deepEqual(getLastMoveSquares(afterBlackFen, logs), {
+    from: "e7",
+    to: "e5",
+  });
+  assert.equal(getLastMoveSquares(startFen, logs), null);
+});
+
 test("generated flowcharts have renderable cached data", () => {
   Object.values(FLOWCHART_DATA).forEach((data) => {
     const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
@@ -614,6 +632,52 @@ function assertFlowchartSpineLayout(
     if (target.y <= source.y) {
       return;
     }
+  });
+
+  const rows = [...new Set(data.nodes.map((node) => node.y))].sort((a, b) => a - b);
+  const layerByY = new Map(rows.map((y, index) => [y, index]));
+  const rowIndexByNodeId = new Map<string, number>();
+  rows.forEach((y) => {
+    data.nodes
+      .filter((node) => node.y === y)
+      .sort((a, b) => a.x - b.x || a.id.localeCompare(b.id, undefined, { numeric: true }))
+      .forEach((node, index) => rowIndexByNodeId.set(node.id, index));
+  });
+
+  rows.slice(0, -1).forEach((_, layer) => {
+    const ownerEdges = data.edges.filter((edge) => {
+      if (edge.transposition) {
+        return false;
+      }
+      const source = nodesById.get(edge.from);
+      const target = nodesById.get(edge.to);
+      return (
+        source &&
+        target &&
+        layerByY.get(source.y) === layer &&
+        layerByY.get(target.y) === layer + 1
+      );
+    });
+    ownerEdges.forEach((edge) => {
+      const source = nodesById.get(edge.from)!;
+      const target = nodesById.get(edge.to)!;
+      assert.ok(
+        target.x >= source.x,
+        `${data.id} ${edge.id} should not place a child left of its owner`,
+      );
+    });
+    ownerEdges.forEach((edge, index) => {
+      ownerEdges.slice(index + 1).forEach((other) => {
+        const sourceDelta =
+          rowIndexByNodeId.get(edge.from)! - rowIndexByNodeId.get(other.from)!;
+        const targetDelta =
+          rowIndexByNodeId.get(edge.to)! - rowIndexByNodeId.get(other.to)!;
+        assert.ok(
+          sourceDelta * targetDelta >= 0,
+          `${data.id} ${edge.id} should not cross ${other.id}`,
+        );
+      });
+    });
   });
 }
 

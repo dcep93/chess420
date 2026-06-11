@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { type Square } from "chess.js";
+import { type Move, type Square } from "chess.js";
 import { flushSync } from "react-dom";
 import { Chessboard } from "react-chessboard";
 import Brain, { View } from "./Brain";
 import lichessF from "./Lichess";
+import { type LogType } from "./Log";
 import settings from "./Settings";
 
 export default function Board() {
@@ -116,9 +117,13 @@ function SubBoard() {
     () => getLegalTargets(fen, prevClicked),
     [fen, prevClicked]
   );
+  const lastMoveSquares = useMemo(
+    () => getLastMoveSquares(fen, state.logs),
+    [fen, state.logs]
+  );
   const squareStyles = useMemo(
-    () => getSquareStyles(prevClicked, legalTargets),
-    [prevClicked, legalTargets]
+    () => getSquareStyles(prevClicked, legalTargets, lastMoveSquares),
+    [prevClicked, legalTargets, lastMoveSquares]
   );
   const isSelectablePiece = (square: string | null) =>
     square ? canSelectPiece(fen, square) : false;
@@ -260,6 +265,39 @@ function safeMove(
   }
 }
 
+export function getLastMoveSquares(
+  fen: string,
+  logs: LogType[]
+): { from: Square; to: Square } | null {
+  const fenKey = Brain.boardTurnKey(fen);
+  for (let index = logs.length - 1; index >= 0; index -= 1) {
+    const log = logs[index];
+    const chess = Brain.getChess(log.fen);
+    const whiteMove = chess.move(log.san);
+    if (!whiteMove) {
+      continue;
+    }
+    if (Brain.boardTurnKey(chess.fen()) === fenKey) {
+      return getMoveSquares(whiteMove);
+    }
+    if (!log.opponent_san) {
+      continue;
+    }
+    const opponentMove = chess.move(log.opponent_san);
+    if (opponentMove && Brain.boardTurnKey(chess.fen()) === fenKey) {
+      return getMoveSquares(opponentMove);
+    }
+  }
+  return null;
+}
+
+function getMoveSquares(move: Move): { from: Square; to: Square } {
+  return {
+    from: move.from,
+    to: move.to,
+  };
+}
+
 function blurBoardFocus() {
   const activeElement = document.activeElement;
   if (
@@ -272,26 +310,42 @@ function blurBoardFocus() {
 
 function getSquareStyles(
   selectedSquare: string | null,
-  legalTargets: Map<string, { isCapture: boolean }>
+  legalTargets: Map<string, { isCapture: boolean }>,
+  lastMoveSquares: { from: Square; to: Square } | null
 ): Record<string, React.CSSProperties> {
   const styles: Record<string, React.CSSProperties> = {};
+  if (lastMoveSquares) {
+    styles[lastMoveSquares.from] = getLastMoveSquareStyle();
+    styles[lastMoveSquares.to] = getLastMoveSquareStyle();
+  }
   if (selectedSquare) {
     styles[selectedSquare] = {
       background: "rgba(255, 255, 0, 0.42)",
     };
   }
   legalTargets.forEach(({ isCapture }, square) => {
+    const lastMoveBackground = styles[square]?.background;
     styles[square] = isCapture
       ? {
+          ...styles[square],
           boxShadow: "inset 0 0 0 0.34rem rgba(20, 15, 12, 0.26)",
           borderRadius: "50%",
         }
       : {
+          ...styles[square],
           background:
-            "radial-gradient(circle, rgba(20, 15, 12, 0.32) 0 18%, transparent 19%)",
+            `radial-gradient(circle, rgba(20, 15, 12, 0.32) 0 18%, transparent 19%)${
+              lastMoveBackground ? `, ${lastMoveBackground}` : ""
+            }`,
         };
   });
   return styles;
+}
+
+function getLastMoveSquareStyle(): React.CSSProperties {
+  return {
+    background: "rgba(205, 170, 72, 0.5)",
+  };
 }
 
 function getBorderColor(total: number, winOdds: number | null): string {

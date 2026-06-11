@@ -219,6 +219,16 @@ function getEdgeLabelPlacements(
   const placed: EdgeLabelPlacement[] = [];
   const placements = new Map<string, EdgeLabelPlacement>();
   const nodeBounds = [...nodesById.values()].map(getFlowchartNodeBounds);
+  const ownedTargetLabels = new Set(
+    edges
+      .filter((edge) => !edge.transposition)
+      .map((edge) => {
+        const source = nodesById.get(edge.from);
+        const target = nodesById.get(edge.to);
+        return `${edge.to}:${getEdgeLabel(edge, source, target)}`;
+      }),
+  );
+  const seenTranspositionTargetLabels = new Set<string>();
   const candidates = edges
     .map((edge, index) => {
       const source = nodesById.get(edge.from);
@@ -228,6 +238,16 @@ function getEdgeLabelPlacements(
         return undefined;
       }
       const label = getEdgeLabel(edge, source, target);
+      const targetLabelKey = `${edge.to}:${label}`;
+      if (edge.transposition) {
+        if (
+          ownedTargetLabels.has(targetLabelKey) ||
+          seenTranspositionTargetLabels.has(targetLabelKey)
+        ) {
+          return undefined;
+        }
+        seenTranspositionTargetLabels.add(targetLabelKey);
+      }
       return {
         edge,
         index,
@@ -384,6 +404,7 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
     >
+      <span className="flowchart-node__id">{node.id}</span>
       <a href={node.playUrl} target="_blank" rel="noreferrer" aria-label={node.fen}>
         <div className="flowchart-board">
           <img src={node.imageUrl} alt="" loading="lazy" />
