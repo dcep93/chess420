@@ -500,15 +500,15 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
     layers.set(node.layer, layer);
   });
 
-  [...layers.entries()]
+  const columnByNode = new Map<string, number>();
+  const orderedLayers = [...layers.entries()]
     .sort(([a], [b]) => a - b)
-    .forEach(([layerIndex, layerNodes]) => {
+    .map(([layerIndex, layerNodes]) => {
       const shouldGroupByWhitePlan =
         layerNodes.filter((node) => node.turn === "w").length >
         layerNodes.length / 2;
 
-      layerNodes
-        .sort((a, b) =>
+      layerNodes.sort((a, b) =>
           compareLayerNodes(
             a,
             b,
@@ -517,12 +517,32 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
             outgoingEdges,
             shouldGroupByWhitePlan,
           ),
-        )
-        .forEach((node, columnIndex) => {
-          node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
-          node.y = layerIndex * (NODE_HEIGHT + ROW_GAP);
-        });
+        );
+
+      layerNodes.forEach((node, columnIndex) => {
+        columnByNode.set(node.id, columnIndex);
+      });
+
+      return [layerIndex, layerNodes] as const;
     });
+
+  orderedLayers.forEach(([layerIndex, layerNodes], layerPosition) => {
+    const previousLayerNodes = orderedLayers[layerPosition - 1]?.[1];
+    if (previousLayerNodes) {
+      addRightSideColumnGaps(
+        layerNodes,
+        previousLayerNodes,
+        outgoingEdges,
+        columnByNode,
+      );
+    }
+
+    layerNodes.forEach((node) => {
+      const columnIndex = columnByNode.get(node.id) || 0;
+      node.x = columnIndex * (NODE_WIDTH + COLUMN_GAP);
+      node.y = layerIndex * (NODE_HEIGHT + ROW_GAP);
+    });
+  });
 
   edges.forEach((edge) => {
     const parent = nodesById.get(edge.from)!;
@@ -554,6 +574,51 @@ function assignLayout(nodes: Map<string, WorkingNode>, edges: WorkingEdge[]) {
           ]
         : [parentSide, childSide];
   });
+}
+
+function addRightSideColumnGaps(
+  layerNodes: WorkingNode[],
+  previousLayerNodes: WorkingNode[],
+  outgoingEdges: Map<string, WorkingEdge[]>,
+  columnByNode: Map<string, number>,
+) {
+  const previousByColumn = new Map<number, WorkingNode>();
+  previousLayerNodes.forEach((node) => {
+    previousByColumn.set(columnByNode.get(node.id) || 0, node);
+  });
+
+  const occupiedColumns = new Set(
+    layerNodes.map((node) => columnByNode.get(node.id) || 0),
+  );
+
+  for (let index = layerNodes.length - 1; index >= 0; index -= 1) {
+    const node = layerNodes[index];
+    const column = columnByNode.get(node.id) || 0;
+    if (!previousByColumn.has(column + 1)) {
+      break;
+    }
+
+    const directlyAbove = previousByColumn.get(column);
+    if (directlyAbove && hasEdgeTo(directlyAbove, node, outgoingEdges)) {
+      break;
+    }
+
+    if (occupiedColumns.has(column + 1)) {
+      break;
+    }
+
+    occupiedColumns.delete(column);
+    columnByNode.set(node.id, column + 1);
+    occupiedColumns.add(column + 1);
+  }
+}
+
+function hasEdgeTo(
+  parent: WorkingNode,
+  child: WorkingNode,
+  outgoingEdges: Map<string, WorkingEdge[]>,
+) {
+  return (outgoingEdges.get(parent.id) || []).some((edge) => edge.to === child.id);
 }
 
 function compareLayerNodes(
