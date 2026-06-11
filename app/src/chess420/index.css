@@ -983,7 +983,7 @@
 .flowchart-edge path {
   fill: none;
   stroke: rgba(232, 206, 171, 0.62);
-  stroke-width: 2.5;
+  stroke-width: 2;
 }
 
 .flowchart-edge--transposition path {
@@ -1057,9 +1057,9 @@
 }
 
 .flowchart-board__arrow {
-  stroke-width: 6;
+  stroke-width: 2.4;
   stroke-linecap: round;
-  opacity: 0.88;
+  opacity: 0.76;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
 

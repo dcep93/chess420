@@ -65,8 +65,8 @@ function FlowchartView({ data }: { data: FlowchartData }) {
                 viewBox="0 0 10 10"
                 refX="8"
                 refY="5"
-                markerWidth="6"
-                markerHeight="6"
+                markerWidth="4"
+                markerHeight="4"
                 orient="auto-start-reverse"
               >
                 <path d="M 0 0 L 10 5 L 0 10 z" />
@@ -122,8 +122,9 @@ function FlowchartNodeCard({ node }: { node: FlowchartNode }) {
                 viewBox="0 0 10 10"
                 refX="8"
                 refY="5"
-                markerWidth="5"
-                markerHeight="5"
+                markerWidth="7"
+                markerHeight="7"
+                markerUnits="userSpaceOnUse"
                 orient="auto-start-reverse"
               >
                 <path d="M 0 0 L 10 5 L 0 10 z" />
