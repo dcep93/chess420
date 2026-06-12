@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Brain from "../Brain";
 import { FLOWCHART_DATA } from "./flowchartData";
+import {
+  getFlowchartBestMoveMismatches,
+  type FlowchartBestMoveMismatch,
+} from "./FlowchartRuleAudit";
 import {
   FLOWCHART_IDS,
   isFlowchartId,
@@ -37,10 +41,16 @@ function FlowchartIndex() {
 
 function FlowchartView({ data }: { data: FlowchartData }) {
   const [isTiny, setIsTiny] = useState(false);
+  const [bestMoveMismatches, setBestMoveMismatches] = useState<
+    Map<string, FlowchartBestMoveMismatch>
+  >(() => new Map());
   const [hoveredTransposition, setHoveredTransposition] =
     useState<FlowchartEdge | null>(null);
   const [activeMoveTooltip, setActiveMoveTooltip] =
     useState<MoveTooltipState | null>(null);
+  useEffect(() => {
+    setBestMoveMismatches(getFlowchartBestMoveMismatches(data));
+  }, [data]);
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
   const highlightedNodeRoles = getHighlightedNodeRoles(hoveredTransposition);
@@ -167,6 +177,7 @@ function FlowchartView({ data }: { data: FlowchartData }) {
               <FlowchartNodeCard
                 key={node.id}
                 node={node}
+                bestMoveMismatch={bestMoveMismatches.get(node.id)}
                 highlightRole={highlightedNodeRoles.get(node.id)}
               />
             ))}
@@ -545,9 +556,11 @@ function getEdgeLabelBasePlacement(
 
 function FlowchartNodeCard({
   node,
+  bestMoveMismatch,
   highlightRole,
 }: {
   node: FlowchartNode;
+  bestMoveMismatch?: FlowchartBestMoveMismatch;
   highlightRole?: HighlightedNodeRole;
 }) {
   return (
@@ -555,9 +568,14 @@ function FlowchartNodeCard({
       className={`flowchart-node flowchart-node--${node.turn}${
         node.terminal ? ` flowchart-node--${node.terminal}` : ""
       }${
+        bestMoveMismatch ? " flowchart-node--best-move-mismatch" : ""
+      }${
         highlightRole ? ` flowchart-node--highlight-${highlightRole}` : ""
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
+      title={
+        bestMoveMismatch ? getBestMoveMismatchTitle(bestMoveMismatch) : undefined
+      }
     >
       <span className="flowchart-node__id">{node.id}</span>
       <a href={node.playUrl} target="_blank" rel="noreferrer" aria-label={node.fen}>
@@ -573,12 +591,24 @@ function FlowchartNodeCard({
       <div className="flowchart-node__label">
         {node.terminal ? (
           <span>{node.terminalReason}</span>
+        ) : bestMoveMismatch ? (
+          <span>rule gap</span>
         ) : (
           <span aria-hidden="true" />
         )}
       </div>
     </article>
   );
+}
+
+function getBestMoveMismatchTitle(mismatch: FlowchartBestMoveMismatch) {
+  if (mismatch.kind === "globalTie") {
+    return `Generated ${mismatch.generatedSan}; selected by global tie among ${mismatch.expectedSans.join(", ")}`;
+  }
+  if (mismatch.kind === "implicit") {
+    return `Generated ${mismatch.generatedSan}; selected without an explicit knight-and-bishop rule`;
+  }
+  return `Generated ${mismatch.generatedSan}; best ${mismatch.expectedSans.join(", ")}`;
 }
 
 function BoardArrow({ arrow }: { arrow: FlowchartBoardArrow }) {

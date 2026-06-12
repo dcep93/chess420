@@ -1146,6 +1146,15 @@
   box-shadow: 0 0 0 3px rgba(255, 123, 195, 0.96), 0 0 18px rgba(255, 123, 195, 0.38);
 }
 
+.flowchart-node--best-move-mismatch .flowchart-board {
+  box-shadow: 0 0 0 24px rgba(236, 74, 74, 0.98), 0 0 18px rgba(236, 74, 74, 0.42);
+}
+
+.flowchart-node--best-move-mismatch.flowchart-node--highlight-parent .flowchart-board,
+.flowchart-node--best-move-mismatch.flowchart-node--highlight-child .flowchart-board {
+  box-shadow: 0 0 0 24px rgba(236, 74, 74, 0.98), 0 0 0 27px rgba(232, 206, 171, 0.72), 0 0 18px rgba(236, 74, 74, 0.42);
+}
+
 .flowchart-node__id {
   position: absolute;
   right: 4px;

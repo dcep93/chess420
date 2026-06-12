@@ -419,7 +419,7 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
             <ol>
               {help.whitePriorities.map((priority) => (
                 <li className={getEndgamePriorityItemClass(priority)} key={priority}>
-                  {priority}
+                  {renderEndgamePriorityText(priority)}
                 </li>
               ))}
             </ol>
@@ -430,7 +430,7 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
             <ol>
               {help.blackPriorities.map((priority) => (
                 <li className={getEndgamePriorityItemClass(priority)} key={priority}>
-                  {priority}
+                  {renderEndgamePriorityText(priority)}
                 </li>
               ))}
             </ol>
@@ -449,6 +449,25 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
       </section>
     </div>,
     document.body
+  );
+}
+
+function renderEndgamePriorityText(priority: string) {
+  const links: Record<string, string> = {
+    "[mate]": "/flowchart/knightBishop",
+    "[prepare]": "/flowchart/knightBishopPrepare",
+  };
+  const marker = Object.keys(links).find((candidate) =>
+    priority.startsWith(candidate)
+  );
+  if (!marker) {
+    return priority;
+  }
+  return (
+    <>
+      <a href={links[marker]}>{marker}</a>
+      {priority.slice(marker.length)}
+    </>
   );
 }
 
