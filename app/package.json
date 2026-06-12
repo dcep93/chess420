@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "generate:flowcharts": "node scripts/generate-flowcharts.mjs",
+    "generate:flowchart-best-moves": "node scripts/generate-flowchart-best-moves.mjs",
     "relayout:flowcharts": "node scripts/relayout-flowcharts.mjs",
     "lint": "eslint .",
     "test": "node scripts/run-tests.mjs",

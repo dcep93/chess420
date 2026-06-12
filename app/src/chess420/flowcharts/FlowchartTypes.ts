@@ -25,6 +25,12 @@ export type FlowchartBoardArrow = {
 
 export type FlowchartTranspositionKind = "exact" | "bishopAnchor";
 
+export type FlowchartBestMoveMismatch = {
+  generatedSan: string;
+  expectedSans: string[];
+  kind: "notBest" | "globalTie" | "implicit";
+};
+
 export type FlowchartEdge = {
   id: string;
   from: string;
@@ -54,6 +60,7 @@ export type FlowchartNode = {
   terminalReason?: string;
   movesToSuccess?: number;
   moveReason?: string;
+  bestMoveMismatch?: FlowchartBestMoveMismatch;
 };
 
 export type FlowchartData = {

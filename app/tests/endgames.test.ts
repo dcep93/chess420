@@ -17,6 +17,7 @@ import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
 import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
+import { analyzeDirectedCycles } from "../src/chess420/flowcharts/KnBCycleDetector";
 import { getFlowchartBestMoveMismatches } from "../src/chess420/flowcharts/FlowchartRuleAudit";
 
 function wait(ms: number): Promise<void> {
@@ -26,6 +27,20 @@ function wait(ms: number): Promise<void> {
 function setEndgame(id: typeof Brain.endgameId) {
   Brain.view = View.endgame;
   Brain.endgameId = id;
+}
+
+function getWhitePieceCompactnessAfterMove(fen: string, san: string): number {
+  const chess = Brain.getChess(fen);
+  chess.move(san);
+  const whiteKing = Brain.findPiece(chess.fen(), "w", "k");
+  const bishop = Brain.findPiece(chess.fen(), "w", "b");
+  const knight = Brain.findPiece(chess.fen(), "w", "n");
+  assert.ok(whiteKing && bishop && knight, fen);
+  return (
+    Brain.kingDistance(whiteKing.square, bishop.square) +
+    Brain.kingDistance(whiteKing.square, knight.square) +
+    Brain.kingDistance(bishop.square, knight.square)
+  );
 }
 
 function assertPhaseTwoOnlyOnWhiteTurn(fen: string) {
@@ -485,10 +500,10 @@ test("generated flowcharts have renderable cached data", () => {
         node.playUrl,
         `/endgames/${playEndgameId}#w//${node.fen.replaceAll(" ", "_")}`,
       );
-      assert.equal(
-        Object.prototype.hasOwnProperty.call(node, "bestMoveMismatch"),
-        false,
-        `${data.id} ${node.id} should not serialize runtime rule gaps`,
+      assert.deepEqual(
+        node.bestMoveMismatch,
+        bestMoveMismatches.get(node.id),
+        `${data.id} ${node.id} should serialize pregenerated rule gaps`,
       );
       node.outgoingEdgeIds.forEach((edgeId) => assert.ok(edgeIds.has(edgeId)));
 
@@ -524,6 +539,15 @@ test("generated flowcharts have renderable cached data", () => {
         node.boardArrows
           .slice(node.outgoingEdgeIds.length)
           .forEach((arrow) => assert.equal(arrow.color, "yellow", node.fen));
+        const chosenEdge = edgesById.get(node.outgoingEdgeIds[0]);
+        assert.ok(chosenEdge, node.fen);
+        const compactFirstTie = [...node.boardArrows].sort(
+          (a, b) =>
+            getWhitePieceCompactnessAfterMove(node.fen, a.san) -
+              getWhitePieceCompactnessAfterMove(node.fen, b.san) ||
+            a.san.localeCompare(b.san),
+        )[0];
+        assert.equal(chosenEdge.san, compactFirstTie.san, node.fen);
       }
     });
 
@@ -657,6 +681,21 @@ test("generated flowcharts have renderable cached data", () => {
   });
 });
 
+test("cycle detector counts nodes in directed cycles", () => {
+  const graph = new Map([
+    ["a", [{ to: "b", san: "ab" }]],
+    ["b", [{ to: "c", san: "bc" }]],
+    ["c", [{ to: "b", san: "cb" }]],
+    ["d", [{ to: "d", san: "dd" }]],
+    ["e", []],
+  ]);
+
+  const analysis = analyzeDirectedCycles(graph);
+
+  assert.deepEqual([...analysis.cyclicNodes].sort(), ["b", "c", "d"]);
+  assert.equal(analysis.cyclicComponents.length, 2);
+});
+
 test("knight-bishop flowchart dedupes bishop positions by edge anchor", () => {
   assert.equal(
     getKnightBishopBishopAnchorKey("1k6/8/1K6/2N2B2/8/8/8/8 b - - 0 1"),
@@ -710,34 +749,32 @@ test("knight-bishop prepare selected nodes match singular white rules", () => {
   );
 
   [
-    ["n0", "force zone x"],
-    ["n8", "force zone x"],
-    ["n9", "force zone x"],
-    ["n14", "force zone x"],
-    ["n31", "force zone x"],
-    ["n53", "force zone x"],
-    ["n81", "force zone x"],
-    ["n52", "key square pattern"],
-    ["n60", "key square pattern"],
-    ["n68", "key square pattern"],
-    ["n86", "key square pattern"],
-    ["n92", "key square pattern"],
-    ["n96", "key square pattern"],
-  ].forEach(([nodeId, expectedReason]) => {
+    ["8/4k3/4B3/4K3/1N6/8/8/8 w - - 0 1", "Nc6+", "force zone x"],
+    ["4k3/8/2N1B3/4K3/8/8/8/8 w - - 0 1", "Kf6", "force zone x"],
+    ["4k3/8/4B3/4K3/3N4/8/8/8 w - - 0 1", "Nc6", "force zone x"],
+    ["4k3/8/2N1BK2/8/8/8/8/8 w - - 0 1", "Kf5", "force zone x"],
+    ["4k3/8/3KB3/8/5N2/8/8/8 w - - 0 1", "Ng6", "force zone x"],
+    ["4k3/8/4BK2/4N3/8/8/8/8 w - - 0 1", "Nf7", "key square pattern"],
+    ["8/8/4B2k/5K2/5N2/8/8/8 w - - 0 1", "Kf6", "key square pattern"],
+    ["3k4/8/3KB1N1/8/8/8/8/8 w - - 0 1", "Ne5", "key square pattern"],
+    ["8/7k/4BK2/8/5N2/8/8/8 w - - 0 1", "Ng6", "key square pattern"],
+    ["8/5K2/4B2k/8/5N2/8/8/8 w - - 0 1", "Kf6", "key square pattern"],
+  ].forEach(([fen, expectedSan, expectedReason]) => {
     const node = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
-      (candidate) => candidate.id === nodeId,
+      (candidate) => candidate.fen === fen,
     );
-    assert.ok(node, nodeId);
-    assert.equal(node.turn, "w", nodeId);
-    assert.equal(node.terminal, undefined, nodeId);
-    assert.equal(node.outgoingEdgeIds.length, 1, nodeId);
+    assert.ok(node, fen);
+    assert.equal(node.turn, "w", fen);
+    assert.equal(node.terminal, undefined, fen);
+    assert.equal(node.outgoingEdgeIds.length, 1, fen);
 
     const generatedEdge = edgesById.get(node.outgoingEdgeIds[0]);
-    assert.ok(generatedEdge, nodeId);
+    assert.ok(generatedEdge, fen);
+    assert.equal(generatedEdge.san, expectedSan, fen);
     assert.deepEqual(
       Brain.getIdealEndgameWhiteMoves(node.fen),
       [generatedEdge.san],
-      `${nodeId} ${node.fen}`,
+      node.fen,
     );
     assert.equal(
       Brain.getKnightAndBishopExplicitWhiteMoveReason(
@@ -745,7 +782,7 @@ test("knight-bishop prepare selected nodes match singular white rules", () => {
         generatedEdge.san,
       ),
       expectedReason,
-      nodeId,
+      fen,
     );
   });
 });
@@ -4105,7 +4142,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Reach the key-square pattern when it is available.",
+      "[prepare] Reach the key-square pattern or force black into Zone X when available.",
     ),
     true,
   );
@@ -4113,7 +4150,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
     knightAndBishopHelp.whitePriorities.includes(
       "[prepare] Force Black into zone X when it is available.",
     ),
-    true,
+    false,
   );
   for (const removedPriority of [
     "Keep the bishop and knight connected diagonally.",

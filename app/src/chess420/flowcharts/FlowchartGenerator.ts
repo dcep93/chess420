@@ -172,6 +172,7 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
       "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
       "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
       "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
+      "8/4k3/4B3/4K3/8/6N1/8/8 w - - 4 3",
       "8/4k3/4B3/4K3/8/7N/8/8 w - - 72 37",
     ],
     preparePolicyStarts: [
@@ -274,7 +275,7 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
   pruneUnreachableNodes(nodes, edges, data.starts);
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignPrepareMoveReasons(nodes, data.id);
+  assignPrepareMoveReasons(nodes, edges, data.id);
   assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
@@ -402,7 +403,7 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
   assignSuccessDistances(nodes, edges, config.id === "knightBishopPrepare");
   assignTranspositionOwners(nodes, edges);
   orderNodeMovesByDistance(nodes, edges);
-  assignPrepareMoveReasons(nodes, config.id);
+  assignPrepareMoveReasons(nodes, edges, config.id);
   assignLayout(nodes, edges);
 
   const orderedNodes = [...nodes.values()].sort((a, b) =>
@@ -713,14 +714,28 @@ function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy
               : {
                   distance: distance + 1,
                   san: node.children[index].san,
+                  compactness: getWhitePieceCompactness(
+                    fenByKey.get(node.children[index].childKey),
+                  ),
                   index,
                 },
           )
           .filter(
-            (child): child is { distance: number; san: string; index: number } =>
-              child !== undefined,
+            (
+              child,
+            ): child is {
+              distance: number;
+              san: string;
+              compactness: number;
+              index: number;
+            } => child !== undefined,
           )
-          .sort((a, b) => a.distance - b.distance || a.index - b.index);
+          .sort(
+            (a, b) =>
+              a.distance - b.distance ||
+              a.compactness - b.compactness ||
+              a.san.localeCompare(b.san),
+          );
         const best = solvedChildren[0];
         if (!best) {
           return;
@@ -827,12 +842,16 @@ function getPrepareSearchFallbackWhiteMoves(
       move,
       index,
       score: getPrepareSearchPositionScore(next.fen()),
+      compactness: getWhitePieceCompactness(next.fen()),
     };
   });
   const bestScore = Math.min(...scored.map((candidate) => candidate.score));
   return scored
     .filter((candidate) => candidate.score === bestScore)
-    .sort((a, b) => a.index - b.index)
+    .sort(
+      (a, b) =>
+        a.compactness - b.compactness || a.move.san.localeCompare(b.move.san),
+    )
     .map((candidate) => candidate.move);
 }
 
@@ -988,6 +1007,23 @@ function sideAdjacencyDistance(a: Square, b: Square): number {
         Math.abs(fileDistance - 1) + rankDistance,
         fileDistance + Math.abs(rankDistance - 1),
       );
+}
+
+function getWhitePieceCompactness(fen?: string): number {
+  if (!fen) {
+    return Number.POSITIVE_INFINITY;
+  }
+  const whiteKing = Brain.findPiece(fen, "w", "k");
+  const bishop = Brain.findPiece(fen, "w", "b");
+  const knight = Brain.findPiece(fen, "w", "n");
+  if (!whiteKing || !bishop || !knight) {
+    return Number.POSITIVE_INFINITY;
+  }
+  return (
+    Brain.kingDistance(whiteKing.square, bishop.square) +
+    Brain.kingDistance(whiteKing.square, knight.square) +
+    Brain.kingDistance(bishop.square, knight.square)
+  );
 }
 
 function findLegalMoveBySan(fen: string, san?: string): Move | undefined {
@@ -1259,6 +1295,7 @@ function orderNodeMovesByDistance(nodes: Map<string, WorkingNode>, edges: Workin
 
 function assignPrepareMoveReasons(
   nodes: Map<string, WorkingNode>,
+  edges: WorkingEdge[],
   flowchartId: FlowchartId,
 ) {
   nodes.forEach((node) => {
@@ -1267,17 +1304,32 @@ function assignPrepareMoveReasons(
   if (flowchartId !== "knightBishopPrepare") {
     return;
   }
+  const edgesById = new Map(edges.map((edge) => [edge.id, edge]));
 
   nodes.forEach((node) => {
     if (node.turn !== "w" || node.terminal || node.outgoingEdgeIds.length === 0) {
       return;
     }
-    const reason = KNIGHT_BISHOP_PREPARE_MOVE_REASONS[node.id];
-    if (!reason) {
+    const edge = edgesById.get(node.outgoingEdgeIds[0]);
+    if (!edge) {
       return;
     }
-    node.moveReason = reason;
+    node.moveReason =
+      node.id === "n0"
+        ? KNIGHT_BISHOP_PREPARE_MOVE_REASONS.n0
+        : getGeneratedPrepareMoveReason(node.fen, edge.san);
   });
+}
+
+function getGeneratedPrepareMoveReason(fen: string, san: string): string {
+  const explicitReason = Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, san);
+  if (explicitReason === "key square pattern") {
+    return `Play ${san} to reach the key-square pattern with Black on the edge and the knight between the kings.`;
+  }
+  if (explicitReason === "force zone x") {
+    return `Play ${san} to force Black into Zone X while White keeps the stable knight-and-bishop geometry.`;
+  }
+  return `Play ${san} to continue the generated preparation route; tied best moves remain shown as yellow arrows.`;
 }
 
 function compareEdgesByTargetDistance(

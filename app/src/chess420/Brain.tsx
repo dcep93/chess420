@@ -266,6 +266,19 @@ export type EndgamePriorityHelp = {
   whitePriorities: string[];
   blackPriorities: string[];
   notes: string[];
+  noteBoards?: EndgamePriorityNoteBoard[];
+};
+
+export type EndgamePriorityNoteBoard = {
+  id: string;
+  title: string;
+  caption: string;
+  pieces: Array<{ square: string; piece: "K" | "B" | "N" | "k" }>;
+  highlights: Array<{
+    square: string;
+    kind: "zone" | "escape" | "key" | "red";
+  }>;
+  arrows?: Array<{ from: string; to: string }>;
 };
 
 export enum View {
@@ -1279,6 +1292,7 @@ export default class Brain {
       whitePriorities: Brain.getEndgameWhitePriorityLabels(baseEndgameId),
       blackPriorities: Brain.getEndgameBlackPriorityLabels(baseEndgameId),
       notes: Brain.getEndgamePriorityNotes(baseEndgameId),
+      noteBoards: Brain.getEndgamePriorityNoteBoards(baseEndgameId),
     };
   }
 
@@ -1292,8 +1306,7 @@ export default class Brain {
   static getEndgamePriorityNotes(baseEndgameId: BaseEndgameId): string[] {
     if (baseEndgameId === "knightAndBishop") {
       return [
-        "Zone X is the edge pair defined by the stable knight-and-bishop geometry. It exists only when White's knight is on the stable square and White's king can be the piece that blocks the escape square.",
-        "If these rules do not choose a move, the normal tie behavior is used.",
+        "Zone X is the blue pair defined by the stable knight/bishop/edge geometry. It exists only when the minor pieces are in yellow position and White's king can block the red escape square.",
       ];
     }
     if (baseEndgameId === "twoBishops") {
@@ -1303,6 +1316,54 @@ export default class Brain {
       ];
     }
     return [];
+  }
+
+  static getEndgamePriorityNoteBoards(
+    baseEndgameId: BaseEndgameId
+  ): EndgamePriorityNoteBoard[] {
+    if (baseEndgameId !== "knightAndBishop") {
+      return [];
+    }
+    return [
+      {
+        id: "zone-x",
+        title: "Zone X",
+        caption: "",
+        pieces: [
+          { square: "f8", piece: "k" },
+          { square: "e5", piece: "K" },
+          { square: "e6", piece: "B" },
+          { square: "c6", piece: "N" },
+        ],
+        highlights: [
+          { square: "e8", kind: "zone" },
+          { square: "f8", kind: "zone" },
+          { square: "c6", kind: "key" },
+          { square: "e6", kind: "key" },
+          { square: "g7", kind: "escape" },
+        ],
+        arrows: [{ from: "e5", to: "f6" }],
+      },
+      {
+        id: "key-square",
+        title: "Key Square",
+        caption: "Move the knight to the key square between the kings, while the black king is on the edge. The bishop cuts off the red escape squares.",
+        pieces: [
+          { square: "d8", piece: "k" },
+          { square: "d6", piece: "K" },
+          { square: "d5", piece: "B" },
+          { square: "d7", piece: "N" },
+        ],
+        highlights: [
+          { square: "c8", kind: "zone" },
+          { square: "d8", kind: "zone" },
+          { square: "e8", kind: "zone" },
+          { square: "d7", kind: "key" },
+          { square: "b7", kind: "red" },
+          { square: "f7", kind: "red" },
+        ],
+      },
+    ];
   }
 
   static getEndgameWhitePriorityLabels(baseEndgameId: BaseEndgameId): string[] {
@@ -1380,8 +1441,8 @@ export default class Brain {
         "king not between pieces": "",
         "shorter queen move": "Prefer the shorter queen move when everything else is tied.",
         "enter mating net": "[mate] Follow the known knight-and-bishop mating net when it is available.",
-        "key square pattern": "Reach the key-square pattern when it is available.",
-        "force zone x": "[prepare] Force Black into zone X when it is available.",
+        "key square pattern": "[prepare] Reach the key-square pattern or force black into Zone X when available.",
+        "force zone x": "",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
         "take direct opposition": "Phase 2: take direct king opposition, unless it moves the white king into a square controlled by a bishop.",

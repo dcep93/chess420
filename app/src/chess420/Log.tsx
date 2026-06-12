@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import Brain, { View } from "./Brain";
+import { defaultPieces } from "react-chessboard";
+import Brain, { type EndgamePriorityNoteBoard, View } from "./Brain";
 import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
 import lichessF, { type LiMove } from "./Lichess";
 import settings from "./Settings";
@@ -443,6 +444,16 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
                   <li key={note}>{note}</li>
                 ))}
               </ul>
+              {help.noteBoards && help.noteBoards.length > 0 ? (
+                <div className="endgame-priority-note-boards">
+                  {help.noteBoards.map((board) => (
+                    <EndgamePriorityNoteBoardView
+                      board={board}
+                      key={board.id}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </section>
           ) : null}
         </div>
@@ -450,6 +461,180 @@ function EndgamePriorityHelpModal(props: { onClose: () => void }) {
     </div>,
     document.body
   );
+}
+
+function EndgamePriorityNoteBoardView(props: {
+  board: EndgamePriorityNoteBoard;
+}) {
+  const { board } = props;
+  const highlightsBySquare = new Map(
+    board.highlights.map((highlight) => [highlight.square, highlight.kind])
+  );
+  const squares = [];
+  for (let rank = 8; rank >= 1; rank -= 1) {
+    for (const file of ["a", "b", "c", "d", "e", "f", "g", "h"]) {
+      squares.push(`${file}${rank}`);
+    }
+  }
+  return (
+    <figure className="endgame-priority-note-board">
+      <figcaption>
+        <strong>{board.title}</strong>
+        <span>{board.caption}</span>
+      </figcaption>
+      <div className="endgame-priority-note-board__board" aria-label={board.title}>
+        <div className="endgame-priority-note-board__squares">
+          {squares.map((square, index) => {
+            const file = index % 8;
+            const row = Math.floor(index / 8);
+            const highlight = highlightsBySquare.get(square);
+            return (
+              <div
+                className={`endgame-priority-note-board__square ${
+                  (file + row) % 2 === 0
+                    ? "endgame-priority-note-board__square--light"
+                    : "endgame-priority-note-board__square--dark"
+                } ${highlight ? `endgame-priority-note-board__highlight endgame-priority-note-board__highlight--${highlight}` : ""}`}
+                key={square}
+              />
+            );
+          })}
+        </div>
+        <svg
+          className="endgame-priority-note-board__arrows"
+          viewBox="0 0 800 800"
+          aria-hidden="true"
+        >
+          {board.arrows?.map((arrow) => (
+            <EndgamePriorityNoteBoardArrow
+              arrow={arrow}
+              key={`${arrow.from}-${arrow.to}`}
+            />
+          ))}
+        </svg>
+        <div className="endgame-priority-note-board__pieces" aria-hidden="true">
+          {board.pieces.map((piece) => {
+            const point = getNoteBoardSquarePoint(piece.square);
+            const PieceSvg = defaultPieces[getNoteBoardPieceType(piece.piece)];
+            return (
+              <div
+                className="endgame-priority-note-board__piece"
+                key={`${piece.piece}-${piece.square}`}
+                style={{
+                  left: `${point.x / 8}%`,
+                  top: `${point.y / 8}%`,
+                }}
+              >
+                <PieceSvg />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </figure>
+  );
+}
+
+function EndgamePriorityNoteBoardArrow(props: {
+  arrow: { from: string; to: string };
+}) {
+  const from = getNoteBoardSquarePoint(props.arrow.from);
+  const to = getNoteBoardSquarePoint(props.arrow.to);
+  const shape = getNoteBoardArrowShape(from, to);
+  return (
+    <g className="endgame-priority-note-board__arrow">
+      <polygon
+        className="endgame-priority-note-board__arrow-fill"
+        points={shape.fillPoints}
+      />
+      <path
+        className="endgame-priority-note-board__arrow-outline"
+        d={shape.outlinePath}
+      />
+    </g>
+  );
+}
+
+function getNoteBoardSquarePoint(square: string) {
+  const file = square.charCodeAt(0) - "a".charCodeAt(0);
+  const rank = Number(square[1]) - 1;
+  return {
+    x: file * 100 + 50,
+    y: (7 - rank) * 100 + 50,
+  };
+}
+
+const NOTE_BOARD_ARROW_SHAFT_WIDTH = 17;
+const NOTE_BOARD_ARROW_HEAD_LENGTH = 64;
+const NOTE_BOARD_ARROW_HEAD_WIDTH = 52;
+
+function getNoteBoardArrowShape(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const unit = { x: dx / length, y: dy / length };
+  const perpendicular = { x: -unit.y, y: unit.x };
+  const headLength = Math.min(NOTE_BOARD_ARROW_HEAD_LENGTH, length * 0.45);
+  const headBase = {
+    x: to.x - unit.x * headLength,
+    y: to.y - unit.y * headLength,
+  };
+  const shaftHalfWidth = NOTE_BOARD_ARROW_SHAFT_WIDTH / 2;
+  const headHalfWidth = NOTE_BOARD_ARROW_HEAD_WIDTH / 2;
+  const tailLeft = offsetNoteBoardPoint(from, perpendicular, shaftHalfWidth);
+  const shaftLeft = offsetNoteBoardPoint(headBase, perpendicular, shaftHalfWidth);
+  const headLeft = offsetNoteBoardPoint(headBase, perpendicular, headHalfWidth);
+  const headRight = offsetNoteBoardPoint(headBase, perpendicular, -headHalfWidth);
+  const shaftRight = offsetNoteBoardPoint(headBase, perpendicular, -shaftHalfWidth);
+  const tailRight = offsetNoteBoardPoint(from, perpendicular, -shaftHalfWidth);
+  const fillPoints = [
+    tailLeft,
+    shaftLeft,
+    headLeft,
+    to,
+    headRight,
+    shaftRight,
+    tailRight,
+  ];
+  return {
+    fillPoints: fillPoints.map(formatNoteBoardPoint).join(" "),
+    outlinePath: [
+      `M ${formatNoteBoardPoint(tailLeft)}`,
+      `L ${formatNoteBoardPoint(shaftLeft)}`,
+      `L ${formatNoteBoardPoint(headLeft)}`,
+      `L ${formatNoteBoardPoint(to)}`,
+      `L ${formatNoteBoardPoint(headRight)}`,
+      `L ${formatNoteBoardPoint(shaftRight)}`,
+      `L ${formatNoteBoardPoint(tailRight)}`,
+    ].join(" "),
+  };
+}
+
+function offsetNoteBoardPoint(
+  point: { x: number; y: number },
+  vector: { x: number; y: number },
+  amount: number,
+) {
+  return {
+    x: point.x + vector.x * amount,
+    y: point.y + vector.y * amount,
+  };
+}
+
+function formatNoteBoardPoint(point: { x: number; y: number }) {
+  return `${Number(point.x.toFixed(3))},${Number(point.y.toFixed(3))}`;
+}
+
+function getNoteBoardPieceType(piece: "K" | "B" | "N" | "k") {
+  return {
+    B: "wB",
+    K: "wK",
+    N: "wN",
+    k: "bK",
+  }[piece];
 }
 
 function renderEndgamePriorityText(priority: string) {

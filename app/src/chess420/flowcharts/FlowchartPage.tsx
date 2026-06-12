@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Brain from "../Brain";
 import { FLOWCHART_DATA } from "./flowchartData";
 import {
-  getFlowchartBestMoveMismatches,
-  type FlowchartBestMoveMismatch,
-} from "./FlowchartRuleAudit";
-import {
   FLOWCHART_IDS,
   isFlowchartId,
+  type FlowchartBestMoveMismatch,
   type FlowchartBoardArrow,
   type FlowchartData,
   type FlowchartEdge,
@@ -41,16 +38,15 @@ function FlowchartIndex() {
 
 function FlowchartView({ data }: { data: FlowchartData }) {
   const [isTiny, setIsTiny] = useState(false);
-  const [bestMoveMismatches, setBestMoveMismatches] = useState<
-    Map<string, FlowchartBestMoveMismatch>
-  >(() => new Map());
   const [hoveredTransposition, setHoveredTransposition] =
     useState<FlowchartEdge | null>(null);
   const [activeMoveTooltip, setActiveMoveTooltip] =
     useState<MoveTooltipState | null>(null);
-  useEffect(() => {
-    setBestMoveMismatches(getFlowchartBestMoveMismatches(data));
-  }, [data]);
+  const bestMoveMismatches = new Map(
+    data.nodes.flatMap((node) =>
+      node.bestMoveMismatch ? [[node.id, node.bestMoveMismatch]] : [],
+    ),
+  );
   const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
   const edgeLabelPlacements = getEdgeLabelPlacements(data.edges, nodesById);
   const highlightedNodeRoles = getHighlightedNodeRoles(hoveredTransposition);
@@ -70,7 +66,7 @@ function FlowchartView({ data }: { data: FlowchartData }) {
           <span>17%</span>
         </label>
         <span className="flowchart-header__count">
-          {data.nodes.length} positions / {data.edges.length} moves
+          {data.nodes.length} positions / {bestMoveMismatches.size} red
         </span>
       </header>
       <div className="flowchart-scroll">

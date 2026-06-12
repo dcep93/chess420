@@ -6,6 +6,7 @@
     "8/4k3/4B3/4K3/1N6/8/8/8 w - - 0 1",
     "8/4k3/4B3/4K3/8/2N5/8/8 w - - 0 1",
     "8/4k3/4B3/4K3/8/1N6/8/8 w - - 0 1",
+    "8/4k3/4B3/4K3/8/6N1/8/8 w - - 0 1",
     "8/4k3/4B3/4K3/8/7N/8/8 w - - 0 1"
   ],
   "nodes": [
@@ -21,7 +22,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/1N6/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n0-0-n4",
+          "id": "n0-0-n5",
           "san": "Nc6+",
           "from": "b4",
           "to": "c6",
@@ -29,7 +30,7 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n0-0-n4"
+        "n0-0-n5"
       ],
       "movesToSuccess": 7,
       "moveReason": "Jump the knight to the active c6 outpost with check, forcing Black to stay on the back rank while White starts building the handoff cage."
@@ -46,7 +47,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/2N5/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n1-0-n5",
+          "id": "n1-0-n6",
           "san": "Nd5+",
           "from": "c3",
           "to": "d5",
@@ -61,10 +62,35 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n1-0-n5"
+        "n1-0-n6"
       ],
       "movesToSuccess": 11,
-      "moveReason": "Use the forcing knight check to enter the longer preparation route; from d5 the knight can pivot through f4 and g6 while the king holds the center."
+      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nd5+",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf5",
+          "Kd5",
+          "Na4",
+          "Nb5",
+          "Nd5+",
+          "Ne4",
+          "Ne2",
+          "Nd1",
+          "Nb1",
+          "Na2"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n2",
@@ -78,7 +104,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/1N6/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n2-0-n6",
+          "id": "n2-0-n7",
           "san": "Nd4",
           "from": "b3",
           "to": "d4",
@@ -86,24 +112,93 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n2-0-n6"
+        "n2-0-n7"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Centralize the knight to d4 so it can reach c6 or the f5/e2 transfer squares without dropping the king or bishop below the fourth rank."
+      "moveReason": "Play Nd4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nd4",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Kf5",
+          "Kd5",
+          "Na5",
+          "Nc5",
+          "Nd4",
+          "Nd2",
+          "Nc1",
+          "Na1"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n3",
+      "key": "8/4k3/4B3/4K3/8/6N1/8/8 w",
+      "fen": "8/4k3/4B3/4K3/8/6N1/8/8 w - - 0 1",
+      "boardFen": "8/4k3/4B3/4K3/8/6N1/8/8",
+      "turn": "w",
+      "x": 3388,
+      "y": 0,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/8/6N1/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/6N1/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n3-0-n8",
+          "san": "Nh5",
+          "from": "g3",
+          "to": "h5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n3-0-n8"
+      ],
+      "movesToSuccess": 9,
+      "moveReason": "Play Nh5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nh5",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf5",
+          "Kd5",
+          "Ne4",
+          "Nf5+",
+          "Nh5",
+          "Nh1",
+          "Nf1",
+          "Ne2"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n4",
       "key": "8/4k3/4B3/4K3/8/7N/8/8 w",
       "fen": "8/4k3/4B3/4K3/8/7N/8/8 w - - 0 1",
       "boardFen": "8/4k3/4B3/4K3/8/7N/8/8",
       "turn": "w",
-      "x": 3388,
+      "x": 4356,
       "y": 0,
       "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/8/7N/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/8/7N/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n3-0-n7",
+          "id": "n4-0-n9",
           "san": "Nf4",
           "from": "h3",
           "to": "f4",
@@ -111,12 +206,33 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n3-0-n7"
+        "n4-0-n9"
       ],
-      "movesToSuccess": 8
+      "movesToSuccess": 8,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf5",
+          "Kd5",
+          "Nf4",
+          "Ng5",
+          "Ng1",
+          "Nf2"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n4",
+      "id": "n5",
       "key": "8/4k3/2N1B3/4K3/8/8/8/8 b",
       "fen": "8/4k3/2N1B3/4K3/8/8/8/8 b - - 0 1",
       "boardFen": "8/4k3/2N1B3/4K3/8/8/8/8",
@@ -127,14 +243,14 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/2N1B3/4K3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n4-0-n8",
+          "id": "n5-0-n10",
           "san": "Ke8",
           "from": "e7",
           "to": "e8",
           "color": "black"
         },
         {
-          "id": "n4-1-n9",
+          "id": "n5-1-n11",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
@@ -142,12 +258,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n4-0-n8",
-        "n4-1-n9"
+        "n5-0-n10",
+        "n5-1-n11"
       ]
     },
     {
-      "id": "n5",
+      "id": "n6",
       "key": "8/4k3/4B3/3NK3/8/8/8/8 b",
       "fen": "8/4k3/4B3/3NK3/8/8/8/8 b - - 0 1",
       "boardFen": "8/4k3/4B3/3NK3/8/8/8/8",
@@ -158,21 +274,21 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/3NK3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n5-1-n11",
+          "id": "n6-1-n13",
           "san": "Ke8",
           "from": "e7",
           "to": "e8",
           "color": "black"
         },
         {
-          "id": "n5-0-n10",
+          "id": "n6-0-n12",
           "san": "Kd8",
           "from": "e7",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n5-2-n12",
+          "id": "n6-2-n14",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
@@ -180,13 +296,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n5-1-n11",
-        "n5-0-n10",
-        "n5-2-n12"
+        "n6-1-n13",
+        "n6-0-n12",
+        "n6-2-n14"
       ]
     },
     {
-      "id": "n6",
+      "id": "n7",
       "key": "8/4k3/4B3/4K3/3N4/8/8/8 b",
       "fen": "8/4k3/4B3/4K3/3N4/8/8/8 b - - 0 1",
       "boardFen": "8/4k3/4B3/4K3/3N4/8/8/8",
@@ -197,21 +313,21 @@
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/3N4/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n6-2-n15",
+          "id": "n7-2-n17",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
           "color": "black"
         },
         {
-          "id": "n6-0-n13",
+          "id": "n7-0-n15",
           "san": "Kd8",
           "from": "e7",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n6-1-n14",
+          "id": "n7-1-n16",
           "san": "Ke8",
           "from": "e7",
           "to": "e8",
@@ -219,38 +335,77 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n6-2-n15",
-        "n6-0-n13",
-        "n6-1-n14"
+        "n7-2-n17",
+        "n7-0-n15",
+        "n7-1-n16"
       ]
     },
     {
-      "id": "n7",
+      "id": "n8",
+      "key": "8/4k3/4B3/4K2N/8/8/8/8 b",
+      "fen": "8/4k3/4B3/4K2N/8/8/8/8 b - - 0 1",
+      "boardFen": "8/4k3/4B3/4K2N/8/8/8/8",
+      "turn": "b",
+      "x": 3388,
+      "y": 214,
+      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K2N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K2N/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n8-1-n19",
+          "san": "Ke8",
+          "from": "e7",
+          "to": "e8",
+          "color": "black"
+        },
+        {
+          "id": "n8-0-n18",
+          "san": "Kd8",
+          "from": "e7",
+          "to": "d8",
+          "color": "black"
+        },
+        {
+          "id": "n8-2-n20",
+          "san": "Kf8",
+          "from": "e7",
+          "to": "f8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n8-1-n19",
+        "n8-0-n18",
+        "n8-2-n20"
+      ]
+    },
+    {
+      "id": "n9",
       "key": "8/4k3/4B3/4K3/5N2/8/8/8 b",
       "fen": "8/4k3/4B3/4K3/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/4k3/4B3/4K3/5N2/8/8/8",
       "turn": "b",
-      "x": 3388,
+      "x": 4356,
       "y": 214,
       "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n7-0-n16",
+          "id": "n9-0-n21",
           "san": "Kd8",
           "from": "e7",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n7-2-n18",
+          "id": "n9-2-n23",
           "san": "Kf8",
           "from": "e7",
           "to": "f8",
           "color": "black"
         },
         {
-          "id": "n7-1-n17",
+          "id": "n9-1-n22",
           "san": "Ke8",
           "from": "e7",
           "to": "e8",
@@ -258,13 +413,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n7-0-n16",
-        "n7-2-n18",
-        "n7-1-n17"
+        "n9-0-n21",
+        "n9-2-n23",
+        "n9-1-n22"
       ]
     },
     {
-      "id": "n8",
+      "id": "n10",
       "key": "4k3/8/2N1B3/4K3/8/8/8/8 w",
       "fen": "4k3/8/2N1B3/4K3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2N1B3/4K3/8/8/8/8",
@@ -275,7 +430,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/4K3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n8-0-n19",
+          "id": "n10-0-n24",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -283,13 +438,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n8-0-n19"
+        "n10-0-n24"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Move into opposition on d6, taking the key square beside the knight so Black cannot use the d-file to loosen the cage."
+      "moveReason": "Play Kf6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n9",
+      "id": "n11",
       "key": "5k2/8/2N1B3/4K3/8/8/8/8 w",
       "fen": "5k2/8/2N1B3/4K3/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/2N1B3/4K3/8/8/8/8",
@@ -300,7 +455,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B3/4K3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n9-0-n20",
+          "id": "n11-0-n25",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -308,13 +463,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n9-0-n20"
+        "n11-0-n25"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Take d6 to keep the knight protected and to prepare a direct finish if Black stays on the back rank."
+      "moveReason": "Play Kf6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n10",
+      "id": "n12",
       "key": "3k4/8/4B3/3NK3/8/8/8/8 w",
       "fen": "3k4/8/4B3/3NK3/8/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/4B3/3NK3/8/8/8/8",
@@ -325,7 +480,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n10-0-n21",
+          "id": "n12-0-n26",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -333,13 +488,36 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n10-0-n21"
+        "n12-0-n26"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Retreat the knight to f4 to preserve the bishop color parity and start the g6 triangulation route against Black's f8 defense."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Nb6",
+          "Nf6",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n11",
+      "id": "n13",
       "key": "4k3/8/4B3/3NK3/8/8/8/8 w",
       "fen": "4k3/8/4B3/3NK3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4B3/3NK3/8/8/8/8",
@@ -350,7 +528,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n11-0-n22",
+          "id": "n13-0-n27",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -358,45 +536,93 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n11-0-n22"
+        "n13-0-n27"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Bring the king to d6, using the knight on d4 as a shield while White takes the opposition squares around d8."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Nb6",
+          "Nc7+",
+          "Nf6+",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n12",
+      "id": "n14",
       "key": "5k2/8/4B3/3NK3/8/8/8/8 w",
       "fen": "5k2/8/4B3/3NK3/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/4B3/3NK3/8/8/8/8",
       "turn": "w",
-      "x": 1452,
+      "x": 1210,
       "y": 496,
       "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/3NK3/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/3NK3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n12-0-n23",
-          "san": "Nf4",
-          "from": "d5",
-          "to": "f4",
-          "color": "white"
-        },
-        {
-          "id": "n12-tie-0-Kf5",
+          "id": "n14-0-n28",
           "san": "Kf5",
           "from": "e5",
           "to": "f5",
+          "color": "white"
+        },
+        {
+          "id": "n14-tie-0-Nf4",
+          "san": "Nf4",
+          "from": "d5",
+          "to": "f4",
           "color": "yellow"
         }
       ],
       "outgoingEdgeIds": [
-        "n12-0-n23"
+        "n14-0-n28"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Send the knight to c6 to check the king's escape squares and reconnect with the standard prepared pattern."
+      "moveReason": "Play Kf5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf5",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Nb6",
+          "Nc7",
+          "Nf6",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n13",
+      "id": "n15",
       "key": "3k4/8/4B3/4K3/3N4/8/8/8 w",
       "fen": "3k4/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/4B3/4K3/3N4/8/8/8",
@@ -407,7 +633,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n13-0-n24",
+          "id": "n15-0-n29",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -415,13 +641,41 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n13-0-n24"
+        "n15-0-n29"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Use the king move to f6 to cut off e7 and g7, making the knight transfer to c6 or f5 safe."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd5",
+          "Nb5",
+          "Nc6+",
+          "Nf5",
+          "Nf3",
+          "Ne2",
+          "Nc2",
+          "Nb3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n14",
+      "id": "n16",
       "key": "4k3/8/4B3/4K3/3N4/8/8/8 w",
       "fen": "4k3/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4B3/4K3/3N4/8/8/8",
@@ -432,7 +686,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n14-0-n25",
+          "id": "n16-0-n30",
           "san": "Nc6",
           "from": "d4",
           "to": "c6",
@@ -440,12 +694,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n14-0-n25"
+        "n16-0-n30"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Play Nc6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n15",
+      "id": "n17",
       "key": "5k2/8/4B3/4K3/3N4/8/8/8 w",
       "fen": "5k2/8/4B3/4K3/3N4/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/4B3/4K3/3N4/8/8/8",
@@ -456,7 +711,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K3/3N4/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n15-0-n26",
+          "id": "n17-0-n31",
           "san": "Kf6",
           "from": "e5",
           "to": "f6",
@@ -464,23 +719,204 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n15-0-n26"
+        "n17-0-n31"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd5",
+          "Nb5",
+          "Nc6",
+          "Nf5",
+          "Nf3",
+          "Ne2",
+          "Nc2",
+          "Nb3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n16",
+      "id": "n18",
+      "key": "3k4/8/4B3/4K2N/8/8/8/8 w",
+      "fen": "3k4/8/4B3/4K2N/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B3/4K2N/8/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/4K2N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/4K2N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n18-0-n32",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n18-0-n32"
+      ],
+      "movesToSuccess": 8,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4",
+          "Kd5",
+          "Nf6",
+          "Ng7",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n19",
+      "key": "4k3/8/4B3/4K2N/8/8/8/8 w",
+      "fen": "4k3/8/4B3/4K2N/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B3/4K2N/8/8/8/8",
+      "turn": "w",
+      "x": 3388,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/4K2N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/4K2N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n19-0-n33",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n19-0-n33"
+      ],
+      "movesToSuccess": 6,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4",
+          "Kd5",
+          "Nf6+",
+          "Ng7+",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n20",
+      "key": "5k2/8/4B3/4K2N/8/8/8/8 w",
+      "fen": "5k2/8/4B3/4K2N/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/4B3/4K2N/8/8/8/8",
+      "turn": "w",
+      "x": 4114,
+      "y": 496,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/4K2N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K2N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n20-0-n34",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n20-0-n34"
+      ],
+      "movesToSuccess": 8,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4",
+          "Kd5",
+          "Nf6",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n21",
       "key": "3k4/8/4B3/4K3/5N2/8/8/8 w",
       "fen": "3k4/8/4B3/4K3/5N2/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/4B3/4K3/5N2/8/8/8",
       "turn": "w",
-      "x": 3388,
+      "x": 4356,
       "y": 496,
       "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/4K3/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n16-0-n27",
+          "id": "n21-0-n35",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -488,54 +924,91 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n16-0-n27"
+        "n21-0-n35"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Ke4",
+          "Kd4",
+          "Kd5",
+          "Nd5",
+          "Ng6",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n17",
+      "id": "n22",
       "key": "4k3/8/4B3/4K3/5N2/8/8/8 w",
       "fen": "4k3/8/4B3/4K3/5N2/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4B3/4K3/5N2/8/8/8",
       "turn": "w",
-      "x": 4598,
+      "x": 5324,
       "y": 496,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/4K3/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n17-0-n28",
-          "san": "Ng6",
-          "from": "f4",
-          "to": "g6",
-          "color": "white"
-        },
-        {
-          "id": "n17-tie-0-Kd6",
+          "id": "n22-0-n36",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
+          "color": "white"
+        },
+        {
+          "id": "n22-tie-0-Ng6",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
           "color": "yellow"
         }
       ],
       "outgoingEdgeIds": [
-        "n17-0-n28"
+        "n22-0-n36"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Ng6"
+        ],
+        "kind": "notBest"
+      }
     },
     {
-      "id": "n18",
+      "id": "n23",
       "key": "5k2/8/4B3/4K3/5N2/8/8/8 w",
       "fen": "5k2/8/4B3/4K3/5N2/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/4B3/4K3/5N2/8/8/8",
       "turn": "w",
-      "x": 3630,
+      "x": 4598,
       "y": 496,
       "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/4K3/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n18-0-n29",
+          "id": "n23-0-n37",
           "san": "Kd6",
           "from": "e5",
           "to": "d6",
@@ -543,12 +1016,41 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n18-0-n29"
+        "n23-0-n37"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Ke4",
+          "Kd4",
+          "Kd5",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n19",
+      "id": "n24",
       "key": "4k3/8/2N1BK2/8/8/8/8/8 b",
       "fen": "4k3/8/2N1BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/2N1BK2/8/8/8/8/8",
@@ -559,7 +1061,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n19-0-n30",
+          "id": "n24-0-n38",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -567,11 +1069,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n19-0-n30"
+        "n24-0-n38"
       ]
     },
     {
-      "id": "n20",
+      "id": "n25",
       "key": "5k2/8/2N1BK2/8/8/8/8/8 b",
       "fen": "5k2/8/2N1BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/2N1BK2/8/8/8/8/8",
@@ -582,7 +1084,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n20-0-n31",
+          "id": "n25-0-n39",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -590,11 +1092,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n20-0-n31"
+        "n25-0-n39"
       ]
     },
     {
-      "id": "n21",
+      "id": "n26",
       "key": "3k4/8/3KB3/3N4/8/8/8/8 b",
       "fen": "3k4/8/3KB3/3N4/8/8/8/8 b - - 0 1",
       "boardFen": "3k4/8/3KB3/3N4/8/8/8/8",
@@ -605,7 +1107,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/3N4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n21-0-n32",
+          "id": "n26-0-n40",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -613,11 +1115,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n21-0-n32"
+        "n26-0-n40"
       ]
     },
     {
-      "id": "n22",
+      "id": "n27",
       "key": "4k3/8/3KB3/3N4/8/8/8/8 b",
       "fen": "4k3/8/3KB3/3N4/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/3KB3/3N4/8/8/8/8",
@@ -628,14 +1130,14 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/3N4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n22-1-n34",
+          "id": "n27-1-n42",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n22-0-n33",
+          "id": "n27-0-n41",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -643,37 +1145,30 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n22-1-n34",
-        "n22-0-n33"
+        "n27-1-n42",
+        "n27-0-n41"
       ]
     },
     {
-      "id": "n23",
-      "key": "5k2/8/4B3/4K3/5N2/8/8/8 b",
-      "fen": "5k2/8/4B3/4K3/5N2/8/8/8 b - - 0 1",
-      "boardFen": "5k2/8/4B3/4K3/5N2/8/8/8",
+      "id": "n28",
+      "key": "5k2/8/4B3/3N1K2/8/8/8/8 b",
+      "fen": "5k2/8/4B3/3N1K2/8/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/4B3/3N1K2/8/8/8/8",
       "turn": "b",
-      "x": 1452,
+      "x": 1210,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/4K3/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/4K3/5N2/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4B3/3N1K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/3N1K2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n23-1-n36",
-          "san": "Ke7",
-          "from": "f8",
-          "to": "e7",
-          "color": "black"
-        },
-        {
-          "id": "n23-2-n17",
+          "id": "n28-1-n44",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
           "color": "black"
         },
         {
-          "id": "n23-0-n35",
+          "id": "n28-0-n43",
           "san": "Kg7",
           "from": "f8",
           "to": "g7",
@@ -681,13 +1176,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n23-1-n36",
-        "n23-2-n17",
-        "n23-0-n35"
+        "n28-1-n44",
+        "n28-0-n43"
       ]
     },
     {
-      "id": "n24",
+      "id": "n29",
       "key": "3k4/8/3KB3/8/3N4/8/8/8 b",
       "fen": "3k4/8/3KB3/8/3N4/8/8/8 b - - 0 1",
       "boardFen": "3k4/8/3KB3/8/3N4/8/8/8",
@@ -698,7 +1192,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/3N4/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n24-0-n37",
+          "id": "n29-0-n45",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -706,11 +1200,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n24-0-n37"
+        "n29-0-n45"
       ]
     },
     {
-      "id": "n25",
+      "id": "n30",
       "key": "4k3/8/2N1B3/4K3/8/8/8/8 b",
       "fen": "4k3/8/2N1B3/4K3/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/2N1B3/4K3/8/8/8/8",
@@ -721,7 +1215,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/4K3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n25-0-n9",
+          "id": "n30-0-n11",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -729,11 +1223,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n25-0-n9"
+        "n30-0-n11"
       ]
     },
     {
-      "id": "n26",
+      "id": "n31",
       "key": "5k2/8/4BK2/8/3N4/8/8/8 b",
       "fen": "5k2/8/4BK2/8/3N4/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/4BK2/8/3N4/8/8/8",
@@ -744,7 +1238,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/8/3N4/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n26-0-n38",
+          "id": "n31-0-n46",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -752,22 +1246,22 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n26-0-n38"
+        "n31-0-n46"
       ]
     },
     {
-      "id": "n27",
-      "key": "3k4/8/3KB3/8/5N2/8/8/8 b",
-      "fen": "3k4/8/3KB3/8/5N2/8/8/8 b - - 0 1",
-      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
+      "id": "n32",
+      "key": "3k4/8/3KB3/7N/8/8/8/8 b",
+      "fen": "3k4/8/3KB3/7N/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/7N/8/8/8/8",
       "turn": "b",
-      "x": 3388,
+      "x": 3872,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/7N/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n27-0-n39",
+          "id": "n32-0-n47",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -775,22 +1269,106 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n27-0-n39"
+        "n32-0-n47"
       ]
     },
     {
-      "id": "n28",
-      "key": "4k3/8/4B1N1/4K3/8/8/8/8 b",
-      "fen": "4k3/8/4B1N1/4K3/8/8/8/8 b - - 0 1",
-      "boardFen": "4k3/8/4B1N1/4K3/8/8/8/8",
+      "id": "n33",
+      "key": "4k3/8/3KB3/7N/8/8/8/8 b",
+      "fen": "4k3/8/3KB3/7N/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB3/7N/8/8/8/8",
       "turn": "b",
-      "x": 4598,
+      "x": 3388,
       "y": 710,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/4K3/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/7N/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n28-0-n40",
+          "id": "n33-1-n49",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        },
+        {
+          "id": "n33-0-n48",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n33-1-n49",
+        "n33-0-n48"
+      ]
+    },
+    {
+      "id": "n34",
+      "key": "5k2/8/3KB3/7N/8/8/8/8 b",
+      "fen": "5k2/8/3KB3/7N/8/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/3KB3/7N/8/8/8/8",
+      "turn": "b",
+      "x": 4114,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/7N/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n34-0-n47",
+          "san": "Ke8",
+          "from": "f8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n34-0-n47"
+      ]
+    },
+    {
+      "id": "n35",
+      "key": "3k4/8/3KB3/8/5N2/8/8/8 b",
+      "fen": "3k4/8/3KB3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 4356,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n35-0-n50",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n35-0-n50"
+      ]
+    },
+    {
+      "id": "n36",
+      "key": "4k3/8/3KB3/8/5N2/8/8/8 b",
+      "fen": "4k3/8/3KB3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/3KB3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 5324,
+      "y": 710,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n36-0-n51",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
+          "color": "black"
+        },
+        {
+          "id": "n36-1-n52",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
@@ -798,29 +1376,30 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n28-0-n40"
+        "n36-0-n51",
+        "n36-1-n52"
       ]
     },
     {
-      "id": "n29",
+      "id": "n37",
       "key": "5k2/8/3KB3/8/5N2/8/8/8 b",
       "fen": "5k2/8/3KB3/8/5N2/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/3KB3/8/5N2/8/8/8",
       "turn": "b",
-      "x": 3630,
+      "x": 4598,
       "y": 710,
       "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n29-1-n39",
+          "id": "n37-1-n50",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
           "color": "black"
         },
         {
-          "id": "n29-0-n41",
+          "id": "n37-0-n53",
           "san": "Kg7",
           "from": "f8",
           "to": "g7",
@@ -828,12 +1407,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n29-1-n39",
-        "n29-0-n41"
+        "n37-1-n50",
+        "n37-0-n53"
       ]
     },
     {
-      "id": "n30",
+      "id": "n38",
       "key": "5k2/8/2N1BK2/8/8/8/8/8 w",
       "fen": "5k2/8/2N1BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/2N1BK2/8/8/8/8/8",
@@ -844,14 +1423,14 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1BK2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n30-0-n42",
+          "id": "n38-0-n54",
           "san": "Ne5",
           "from": "c6",
           "to": "e5",
           "color": "white"
         },
         {
-          "id": "n30-tie-0-Nd8",
+          "id": "n38-tie-0-Nd8",
           "san": "Nd8",
           "from": "c6",
           "to": "d8",
@@ -859,13 +1438,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n30-0-n42"
+        "n38-0-n54"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Transfer the knight through e2 so it can return to f4 with the right color and without blocking the king on d6."
+      "moveReason": "Play Ne5 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n31",
+      "id": "n39",
       "key": "4k3/8/2N1BK2/8/8/8/8/8 w",
       "fen": "4k3/8/2N1BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2N1BK2/8/8/8/8/8",
@@ -876,14 +1455,14 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1BK2/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n31-0-n43",
+          "id": "n39-0-n55",
           "san": "Kf5",
           "from": "f6",
           "to": "f5",
           "color": "white"
         },
         {
-          "id": "n31-tie-0-Kg5",
+          "id": "n39-tie-0-Kg5",
           "san": "Kg5",
           "from": "f6",
           "to": "g5",
@@ -891,13 +1470,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n31-0-n43"
+        "n39-0-n55"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Put the knight back on c6, restoring the familiar cage with the king on f6 ready to finish."
+      "moveReason": "Play Kf5 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n32",
+      "id": "n40",
       "key": "4k3/8/3KB3/3N4/8/8/8/8 w",
       "fen": "4k3/8/3KB3/3N4/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/3KB3/3N4/8/8/8/8",
@@ -908,7 +1487,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n32-0-n44",
+          "id": "n40-0-n36",
           "san": "Nf4",
           "from": "d5",
           "to": "f4",
@@ -916,12 +1495,37 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n32-0-n44"
+        "n40-0-n36"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Kc7",
+          "Ke5",
+          "Kc5",
+          "Kc6",
+          "Bd7+",
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Nb6",
+          "Nc7+",
+          "Ne7",
+          "Nf6+",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n33",
+      "id": "n41",
       "key": "5k2/8/3KB3/3N4/8/8/8/8 w",
       "fen": "5k2/8/3KB3/3N4/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/3KB3/3N4/8/8/8/8",
@@ -932,7 +1536,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n33-0-n29",
+          "id": "n41-0-n37",
           "san": "Nf4",
           "from": "d5",
           "to": "f4",
@@ -940,12 +1544,37 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n33-0-n29"
+        "n41-0-n37"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Kc7",
+          "Kd7",
+          "Ke5",
+          "Kc5",
+          "Kc6",
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Nb6",
+          "Nc7",
+          "Ne7",
+          "Nf6",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n34",
+      "id": "n42",
       "key": "3k4/8/3KB3/3N4/8/8/8/8 w",
       "fen": "3k4/8/3KB3/3N4/8/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/3KB3/3N4/8/8/8/8",
@@ -956,7 +1585,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n34-0-n45",
+          "id": "n42-0-n56",
           "san": "Nb6",
           "from": "d5",
           "to": "b6",
@@ -964,60 +1593,106 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n34-0-n45"
+        "n42-0-n56"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Nb6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n35",
-      "key": "8/6k1/4B3/4K3/5N2/8/8/8 w",
-      "fen": "8/6k1/4B3/4K3/5N2/8/8/8 w - - 0 1",
-      "boardFen": "8/6k1/4B3/4K3/5N2/8/8/8",
+      "id": "n43",
+      "key": "8/6k1/4B3/3N1K2/8/8/8/8 w",
+      "fen": "8/6k1/4B3/3N1K2/8/8/8/8 w - - 0 1",
+      "boardFen": "8/6k1/4B3/3N1K2/8/8/8/8",
       "turn": "w",
       "x": 1694,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B3/4K3/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/8/6k1/4B3/3N1K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/3N1K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n35-0-n46",
-          "san": "Kf5",
-          "from": "e5",
-          "to": "f5",
+          "id": "n43-0-n57",
+          "san": "Nf4",
+          "from": "d5",
+          "to": "f4",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n35-0-n46"
+        "n43-0-n57"
       ],
-      "movesToSuccess": 9
+      "movesToSuccess": 9,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Nb6",
+          "Nc7",
+          "Ne7",
+          "Nf6",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4",
+          "Kg5",
+          "Kg4",
+          "Kf4",
+          "Ke4",
+          "Ke5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n36",
-      "key": "8/4k3/4B3/4K3/5N2/8/8/8 w",
-      "fen": "8/4k3/4B3/4K3/5N2/8/8/8 w - - 0 1",
-      "boardFen": "8/4k3/4B3/4K3/5N2/8/8/8",
+      "id": "n44",
+      "key": "4k3/8/4B3/3N1K2/8/8/8/8 w",
+      "fen": "4k3/8/4B3/3N1K2/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4B3/3N1K2/8/8/8/8",
       "turn": "w",
-      "x": 1452,
+      "x": 1210,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B3/4K3/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B3/4K3/5N2/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B3/3N1K2/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B3/3N1K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n36-0-n47",
-          "san": "Ng6+",
-          "from": "f4",
-          "to": "g6",
+          "id": "n44-0-n58",
+          "san": "Kf6",
+          "from": "f5",
+          "to": "f6",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n36-0-n47"
+        "n44-0-n58"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 8,
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Bc8",
+          "Bg8",
+          "Nb6",
+          "Nc7+",
+          "Nf6+",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4",
+          "Kf6",
+          "Kg6",
+          "Kg5",
+          "Kg4",
+          "Kf4",
+          "Ke4",
+          "Ke5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n37",
+      "id": "n45",
       "key": "4k3/8/3KB3/8/3N4/8/8/8 w",
       "fen": "4k3/8/3KB3/8/3N4/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/3KB3/8/3N4/8/8/8",
@@ -1028,7 +1703,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/3N4/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n37-0-n48",
+          "id": "n45-0-n59",
           "san": "Ne2",
           "from": "d4",
           "to": "e2",
@@ -1036,12 +1711,41 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n37-0-n48"
+        "n45-0-n59"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 6,
+      "moveReason": "Play Ne2 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ne2",
+        "expectedSans": [
+          "Kc7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7+",
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nb5",
+          "Nc6",
+          "Nf5",
+          "Nf3",
+          "Ne2",
+          "Nc2",
+          "Nb3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n38",
+      "id": "n46",
       "key": "4k3/8/4BK2/8/3N4/8/8/8 w",
       "fen": "4k3/8/4BK2/8/3N4/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4BK2/8/3N4/8/8/8",
@@ -1052,7 +1756,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/8/3N4/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n38-0-n19",
+          "id": "n46-0-n24",
           "san": "Nc6",
           "from": "d4",
           "to": "c6",
@@ -1060,23 +1764,168 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n38-0-n19"
+        "n46-0-n24"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Play Nc6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n39",
+      "id": "n47",
+      "key": "4k3/8/3KB3/7N/8/8/8/8 w",
+      "fen": "4k3/8/3KB3/7N/8/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/3KB3/7N/8/8/8/8",
+      "turn": "w",
+      "x": 3872,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/7N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n47-0-n36",
+          "san": "Nf4",
+          "from": "h5",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n47-0-n36"
+      ],
+      "movesToSuccess": 7,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Kc7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7+",
+          "Bc8",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nf6+",
+          "Ng7+",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n48",
+      "key": "5k2/8/3KB3/7N/8/8/8/8 w",
+      "fen": "5k2/8/3KB3/7N/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/3KB3/7N/8/8/8/8",
+      "turn": "w",
+      "x": 3630,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/7N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n48-0-n37",
+          "san": "Nf4",
+          "from": "h5",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n48-0-n37"
+      ],
+      "movesToSuccess": 5,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Kc7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nf6",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n49",
+      "key": "3k4/8/3KB3/7N/8/8/8/8 w",
+      "fen": "3k4/8/3KB3/7N/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB3/7N/8/8/8/8",
+      "turn": "w",
+      "x": 3388,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/7N/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/7N/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n49-0-n35",
+          "san": "Nf4",
+          "from": "h5",
+          "to": "f4",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n49-0-n35"
+      ],
+      "movesToSuccess": 4,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Ng3",
+          "Nf4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n50",
       "key": "4k3/8/3KB3/8/5N2/8/8/8 w",
       "fen": "4k3/8/3KB3/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/3KB3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 3388,
+      "x": 4356,
       "y": 992,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n39-0-n49",
+          "id": "n50-0-n60",
           "san": "Ng6",
           "from": "f4",
           "to": "g6",
@@ -1084,47 +1933,102 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n39-0-n49"
+        "n50-0-n60"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Play Ng6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n40",
-      "key": "3k4/8/4B1N1/4K3/8/8/8/8 w",
-      "fen": "3k4/8/4B1N1/4K3/8/8/8/8 w - - 0 1",
-      "boardFen": "3k4/8/4B1N1/4K3/8/8/8/8",
+      "id": "n51",
+      "key": "5k2/8/3KB3/8/5N2/8/8/8 w",
+      "fen": "5k2/8/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/3KB3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 4598,
+      "x": 5324,
       "y": 992,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B1N1/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B1N1/4K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n40-0-n50",
-          "san": "Kd6",
-          "from": "e5",
-          "to": "d6",
+          "id": "n51-0-n61",
+          "san": "Kd7",
+          "from": "d6",
+          "to": "d7",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n40-0-n50"
+        "n51-0-n61"
       ],
-      "movesToSuccess": 6
+      "movesToSuccess": 5,
+      "moveReason": "Play Kd7 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd7",
+        "expectedSans": [
+          "Kc7",
+          "Kd7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n41",
+      "id": "n52",
+      "key": "3k4/8/3KB3/8/5N2/8/8/8 w",
+      "fen": "3k4/8/3KB3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 5566,
+      "y": 992,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n52-0-n62",
+          "san": "Ng6",
+          "from": "f4",
+          "to": "g6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n52-0-n62"
+      ],
+      "movesToSuccess": 6,
+      "moveReason": "Play Ng6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
+    },
+    {
+      "id": "n53",
       "key": "8/6k1/3KB3/8/5N2/8/8/8 w",
       "fen": "8/6k1/3KB3/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/6k1/3KB3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 3630,
+      "x": 4598,
       "y": 992,
       "imageUrl": "http://www.fen-to-image.com/image/8/6k1/3KB3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/6k1/3KB3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n41-0-n51",
+          "id": "n53-0-n63",
           "san": "Ke7",
           "from": "d6",
           "to": "e7",
@@ -1132,13 +2036,41 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n41-0-n51"
+        "n53-0-n63"
       ],
       "movesToSuccess": 4,
-      "moveReason": "This is the direct handoff: the knight reaches f7, side-adjacent to both kings and matching the bishop's square color."
+      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ke7",
+        "expectedSans": [
+          "Kc7",
+          "Kd7",
+          "Ke7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Nh5+",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n42",
+      "id": "n54",
       "key": "5k2/8/4BK2/4N3/8/8/8/8 b",
       "fen": "5k2/8/4BK2/4N3/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/4BK2/4N3/8/8/8/8",
@@ -1149,7 +2081,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/4N3/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n42-0-n52",
+          "id": "n54-0-n64",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -1157,11 +2089,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n42-0-n52"
+        "n54-0-n64"
       ]
     },
     {
-      "id": "n43",
+      "id": "n55",
       "key": "4k3/8/2N1B3/5K2/8/8/8/8 b",
       "fen": "4k3/8/2N1B3/5K2/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/2N1B3/5K2/8/8/8/8",
@@ -1172,7 +2104,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B3/5K2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n43-0-n53",
+          "id": "n55-0-n65",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -1180,42 +2112,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n43-0-n53"
+        "n55-0-n65"
       ]
     },
     {
-      "id": "n44",
-      "key": "4k3/8/3KB3/8/5N2/8/8/8 b",
-      "fen": "4k3/8/3KB3/8/5N2/8/8/8 b - - 0 1",
-      "boardFen": "4k3/8/3KB3/8/5N2/8/8/8",
-      "turn": "b",
-      "x": 968,
-      "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/5N2/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n44-0-n54",
-          "san": "Kf8",
-          "from": "e8",
-          "to": "f8",
-          "color": "black"
-        },
-        {
-          "id": "n44-1-n55",
-          "san": "Kd8",
-          "from": "e8",
-          "to": "d8",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n44-0-n54",
-        "n44-1-n55"
-      ]
-    },
-    {
-      "id": "n45",
+      "id": "n56",
       "key": "3k4/8/1N1KB3/8/8/8/8/8 b",
       "fen": "3k4/8/1N1KB3/8/8/8/8/8 b - - 0 1",
       "boardFen": "3k4/8/1N1KB3/8/8/8/8/8",
@@ -1226,7 +2127,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/1N1KB3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n45-0-n56",
+          "id": "n56-0-n66",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -1234,11 +2135,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n45-0-n56"
+        "n56-0-n66"
       ]
     },
     {
-      "id": "n46",
+      "id": "n57",
       "key": "8/6k1/4B3/5K2/5N2/8/8/8 b",
       "fen": "8/6k1/4B3/5K2/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/6k1/4B3/5K2/5N2/8/8/8",
@@ -1249,28 +2150,28 @@
       "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/5K2/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n46-3-n60",
+          "id": "n57-3-n70",
           "san": "Kh6",
           "from": "g7",
           "to": "h6",
           "color": "black"
         },
         {
-          "id": "n46-1-n58",
+          "id": "n57-1-n68",
           "san": "Kh8",
           "from": "g7",
           "to": "h8",
           "color": "black"
         },
         {
-          "id": "n46-2-n59",
+          "id": "n57-2-n69",
           "san": "Kh7",
           "from": "g7",
           "to": "h7",
           "color": "black"
         },
         {
-          "id": "n46-0-n57",
+          "id": "n57-0-n67",
           "san": "Kf8",
           "from": "g7",
           "to": "f8",
@@ -1278,45 +2179,45 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n46-3-n60",
-        "n46-1-n58",
-        "n46-2-n59",
-        "n46-0-n57"
+        "n57-3-n70",
+        "n57-1-n68",
+        "n57-2-n69",
+        "n57-0-n67"
       ]
     },
     {
-      "id": "n47",
-      "key": "8/4k3/4B1N1/4K3/8/8/8/8 b",
-      "fen": "8/4k3/4B1N1/4K3/8/8/8/8 b - - 0 1",
-      "boardFen": "8/4k3/4B1N1/4K3/8/8/8/8",
+      "id": "n58",
+      "key": "4k3/8/4BK2/3N4/8/8/8/8 b",
+      "fen": "4k3/8/4BK2/3N4/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/4BK2/3N4/8/8/8/8",
       "turn": "b",
-      "x": 1452,
+      "x": 1210,
       "y": 1206,
-      "imageUrl": "http://www.fen-to-image.com/image/8/4k3/4B1N1/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/4k3/4B1N1/4K3/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4BK2/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/3N4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n47-1-n61",
-          "san": "Ke8",
-          "from": "e7",
-          "to": "e8",
+          "id": "n58-0-n71",
+          "san": "Kf8",
+          "from": "e8",
+          "to": "f8",
           "color": "black"
         },
         {
-          "id": "n47-0-n40",
+          "id": "n58-1-n72",
           "san": "Kd8",
-          "from": "e7",
+          "from": "e8",
           "to": "d8",
           "color": "black"
         }
       ],
       "outgoingEdgeIds": [
-        "n47-1-n61",
-        "n47-0-n40"
+        "n58-0-n71",
+        "n58-1-n72"
       ]
     },
     {
-      "id": "n48",
+      "id": "n59",
       "key": "4k3/8/3KB3/8/8/8/4N3/8 b",
       "fen": "4k3/8/3KB3/8/8/8/4N3/8 b - - 0 1",
       "boardFen": "4k3/8/3KB3/8/8/8/4N3/8",
@@ -1327,14 +2228,14 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/8/8/8/4N3/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n48-1-n63",
+          "id": "n59-1-n74",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
           "color": "black"
         },
         {
-          "id": "n48-0-n62",
+          "id": "n59-0-n73",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -1342,23 +2243,23 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n48-1-n63",
-        "n48-0-n62"
+        "n59-1-n74",
+        "n59-0-n73"
       ]
     },
     {
-      "id": "n49",
+      "id": "n60",
       "key": "4k3/8/3KB1N1/8/8/8/8/8 b",
       "fen": "4k3/8/3KB1N1/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/3KB1N1/8/8/8/8/8",
       "turn": "b",
-      "x": 3388,
+      "x": 4356,
       "y": 1206,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB1N1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n49-0-n64",
+          "id": "n60-0-n75",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
@@ -1366,22 +2267,45 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n49-0-n64"
+        "n60-0-n75"
       ]
     },
     {
-      "id": "n50",
+      "id": "n61",
+      "key": "5k2/3K4/4B3/8/5N2/8/8/8 b",
+      "fen": "5k2/3K4/4B3/8/5N2/8/8/8 b - - 0 1",
+      "boardFen": "5k2/3K4/4B3/8/5N2/8/8/8",
+      "turn": "b",
+      "x": 5324,
+      "y": 1206,
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/3K4/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/3K4/4B3/8/5N2/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n61-0-n76",
+          "san": "Kg7",
+          "from": "f8",
+          "to": "g7",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n61-0-n76"
+      ]
+    },
+    {
+      "id": "n62",
       "key": "3k4/8/3KB1N1/8/8/8/8/8 b",
       "fen": "3k4/8/3KB1N1/8/8/8/8/8 b - - 0 1",
       "boardFen": "3k4/8/3KB1N1/8/8/8/8/8",
       "turn": "b",
-      "x": 4598,
+      "x": 5566,
       "y": 1206,
       "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB1N1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n50-0-n65",
+          "id": "n62-0-n77",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -1389,36 +2313,36 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n50-0-n65"
+        "n62-0-n77"
       ]
     },
     {
-      "id": "n51",
+      "id": "n63",
       "key": "8/4K1k1/4B3/8/5N2/8/8/8 b",
       "fen": "8/4K1k1/4B3/8/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/4K1k1/4B3/8/5N2/8/8/8",
       "turn": "b",
-      "x": 3630,
+      "x": 4598,
       "y": 1206,
       "imageUrl": "http://www.fen-to-image.com/image/8/4K1k1/4B3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4K1k1/4B3/8/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n51-2-n68",
+          "id": "n63-2-n80",
           "san": "Kh6",
           "from": "g7",
           "to": "h6",
           "color": "black"
         },
         {
-          "id": "n51-0-n66",
+          "id": "n63-0-n78",
           "san": "Kh8",
           "from": "g7",
           "to": "h8",
           "color": "black"
         },
         {
-          "id": "n51-1-n67",
+          "id": "n63-1-n79",
           "san": "Kh7",
           "from": "g7",
           "to": "h7",
@@ -1426,13 +2350,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n51-2-n68",
-        "n51-0-n66",
-        "n51-1-n67"
+        "n63-2-n80",
+        "n63-0-n78",
+        "n63-1-n79"
       ]
     },
     {
-      "id": "n52",
+      "id": "n64",
       "key": "4k3/8/4BK2/4N3/8/8/8/8 w",
       "fen": "4k3/8/4BK2/4N3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4BK2/4N3/8/8/8/8",
@@ -1443,7 +2367,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n52-0-n69",
+          "id": "n64-0-n81",
           "san": "Nf7",
           "from": "e5",
           "to": "f7",
@@ -1451,13 +2375,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n52-0-n69"
+        "n64-0-n81"
       ],
       "movesToSuccess": 1,
-      "moveReason": "Bring the king to d6 so the advanced knight on g6 has support and Black cannot escape through e7."
+      "moveReason": "Play Nf7 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n53",
+      "id": "n65",
       "key": "5k2/8/2N1B3/5K2/8/8/8/8 w",
       "fen": "5k2/8/2N1B3/5K2/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/2N1B3/5K2/8/8/8/8",
@@ -1468,7 +2392,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B3/5K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n53-0-n70",
+          "id": "n65-0-n82",
           "san": "Kg6",
           "from": "f5",
           "to": "g6",
@@ -1476,63 +2400,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n53-0-n70"
+        "n65-0-n82"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Take d6 to hold the center; with the knight already on g6, White only needs to convert the edge cage."
+      "moveReason": "Play Kg6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n54",
-      "key": "5k2/8/3KB3/8/5N2/8/8/8 w",
-      "fen": "5k2/8/3KB3/8/5N2/8/8/8 w - - 0 1",
-      "boardFen": "5k2/8/3KB3/8/5N2/8/8/8",
-      "turn": "w",
-      "x": 968,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/3KB3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n54-0-n71",
-          "san": "Kd7",
-          "from": "d6",
-          "to": "d7",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n54-0-n71"
-      ],
-      "movesToSuccess": 5,
-      "moveReason": "Bring the knight back to f4, restoring the working color and setting up the final g6 or e2 route."
-    },
-    {
-      "id": "n55",
-      "key": "3k4/8/3KB3/8/5N2/8/8/8 w",
-      "fen": "3k4/8/3KB3/8/5N2/8/8/8 w - - 0 1",
-      "boardFen": "3k4/8/3KB3/8/5N2/8/8/8",
-      "turn": "w",
-      "x": 1210,
-      "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/5N2/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n55-0-n50",
-          "san": "Ng6",
-          "from": "f4",
-          "to": "g6",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n55-0-n50"
-      ],
-      "movesToSuccess": 6,
-      "moveReason": "Use f4 as the knight's transfer square; it keeps Black boxed while avoiding a premature wrong-color finish."
-    },
-    {
-      "id": "n56",
+      "id": "n66",
       "key": "4k3/8/1N1KB3/8/8/8/8/8 w",
       "fen": "4k3/8/1N1KB3/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/1N1KB3/8/8/8/8/8",
@@ -1543,7 +2417,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/1N1KB3/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n56-0-n72",
+          "id": "n66-0-n83",
           "san": "Nd7",
           "from": "b6",
           "to": "d7",
@@ -1551,12 +2425,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n56-0-n72"
+        "n66-0-n83"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Play Nd7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
-      "id": "n57",
+      "id": "n67",
       "key": "5k2/8/4B3/5K2/5N2/8/8/8 w",
       "fen": "5k2/8/4B3/5K2/5N2/8/8/8 w - - 0 1",
       "boardFen": "5k2/8/4B3/5K2/5N2/8/8/8",
@@ -1567,7 +2442,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n57-0-n73",
+          "id": "n67-0-n84",
           "san": "Ng6+",
           "from": "f4",
           "to": "g6",
@@ -1575,12 +2450,38 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n57-0-n73"
+        "n67-0-n84"
       ],
-      "movesToSuccess": 8
+      "movesToSuccess": 8,
+      "moveReason": "Play Ng6+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ng6+",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf6",
+          "Kg6",
+          "Kg5",
+          "Kg4",
+          "Ke4",
+          "Ke5",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n58",
+      "id": "n68",
       "key": "7k/8/4B3/5K2/5N2/8/8/8 w",
       "fen": "7k/8/4B3/5K2/5N2/8/8/8 w - - 0 1",
       "boardFen": "7k/8/4B3/5K2/5N2/8/8/8",
@@ -1591,7 +2492,7 @@
       "playUrl": "/endgames/knightAndBishop#w//7k/8/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n58-0-n74",
+          "id": "n68-0-n85",
           "san": "Kf6",
           "from": "f5",
           "to": "f6",
@@ -1599,12 +2500,38 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n58-0-n74"
+        "n68-0-n85"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf6",
+          "Kg5",
+          "Kg4",
+          "Ke4",
+          "Ke5",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n59",
+      "id": "n69",
       "key": "8/7k/4B3/5K2/5N2/8/8/8 w",
       "fen": "8/7k/4B3/5K2/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/7k/4B3/5K2/5N2/8/8/8",
@@ -1615,7 +2542,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/7k/4B3/5K2/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n59-0-n75",
+          "id": "n69-0-n86",
           "san": "Kg5",
           "from": "f5",
           "to": "g5",
@@ -1623,12 +2550,38 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n59-0-n75"
+        "n69-0-n86"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Play Kg5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kg5",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf6",
+          "Kg5",
+          "Kg4",
+          "Ke4",
+          "Ke5",
+          "Nd5",
+          "Ng6",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n60",
+      "id": "n70",
       "key": "8/8/4B2k/5K2/5N2/8/8/8 w",
       "fen": "8/8/4B2k/5K2/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/8/4B2k/5K2/5N2/8/8/8",
@@ -1639,7 +2592,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/8/4B2k/5K2/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n60-0-n76",
+          "id": "n70-0-n87",
           "san": "Kf6",
           "from": "f5",
           "to": "f6",
@@ -1647,36 +2600,106 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n60-0-n76"
+        "n70-0-n87"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kf6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n61",
-      "key": "4k3/8/4B1N1/4K3/8/8/8/8 w",
-      "fen": "4k3/8/4B1N1/4K3/8/8/8/8 w - - 0 1",
-      "boardFen": "4k3/8/4B1N1/4K3/8/8/8/8",
+      "id": "n71",
+      "key": "5k2/8/4BK2/3N4/8/8/8/8 w",
+      "fen": "5k2/8/4BK2/3N4/8/8/8/8 w - - 0 1",
+      "boardFen": "5k2/8/4BK2/3N4/8/8/8/8",
       "turn": "w",
-      "x": 1452,
+      "x": 1210,
       "y": 1488,
-      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/4K3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/4K3/8/8/8/8_w_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4BK2/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/3N4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n61-0-n49",
-          "san": "Kd6",
-          "from": "e5",
-          "to": "d6",
+          "id": "n71-0-n88",
+          "san": "Nb4",
+          "from": "d5",
+          "to": "b4",
           "color": "white"
         }
       ],
       "outgoingEdgeIds": [
-        "n61-0-n49"
+        "n71-0-n88"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 4,
+      "moveReason": "Play Nb4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nb4",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Kg6",
+          "Kg5",
+          "Kf5",
+          "Ke5",
+          "Nb6",
+          "Ne7",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n62",
+      "id": "n72",
+      "key": "3k4/8/4BK2/3N4/8/8/8/8 w",
+      "fen": "3k4/8/4BK2/3N4/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4BK2/3N4/8/8/8/8",
+      "turn": "w",
+      "x": 1452,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4BK2/3N4/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4BK2/3N4/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n72-0-n89",
+          "san": "Ke5",
+          "from": "f6",
+          "to": "e5",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n72-0-n89"
+      ],
+      "movesToSuccess": 7,
+      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ke5",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Kg7",
+          "Kg6",
+          "Kg5",
+          "Kf5",
+          "Ke5",
+          "Nb6",
+          "Ne7",
+          "Nf4",
+          "Ne3",
+          "Nc3",
+          "Nb4"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n73",
       "key": "5k2/8/3KB3/8/8/8/4N3/8 w",
       "fen": "5k2/8/3KB3/8/8/8/4N3/8 w - - 0 1",
       "boardFen": "5k2/8/3KB3/8/8/8/4N3/8",
@@ -1687,7 +2710,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/3KB3/8/8/8/4N3/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n62-0-n29",
+          "id": "n73-0-n37",
           "san": "Nf4",
           "from": "e2",
           "to": "f4",
@@ -1695,12 +2718,40 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n62-0-n29"
+        "n73-0-n37"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Kc7",
+          "Kd7",
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nc3",
+          "Nd4",
+          "Nf4",
+          "Ng3",
+          "Ng1",
+          "Nc1"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n63",
+      "id": "n74",
       "key": "3k4/8/3KB3/8/8/8/4N3/8 w",
       "fen": "3k4/8/3KB3/8/8/8/4N3/8 w - - 0 1",
       "boardFen": "3k4/8/3KB3/8/8/8/4N3/8",
@@ -1711,7 +2762,7 @@
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/8/8/8/4N3/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n63-0-n27",
+          "id": "n74-0-n35",
           "san": "Nf4",
           "from": "e2",
           "to": "f4",
@@ -1719,30 +2770,56 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n63-0-n27"
+        "n74-0-n35"
       ],
-      "movesToSuccess": 4
+      "movesToSuccess": 4,
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Ke5",
+          "Kd5",
+          "Kc5",
+          "Kc6",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nc3",
+          "Nd4",
+          "Nf4",
+          "Ng3",
+          "Ng1",
+          "Nc1"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n64",
+      "id": "n75",
       "key": "3k4/8/3KB1N1/8/8/8/8/8 w",
       "fen": "3k4/8/3KB1N1/8/8/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/3KB1N1/8/8/8/8/8",
       "turn": "w",
-      "x": 3388,
+      "x": 4356,
       "y": 1488,
       "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB1N1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n64-0-n77",
+          "id": "n75-0-n90",
           "san": "Ne5",
           "from": "g6",
           "to": "e5",
           "color": "white"
         },
         {
-          "id": "n64-tie-0-Nf8",
+          "id": "n75-tie-0-Nf8",
           "san": "Nf8",
           "from": "g6",
           "to": "f8",
@@ -1750,30 +2827,82 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n64-0-n77"
+        "n75-0-n90"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Ne5 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n65",
+      "id": "n76",
+      "key": "8/3K2k1/4B3/8/5N2/8/8/8 w",
+      "fen": "8/3K2k1/4B3/8/5N2/8/8/8 w - - 0 1",
+      "boardFen": "8/3K2k1/4B3/8/5N2/8/8/8",
+      "turn": "w",
+      "x": 5324,
+      "y": 1488,
+      "imageUrl": "http://www.fen-to-image.com/image/8/3K2k1/4B3/8/5N2/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//8/3K2k1/4B3/8/5N2/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n76-0-n63",
+          "san": "Ke7",
+          "from": "d7",
+          "to": "e7",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n76-0-n63"
+      ],
+      "movesToSuccess": 4,
+      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ke7",
+        "expectedSans": [
+          "Kc8",
+          "Kd8",
+          "Ke8",
+          "Ke7",
+          "Kd6",
+          "Kc6",
+          "Kc7",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Nh5+",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
+    },
+    {
+      "id": "n77",
       "key": "4k3/8/3KB1N1/8/8/8/8/8 w",
       "fen": "4k3/8/3KB1N1/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/3KB1N1/8/8/8/8/8",
       "turn": "w",
-      "x": 4598,
+      "x": 5566,
       "y": 1488,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB1N1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n65-0-n78",
+          "id": "n77-0-n91",
           "san": "Kd5",
           "from": "d6",
           "to": "d5",
           "color": "white"
         },
         {
-          "id": "n65-tie-0-Kc5",
+          "id": "n77-tie-0-Kc5",
           "san": "Kc5",
           "from": "d6",
           "to": "c5",
@@ -1781,23 +2910,24 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n65-0-n78"
+        "n77-0-n91"
       ],
-      "movesToSuccess": 5
+      "movesToSuccess": 5,
+      "moveReason": "Play Kd5 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n66",
+      "id": "n78",
       "key": "7k/4K3/4B3/8/5N2/8/8/8 w",
       "fen": "7k/4K3/4B3/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "7k/4K3/4B3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 3872,
+      "x": 4840,
       "y": 1488,
       "imageUrl": "http://www.fen-to-image.com/image/7k/4K3/4B3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//7k/4K3/4B3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n66-0-n74",
+          "id": "n78-0-n85",
           "san": "Kf6",
           "from": "e7",
           "to": "f6",
@@ -1805,23 +2935,54 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n66-0-n74"
+        "n78-0-n85"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Kd8",
+          "Ke8",
+          "Kf8",
+          "Kf7",
+          "Kf6",
+          "Kd6",
+          "Kd7",
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n67",
+      "id": "n79",
       "key": "8/4K2k/4B3/8/5N2/8/8/8 w",
       "fen": "8/4K2k/4B3/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/4K2k/4B3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 4114,
+      "x": 5082,
       "y": 1488,
       "imageUrl": "http://www.fen-to-image.com/image/8/4K2k/4B3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4K2k/4B3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n67-0-n79",
+          "id": "n79-0-n92",
           "san": "Kf7",
           "from": "e7",
           "to": "f7",
@@ -1829,23 +2990,53 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n67-0-n79"
+        "n79-0-n92"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Play Kf7 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf7",
+        "expectedSans": [
+          "Kd8",
+          "Ke8",
+          "Kf8",
+          "Kf7",
+          "Kf6",
+          "Kd6",
+          "Kd7",
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bf5+",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n68",
+      "id": "n80",
       "key": "8/4K3/4B2k/8/5N2/8/8/8 w",
       "fen": "8/4K3/4B2k/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/4K3/4B2k/8/5N2/8/8/8",
       "turn": "w",
-      "x": 3630,
+      "x": 4598,
       "y": 1488,
       "imageUrl": "http://www.fen-to-image.com/image/8/4K3/4B2k/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/4K3/4B2k/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n68-0-n76",
+          "id": "n80-0-n87",
           "san": "Kf6",
           "from": "e7",
           "to": "f6",
@@ -1853,12 +3044,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n68-0-n76"
+        "n80-0-n87"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kf6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n69",
+      "id": "n81",
       "key": "4k3/5N2/4BK2/8/8/8/8/8 b",
       "fen": "4k3/5N2/4BK2/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/5N2/4BK2/8/8/8/8/8",
@@ -1869,7 +3061,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/5N2/4BK2/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n69-0-n80",
+          "id": "n81-0-n93",
           "san": "Kf8",
           "from": "e8",
           "to": "f8",
@@ -1877,11 +3069,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n69-0-n80"
+        "n81-0-n93"
       ]
     },
     {
-      "id": "n70",
+      "id": "n82",
       "key": "5k2/8/2N1B1K1/8/8/8/8/8 b",
       "fen": "5k2/8/2N1B1K1/8/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/2N1B1K1/8/8/8/8/8",
@@ -1892,7 +3084,7 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/2N1B1K1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n70-0-n81",
+          "id": "n82-0-n94",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -1900,34 +3092,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n70-0-n81"
+        "n82-0-n94"
       ]
     },
     {
-      "id": "n71",
-      "key": "5k2/3K4/4B3/8/5N2/8/8/8 b",
-      "fen": "5k2/3K4/4B3/8/5N2/8/8/8 b - - 0 1",
-      "boardFen": "5k2/3K4/4B3/8/5N2/8/8/8",
-      "turn": "b",
-      "x": 968,
-      "y": 1702,
-      "imageUrl": "http://www.fen-to-image.com/image/5k2/3K4/4B3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//5k2/3K4/4B3/8/5N2/8/8/8_b_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n71-0-n82",
-          "san": "Kg7",
-          "from": "f8",
-          "to": "g7",
-          "color": "black"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n71-0-n82"
-      ]
-    },
-    {
-      "id": "n72",
+      "id": "n83",
       "key": "4k3/3N4/3KB3/8/8/8/8/8 b",
       "fen": "4k3/3N4/3KB3/8/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/3N4/3KB3/8/8/8/8/8",
@@ -1938,7 +3107,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/3N4/3KB3/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n72-0-n83",
+          "id": "n83-0-n95",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
@@ -1946,11 +3115,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n72-0-n83"
+        "n83-0-n95"
       ]
     },
     {
-      "id": "n73",
+      "id": "n84",
       "key": "5k2/8/4B1N1/5K2/8/8/8/8 b",
       "fen": "5k2/8/4B1N1/5K2/8/8/8/8 b - - 0 1",
       "boardFen": "5k2/8/4B1N1/5K2/8/8/8/8",
@@ -1961,14 +3130,14 @@
       "playUrl": "/endgames/knightAndBishop#w//5k2/8/4B1N1/5K2/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n73-0-n84",
+          "id": "n84-0-n96",
           "san": "Kg7",
           "from": "f8",
           "to": "g7",
           "color": "black"
         },
         {
-          "id": "n73-1-n85",
+          "id": "n84-1-n97",
           "san": "Ke8",
           "from": "f8",
           "to": "e8",
@@ -1976,12 +3145,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n73-0-n84",
-        "n73-1-n85"
+        "n84-0-n96",
+        "n84-1-n97"
       ]
     },
     {
-      "id": "n74",
+      "id": "n85",
       "key": "7k/8/4BK2/8/5N2/8/8/8 b",
       "fen": "7k/8/4BK2/8/5N2/8/8/8 b - - 0 1",
       "boardFen": "7k/8/4BK2/8/5N2/8/8/8",
@@ -1992,7 +3161,7 @@
       "playUrl": "/endgames/knightAndBishop#w//7k/8/4BK2/8/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n74-0-n86",
+          "id": "n85-0-n98",
           "san": "Kh7",
           "from": "h8",
           "to": "h7",
@@ -2000,11 +3169,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n74-0-n86"
+        "n85-0-n98"
       ]
     },
     {
-      "id": "n75",
+      "id": "n86",
       "key": "8/7k/4B3/6K1/5N2/8/8/8 b",
       "fen": "8/7k/4B3/6K1/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/7k/4B3/6K1/5N2/8/8/8",
@@ -2015,14 +3184,14 @@
       "playUrl": "/endgames/knightAndBishop#w//8/7k/4B3/6K1/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n75-1-n88",
+          "id": "n86-1-n100",
           "san": "Kg7",
           "from": "h7",
           "to": "g7",
           "color": "black"
         },
         {
-          "id": "n75-0-n87",
+          "id": "n86-0-n99",
           "san": "Kh8",
           "from": "h7",
           "to": "h8",
@@ -2030,12 +3199,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n75-1-n88",
-        "n75-0-n87"
+        "n86-1-n100",
+        "n86-0-n99"
       ]
     },
     {
-      "id": "n76",
+      "id": "n87",
       "key": "8/8/4BK1k/8/5N2/8/8/8 b",
       "fen": "8/8/4BK1k/8/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/8/4BK1k/8/5N2/8/8/8",
@@ -2046,7 +3215,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/8/4BK1k/8/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n76-0-n86",
+          "id": "n87-0-n98",
           "san": "Kh7",
           "from": "h6",
           "to": "h7",
@@ -2054,22 +3223,45 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n76-0-n86"
+        "n87-0-n98"
       ]
     },
     {
-      "id": "n77",
-      "key": "3k4/8/3KB3/4N3/8/8/8/8 b",
-      "fen": "3k4/8/3KB3/4N3/8/8/8/8 b - - 0 1",
-      "boardFen": "3k4/8/3KB3/4N3/8/8/8/8",
+      "id": "n88",
+      "key": "5k2/8/4BK2/8/1N6/8/8/8 b",
+      "fen": "5k2/8/4BK2/8/1N6/8/8/8 b - - 0 1",
+      "boardFen": "5k2/8/4BK2/8/1N6/8/8/8",
       "turn": "b",
-      "x": 3388,
+      "x": 1210,
       "y": 1702,
-      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/4N3/8/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/4N3/8/8/8/8_b_-_-_0_1",
+      "imageUrl": "http://www.fen-to-image.com/image/5k2/8/4BK2/8/1N6/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//5k2/8/4BK2/8/1N6/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n77-0-n89",
+          "id": "n88-0-n101",
+          "san": "Ke8",
+          "from": "f8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n88-0-n101"
+      ]
+    },
+    {
+      "id": "n89",
+      "key": "3k4/8/4B3/3NK3/8/8/8/8 b",
+      "fen": "3k4/8/4B3/3NK3/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/4B3/3NK3/8/8/8/8",
+      "turn": "b",
+      "x": 1452,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B3/3NK3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B3/3NK3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n89-0-n13",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -2077,22 +3269,45 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n77-0-n89"
+        "n89-0-n13"
       ]
     },
     {
-      "id": "n78",
+      "id": "n90",
+      "key": "3k4/8/3KB3/4N3/8/8/8/8 b",
+      "fen": "3k4/8/3KB3/4N3/8/8/8/8 b - - 0 1",
+      "boardFen": "3k4/8/3KB3/4N3/8/8/8/8",
+      "turn": "b",
+      "x": 4356,
+      "y": 1702,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/3KB3/4N3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/3KB3/4N3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n90-0-n102",
+          "san": "Ke8",
+          "from": "d8",
+          "to": "e8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n90-0-n102"
+      ]
+    },
+    {
+      "id": "n91",
       "key": "4k3/8/4B1N1/3K4/8/8/8/8 b",
       "fen": "4k3/8/4B1N1/3K4/8/8/8/8 b - - 0 1",
       "boardFen": "4k3/8/4B1N1/3K4/8/8/8/8",
       "turn": "b",
-      "x": 4598,
+      "x": 5566,
       "y": 1702,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/3K4/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/3K4/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n78-0-n90",
+          "id": "n91-0-n103",
           "san": "Kd8",
           "from": "e8",
           "to": "d8",
@@ -2100,29 +3315,29 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n78-0-n90"
+        "n91-0-n103"
       ]
     },
     {
-      "id": "n79",
+      "id": "n92",
       "key": "8/5K1k/4B3/8/5N2/8/8/8 b",
       "fen": "8/5K1k/4B3/8/5N2/8/8/8 b - - 0 1",
       "boardFen": "8/5K1k/4B3/8/5N2/8/8/8",
       "turn": "b",
-      "x": 4114,
+      "x": 5082,
       "y": 1702,
       "imageUrl": "http://www.fen-to-image.com/image/8/5K1k/4B3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/5K1k/4B3/8/5N2/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n79-1-n92",
+          "id": "n92-1-n105",
           "san": "Kh6",
           "from": "h7",
           "to": "h6",
           "color": "black"
         },
         {
-          "id": "n79-0-n91",
+          "id": "n92-0-n104",
           "san": "Kh8",
           "from": "h7",
           "to": "h8",
@@ -2130,12 +3345,12 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n79-1-n92",
-        "n79-0-n91"
+        "n92-1-n105",
+        "n92-0-n104"
       ]
     },
     {
-      "id": "n80",
+      "id": "n93",
       "key": "5k2/5N2/4BK2/8/8/8/8/8 w",
       "fen": "5k2/5N2/4BK2/8/8/8/8/8 w - - 0 1",
       "boardFen": "5k2/5N2/4BK2/8/8/8/8/8",
@@ -2151,7 +3366,7 @@
       "movesToSuccess": 0
     },
     {
-      "id": "n81",
+      "id": "n94",
       "key": "4k3/8/2N1B1K1/8/8/8/8/8 w",
       "fen": "4k3/8/2N1B1K1/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2N1B1K1/8/8/8/8/8",
@@ -2162,7 +3377,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2N1B1K1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n81-0-n19",
+          "id": "n94-0-n24",
           "san": "Kf6",
           "from": "g6",
           "to": "f6",
@@ -2170,37 +3385,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n81-0-n19"
+        "n94-0-n24"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Move the knight to g6, tightening the cage before the king finishes the opposition pattern."
+      "moveReason": "Play Kf6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n82",
-      "key": "8/3K2k1/4B3/8/5N2/8/8/8 w",
-      "fen": "8/3K2k1/4B3/8/5N2/8/8/8 w - - 0 1",
-      "boardFen": "8/3K2k1/4B3/8/5N2/8/8/8",
-      "turn": "w",
-      "x": 968,
-      "y": 1984,
-      "imageUrl": "http://www.fen-to-image.com/image/8/3K2k1/4B3/8/5N2/8/8/8",
-      "playUrl": "/endgames/knightAndBishop#w//8/3K2k1/4B3/8/5N2/8/8/8_w_-_-_0_1",
-      "boardArrows": [
-        {
-          "id": "n82-0-n51",
-          "san": "Ke7",
-          "from": "d7",
-          "to": "e7",
-          "color": "white"
-        }
-      ],
-      "outgoingEdgeIds": [
-        "n82-0-n51"
-      ],
-      "movesToSuccess": 4
-    },
-    {
-      "id": "n83",
+      "id": "n95",
       "key": "3k4/3N4/3KB3/8/8/8/8/8 w",
       "fen": "3k4/3N4/3KB3/8/8/8/8/8 w - - 0 1",
       "boardFen": "3k4/3N4/3KB3/8/8/8/8/8",
@@ -2216,7 +3407,7 @@
       "movesToSuccess": 0
     },
     {
-      "id": "n84",
+      "id": "n96",
       "key": "8/6k1/4B1N1/5K2/8/8/8/8 w",
       "fen": "8/6k1/4B1N1/5K2/8/8/8/8 w - - 0 1",
       "boardFen": "8/6k1/4B1N1/5K2/8/8/8/8",
@@ -2227,7 +3418,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B1N1/5K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n84-0-n93",
+          "id": "n96-0-n106",
           "san": "Kg5",
           "from": "f5",
           "to": "g5",
@@ -2235,12 +3426,30 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n84-0-n93"
+        "n96-0-n106"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kg5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kg5",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Ne7",
+          "Nh4",
+          "Nf4",
+          "Ne5",
+          "Kg5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n85",
+      "id": "n97",
       "key": "4k3/8/4B1N1/5K2/8/8/8/8 w",
       "fen": "4k3/8/4B1N1/5K2/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/4B1N1/5K2/8/8/8/8",
@@ -2251,7 +3460,7 @@
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/5K2/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n85-0-n28",
+          "id": "n97-0-n107",
           "san": "Ke5",
           "from": "f5",
           "to": "e5",
@@ -2259,12 +3468,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n85-0-n28"
+        "n97-0-n107"
       ],
-      "movesToSuccess": 7
+      "movesToSuccess": 7,
+      "moveReason": "Play Ke5 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n86",
+      "id": "n98",
       "key": "8/7k/4BK2/8/5N2/8/8/8 w",
       "fen": "8/7k/4BK2/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/7k/4BK2/8/5N2/8/8/8",
@@ -2275,7 +3485,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/7k/4BK2/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n86-0-n94",
+          "id": "n98-0-n108",
           "san": "Ng6",
           "from": "f4",
           "to": "g6",
@@ -2283,12 +3493,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n86-0-n94"
+        "n98-0-n108"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Play Ng6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n87",
+      "id": "n99",
       "key": "7k/8/4B3/6K1/5N2/8/8/8 w",
       "fen": "7k/8/4B3/6K1/5N2/8/8/8 w - - 0 1",
       "boardFen": "7k/8/4B3/6K1/5N2/8/8/8",
@@ -2299,7 +3510,7 @@
       "playUrl": "/endgames/knightAndBishop#w//7k/8/4B3/6K1/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n87-0-n74",
+          "id": "n99-0-n85",
           "san": "Kf6",
           "from": "g5",
           "to": "f6",
@@ -2307,13 +3518,41 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n87-0-n74"
+        "n99-0-n85"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Step to c6 to triangulate from the d-file and force Black back into the final Nd7 handoff."
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kf6",
+          "Kh5",
+          "Kh4",
+          "Kg4",
+          "Kf5",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n88",
+      "id": "n100",
       "key": "8/6k1/4B3/6K1/5N2/8/8/8 w",
       "fen": "8/6k1/4B3/6K1/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/6k1/4B3/6K1/5N2/8/8/8",
@@ -2324,7 +3563,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B3/6K1/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n88-0-n93",
+          "id": "n100-0-n106",
           "san": "Ng6",
           "from": "f4",
           "to": "g6",
@@ -2332,24 +3571,75 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n88-0-n93"
+        "n100-0-n106"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Move to f6, keeping the h8 king on the edge and preserving the knight's direct route to g6."
+      "moveReason": "Play Ng6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ng6",
+        "expectedSans": [
+          "Bd7",
+          "Bc8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Kh5",
+          "Kh4",
+          "Kg4",
+          "Kf5",
+          "Nd5",
+          "Ng6",
+          "Nh5+",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n89",
+      "id": "n101",
+      "key": "4k3/8/4BK2/8/1N6/8/8/8 w",
+      "fen": "4k3/8/4BK2/8/1N6/8/8/8 w - - 0 1",
+      "boardFen": "4k3/8/4BK2/8/1N6/8/8/8",
+      "turn": "w",
+      "x": 1210,
+      "y": 1984,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4BK2/8/1N6/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4BK2/8/1N6/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n101-0-n24",
+          "san": "Nc6",
+          "from": "b4",
+          "to": "c6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n101-0-n24"
+      ],
+      "movesToSuccess": 3,
+      "moveReason": "Play Nc6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
+    },
+    {
+      "id": "n102",
       "key": "4k3/8/3KB3/4N3/8/8/8/8 w",
       "fen": "4k3/8/3KB3/4N3/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/3KB3/4N3/8/8/8/8",
       "turn": "w",
-      "x": 3388,
+      "x": 4356,
       "y": 1984,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/3KB3/4N3/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/3KB3/4N3/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n89-0-n72",
+          "id": "n102-0-n83",
           "san": "Nd7",
           "from": "e5",
           "to": "d7",
@@ -2357,24 +3647,24 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n89-0-n72"
+        "n102-0-n83"
       ],
       "movesToSuccess": 1,
-      "moveReason": "Return to f6 to hold the h6 king in place and avoid giving up the edge cage."
+      "moveReason": "Play Nd7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
-      "id": "n90",
+      "id": "n103",
       "key": "3k4/8/4B1N1/3K4/8/8/8/8 w",
       "fen": "3k4/8/4B1N1/3K4/8/8/8/8 w - - 0 1",
       "boardFen": "3k4/8/4B1N1/3K4/8/8/8/8",
       "turn": "w",
-      "x": 4598,
+      "x": 5566,
       "y": 1984,
       "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B1N1/3K4/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B1N1/3K4/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n90-0-n95",
+          "id": "n103-0-n109",
           "san": "Kc6",
           "from": "d5",
           "to": "c6",
@@ -2382,24 +3672,24 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n90-0-n95"
+        "n103-0-n109"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Finish with Nd7: the knight becomes side-adjacent to both kings on the bishop's color."
+      "moveReason": "Play Kc6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     },
     {
-      "id": "n91",
+      "id": "n104",
       "key": "7k/5K2/4B3/8/5N2/8/8/8 w",
       "fen": "7k/5K2/4B3/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "7k/5K2/4B3/8/5N2/8/8/8",
       "turn": "w",
-      "x": 4356,
+      "x": 5324,
       "y": 1984,
       "imageUrl": "http://www.fen-to-image.com/image/7k/5K2/4B3/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//7k/5K2/4B3/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n91-0-n74",
+          "id": "n104-0-n85",
           "san": "Kf6",
           "from": "f7",
           "to": "f6",
@@ -2407,24 +3697,49 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n91-0-n74"
+        "n104-0-n85"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Move the king to f6 so the knight on g6 and bishop on e6 lock the final h-file cage."
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kf6",
+        "expectedSans": [
+          "Ke8",
+          "Kf8",
+          "Kf6",
+          "Ke7",
+          "Bd7",
+          "Bc8",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4",
+          "Bb3",
+          "Ba2",
+          "Nd5",
+          "Ng6+",
+          "Nh5",
+          "Nh3",
+          "Ng2",
+          "Ne2",
+          "Nd3"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
-      "id": "n92",
+      "id": "n105",
       "key": "8/5K2/4B2k/8/5N2/8/8/8 w",
       "fen": "8/5K2/4B2k/8/5N2/8/8/8 w - - 0 1",
       "boardFen": "8/5K2/4B2k/8/5N2/8/8/8",
       "turn": "w",
-      "x": 4114,
+      "x": 5082,
       "y": 1984,
       "imageUrl": "http://www.fen-to-image.com/image/8/5K2/4B2k/8/5N2/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//8/5K2/4B2k/8/5N2/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n92-0-n76",
+          "id": "n105-0-n87",
           "san": "Kf6",
           "from": "f7",
           "to": "f6",
@@ -2432,12 +3747,13 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n92-0-n76"
+        "n105-0-n87"
       ],
-      "movesToSuccess": 2
+      "movesToSuccess": 2,
+      "moveReason": "Play Kf6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n93",
+      "id": "n106",
       "key": "8/6k1/4B1N1/6K1/8/8/8/8 b",
       "fen": "8/6k1/4B1N1/6K1/8/8/8/8 b - - 0 1",
       "boardFen": "8/6k1/4B1N1/6K1/8/8/8/8",
@@ -2448,7 +3764,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/6k1/4B1N1/6K1/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n93-0-n96",
+          "id": "n106-0-n110",
           "san": "Kh7",
           "from": "g7",
           "to": "h7",
@@ -2456,11 +3772,34 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n93-0-n96"
+        "n106-0-n110"
       ]
     },
     {
-      "id": "n94",
+      "id": "n107",
+      "key": "4k3/8/4B1N1/4K3/8/8/8/8 b",
+      "fen": "4k3/8/4B1N1/4K3/8/8/8/8 b - - 0 1",
+      "boardFen": "4k3/8/4B1N1/4K3/8/8/8/8",
+      "turn": "b",
+      "x": 2904,
+      "y": 2198,
+      "imageUrl": "http://www.fen-to-image.com/image/4k3/8/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//4k3/8/4B1N1/4K3/8/8/8/8_b_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n107-0-n111",
+          "san": "Kd8",
+          "from": "e8",
+          "to": "d8",
+          "color": "black"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n107-0-n111"
+      ]
+    },
+    {
+      "id": "n108",
       "key": "8/7k/4BKN1/8/8/8/8/8 b",
       "fen": "8/7k/4BKN1/8/8/8/8/8 b - - 0 1",
       "boardFen": "8/7k/4BKN1/8/8/8/8/8",
@@ -2471,7 +3810,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/7k/4BKN1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n94-0-n97",
+          "id": "n108-0-n112",
           "san": "Kh6",
           "from": "h7",
           "to": "h6",
@@ -2479,22 +3818,22 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n94-0-n97"
+        "n108-0-n112"
       ]
     },
     {
-      "id": "n95",
+      "id": "n109",
       "key": "3k4/8/2K1B1N1/8/8/8/8/8 b",
       "fen": "3k4/8/2K1B1N1/8/8/8/8/8 b - - 0 1",
       "boardFen": "3k4/8/2K1B1N1/8/8/8/8/8",
       "turn": "b",
-      "x": 4598,
+      "x": 5566,
       "y": 2198,
       "imageUrl": "http://www.fen-to-image.com/image/3k4/8/2K1B1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//3k4/8/2K1B1N1/8/8/8/8/8_b_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n95-0-n98",
+          "id": "n109-0-n113",
           "san": "Ke8",
           "from": "d8",
           "to": "e8",
@@ -2502,11 +3841,11 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n95-0-n98"
+        "n109-0-n113"
       ]
     },
     {
-      "id": "n96",
+      "id": "n110",
       "key": "8/7k/4B1N1/6K1/8/8/8/8 w",
       "fen": "8/7k/4B1N1/6K1/8/8/8/8 w - - 0 1",
       "boardFen": "8/7k/4B1N1/6K1/8/8/8/8",
@@ -2517,7 +3856,7 @@
       "playUrl": "/endgames/knightAndBishop#w//8/7k/4B1N1/6K1/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n96-0-n94",
+          "id": "n110-0-n108",
           "san": "Kf6",
           "from": "g5",
           "to": "f6",
@@ -2525,12 +3864,38 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n96-0-n94"
+        "n110-0-n108"
       ],
-      "movesToSuccess": 1
+      "movesToSuccess": 1,
+      "moveReason": "Play Kf6 to reach the key-square pattern with Black on the edge and the knight between the kings."
     },
     {
-      "id": "n97",
+      "id": "n111",
+      "key": "3k4/8/4B1N1/4K3/8/8/8/8 w",
+      "fen": "3k4/8/4B1N1/4K3/8/8/8/8 w - - 0 1",
+      "boardFen": "3k4/8/4B1N1/4K3/8/8/8/8",
+      "turn": "w",
+      "x": 2904,
+      "y": 2412,
+      "imageUrl": "http://www.fen-to-image.com/image/3k4/8/4B1N1/4K3/8/8/8/8",
+      "playUrl": "/endgames/knightAndBishop#w//3k4/8/4B1N1/4K3/8/8/8/8_w_-_-_0_1",
+      "boardArrows": [
+        {
+          "id": "n111-0-n62",
+          "san": "Kd6",
+          "from": "e5",
+          "to": "d6",
+          "color": "white"
+        }
+      ],
+      "outgoingEdgeIds": [
+        "n111-0-n62"
+      ],
+      "movesToSuccess": 6,
+      "moveReason": "Play Kd6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
+    },
+    {
+      "id": "n112",
       "key": "8/8/4BKNk/8/8/8/8/8 w",
       "fen": "8/8/4BKNk/8/8/8/8/8 w - - 0 1",
       "boardFen": "8/8/4BKNk/8/8/8/8/8",
@@ -2546,18 +3911,18 @@
       "movesToSuccess": 0
     },
     {
-      "id": "n98",
+      "id": "n113",
       "key": "4k3/8/2K1B1N1/8/8/8/8/8 w",
       "fen": "4k3/8/2K1B1N1/8/8/8/8/8 w - - 0 1",
       "boardFen": "4k3/8/2K1B1N1/8/8/8/8/8",
       "turn": "w",
-      "x": 4598,
+      "x": 5566,
       "y": 2412,
       "imageUrl": "http://www.fen-to-image.com/image/4k3/8/2K1B1N1/8/8/8/8/8",
       "playUrl": "/endgames/knightAndBishop#w//4k3/8/2K1B1N1/8/8/8/8/8_w_-_-_0_1",
       "boardArrows": [
         {
-          "id": "n98-0-n49",
+          "id": "n113-0-n60",
           "san": "Kd6",
           "from": "c6",
           "to": "d6",
@@ -2565,16 +3930,17 @@
         }
       ],
       "outgoingEdgeIds": [
-        "n98-0-n49"
+        "n113-0-n60"
       ],
-      "movesToSuccess": 3
+      "movesToSuccess": 3,
+      "moveReason": "Play Kd6 to force Black into Zone X while White keeps the stable knight-and-bishop geometry."
     }
   ],
   "edges": [
     {
-      "id": "n0-0-n4",
+      "id": "n0-0-n5",
       "from": "n0",
-      "to": "n4",
+      "to": "n5",
       "san": "Nc6+",
       "fromSquare": "b4",
       "toSquare": "c6",
@@ -2591,9 +3957,9 @@
       ]
     },
     {
-      "id": "n1-0-n5",
+      "id": "n1-0-n6",
       "from": "n1",
-      "to": "n5",
+      "to": "n6",
       "san": "Nd5+",
       "fromSquare": "c3",
       "toSquare": "d5",
@@ -2610,9 +3976,9 @@
       ]
     },
     {
-      "id": "n2-0-n6",
+      "id": "n2-0-n7",
       "from": "n2",
-      "to": "n6",
+      "to": "n7",
       "san": "Nd4",
       "fromSquare": "b3",
       "toSquare": "d4",
@@ -2629,12 +3995,12 @@
       ]
     },
     {
-      "id": "n3-0-n7",
+      "id": "n3-0-n8",
       "from": "n3",
-      "to": "n7",
-      "san": "Nf4",
-      "fromSquare": "h3",
-      "toSquare": "f4",
+      "to": "n8",
+      "san": "Nh5",
+      "fromSquare": "g3",
+      "toSquare": "h5",
       "transposition": false,
       "points": [
         {
@@ -2648,9 +4014,28 @@
       ]
     },
     {
-      "id": "n4-0-n8",
+      "id": "n4-0-n9",
       "from": "n4",
-      "to": "n8",
+      "to": "n9",
+      "san": "Nf4",
+      "fromSquare": "h3",
+      "toSquare": "f4",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 150
+        },
+        {
+          "x": 4431,
+          "y": 214
+        }
+      ]
+    },
+    {
+      "id": "n5-0-n10",
+      "from": "n5",
+      "to": "n10",
       "san": "Ke8",
       "fromSquare": "e7",
       "toSquare": "e8",
@@ -2662,60 +4047,6 @@
         },
         {
           "x": 75,
-          "y": 496
-        }
-      ]
-    },
-    {
-      "id": "n4-1-n9",
-      "from": "n4",
-      "to": "n9",
-      "san": "Kf8",
-      "fromSquare": "e7",
-      "toSquare": "f8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 75,
-          "y": 364
-        },
-        {
-          "x": 75,
-          "y": 410.2
-        },
-        {
-          "x": 317,
-          "y": 410.2
-        },
-        {
-          "x": 317,
-          "y": 496
-        }
-      ]
-    },
-    {
-      "id": "n5-0-n10",
-      "from": "n5",
-      "to": "n10",
-      "san": "Kd8",
-      "fromSquare": "e7",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 559,
-          "y": 364
-        },
-        {
-          "x": 559,
-          "y": 410.2
-        },
-        {
-          "x": 1043,
-          "y": 410.2
-        },
-        {
-          "x": 1043,
           "y": 496
         }
       ]
@@ -2724,31 +4055,39 @@
       "id": "n5-1-n11",
       "from": "n5",
       "to": "n11",
-      "san": "Ke8",
-      "fromSquare": "e7",
-      "toSquare": "e8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 559,
-          "y": 364
-        },
-        {
-          "x": 559,
-          "y": 496
-        }
-      ]
-    },
-    {
-      "id": "n5-2-n12",
-      "from": "n5",
-      "to": "n12",
       "san": "Kf8",
       "fromSquare": "e7",
       "toSquare": "f8",
       "transposition": false,
       "points": [
         {
+          "x": 75,
+          "y": 364
+        },
+        {
+          "x": 75,
+          "y": 410.2
+        },
+        {
+          "x": 317,
+          "y": 410.2
+        },
+        {
+          "x": 317,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n6-0-n12",
+      "from": "n6",
+      "to": "n12",
+      "san": "Kd8",
+      "fromSquare": "e7",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
           "x": 559,
           "y": 364
         },
@@ -2757,46 +4096,92 @@
           "y": 410.2
         },
         {
-          "x": 1527,
+          "x": 1043,
           "y": 410.2
         },
         {
-          "x": 1527,
+          "x": 1043,
           "y": 496
         }
       ]
     },
     {
-      "id": "n6-0-n13",
+      "id": "n6-1-n13",
       "from": "n6",
       "to": "n13",
-      "san": "Kd8",
+      "san": "Ke8",
       "fromSquare": "e7",
-      "toSquare": "d8",
+      "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 2011,
+          "x": 559,
           "y": 364
         },
         {
-          "x": 2011,
-          "y": 410.2
-        },
-        {
-          "x": 2979,
-          "y": 410.2
-        },
-        {
-          "x": 2979,
+          "x": 559,
           "y": 496
         }
       ]
     },
     {
-      "id": "n6-1-n14",
+      "id": "n6-2-n14",
       "from": "n6",
       "to": "n14",
+      "san": "Kf8",
+      "fromSquare": "e7",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 364
+        },
+        {
+          "x": 559,
+          "y": 410.2
+        },
+        {
+          "x": 1285,
+          "y": 410.2
+        },
+        {
+          "x": 1285,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n7-0-n15",
+      "from": "n7",
+      "to": "n15",
+      "san": "Kd8",
+      "fromSquare": "e7",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2011,
+          "y": 364
+        },
+        {
+          "x": 2011,
+          "y": 410.2
+        },
+        {
+          "x": 2979,
+          "y": 410.2
+        },
+        {
+          "x": 2979,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n7-1-n16",
+      "from": "n7",
+      "to": "n16",
       "san": "Ke8",
       "fromSquare": "e7",
       "toSquare": "e8",
@@ -2821,9 +4206,9 @@
       ]
     },
     {
-      "id": "n6-2-n15",
-      "from": "n6",
-      "to": "n15",
+      "id": "n7-2-n17",
+      "from": "n7",
+      "to": "n17",
       "san": "Kf8",
       "fromSquare": "e7",
       "toSquare": "f8",
@@ -2840,9 +4225,9 @@
       ]
     },
     {
-      "id": "n7-0-n16",
-      "from": "n7",
-      "to": "n16",
+      "id": "n8-0-n18",
+      "from": "n8",
+      "to": "n18",
       "san": "Kd8",
       "fromSquare": "e7",
       "toSquare": "d8",
@@ -2854,14 +4239,22 @@
         },
         {
           "x": 3463,
+          "y": 410.2
+        },
+        {
+          "x": 3947,
+          "y": 410.2
+        },
+        {
+          "x": 3947,
           "y": 496
         }
       ]
     },
     {
-      "id": "n7-1-n17",
-      "from": "n7",
-      "to": "n17",
+      "id": "n8-1-n19",
+      "from": "n8",
+      "to": "n19",
       "san": "Ke8",
       "fromSquare": "e7",
       "toSquare": "e8",
@@ -2873,22 +4266,14 @@
         },
         {
           "x": 3463,
-          "y": 410.2
-        },
-        {
-          "x": 4673,
-          "y": 410.2
-        },
-        {
-          "x": 4673,
           "y": 496
         }
       ]
     },
     {
-      "id": "n7-2-n18",
-      "from": "n7",
-      "to": "n18",
+      "id": "n8-2-n20",
+      "from": "n8",
+      "to": "n20",
       "san": "Kf8",
       "fromSquare": "e7",
       "toSquare": "f8",
@@ -2903,38 +4288,111 @@
           "y": 410.2
         },
         {
-          "x": 3705,
+          "x": 4189,
           "y": 410.2
         },
         {
-          "x": 3705,
+          "x": 4189,
           "y": 496
         }
       ]
     },
     {
-      "id": "n8-0-n19",
-      "from": "n8",
-      "to": "n19",
-      "san": "Kf6",
-      "fromSquare": "e5",
-      "toSquare": "f6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 75,
-          "y": 646
-        },
-        {
-          "x": 75,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n9-0-n20",
+      "id": "n9-0-n21",
       "from": "n9",
-      "to": "n20",
+      "to": "n21",
+      "san": "Kd8",
+      "fromSquare": "e7",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 364
+        },
+        {
+          "x": 4431,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n9-1-n22",
+      "from": "n9",
+      "to": "n22",
+      "san": "Ke8",
+      "fromSquare": "e7",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 364
+        },
+        {
+          "x": 4431,
+          "y": 410.2
+        },
+        {
+          "x": 5399,
+          "y": 410.2
+        },
+        {
+          "x": 5399,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n9-2-n23",
+      "from": "n9",
+      "to": "n23",
+      "san": "Kf8",
+      "fromSquare": "e7",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 364
+        },
+        {
+          "x": 4431,
+          "y": 410.2
+        },
+        {
+          "x": 4673,
+          "y": 410.2
+        },
+        {
+          "x": 4673,
+          "y": 496
+        }
+      ]
+    },
+    {
+      "id": "n10-0-n24",
+      "from": "n10",
+      "to": "n24",
+      "san": "Kf6",
+      "fromSquare": "e5",
+      "toSquare": "f6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 75,
+          "y": 646
+        },
+        {
+          "x": 75,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n11-0-n25",
+      "from": "n11",
+      "to": "n25",
       "san": "Kf6",
       "fromSquare": "e5",
       "toSquare": "f6",
@@ -2951,66 +4409,66 @@
       ]
     },
     {
-      "id": "n10-0-n21",
-      "from": "n10",
-      "to": "n21",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 646
-        },
-        {
-          "x": 1043,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n11-0-n22",
-      "from": "n11",
-      "to": "n22",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 559,
-          "y": 646
-        },
-        {
-          "x": 559,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n12-0-n23",
+      "id": "n12-0-n26",
       "from": "n12",
-      "to": "n23",
-      "san": "Nf4",
-      "fromSquare": "d5",
-      "toSquare": "f4",
+      "to": "n26",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
       "transposition": false,
       "points": [
         {
-          "x": 1527,
+          "x": 1043,
           "y": 646
         },
         {
-          "x": 1527,
+          "x": 1043,
           "y": 710
         }
       ]
     },
     {
-      "id": "n13-0-n24",
+      "id": "n13-0-n27",
       "from": "n13",
-      "to": "n24",
+      "to": "n27",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 559,
+          "y": 646
+        },
+        {
+          "x": 559,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n14-0-n28",
+      "from": "n14",
+      "to": "n28",
+      "san": "Kf5",
+      "fromSquare": "e5",
+      "toSquare": "f5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1285,
+          "y": 646
+        },
+        {
+          "x": 1285,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n15-0-n29",
+      "from": "n15",
+      "to": "n29",
       "san": "Kd6",
       "fromSquare": "e5",
       "toSquare": "d6",
@@ -3027,9 +4485,9 @@
       ]
     },
     {
-      "id": "n14-0-n25",
-      "from": "n14",
-      "to": "n25",
+      "id": "n16-0-n30",
+      "from": "n16",
+      "to": "n30",
       "san": "Nc6",
       "fromSquare": "d4",
       "toSquare": "c6",
@@ -3046,9 +4504,9 @@
       ]
     },
     {
-      "id": "n15-0-n26",
-      "from": "n15",
-      "to": "n26",
+      "id": "n17-0-n31",
+      "from": "n17",
+      "to": "n31",
       "san": "Kf6",
       "fromSquare": "e5",
       "toSquare": "f6",
@@ -3065,66 +4523,123 @@
       ]
     },
     {
-      "id": "n16-0-n27",
-      "from": "n16",
-      "to": "n27",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 3463,
-          "y": 646
-        },
-        {
-          "x": 3463,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n17-0-n28",
-      "from": "n17",
-      "to": "n28",
-      "san": "Ng6",
-      "fromSquare": "f4",
-      "toSquare": "g6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 4673,
-          "y": 646
-        },
-        {
-          "x": 4673,
-          "y": 710
-        }
-      ]
-    },
-    {
-      "id": "n18-0-n29",
+      "id": "n18-0-n32",
       "from": "n18",
-      "to": "n29",
+      "to": "n32",
       "san": "Kd6",
       "fromSquare": "e5",
       "toSquare": "d6",
       "transposition": false,
       "points": [
         {
-          "x": 3705,
+          "x": 3947,
           "y": 646
         },
         {
-          "x": 3705,
+          "x": 3947,
           "y": 710
         }
       ]
     },
     {
-      "id": "n19-0-n30",
+      "id": "n19-0-n33",
       "from": "n19",
-      "to": "n30",
+      "to": "n33",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3463,
+          "y": 646
+        },
+        {
+          "x": 3463,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n20-0-n34",
+      "from": "n20",
+      "to": "n34",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4189,
+          "y": 646
+        },
+        {
+          "x": 4189,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n21-0-n35",
+      "from": "n21",
+      "to": "n35",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 646
+        },
+        {
+          "x": 4431,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n22-0-n36",
+      "from": "n22",
+      "to": "n36",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5399,
+          "y": 646
+        },
+        {
+          "x": 5399,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n23-0-n37",
+      "from": "n23",
+      "to": "n37",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4673,
+          "y": 646
+        },
+        {
+          "x": 4673,
+          "y": 710
+        }
+      ]
+    },
+    {
+      "id": "n24-0-n38",
+      "from": "n24",
+      "to": "n38",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -3141,9 +4656,9 @@
       ]
     },
     {
-      "id": "n20-0-n31",
-      "from": "n20",
-      "to": "n31",
+      "id": "n25-0-n39",
+      "from": "n25",
+      "to": "n39",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -3160,9 +4675,9 @@
       ]
     },
     {
-      "id": "n21-0-n32",
-      "from": "n21",
-      "to": "n32",
+      "id": "n26-0-n40",
+      "from": "n26",
+      "to": "n40",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
@@ -3179,9 +4694,9 @@
       ]
     },
     {
-      "id": "n22-0-n33",
-      "from": "n22",
-      "to": "n33",
+      "id": "n27-0-n41",
+      "from": "n27",
+      "to": "n41",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -3206,9 +4721,9 @@
       ]
     },
     {
-      "id": "n22-1-n34",
-      "from": "n22",
-      "to": "n34",
+      "id": "n27-1-n42",
+      "from": "n27",
+      "to": "n42",
       "san": "Kd8",
       "fromSquare": "e8",
       "toSquare": "d8",
@@ -3225,20 +4740,20 @@
       ]
     },
     {
-      "id": "n23-0-n35",
-      "from": "n23",
-      "to": "n35",
+      "id": "n28-0-n43",
+      "from": "n28",
+      "to": "n43",
       "san": "Kg7",
       "fromSquare": "f8",
       "toSquare": "g7",
       "transposition": false,
       "points": [
         {
-          "x": 1527,
+          "x": 1285,
           "y": 860
         },
         {
-          "x": 1527,
+          "x": 1285,
           "y": 906.2
         },
         {
@@ -3252,47 +4767,28 @@
       ]
     },
     {
-      "id": "n23-1-n36",
-      "from": "n23",
-      "to": "n36",
-      "san": "Ke7",
-      "fromSquare": "f8",
-      "toSquare": "e7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1527,
-          "y": 860
-        },
-        {
-          "x": 1527,
-          "y": 992
-        }
-      ]
-    },
-    {
-      "id": "n23-2-n17",
-      "from": "n23",
-      "to": "n17",
+      "id": "n28-1-n44",
+      "from": "n28",
+      "to": "n44",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
-      "transposition": true,
+      "transposition": false,
       "points": [
         {
-          "x": 1602,
-          "y": 785
+          "x": 1285,
+          "y": 860
         },
         {
-          "x": 4598,
-          "y": 571
+          "x": 1285,
+          "y": 992
         }
       ]
     },
     {
-      "id": "n24-0-n37",
-      "from": "n24",
-      "to": "n37",
+      "id": "n29-0-n45",
+      "from": "n29",
+      "to": "n45",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
@@ -3309,9 +4805,9 @@
       ]
     },
     {
-      "id": "n25-0-n9",
-      "from": "n25",
-      "to": "n9",
+      "id": "n30-0-n11",
+      "from": "n30",
+      "to": "n11",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -3328,9 +4824,9 @@
       ]
     },
     {
-      "id": "n26-0-n38",
-      "from": "n26",
-      "to": "n38",
+      "id": "n31-0-n46",
+      "from": "n31",
+      "to": "n46",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -3347,73 +4843,62 @@
       ]
     },
     {
-      "id": "n27-0-n39",
-      "from": "n27",
-      "to": "n39",
+      "id": "n32-0-n47",
+      "from": "n32",
+      "to": "n47",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 3463,
+          "x": 3947,
           "y": 860
         },
         {
-          "x": 3463,
+          "x": 3947,
           "y": 992
         }
       ]
     },
     {
-      "id": "n28-0-n40",
-      "from": "n28",
-      "to": "n40",
+      "id": "n33-0-n48",
+      "from": "n33",
+      "to": "n48",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 3463,
+          "y": 860
+        },
+        {
+          "x": 3463,
+          "y": 906.2
+        },
+        {
+          "x": 3705,
+          "y": 906.2
+        },
+        {
+          "x": 3705,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n33-1-n49",
+      "from": "n33",
+      "to": "n49",
       "san": "Kd8",
       "fromSquare": "e8",
       "toSquare": "d8",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
-          "y": 860
-        },
-        {
-          "x": 4673,
-          "y": 992
-        }
-      ]
-    },
-    {
-      "id": "n29-0-n41",
-      "from": "n29",
-      "to": "n41",
-      "san": "Kg7",
-      "fromSquare": "f8",
-      "toSquare": "g7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 3705,
-          "y": 860
-        },
-        {
-          "x": 3705,
-          "y": 992
-        }
-      ]
-    },
-    {
-      "id": "n29-1-n39",
-      "from": "n29",
-      "to": "n39",
-      "san": "Ke8",
-      "fromSquare": "f8",
-      "toSquare": "e8",
-      "transposition": true,
-      "points": [
-        {
-          "x": 3705,
+          "x": 3463,
           "y": 860
         },
         {
@@ -3423,9 +4908,131 @@
       ]
     },
     {
-      "id": "n30-0-n42",
-      "from": "n30",
-      "to": "n42",
+      "id": "n34-0-n47",
+      "from": "n34",
+      "to": "n47",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4189,
+          "y": 860
+        },
+        {
+          "x": 3947,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n35-0-n50",
+      "from": "n35",
+      "to": "n50",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 860
+        },
+        {
+          "x": 4431,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n36-0-n51",
+      "from": "n36",
+      "to": "n51",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5399,
+          "y": 860
+        },
+        {
+          "x": 5399,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n36-1-n52",
+      "from": "n36",
+      "to": "n52",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5399,
+          "y": 860
+        },
+        {
+          "x": 5399,
+          "y": 906.2
+        },
+        {
+          "x": 5641,
+          "y": 906.2
+        },
+        {
+          "x": 5641,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n37-0-n53",
+      "from": "n37",
+      "to": "n53",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4673,
+          "y": 860
+        },
+        {
+          "x": 4673,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n37-1-n50",
+      "from": "n37",
+      "to": "n50",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4673,
+          "y": 860
+        },
+        {
+          "x": 4431,
+          "y": 992
+        }
+      ]
+    },
+    {
+      "id": "n38-0-n54",
+      "from": "n38",
+      "to": "n54",
       "san": "Ne5",
       "fromSquare": "c6",
       "toSquare": "e5",
@@ -3442,9 +5049,9 @@
       ]
     },
     {
-      "id": "n31-0-n43",
-      "from": "n31",
-      "to": "n43",
+      "id": "n39-0-n55",
+      "from": "n39",
+      "to": "n55",
       "san": "Kf5",
       "fromSquare": "f6",
       "toSquare": "f5",
@@ -3461,28 +5068,28 @@
       ]
     },
     {
-      "id": "n32-0-n44",
-      "from": "n32",
-      "to": "n44",
+      "id": "n40-0-n36",
+      "from": "n40",
+      "to": "n36",
       "san": "Nf4",
       "fromSquare": "d5",
       "toSquare": "f4",
-      "transposition": false,
+      "transposition": true,
       "points": [
         {
-          "x": 1043,
-          "y": 1142
+          "x": 1118,
+          "y": 1067
         },
         {
-          "x": 1043,
-          "y": 1206
+          "x": 5324,
+          "y": 785
         }
       ]
     },
     {
-      "id": "n33-0-n29",
-      "from": "n33",
-      "to": "n29",
+      "id": "n41-0-n37",
+      "from": "n41",
+      "to": "n37",
       "san": "Nf4",
       "fromSquare": "d5",
       "toSquare": "f4",
@@ -3493,15 +5100,15 @@
           "y": 1067
         },
         {
-          "x": 3630,
+          "x": 4598,
           "y": 785
         }
       ]
     },
     {
-      "id": "n34-0-n45",
-      "from": "n34",
-      "to": "n45",
+      "id": "n42-0-n56",
+      "from": "n42",
+      "to": "n56",
       "san": "Nb6",
       "fromSquare": "d5",
       "toSquare": "b6",
@@ -3518,12 +5125,12 @@
       ]
     },
     {
-      "id": "n35-0-n46",
-      "from": "n35",
-      "to": "n46",
-      "san": "Kf5",
-      "fromSquare": "e5",
-      "toSquare": "f5",
+      "id": "n43-0-n57",
+      "from": "n43",
+      "to": "n57",
+      "san": "Nf4",
+      "fromSquare": "d5",
+      "toSquare": "f4",
       "transposition": false,
       "points": [
         {
@@ -3537,28 +5144,28 @@
       ]
     },
     {
-      "id": "n36-0-n47",
-      "from": "n36",
-      "to": "n47",
-      "san": "Ng6+",
-      "fromSquare": "f4",
-      "toSquare": "g6",
+      "id": "n44-0-n58",
+      "from": "n44",
+      "to": "n58",
+      "san": "Kf6",
+      "fromSquare": "f5",
+      "toSquare": "f6",
       "transposition": false,
       "points": [
         {
-          "x": 1527,
+          "x": 1285,
           "y": 1142
         },
         {
-          "x": 1527,
+          "x": 1285,
           "y": 1206
         }
       ]
     },
     {
-      "id": "n37-0-n48",
-      "from": "n37",
-      "to": "n48",
+      "id": "n45-0-n59",
+      "from": "n45",
+      "to": "n59",
       "san": "Ne2",
       "fromSquare": "d4",
       "toSquare": "e2",
@@ -3575,9 +5182,9 @@
       ]
     },
     {
-      "id": "n38-0-n19",
-      "from": "n38",
-      "to": "n19",
+      "id": "n46-0-n24",
+      "from": "n46",
+      "to": "n24",
       "san": "Nc6",
       "fromSquare": "d4",
       "toSquare": "c6",
@@ -3594,66 +5201,142 @@
       ]
     },
     {
-      "id": "n39-0-n49",
-      "from": "n39",
-      "to": "n49",
+      "id": "n47-0-n36",
+      "from": "n47",
+      "to": "n36",
+      "san": "Nf4",
+      "fromSquare": "h5",
+      "toSquare": "f4",
+      "transposition": true,
+      "points": [
+        {
+          "x": 4022,
+          "y": 1067
+        },
+        {
+          "x": 5324,
+          "y": 785
+        }
+      ]
+    },
+    {
+      "id": "n48-0-n37",
+      "from": "n48",
+      "to": "n37",
+      "san": "Nf4",
+      "fromSquare": "h5",
+      "toSquare": "f4",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3780,
+          "y": 1067
+        },
+        {
+          "x": 4598,
+          "y": 785
+        }
+      ]
+    },
+    {
+      "id": "n49-0-n35",
+      "from": "n49",
+      "to": "n35",
+      "san": "Nf4",
+      "fromSquare": "h5",
+      "toSquare": "f4",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3538,
+          "y": 1067
+        },
+        {
+          "x": 4356,
+          "y": 785
+        }
+      ]
+    },
+    {
+      "id": "n50-0-n60",
+      "from": "n50",
+      "to": "n60",
       "san": "Ng6",
       "fromSquare": "f4",
       "toSquare": "g6",
       "transposition": false,
       "points": [
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1142
         },
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1206
         }
       ]
     },
     {
-      "id": "n40-0-n50",
-      "from": "n40",
-      "to": "n50",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
+      "id": "n51-0-n61",
+      "from": "n51",
+      "to": "n61",
+      "san": "Kd7",
+      "fromSquare": "d6",
+      "toSquare": "d7",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 5399,
           "y": 1142
         },
         {
-          "x": 4673,
+          "x": 5399,
           "y": 1206
         }
       ]
     },
     {
-      "id": "n41-0-n51",
-      "from": "n41",
-      "to": "n51",
+      "id": "n52-0-n62",
+      "from": "n52",
+      "to": "n62",
+      "san": "Ng6",
+      "fromSquare": "f4",
+      "toSquare": "g6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5641,
+          "y": 1142
+        },
+        {
+          "x": 5641,
+          "y": 1206
+        }
+      ]
+    },
+    {
+      "id": "n53-0-n63",
+      "from": "n53",
+      "to": "n63",
       "san": "Ke7",
       "fromSquare": "d6",
       "toSquare": "e7",
       "transposition": false,
       "points": [
         {
-          "x": 3705,
+          "x": 4673,
           "y": 1142
         },
         {
-          "x": 3705,
+          "x": 4673,
           "y": 1206
         }
       ]
     },
     {
-      "id": "n42-0-n52",
-      "from": "n42",
-      "to": "n52",
+      "id": "n54-0-n64",
+      "from": "n54",
+      "to": "n64",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -3670,388 +5353,369 @@
       ]
     },
     {
-      "id": "n43-0-n53",
-      "from": "n43",
-      "to": "n53",
-      "san": "Kf8",
-      "fromSquare": "e8",
-      "toSquare": "f8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 317,
-          "y": 1356
-        },
-        {
-          "x": 317,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n44-0-n54",
-      "from": "n44",
-      "to": "n54",
-      "san": "Kf8",
-      "fromSquare": "e8",
-      "toSquare": "f8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 1356
-        },
-        {
-          "x": 1043,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n44-1-n55",
-      "from": "n44",
-      "to": "n55",
-      "san": "Kd8",
-      "fromSquare": "e8",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 1356
-        },
-        {
-          "x": 1043,
-          "y": 1402.2
-        },
-        {
-          "x": 1285,
-          "y": 1402.2
-        },
-        {
-          "x": 1285,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n45-0-n56",
-      "from": "n45",
-      "to": "n56",
-      "san": "Ke8",
-      "fromSquare": "d8",
-      "toSquare": "e8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 559,
-          "y": 1356
-        },
-        {
-          "x": 559,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n46-0-n57",
-      "from": "n46",
-      "to": "n57",
-      "san": "Kf8",
-      "fromSquare": "g7",
-      "toSquare": "f8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1356
-        },
-        {
-          "x": 1769,
-          "y": 1402.2
-        },
-        {
-          "x": 2737,
-          "y": 1402.2
-        },
-        {
-          "x": 2737,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n46-1-n58",
-      "from": "n46",
-      "to": "n58",
-      "san": "Kh8",
-      "fromSquare": "g7",
-      "toSquare": "h8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1356
-        },
-        {
-          "x": 1769,
-          "y": 1402.2
-        },
-        {
-          "x": 2011,
-          "y": 1402.2
-        },
-        {
-          "x": 2011,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n46-2-n59",
-      "from": "n46",
-      "to": "n59",
-      "san": "Kh7",
-      "fromSquare": "g7",
-      "toSquare": "h7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1356
-        },
-        {
-          "x": 1769,
-          "y": 1402.2
-        },
-        {
-          "x": 2253,
-          "y": 1402.2
-        },
-        {
-          "x": 2253,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n46-3-n60",
-      "from": "n46",
-      "to": "n60",
-      "san": "Kh6",
-      "fromSquare": "g7",
-      "toSquare": "h6",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1769,
-          "y": 1356
-        },
-        {
-          "x": 1769,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n47-0-n40",
-      "from": "n47",
-      "to": "n40",
-      "san": "Kd8",
-      "fromSquare": "e7",
-      "toSquare": "d8",
-      "transposition": true,
-      "points": [
-        {
-          "x": 1602,
-          "y": 1281
-        },
-        {
-          "x": 4598,
-          "y": 1067
-        }
-      ]
-    },
-    {
-      "id": "n47-1-n61",
-      "from": "n47",
-      "to": "n61",
-      "san": "Ke8",
-      "fromSquare": "e7",
-      "toSquare": "e8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1527,
-          "y": 1356
-        },
-        {
-          "x": 1527,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n48-0-n62",
-      "from": "n48",
-      "to": "n62",
-      "san": "Kf8",
-      "fromSquare": "e8",
-      "toSquare": "f8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 2979,
-          "y": 1356
-        },
-        {
-          "x": 2979,
-          "y": 1402.2
-        },
-        {
-          "x": 3221,
-          "y": 1402.2
-        },
-        {
-          "x": 3221,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n48-1-n63",
-      "from": "n48",
-      "to": "n63",
-      "san": "Kd8",
-      "fromSquare": "e8",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 2979,
-          "y": 1356
-        },
-        {
-          "x": 2979,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n49-0-n64",
-      "from": "n49",
-      "to": "n64",
-      "san": "Kd8",
-      "fromSquare": "e8",
-      "toSquare": "d8",
-      "transposition": false,
-      "points": [
-        {
-          "x": 3463,
-          "y": 1356
-        },
-        {
-          "x": 3463,
-          "y": 1488
-        }
-      ]
-    },
-    {
-      "id": "n50-0-n65",
-      "from": "n50",
+      "id": "n55-0-n65",
+      "from": "n55",
       "to": "n65",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 317,
+          "y": 1356
+        },
+        {
+          "x": 317,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n56-0-n66",
+      "from": "n56",
+      "to": "n66",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 559,
           "y": 1356
         },
         {
-          "x": 4673,
+          "x": 559,
           "y": 1488
         }
       ]
     },
     {
-      "id": "n51-0-n66",
-      "from": "n51",
-      "to": "n66",
+      "id": "n57-0-n67",
+      "from": "n57",
+      "to": "n67",
+      "san": "Kf8",
+      "fromSquare": "g7",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1769,
+          "y": 1356
+        },
+        {
+          "x": 1769,
+          "y": 1402.2
+        },
+        {
+          "x": 2737,
+          "y": 1402.2
+        },
+        {
+          "x": 2737,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n57-1-n68",
+      "from": "n57",
+      "to": "n68",
       "san": "Kh8",
       "fromSquare": "g7",
       "toSquare": "h8",
       "transposition": false,
       "points": [
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1356
         },
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1402.2
         },
         {
-          "x": 3947,
+          "x": 2011,
           "y": 1402.2
         },
         {
-          "x": 3947,
+          "x": 2011,
           "y": 1488
         }
       ]
     },
     {
-      "id": "n51-1-n67",
-      "from": "n51",
-      "to": "n67",
+      "id": "n57-2-n69",
+      "from": "n57",
+      "to": "n69",
       "san": "Kh7",
       "fromSquare": "g7",
       "toSquare": "h7",
       "transposition": false,
       "points": [
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1356
         },
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1402.2
         },
         {
-          "x": 4189,
+          "x": 2253,
           "y": 1402.2
         },
         {
-          "x": 4189,
+          "x": 2253,
           "y": 1488
         }
       ]
     },
     {
-      "id": "n51-2-n68",
-      "from": "n51",
-      "to": "n68",
+      "id": "n57-3-n70",
+      "from": "n57",
+      "to": "n70",
       "san": "Kh6",
       "fromSquare": "g7",
       "toSquare": "h6",
       "transposition": false,
       "points": [
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1356
         },
         {
-          "x": 3705,
+          "x": 1769,
           "y": 1488
         }
       ]
     },
     {
-      "id": "n52-0-n69",
-      "from": "n52",
-      "to": "n69",
+      "id": "n58-0-n71",
+      "from": "n58",
+      "to": "n71",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1285,
+          "y": 1356
+        },
+        {
+          "x": 1285,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n58-1-n72",
+      "from": "n58",
+      "to": "n72",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1285,
+          "y": 1356
+        },
+        {
+          "x": 1285,
+          "y": 1402.2
+        },
+        {
+          "x": 1527,
+          "y": 1402.2
+        },
+        {
+          "x": 1527,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n59-0-n73",
+      "from": "n59",
+      "to": "n73",
+      "san": "Kf8",
+      "fromSquare": "e8",
+      "toSquare": "f8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1402.2
+        },
+        {
+          "x": 3221,
+          "y": 1402.2
+        },
+        {
+          "x": 3221,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n59-1-n74",
+      "from": "n59",
+      "to": "n74",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 1356
+        },
+        {
+          "x": 2979,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n60-0-n75",
+      "from": "n60",
+      "to": "n75",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4431,
+          "y": 1356
+        },
+        {
+          "x": 4431,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n61-0-n76",
+      "from": "n61",
+      "to": "n76",
+      "san": "Kg7",
+      "fromSquare": "f8",
+      "toSquare": "g7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5399,
+          "y": 1356
+        },
+        {
+          "x": 5399,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n62-0-n77",
+      "from": "n62",
+      "to": "n77",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 5641,
+          "y": 1356
+        },
+        {
+          "x": 5641,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n63-0-n78",
+      "from": "n63",
+      "to": "n78",
+      "san": "Kh8",
+      "fromSquare": "g7",
+      "toSquare": "h8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4673,
+          "y": 1356
+        },
+        {
+          "x": 4673,
+          "y": 1402.2
+        },
+        {
+          "x": 4915,
+          "y": 1402.2
+        },
+        {
+          "x": 4915,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n63-1-n79",
+      "from": "n63",
+      "to": "n79",
+      "san": "Kh7",
+      "fromSquare": "g7",
+      "toSquare": "h7",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4673,
+          "y": 1356
+        },
+        {
+          "x": 4673,
+          "y": 1402.2
+        },
+        {
+          "x": 5157,
+          "y": 1402.2
+        },
+        {
+          "x": 5157,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n63-2-n80",
+      "from": "n63",
+      "to": "n80",
+      "san": "Kh6",
+      "fromSquare": "g7",
+      "toSquare": "h6",
+      "transposition": false,
+      "points": [
+        {
+          "x": 4673,
+          "y": 1356
+        },
+        {
+          "x": 4673,
+          "y": 1488
+        }
+      ]
+    },
+    {
+      "id": "n64-0-n81",
+      "from": "n64",
+      "to": "n81",
       "san": "Nf7",
       "fromSquare": "e5",
       "toSquare": "f7",
@@ -4068,9 +5732,9 @@
       ]
     },
     {
-      "id": "n53-0-n70",
-      "from": "n53",
-      "to": "n70",
+      "id": "n65-0-n82",
+      "from": "n65",
+      "to": "n82",
       "san": "Kg6",
       "fromSquare": "f5",
       "toSquare": "g6",
@@ -4087,47 +5751,9 @@
       ]
     },
     {
-      "id": "n54-0-n71",
-      "from": "n54",
-      "to": "n71",
-      "san": "Kd7",
-      "fromSquare": "d6",
-      "toSquare": "d7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 1638
-        },
-        {
-          "x": 1043,
-          "y": 1702
-        }
-      ]
-    },
-    {
-      "id": "n55-0-n50",
-      "from": "n55",
-      "to": "n50",
-      "san": "Ng6",
-      "fromSquare": "f4",
-      "toSquare": "g6",
-      "transposition": true,
-      "points": [
-        {
-          "x": 1360,
-          "y": 1563
-        },
-        {
-          "x": 4598,
-          "y": 1281
-        }
-      ]
-    },
-    {
-      "id": "n56-0-n72",
-      "from": "n56",
-      "to": "n72",
+      "id": "n66-0-n83",
+      "from": "n66",
+      "to": "n83",
       "san": "Nd7",
       "fromSquare": "b6",
       "toSquare": "d7",
@@ -4144,9 +5770,9 @@
       ]
     },
     {
-      "id": "n57-0-n73",
-      "from": "n57",
-      "to": "n73",
+      "id": "n67-0-n84",
+      "from": "n67",
+      "to": "n84",
       "san": "Ng6+",
       "fromSquare": "f4",
       "toSquare": "g6",
@@ -4163,9 +5789,9 @@
       ]
     },
     {
-      "id": "n58-0-n74",
-      "from": "n58",
-      "to": "n74",
+      "id": "n68-0-n85",
+      "from": "n68",
+      "to": "n85",
       "san": "Kf6",
       "fromSquare": "f5",
       "toSquare": "f6",
@@ -4182,9 +5808,9 @@
       ]
     },
     {
-      "id": "n59-0-n75",
-      "from": "n59",
-      "to": "n75",
+      "id": "n69-0-n86",
+      "from": "n69",
+      "to": "n86",
       "san": "Kg5",
       "fromSquare": "f5",
       "toSquare": "g5",
@@ -4201,9 +5827,9 @@
       ]
     },
     {
-      "id": "n60-0-n76",
-      "from": "n60",
-      "to": "n76",
+      "id": "n70-0-n87",
+      "from": "n70",
+      "to": "n87",
       "san": "Kf6",
       "fromSquare": "f5",
       "toSquare": "f6",
@@ -4220,28 +5846,47 @@
       ]
     },
     {
-      "id": "n61-0-n49",
-      "from": "n61",
-      "to": "n49",
-      "san": "Kd6",
-      "fromSquare": "e5",
-      "toSquare": "d6",
-      "transposition": true,
+      "id": "n71-0-n88",
+      "from": "n71",
+      "to": "n88",
+      "san": "Nb4",
+      "fromSquare": "d5",
+      "toSquare": "b4",
+      "transposition": false,
       "points": [
         {
-          "x": 1602,
-          "y": 1563
+          "x": 1285,
+          "y": 1638
         },
         {
-          "x": 3388,
-          "y": 1281
+          "x": 1285,
+          "y": 1702
         }
       ]
     },
     {
-      "id": "n62-0-n29",
-      "from": "n62",
-      "to": "n29",
+      "id": "n72-0-n89",
+      "from": "n72",
+      "to": "n89",
+      "san": "Ke5",
+      "fromSquare": "f6",
+      "toSquare": "e5",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1527,
+          "y": 1638
+        },
+        {
+          "x": 1527,
+          "y": 1702
+        }
+      ]
+    },
+    {
+      "id": "n73-0-n37",
+      "from": "n73",
+      "to": "n37",
       "san": "Nf4",
       "fromSquare": "e2",
       "toSquare": "f4",
@@ -4252,15 +5897,15 @@
           "y": 1563
         },
         {
-          "x": 3630,
+          "x": 4598,
           "y": 785
         }
       ]
     },
     {
-      "id": "n63-0-n27",
-      "from": "n63",
-      "to": "n27",
+      "id": "n74-0-n35",
+      "from": "n74",
+      "to": "n35",
       "san": "Nf4",
       "fromSquare": "e2",
       "toSquare": "f4",
@@ -4271,60 +5916,79 @@
           "y": 1563
         },
         {
-          "x": 3388,
+          "x": 4356,
           "y": 785
         }
       ]
     },
     {
-      "id": "n64-0-n77",
-      "from": "n64",
-      "to": "n77",
+      "id": "n75-0-n90",
+      "from": "n75",
+      "to": "n90",
       "san": "Ne5",
       "fromSquare": "g6",
       "toSquare": "e5",
       "transposition": false,
       "points": [
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1638
         },
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1702
         }
       ]
     },
     {
-      "id": "n65-0-n78",
-      "from": "n65",
-      "to": "n78",
+      "id": "n76-0-n63",
+      "from": "n76",
+      "to": "n63",
+      "san": "Ke7",
+      "fromSquare": "d7",
+      "toSquare": "e7",
+      "transposition": true,
+      "points": [
+        {
+          "x": 5324,
+          "y": 1563
+        },
+        {
+          "x": 4748,
+          "y": 1281
+        }
+      ]
+    },
+    {
+      "id": "n77-0-n91",
+      "from": "n77",
+      "to": "n91",
       "san": "Kd5",
       "fromSquare": "d6",
       "toSquare": "d5",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 5641,
           "y": 1638
         },
         {
-          "x": 4673,
+          "x": 5641,
           "y": 1702
         }
       ]
     },
     {
-      "id": "n66-0-n74",
-      "from": "n66",
-      "to": "n74",
+      "id": "n78-0-n85",
+      "from": "n78",
+      "to": "n85",
       "san": "Kf6",
       "fromSquare": "e7",
       "toSquare": "f6",
       "transposition": true,
       "points": [
         {
-          "x": 3947,
+          "x": 4915,
           "y": 1638
         },
         {
@@ -4334,35 +5998,35 @@
       ]
     },
     {
-      "id": "n67-0-n79",
-      "from": "n67",
-      "to": "n79",
+      "id": "n79-0-n92",
+      "from": "n79",
+      "to": "n92",
       "san": "Kf7",
       "fromSquare": "e7",
       "toSquare": "f7",
       "transposition": false,
       "points": [
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1638
         },
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1702
         }
       ]
     },
     {
-      "id": "n68-0-n76",
-      "from": "n68",
-      "to": "n76",
+      "id": "n80-0-n87",
+      "from": "n80",
+      "to": "n87",
       "san": "Kf6",
       "fromSquare": "e7",
       "toSquare": "f6",
       "transposition": true,
       "points": [
         {
-          "x": 3705,
+          "x": 4673,
           "y": 1638
         },
         {
@@ -4372,9 +6036,9 @@
       ]
     },
     {
-      "id": "n69-0-n80",
-      "from": "n69",
-      "to": "n80",
+      "id": "n81-0-n93",
+      "from": "n81",
+      "to": "n93",
       "san": "Kf8",
       "fromSquare": "e8",
       "toSquare": "f8",
@@ -4391,9 +6055,9 @@
       ]
     },
     {
-      "id": "n70-0-n81",
-      "from": "n70",
-      "to": "n81",
+      "id": "n82-0-n94",
+      "from": "n82",
+      "to": "n94",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -4410,28 +6074,9 @@
       ]
     },
     {
-      "id": "n71-0-n82",
-      "from": "n71",
-      "to": "n82",
-      "san": "Kg7",
-      "fromSquare": "f8",
-      "toSquare": "g7",
-      "transposition": false,
-      "points": [
-        {
-          "x": 1043,
-          "y": 1852
-        },
-        {
-          "x": 1043,
-          "y": 1984
-        }
-      ]
-    },
-    {
-      "id": "n72-0-n83",
-      "from": "n72",
-      "to": "n83",
+      "id": "n83-0-n95",
+      "from": "n83",
+      "to": "n95",
       "san": "Kd8",
       "fromSquare": "e8",
       "toSquare": "d8",
@@ -4448,9 +6093,9 @@
       ]
     },
     {
-      "id": "n73-0-n84",
-      "from": "n73",
-      "to": "n84",
+      "id": "n84-0-n96",
+      "from": "n84",
+      "to": "n96",
       "san": "Kg7",
       "fromSquare": "f8",
       "toSquare": "g7",
@@ -4467,9 +6112,9 @@
       ]
     },
     {
-      "id": "n73-1-n85",
-      "from": "n73",
-      "to": "n85",
+      "id": "n84-1-n97",
+      "from": "n84",
+      "to": "n97",
       "san": "Ke8",
       "fromSquare": "f8",
       "toSquare": "e8",
@@ -4494,9 +6139,9 @@
       ]
     },
     {
-      "id": "n74-0-n86",
-      "from": "n74",
-      "to": "n86",
+      "id": "n85-0-n98",
+      "from": "n85",
+      "to": "n98",
       "san": "Kh7",
       "fromSquare": "h8",
       "toSquare": "h7",
@@ -4513,9 +6158,9 @@
       ]
     },
     {
-      "id": "n75-0-n87",
-      "from": "n75",
-      "to": "n87",
+      "id": "n86-0-n99",
+      "from": "n86",
+      "to": "n99",
       "san": "Kh8",
       "fromSquare": "h7",
       "toSquare": "h8",
@@ -4540,9 +6185,9 @@
       ]
     },
     {
-      "id": "n75-1-n88",
-      "from": "n75",
-      "to": "n88",
+      "id": "n86-1-n100",
+      "from": "n86",
+      "to": "n100",
       "san": "Kg7",
       "fromSquare": "h7",
       "toSquare": "g7",
@@ -4559,9 +6204,9 @@
       ]
     },
     {
-      "id": "n76-0-n86",
-      "from": "n76",
-      "to": "n86",
+      "id": "n87-0-n98",
+      "from": "n87",
+      "to": "n98",
       "san": "Kh7",
       "fromSquare": "h6",
       "toSquare": "h7",
@@ -4578,93 +6223,131 @@
       ]
     },
     {
-      "id": "n77-0-n89",
-      "from": "n77",
-      "to": "n89",
+      "id": "n88-0-n101",
+      "from": "n88",
+      "to": "n101",
+      "san": "Ke8",
+      "fromSquare": "f8",
+      "toSquare": "e8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 1285,
+          "y": 1852
+        },
+        {
+          "x": 1285,
+          "y": 1984
+        }
+      ]
+    },
+    {
+      "id": "n89-0-n13",
+      "from": "n89",
+      "to": "n13",
+      "san": "Ke8",
+      "fromSquare": "d8",
+      "toSquare": "e8",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1452,
+          "y": 1777
+        },
+        {
+          "x": 634,
+          "y": 571
+        }
+      ]
+    },
+    {
+      "id": "n90-0-n102",
+      "from": "n90",
+      "to": "n102",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1852
         },
         {
-          "x": 3463,
+          "x": 4431,
           "y": 1984
         }
       ]
     },
     {
-      "id": "n78-0-n90",
-      "from": "n78",
-      "to": "n90",
+      "id": "n91-0-n103",
+      "from": "n91",
+      "to": "n103",
       "san": "Kd8",
       "fromSquare": "e8",
       "toSquare": "d8",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 5641,
           "y": 1852
         },
         {
-          "x": 4673,
+          "x": 5641,
           "y": 1984
         }
       ]
     },
     {
-      "id": "n79-0-n91",
-      "from": "n79",
-      "to": "n91",
+      "id": "n92-0-n104",
+      "from": "n92",
+      "to": "n104",
       "san": "Kh8",
       "fromSquare": "h7",
       "toSquare": "h8",
       "transposition": false,
       "points": [
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1852
         },
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1898.2
         },
         {
-          "x": 4431,
+          "x": 5399,
           "y": 1898.2
         },
         {
-          "x": 4431,
+          "x": 5399,
           "y": 1984
         }
       ]
     },
     {
-      "id": "n79-1-n92",
-      "from": "n79",
-      "to": "n92",
+      "id": "n92-1-n105",
+      "from": "n92",
+      "to": "n105",
       "san": "Kh6",
       "fromSquare": "h7",
       "toSquare": "h6",
       "transposition": false,
       "points": [
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1852
         },
         {
-          "x": 4189,
+          "x": 5157,
           "y": 1984
         }
       ]
     },
     {
-      "id": "n81-0-n19",
-      "from": "n81",
-      "to": "n19",
+      "id": "n94-0-n24",
+      "from": "n94",
+      "to": "n24",
       "san": "Kf6",
       "fromSquare": "g6",
       "toSquare": "f6",
@@ -4681,28 +6364,9 @@
       ]
     },
     {
-      "id": "n82-0-n51",
-      "from": "n82",
-      "to": "n51",
-      "san": "Ke7",
-      "fromSquare": "d7",
-      "toSquare": "e7",
-      "transposition": true,
-      "points": [
-        {
-          "x": 1118,
-          "y": 2059
-        },
-        {
-          "x": 3630,
-          "y": 1281
-        }
-      ]
-    },
-    {
-      "id": "n84-0-n93",
-      "from": "n84",
-      "to": "n93",
+      "id": "n96-0-n106",
+      "from": "n96",
+      "to": "n106",
       "san": "Kg5",
       "fromSquare": "f5",
       "toSquare": "g5",
@@ -4719,28 +6383,28 @@
       ]
     },
     {
-      "id": "n85-0-n28",
-      "from": "n85",
-      "to": "n28",
+      "id": "n97-0-n107",
+      "from": "n97",
+      "to": "n107",
       "san": "Ke5",
       "fromSquare": "f5",
       "toSquare": "e5",
-      "transposition": true,
+      "transposition": false,
       "points": [
         {
-          "x": 3054,
-          "y": 2059
+          "x": 2979,
+          "y": 2134
         },
         {
-          "x": 4598,
-          "y": 785
+          "x": 2979,
+          "y": 2198
         }
       ]
     },
     {
-      "id": "n86-0-n94",
-      "from": "n86",
-      "to": "n94",
+      "id": "n98-0-n108",
+      "from": "n98",
+      "to": "n108",
       "san": "Ng6",
       "fromSquare": "f4",
       "toSquare": "g6",
@@ -4757,9 +6421,9 @@
       ]
     },
     {
-      "id": "n87-0-n74",
-      "from": "n87",
-      "to": "n74",
+      "id": "n99-0-n85",
+      "from": "n99",
+      "to": "n85",
       "san": "Kf6",
       "fromSquare": "g5",
       "toSquare": "f6",
@@ -4776,9 +6440,9 @@
       ]
     },
     {
-      "id": "n88-0-n93",
-      "from": "n88",
-      "to": "n93",
+      "id": "n100-0-n106",
+      "from": "n100",
+      "to": "n106",
       "san": "Ng6",
       "fromSquare": "f4",
       "toSquare": "g6",
@@ -4795,16 +6459,35 @@
       ]
     },
     {
-      "id": "n89-0-n72",
-      "from": "n89",
-      "to": "n72",
+      "id": "n101-0-n24",
+      "from": "n101",
+      "to": "n24",
+      "san": "Nc6",
+      "fromSquare": "b4",
+      "toSquare": "c6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 1210,
+          "y": 2059
+        },
+        {
+          "x": 150,
+          "y": 785
+        }
+      ]
+    },
+    {
+      "id": "n102-0-n83",
+      "from": "n102",
+      "to": "n83",
       "san": "Nd7",
       "fromSquare": "e5",
       "toSquare": "d7",
       "transposition": true,
       "points": [
         {
-          "x": 3388,
+          "x": 4356,
           "y": 2059
         },
         {
@@ -4814,35 +6497,35 @@
       ]
     },
     {
-      "id": "n90-0-n95",
-      "from": "n90",
-      "to": "n95",
+      "id": "n103-0-n109",
+      "from": "n103",
+      "to": "n109",
       "san": "Kc6",
       "fromSquare": "d5",
       "toSquare": "c6",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 5641,
           "y": 2134
         },
         {
-          "x": 4673,
+          "x": 5641,
           "y": 2198
         }
       ]
     },
     {
-      "id": "n91-0-n74",
-      "from": "n91",
-      "to": "n74",
+      "id": "n104-0-n85",
+      "from": "n104",
+      "to": "n85",
       "san": "Kf6",
       "fromSquare": "f7",
       "toSquare": "f6",
       "transposition": true,
       "points": [
         {
-          "x": 4356,
+          "x": 5324,
           "y": 2059
         },
         {
@@ -4852,16 +6535,16 @@
       ]
     },
     {
-      "id": "n92-0-n76",
-      "from": "n92",
-      "to": "n76",
+      "id": "n105-0-n87",
+      "from": "n105",
+      "to": "n87",
       "san": "Kf6",
       "fromSquare": "f7",
       "toSquare": "f6",
       "transposition": true,
       "points": [
         {
-          "x": 4114,
+          "x": 5082,
           "y": 2059
         },
         {
@@ -4871,9 +6554,9 @@
       ]
     },
     {
-      "id": "n93-0-n96",
-      "from": "n93",
-      "to": "n96",
+      "id": "n106-0-n110",
+      "from": "n106",
+      "to": "n110",
       "san": "Kh7",
       "fromSquare": "g7",
       "toSquare": "h7",
@@ -4890,9 +6573,28 @@
       ]
     },
     {
-      "id": "n94-0-n97",
-      "from": "n94",
-      "to": "n97",
+      "id": "n107-0-n111",
+      "from": "n107",
+      "to": "n111",
+      "san": "Kd8",
+      "fromSquare": "e8",
+      "toSquare": "d8",
+      "transposition": false,
+      "points": [
+        {
+          "x": 2979,
+          "y": 2348
+        },
+        {
+          "x": 2979,
+          "y": 2412
+        }
+      ]
+    },
+    {
+      "id": "n108-0-n112",
+      "from": "n108",
+      "to": "n112",
       "san": "Kh6",
       "fromSquare": "h7",
       "toSquare": "h6",
@@ -4909,28 +6611,28 @@
       ]
     },
     {
-      "id": "n95-0-n98",
-      "from": "n95",
-      "to": "n98",
+      "id": "n109-0-n113",
+      "from": "n109",
+      "to": "n113",
       "san": "Ke8",
       "fromSquare": "d8",
       "toSquare": "e8",
       "transposition": false,
       "points": [
         {
-          "x": 4673,
+          "x": 5641,
           "y": 2348
         },
         {
-          "x": 4673,
+          "x": 5641,
           "y": 2412
         }
       ]
     },
     {
-      "id": "n96-0-n94",
-      "from": "n96",
-      "to": "n94",
+      "id": "n110-0-n108",
+      "from": "n110",
+      "to": "n108",
       "san": "Kf6",
       "fromSquare": "g5",
       "toSquare": "f6",
@@ -4947,20 +6649,39 @@
       ]
     },
     {
-      "id": "n98-0-n49",
-      "from": "n98",
-      "to": "n49",
+      "id": "n111-0-n62",
+      "from": "n111",
+      "to": "n62",
+      "san": "Kd6",
+      "fromSquare": "e5",
+      "toSquare": "d6",
+      "transposition": true,
+      "points": [
+        {
+          "x": 3054,
+          "y": 2487
+        },
+        {
+          "x": 5566,
+          "y": 1281
+        }
+      ]
+    },
+    {
+      "id": "n113-0-n60",
+      "from": "n113",
+      "to": "n60",
       "san": "Kd6",
       "fromSquare": "c6",
       "toSquare": "d6",
       "transposition": true,
       "points": [
         {
-          "x": 4598,
+          "x": 5566,
           "y": 2487
         },
         {
-          "x": 3538,
+          "x": 4506,
           "y": 1281
         }
       ]
@@ -4971,7 +6692,7 @@
     "nodeHeight": 150,
     "columnGap": 92,
     "rowGap": 64,
-    "width": 4748,
+    "width": 5716,
     "height": 2562
   }
 }
