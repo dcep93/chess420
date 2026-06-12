@@ -563,10 +563,14 @@ function FlowchartNodeCard({
   bestMoveMismatch?: FlowchartBestMoveMismatch;
   highlightRole?: HighlightedNodeRole;
 }) {
+  const generatedMoveTie =
+    node.turn === "w" && node.boardArrows.length > node.outgoingEdgeIds.length;
   return (
     <article
       className={`flowchart-node flowchart-node--${node.turn}${
         node.terminal ? ` flowchart-node--${node.terminal}` : ""
+      }${
+        generatedMoveTie ? " flowchart-node--generated-move-tie" : ""
       }${
         bestMoveMismatch ? " flowchart-node--best-move-mismatch" : ""
       }${
@@ -574,7 +578,11 @@ function FlowchartNodeCard({
       }`}
       style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
       title={
-        bestMoveMismatch ? getBestMoveMismatchTitle(bestMoveMismatch) : undefined
+        bestMoveMismatch
+          ? getBestMoveMismatchTitle(bestMoveMismatch)
+          : generatedMoveTie
+            ? getGeneratedMoveTieTitle(node)
+            : undefined
       }
     >
       <span className="flowchart-node__id">{node.id}</span>
@@ -593,12 +601,18 @@ function FlowchartNodeCard({
           <span>{node.terminalReason}</span>
         ) : bestMoveMismatch ? (
           <span>rule gap</span>
+        ) : generatedMoveTie ? (
+          <span>tie</span>
         ) : (
           <span aria-hidden="true" />
         )}
       </div>
     </article>
   );
+}
+
+function getGeneratedMoveTieTitle(node: FlowchartNode) {
+  return `Generated tie among ${node.boardArrows.map((arrow) => arrow.san).join(", ")}`;
 }
 
 function getBestMoveMismatchTitle(mismatch: FlowchartBestMoveMismatch) {

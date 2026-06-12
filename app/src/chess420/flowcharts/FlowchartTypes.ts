@@ -20,7 +20,7 @@ export type FlowchartBoardArrow = {
   san: string;
   from: Square;
   to: Square;
-  color: "white" | "black";
+  color: "white" | "black" | "yellow";
 };
 
 export type FlowchartTranspositionKind = "exact" | "bishopAnchor";

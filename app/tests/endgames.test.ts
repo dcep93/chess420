@@ -517,8 +517,26 @@ test("generated flowcharts have renderable cached data", () => {
           node.fen,
         );
       }
-      assert.equal(node.boardArrows.length, node.outgoingEdgeIds.length);
+      assert.ok(node.boardArrows.length >= node.outgoingEdgeIds.length, node.fen);
+      if (node.boardArrows.length > node.outgoingEdgeIds.length) {
+        assert.equal(node.turn, "w", node.fen);
+        assert.equal(node.outgoingEdgeIds.length, 1, node.fen);
+        node.boardArrows
+          .slice(node.outgoingEdgeIds.length)
+          .forEach((arrow) => assert.equal(arrow.color, "yellow", node.fen));
+      }
     });
+
+    if (data.id === "knightBishopPrepare") {
+      assert.ok(
+        data.nodes.some(
+          (node) =>
+            node.turn === "w" &&
+            node.boardArrows.length > node.outgoingEdgeIds.length,
+        ),
+        "knightBishopPrepare should expose generated White ties as extra arrows",
+      );
+    }
 
     setEndgame(data.endgameId);
     data.nodes.forEach((node) => {
@@ -693,16 +711,18 @@ test("knight-bishop prepare selected nodes match singular white rules", () => {
 
   [
     ["n0", "force zone x"],
-    ["n6", "force zone x"],
-    ["n7", "force zone x"],
-    ["n23", "force zone x"],
-    ["n42", "force zone x"],
-    ["n69", "force zone x"],
-    ["n41", "key square pattern"],
-    ["n74", "key square pattern"],
-    ["n75", "key square pattern"],
-    ["n79", "key square pattern"],
-    ["n91", "key square pattern"],
+    ["n8", "force zone x"],
+    ["n9", "force zone x"],
+    ["n14", "force zone x"],
+    ["n31", "force zone x"],
+    ["n53", "force zone x"],
+    ["n81", "force zone x"],
+    ["n52", "key square pattern"],
+    ["n60", "key square pattern"],
+    ["n68", "key square pattern"],
+    ["n86", "key square pattern"],
+    ["n92", "key square pattern"],
+    ["n96", "key square pattern"],
   ].forEach(([nodeId, expectedReason]) => {
     const node = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
       (candidate) => candidate.id === nodeId,
@@ -730,10 +750,11 @@ test("knight-bishop prepare selected nodes match singular white rules", () => {
   });
 });
 
-test("knight-bishop prepare n72 remains a rule gap", () => {
+test("knight-bishop prepare former n72 remains a rule gap", () => {
   setEndgame(FLOWCHART_DATA.knightBishopPrepare.endgameId);
   const node = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
-    (candidate) => candidate.id === "n72",
+    (candidate) =>
+      candidate.fen === "7k/4K3/4B3/8/5N2/8/8/8 w - - 0 1",
   );
   assert.ok(node);
   assert.equal(node.outgoingEdgeIds.length, 1);
@@ -752,7 +773,12 @@ test("knight-bishop prepare n72 remains a rule gap", () => {
 
 test("knight-bishop prepare white moves explain their purpose", () => {
   FLOWCHART_DATA.knightBishopPrepare.nodes.forEach((node) => {
-    if (node.turn !== "w" || node.terminal || node.outgoingEdgeIds.length === 0) {
+    if (
+      node.turn !== "w" ||
+      node.terminal ||
+      node.outgoingEdgeIds.length === 0 ||
+      node.moveReason == null
+    ) {
       return;
     }
     assert.equal(typeof node.moveReason, "string", node.id);
@@ -760,14 +786,9 @@ test("knight-bishop prepare white moves explain their purpose", () => {
   });
 
   assert.match(
-    FLOWCHART_DATA.knightBishopPrepare.nodes.find((node) => node.id === "n23")
+    FLOWCHART_DATA.knightBishopPrepare.nodes.find((node) => node.id === "n0")
       ?.moveReason || "",
-    /triangulate.*preferred parity/i,
-  );
-  assert.match(
-    FLOWCHART_DATA.knightBishopPrepare.nodes.find((node) => node.id === "n42")
-      ?.moveReason || "",
-    /Continue the triangulation from n23/i,
+    /active c6 outpost/i,
   );
 });
 

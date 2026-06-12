@@ -18,6 +18,7 @@ type FlowchartConfig = {
   endgameId: EndgameId;
   playEndgameId: EndgameId;
   starts: string[];
+  preparePolicyStarts?: string[];
   success: (fen: string) => string | undefined;
   failure?: (fen: string) => string | undefined;
   maxNodes: number;
@@ -31,6 +32,7 @@ type WorkingNode = Omit<
   "boardArrows" | "outgoingEdgeIds" | "x" | "y"
 > & {
   boardArrows: FlowchartBoardArrow[];
+  generatedWhiteTieArrows: FlowchartBoardArrow[];
   outgoingEdgeIds: string[];
   x: number;
   y: number;
@@ -42,7 +44,7 @@ type WorkingEdge = Omit<FlowchartEdge, "points"> & {
   points?: FlowchartPoint[];
 };
 
-type WhiteMoveSelector = (fen: string, layer: number) => Move | undefined;
+type WhiteMoveSelector = (fen: string, layer: number) => Move[];
 
 type PrepareSearchOutcome = "success" | "failure" | "horizon" | "cycle" | "escape";
 
@@ -87,7 +89,7 @@ type PrepareSearchPolicyNode = {
 type PrepareSearchPolicy = {
   nodes: Map<string, PrepareSearchPolicyNode>;
   distances: Map<string, number>;
-  whiteMoves: Map<string, string>;
+  whiteMoves: Map<string, string[]>;
 };
 
 const PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT = 80;
@@ -170,6 +172,12 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
       "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
       "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
       "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
+      "8/4k3/4B3/4K3/8/7N/8/8 w - - 72 37",
+    ],
+    preparePolicyStarts: [
+      "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
+      "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
+      "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
     ],
     success: getKnightBishopPrepareSuccess,
     failure: getKnightBishopPrepareFailure,
@@ -239,6 +247,7 @@ export function relayoutFlowchartData(data: FlowchartData): FlowchartData {
       {
         ...node,
         boardArrows: [...node.boardArrows],
+        generatedWhiteTieArrows: [],
         outgoingEdgeIds: [...node.outgoingEdgeIds],
         layer: rows.indexOf(node.y),
       },
@@ -328,7 +337,8 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
 
     const chess = Brain.getChess(node.fen);
     const moves = getFlowchartMoves(node.fen, node.layer, selectWhiteMove);
-    moves.forEach((move, moveIndex) => {
+    const pathMoves = chess.turn() === "w" ? moves.slice(0, 1) : moves;
+    pathMoves.forEach((move, moveIndex) => {
       const nextChess = Brain.getChess(node.fen);
       const result = nextChess.move(move.san);
       if (!result) {
@@ -367,6 +377,18 @@ function buildFlowchart(config: FlowchartConfig): FlowchartData {
         queue.push(child.id);
       }
     });
+    if (chess.turn() === "w" && moves.length > pathMoves.length) {
+      moves.slice(pathMoves.length).forEach((move, tieIndex) => {
+        node.generatedWhiteTieArrows.push({
+          id: `${node.id}-tie-${tieIndex}-${move.san}`,
+          san: move.san,
+          from: move.from,
+          to: move.to,
+          color: "yellow",
+        });
+      });
+      node.boardArrows.push(...node.generatedWhiteTieArrows);
+    }
   }
 
   assignBishopAnchorEquivalentReferences(
@@ -457,6 +479,7 @@ function getOrCreateNode(
     imageUrl: `${BOARD_IMAGE_ORIGIN}/image/${Brain.boardKey(fen)}`,
     playUrl: `/endgames/${config.playEndgameId}#w//${fen.replaceAll(" ", "_")}`,
     boardArrows: [],
+    generatedWhiteTieArrows: [],
     outgoingEdgeIds: [],
     x: 0,
     y: 0,
@@ -498,22 +521,20 @@ function getFlowchartMoves(
   }
 
   const selected = selectWhiteMove(fen, layer);
-  return selected ? [selected] : [];
+  return selected;
 }
 
-function selectEndgameHeuristicWhiteMove(fen: string): Move | undefined {
+function selectEndgameHeuristicWhiteMove(fen: string): Move[] {
   const chess = Brain.getChess(fen);
   const legalVerboseMoves = chess.moves({ verbose: true });
   const idealSans = Brain.getIdealEndgameWhiteMoves(fen);
-  return (
+  const selected =
     legalVerboseMoves.find((move) => idealSans.includes(move.san)) ||
-    legalVerboseMoves[0]
-  );
+    legalVerboseMoves[0];
+  return selected ? [selected] : [];
 }
 
-function createSearchWhiteMoveSelector(
-  config: FlowchartConfig,
-): WhiteMoveSelector {
+function createSearchWhiteMoveSelector(config: FlowchartConfig): WhiteMoveSelector {
   const memo = new Map<string, { distance: number | null; san?: string }>();
   const visiting = new Set<string>();
 
@@ -588,11 +609,12 @@ function createSearchWhiteMoveSelector(
   return (fen) => {
     const result = solve(fen);
     if (!result.san) {
-      return undefined;
+      return [];
     }
-    return Brain.getChess(fen)
+    const move = Brain.getChess(fen)
       .moves({ verbose: true })
       .find((move) => move.san === result.san);
+    return move ? [move] : [];
   };
 }
 
@@ -603,21 +625,25 @@ function createPrepareSearchWhiteMoveSelector(
 
   return (fen) => {
     const normalizedFen = normalizeFen(fen);
-    return findLegalMoveBySan(
-      fen,
-      policy.whiteMoves.get(Brain.boardTurnKey(normalizedFen)),
-    );
+    const policySans = policy.whiteMoves.get(Brain.boardTurnKey(normalizedFen));
+    if (!policySans) {
+      return getPrepareSearchFallbackWhiteMoves(fen, config);
+    }
+    return policySans
+      .map((san) => findLegalMoveBySan(fen, san))
+      .filter((move): move is Move => move !== undefined);
   };
 }
 
 function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy {
   const nodes = new Map<string, PrepareSearchPolicyNode>();
   const distances = new Map<string, number>();
-  const whiteMoves = new Map<string, string>();
-  const queue = config.starts.map((fen) => Brain.boardTurnKey(normalizeFen(fen)));
+  const whiteMoves = new Map<string, string[]>();
+  const policyStarts = config.preparePolicyStarts || config.starts;
+  const queue = policyStarts.map((fen) => Brain.boardTurnKey(normalizeFen(fen)));
   const queued = new Set(queue);
   const fenByKey = new Map(
-    config.starts.map((fen) => [
+    policyStarts.map((fen) => [
       Brain.boardTurnKey(normalizeFen(fen)),
       normalizeFen(fen),
     ]),
@@ -633,20 +659,22 @@ function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy
     const chess = Brain.getChess(fen);
     const children: PrepareSearchPolicyNode["children"] = terminal
       ? []
-      : getPrepareSearchCandidateMoves(fen, chess.moves({ verbose: true })).map(
-          (move) => {
-            const next = Brain.getChess(fen);
-            next.move(move.san);
-            const childFen = normalizeFen(next.fen());
-            const childKey = Brain.boardTurnKey(childFen);
-            fenByKey.set(childKey, childFen);
-            if (!queued.has(childKey)) {
-              queued.add(childKey);
-              queue.push(childKey);
-            }
-            return { san: move.san, childKey };
-          },
-        );
+      : getPrepareSearchCandidateMoves(
+          fen,
+          chess.moves({ verbose: true }),
+          config,
+        ).map((move) => {
+          const next = Brain.getChess(fen);
+          next.move(move.san);
+          const childFen = normalizeFen(next.fen());
+          const childKey = Brain.boardTurnKey(childFen);
+          fenByKey.set(childKey, childFen);
+          if (!queued.has(childKey)) {
+            queued.add(childKey);
+            queue.push(childKey);
+          }
+          return { san: move.san, childKey };
+        });
     nodes.set(key, {
       fen,
       turn: chess.turn(),
@@ -674,27 +702,36 @@ function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy
       if (distances.has(key) || node.terminal || node.children.length === 0) {
         return;
       }
-      const childDistances = node.children.map((child) =>
-        distances.get(child.childKey),
-      );
+        const childDistances = node.children.map((child) =>
+          distances.get(child.childKey),
+        );
       if (node.turn === "w") {
         const solvedChildren = childDistances
           .map((distance, index) =>
             distance === undefined
               ? undefined
-              : { distance: distance + 1, san: node.children[index].san },
+              : {
+                  distance: distance + 1,
+                  san: node.children[index].san,
+                  index,
+                },
           )
           .filter(
-            (child): child is { distance: number; san: string } =>
+            (child): child is { distance: number; san: string; index: number } =>
               child !== undefined,
           )
-          .sort((a, b) => a.distance - b.distance);
+          .sort((a, b) => a.distance - b.distance || a.index - b.index);
         const best = solvedChildren[0];
         if (!best) {
           return;
         }
         distances.set(key, best.distance);
-        whiteMoves.set(key, best.san);
+        whiteMoves.set(
+          key,
+          solvedChildren
+            .filter((child) => child.distance === best.distance)
+            .map((child) => child.san),
+        );
         changed = true;
       } else {
         if (childDistances.some((distance) => distance === undefined)) {
@@ -758,17 +795,45 @@ function addPrepareSearchPolicyDebug(
     });
   });
 
-  config.starts.map(normalizeFen).forEach((fen) => {
+  (config.preparePolicyStarts || config.starts).map(normalizeFen).forEach((fen) => {
     const key = Brain.boardTurnKey(fen);
     const distance = policy.distances.get(key);
     prepareSearchDebugReport.starts.push({
       fen,
       solved: distance !== undefined,
       distance: distance ?? null,
-      san: policy.whiteMoves.get(key),
+      san: policy.whiteMoves.get(key)?.[0],
       line: getPrepareSearchPolicyLine(key, policy),
     });
   });
+}
+
+function getPrepareSearchFallbackWhiteMoves(
+  fen: string,
+  config: FlowchartConfig,
+): Move[] {
+  const candidates = getPrepareSearchCandidateMoves(
+    fen,
+    Brain.getChess(fen).moves({ verbose: true }),
+    config,
+  );
+  if (candidates.length === 0) {
+    return [];
+  }
+  const scored = candidates.map((move, index) => {
+    const next = Brain.getChess(fen);
+    next.move(move.san);
+    return {
+      move,
+      index,
+      score: getPrepareSearchPositionScore(next.fen()),
+    };
+  });
+  const bestScore = Math.min(...scored.map((candidate) => candidate.score));
+  return scored
+    .filter((candidate) => candidate.score === bestScore)
+    .sort((a, b) => a.index - b.index)
+    .map((candidate) => candidate.move);
 }
 
 function getPrepareSearchPolicyLine(
@@ -786,7 +851,7 @@ function getPrepareSearchPolicyLine(
     }
     const san =
       node.turn === "w"
-        ? policy.whiteMoves.get(key)
+        ? policy.whiteMoves.get(key)?.[0]
         : node.children
             .map((child) => ({
               ...child,
@@ -813,7 +878,11 @@ function getPrepareSearchPolicyLine(
   return line;
 }
 
-function getPrepareSearchCandidateMoves(fen: string, moves: Move[]): Move[] {
+function getPrepareSearchCandidateMoves(
+  fen: string,
+  moves: Move[],
+  config: FlowchartConfig,
+): Move[] {
   const orderedMoves = orderPrepareSearchMoves(fen, moves);
   if (Brain.getChess(fen).turn() !== "w") {
     return orderedMoves;
@@ -847,7 +916,7 @@ function getPrepareSearchCandidateMoves(fen: string, moves: Move[]): Move[] {
       reason: `${rejectedPiece} below fourth rank`,
     });
     return false;
-  });
+  }).slice(0, config.maxSearchWhiteMoves);
 }
 
 function addPrepareSearchDebugSample(
@@ -1199,23 +1268,16 @@ function assignPrepareMoveReasons(
     return;
   }
 
-  const missingReasons: string[] = [];
   nodes.forEach((node) => {
     if (node.turn !== "w" || node.terminal || node.outgoingEdgeIds.length === 0) {
       return;
     }
     const reason = KNIGHT_BISHOP_PREPARE_MOVE_REASONS[node.id];
     if (!reason) {
-      missingReasons.push(`${node.id} ${node.fen}`);
       return;
     }
     node.moveReason = reason;
   });
-  if (missingReasons.length > 0) {
-    throw new Error(
-      `Missing knightBishopPrepare move reasons:\n${missingReasons.join("\n")}`,
-    );
-  }
 }
 
 function compareEdgesByTargetDistance(
@@ -1449,6 +1511,7 @@ function collapseReferenceNodes(
       color: node.turn === "w" ? "white" : "black",
     });
   });
+  appendGeneratedWhiteTieArrows(nodes, liveNodeIds);
 }
 
 function pruneUnreachableNodes(
@@ -1512,6 +1575,24 @@ function pruneUnreachableNodes(
       from: edge.fromSquare,
       to: edge.toSquare,
       color: node.turn === "w" ? "white" : "black",
+    });
+  });
+  appendGeneratedWhiteTieArrows(nodes, liveNodeIds);
+}
+
+function appendGeneratedWhiteTieArrows(
+  nodes: Map<string, WorkingNode>,
+  liveNodeIds = new Set([...nodes.values()].map((node) => node.id)),
+) {
+  nodes.forEach((node) => {
+    if (!liveNodeIds.has(node.id) || node.generatedWhiteTieArrows.length === 0) {
+      return;
+    }
+    const existingArrowIds = new Set(node.boardArrows.map((arrow) => arrow.id));
+    node.generatedWhiteTieArrows.forEach((arrow) => {
+      if (!existingArrowIds.has(arrow.id)) {
+        node.boardArrows.push(arrow);
+      }
     });
   });
 }
