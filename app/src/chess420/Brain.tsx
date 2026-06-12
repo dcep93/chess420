@@ -273,6 +273,11 @@ export type EndgamePriorityNoteBoard = {
   id: string;
   title: string;
   caption: string;
+  layout?: {
+    files: number;
+    ranks: number;
+    fileOffset: number;
+  };
   pieces: Array<{ square: string; piece: "K" | "B" | "N" | "k" }>;
   highlights: Array<{
     square: string;
@@ -1329,6 +1334,7 @@ export default class Brain {
         id: "zone-x",
         title: "Zone X",
         caption: "",
+        layout: { files: 14, ranks: 8, fileOffset: 3 },
         pieces: [
           { square: "f8", piece: "k" },
           { square: "e5", piece: "K" },
@@ -1348,6 +1354,7 @@ export default class Brain {
         id: "key-square",
         title: "Key Square",
         caption: "Move the knight to the key square between the kings, while the black king is on the edge. The bishop cuts off the red escape squares.",
+        layout: { files: 14, ranks: 8, fileOffset: 3 },
         pieces: [
           { square: "d8", piece: "k" },
           { square: "d6", piece: "K" },

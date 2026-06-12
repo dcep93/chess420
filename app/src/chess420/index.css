@@ -852,7 +852,7 @@
 }
 .endgame-priority-note-board__board {
   position: relative;
-  width: min(100%, 13rem);
+  width: min(100%, var(--note-board-max-width, 13rem));
   aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid rgba(238, 219, 189, 0.3);
@@ -867,8 +867,6 @@
 }
 .endgame-priority-note-board__squares {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
 }
 .endgame-priority-note-board__arrows {
   pointer-events: none;
@@ -911,8 +909,6 @@
 }
 .endgame-priority-note-board__piece {
   position: absolute;
-  width: 12.5%;
-  height: 12.5%;
   transform: translate(-50%, -50%);
   pointer-events: none;
   background: transparent;

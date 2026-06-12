@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { defaultPieces } from "react-chessboard";
 import Brain, { type EndgamePriorityNoteBoard, View } from "./Brain";
@@ -467,13 +467,20 @@ function EndgamePriorityNoteBoardView(props: {
   board: EndgamePriorityNoteBoard;
 }) {
   const { board } = props;
+  const layout = getNoteBoardLayout(board);
   const highlightsBySquare = new Map(
     board.highlights.map((highlight) => [highlight.square, highlight.kind])
   );
   const squares = [];
-  for (let rank = 8; rank >= 1; rank -= 1) {
-    for (const file of ["a", "b", "c", "d", "e", "f", "g", "h"]) {
-      squares.push(`${file}${rank}`);
+  for (let row = 0; row < layout.ranks; row += 1) {
+    const rank = layout.ranks - row;
+    for (let column = 0; column < layout.files; column += 1) {
+      const file = getNoteBoardFileAtColumn(column, layout.fileOffset);
+      squares.push({
+        column,
+        row,
+        square: file ? `${file}${rank}` : undefined,
+      });
     }
   }
   return (
@@ -482,47 +489,61 @@ function EndgamePriorityNoteBoardView(props: {
         <strong>{board.title}</strong>
         <span>{board.caption}</span>
       </figcaption>
-      <div className="endgame-priority-note-board__board" aria-label={board.title}>
-        <div className="endgame-priority-note-board__squares">
-          {squares.map((square, index) => {
-            const file = index % 8;
-            const row = Math.floor(index / 8);
-            const highlight = highlightsBySquare.get(square);
+      <div
+        className="endgame-priority-note-board__board"
+        style={{
+          "--note-board-max-width": layout.files > 8 ? "18rem" : "13rem",
+          aspectRatio: `${layout.files} / ${layout.ranks}`,
+        } as CSSProperties}
+        aria-label={board.title}
+      >
+        <div
+          className="endgame-priority-note-board__squares"
+          style={{
+            gridTemplateColumns: `repeat(${layout.files}, 1fr)`,
+            gridTemplateRows: `repeat(${layout.ranks}, 1fr)`,
+          }}
+        >
+          {squares.map(({ column, row, square }) => {
+            const highlight = square ? highlightsBySquare.get(square) : undefined;
             return (
               <div
                 className={`endgame-priority-note-board__square ${
-                  (file + row) % 2 === 0
+                  (column - layout.fileOffset + row) % 2 === 0
                     ? "endgame-priority-note-board__square--light"
                     : "endgame-priority-note-board__square--dark"
                 } ${highlight ? `endgame-priority-note-board__highlight endgame-priority-note-board__highlight--${highlight}` : ""}`}
-                key={square}
+                key={square ?? `${column}-${row}`}
               />
             );
           })}
         </div>
         <svg
           className="endgame-priority-note-board__arrows"
-          viewBox="0 0 800 800"
+          viewBox={`0 0 ${layout.files * 100} ${layout.ranks * 100}`}
           aria-hidden="true"
         >
           {board.arrows?.map((arrow) => (
             <EndgamePriorityNoteBoardArrow
               arrow={arrow}
+              layout={layout}
               key={`${arrow.from}-${arrow.to}`}
             />
           ))}
         </svg>
         <div className="endgame-priority-note-board__pieces" aria-hidden="true">
           {board.pieces.map((piece) => {
-            const point = getNoteBoardSquarePoint(piece.square);
+            const point = getNoteBoardSquarePoint(piece.square, layout);
             const PieceSvg = defaultPieces[getNoteBoardPieceType(piece.piece)];
             return (
               <div
                 className="endgame-priority-note-board__piece"
                 key={`${piece.piece}-${piece.square}`}
                 style={{
-                  left: `${point.x / 8}%`,
-                  top: `${point.y / 8}%`,
+                  left: `${point.x / layout.files}%`,
+                  top: `${point.y / layout.ranks}%`,
+                  width: `${100 / layout.files}%`,
+                  height: `${100 / layout.ranks}%`,
                 }}
               >
                 <PieceSvg />
@@ -537,9 +558,10 @@ function EndgamePriorityNoteBoardView(props: {
 
 function EndgamePriorityNoteBoardArrow(props: {
   arrow: { from: string; to: string };
+  layout: NoteBoardLayout;
 }) {
-  const from = getNoteBoardSquarePoint(props.arrow.from);
-  const to = getNoteBoardSquarePoint(props.arrow.to);
+  const from = getNoteBoardSquarePoint(props.arrow.from, props.layout);
+  const to = getNoteBoardSquarePoint(props.arrow.to, props.layout);
   const shape = getNoteBoardArrowShape(from, to);
   return (
     <g className="endgame-priority-note-board__arrow">
@@ -555,12 +577,34 @@ function EndgamePriorityNoteBoardArrow(props: {
   );
 }
 
-function getNoteBoardSquarePoint(square: string) {
-  const file = square.charCodeAt(0) - "a".charCodeAt(0);
+type NoteBoardLayout = {
+  files: number;
+  ranks: number;
+  fileOffset: number;
+};
+
+const DEFAULT_NOTE_BOARD_LAYOUT: NoteBoardLayout = {
+  files: 8,
+  ranks: 8,
+  fileOffset: 0,
+};
+
+const NOTE_BOARD_FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+function getNoteBoardLayout(board: EndgamePriorityNoteBoard): NoteBoardLayout {
+  return board.layout ?? DEFAULT_NOTE_BOARD_LAYOUT;
+}
+
+function getNoteBoardFileAtColumn(column: number, fileOffset: number) {
+  return NOTE_BOARD_FILES[column - fileOffset];
+}
+
+function getNoteBoardSquarePoint(square: string, layout: NoteBoardLayout) {
+  const file = square.charCodeAt(0) - "a".charCodeAt(0) + layout.fileOffset;
   const rank = Number(square[1]) - 1;
   return {
     x: file * 100 + 50,
-    y: (7 - rank) * 100 + 50,
+    y: (layout.ranks - 1 - rank) * 100 + 50,
   };
 }
 
