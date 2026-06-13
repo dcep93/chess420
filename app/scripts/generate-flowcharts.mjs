@@ -5,28 +5,52 @@ import { build } from "esbuild";
 
 const entry = resolve(".tmp/generate-flowcharts-entry.ts");
 const outfile = resolve(".tmp/generate-flowcharts.mjs");
-const flowchartId = process.argv[2];
+const args = process.argv.slice(2);
+const flowchartId = args.find((arg) => !arg.startsWith("--"));
 
 mkdirSync(dirname(entry), { recursive: true });
 writeFileSync(
   entry,
   `
 import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 import {
   generateAllFlowcharts,
   generateFlowchart,
   getPrepareSearchDebugReport,
 } from "../src/chess420/flowcharts/FlowchartGenerator";
-import { isFlowchartId } from "../src/chess420/flowcharts/FlowchartTypes";
+import {
+  FLOWCHART_IDS,
+  isFlowchartId,
+  type FlowchartData,
+  type FlowchartId,
+} from "../src/chess420/flowcharts/FlowchartTypes";
 
-const flowchartId = process.argv[2];
+const args = process.argv.slice(2);
+const flowchartId = args.find((arg) => !arg.startsWith("--"));
+const useCache = !args.includes("--fresh");
 if (flowchartId && !isFlowchartId(flowchartId)) {
   throw new Error(\`Unknown flowchart id: \${flowchartId}\`);
 }
+function readCachedFlowchart(id: FlowchartId): FlowchartData | undefined {
+  if (!useCache) {
+    return undefined;
+  }
+  const path = \`src/chess420/flowcharts/generated/\${id}.json\`;
+  if (!existsSync(path)) {
+    return undefined;
+  }
+  return JSON.parse(readFileSync(path, "utf8")) as FlowchartData;
+}
+const cachedData = Object.fromEntries(
+  FLOWCHART_IDS.map((id) => [id, readCachedFlowchart(id)]).filter(
+    (entry): entry is [FlowchartId, FlowchartData] => entry[1] !== undefined,
+  ),
+);
 const generated = flowchartId
-  ? { [flowchartId]: generateFlowchart(flowchartId) }
-  : generateAllFlowcharts();
+  ? { [flowchartId]: generateFlowchart(flowchartId, { cachedData }) }
+  : generateAllFlowcharts({ cachedData });
 for (const [id, data] of Object.entries(generated)) {
   const path = \`src/chess420/flowcharts/generated/\${id}.json\`;
   mkdirSync(dirname(path), { recursive: true });
@@ -59,7 +83,7 @@ await build({
 
 const result = spawnSync(
   process.execPath,
-  flowchartId ? [outfile, flowchartId] : [outfile],
+  [outfile, ...args],
   {
     stdio: "inherit",
   },

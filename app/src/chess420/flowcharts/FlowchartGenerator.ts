@@ -27,6 +27,10 @@ type FlowchartConfig = {
   maxSearchWhiteMoves?: number;
 };
 
+type FlowchartGenerationOptions = {
+  cachedData?: Partial<Record<FlowchartId, FlowchartData>>;
+};
+
 type WorkingNode = Omit<
   FlowchartNode,
   "boardArrows" | "outgoingEdgeIds" | "x" | "y"
@@ -90,6 +94,10 @@ type PrepareSearchPolicy = {
   nodes: Map<string, PrepareSearchPolicyNode>;
   distances: Map<string, number>;
   whiteMoves: Map<string, string[]>;
+};
+
+type CachedPrepareSearchPolicy = PrepareSearchPolicy & {
+  fenByKey: Map<string, string>;
 };
 
 const PREPARE_SEARCH_DEBUG_SAMPLE_LIMIT = 80;
@@ -174,6 +182,7 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
       "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
       "8/4k3/4B3/4K3/8/6N1/8/8 w - - 4 3",
       "8/4k3/4B3/4K3/8/7N/8/8 w - - 72 37",
+      "3k4/8/4BK2/5N2/8/8/8/8 w - - 18 10",
     ],
     preparePolicyStarts: [
       "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
@@ -199,12 +208,23 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
   },
 };
 
-export function generateFlowchart(id: FlowchartId): FlowchartData {
+export function generateFlowchart(
+  id: FlowchartId,
+  options: FlowchartGenerationOptions = {},
+): FlowchartData {
   if (id === "knightBishopPrepare") {
     prepareSearchDebugReport = createPrepareSearchDebugReport();
   }
+  const config = FLOWCHART_CONFIGS[id];
+  const cachedData = options.cachedData?.[id];
+  if (cachedData && cachedFlowchartMatchesConfig(cachedData, config)) {
+    if (id === "knightBishopPrepare") {
+      populateCachedPrepareSearchDebugReport(config, cachedData);
+    }
+    return cachedData;
+  }
   return withEndgame(FLOWCHART_CONFIGS[id].endgameId, () =>
-    buildFlowchart(FLOWCHART_CONFIGS[id]),
+    buildFlowchart(config, options),
   );
 }
 
@@ -233,10 +253,65 @@ function createPrepareSearchDebugReport(): PrepareSearchDebugReport {
   };
 }
 
-export function generateAllFlowcharts(): Record<FlowchartId, FlowchartData> {
+function cachedFlowchartMatchesConfig(
+  data: FlowchartData,
+  config: FlowchartConfig,
+): boolean {
+  return (
+    data.id === config.id &&
+    JSON.stringify(data.starts) ===
+      JSON.stringify(config.starts.map(normalizeFen))
+  );
+}
+
+function populateCachedPrepareSearchDebugReport(
+  config: FlowchartConfig,
+  cachedData: FlowchartData,
+) {
+  const nodesByKey = new Map(
+    cachedData.nodes.map((node) => [Brain.boardTurnKey(node.fen), node]),
+  );
+  prepareSearchDebugReport.calls = cachedData.nodes.length;
+  prepareSearchDebugReport.memoHits = cachedData.nodes.length;
+  prepareSearchDebugReport.outcomeCounts.success = cachedData.nodes.filter(
+    (node) => node.terminal === "success",
+  ).length;
+  prepareSearchDebugReport.outcomeCounts.failure = cachedData.nodes.filter(
+    (node) => node.terminal === "failure",
+  ).length;
+  prepareSearchDebugReport.maxDepth = Math.max(
+    ...cachedData.nodes.map((node) => node.movesToSuccess ?? 0),
+    0,
+  );
+  (config.preparePolicyStarts || config.starts).map(normalizeFen).forEach((fen) => {
+    const node = nodesByKey.get(Brain.boardTurnKey(fen));
+    prepareSearchDebugReport.starts.push({
+      fen,
+      solved: typeof node?.movesToSuccess === "number",
+      distance: node?.movesToSuccess ?? null,
+      san: getPrimaryFlowchartWhiteMove(cachedData, node),
+      line: [],
+    });
+  });
+}
+
+function getPrimaryFlowchartWhiteMove(
+  data: FlowchartData,
+  node: FlowchartNode | undefined,
+): string | undefined {
+  if (!node || node.turn !== "w") {
+    return undefined;
+  }
+  const edgeId = node.outgoingEdgeIds[0];
+  return data.edges.find((edge) => edge.id === edgeId)?.san;
+}
+
+export function generateAllFlowcharts(
+  options: FlowchartGenerationOptions = {},
+): Record<FlowchartId, FlowchartData> {
   return {
-    knightBishopPrepare: generateFlowchart("knightBishopPrepare"),
-    knightBishop: generateFlowchart("knightBishop"),
+    knightBishopPrepare: generateFlowchart("knightBishopPrepare", options),
+    knightBishop: generateFlowchart("knightBishop", options),
   };
 }
 
@@ -309,14 +384,20 @@ function withEndgame<T>(endgameId: EndgameId, run: () => T): T {
   }
 }
 
-function buildFlowchart(config: FlowchartConfig): FlowchartData {
+function buildFlowchart(
+  config: FlowchartConfig,
+  options: FlowchartGenerationOptions = {},
+): FlowchartData {
   const nodes = new Map<string, WorkingNode>();
   const edges: WorkingEdge[] = [];
   const queue: string[] = [];
   const expanded = new Set<string>();
   const selectWhiteMove: WhiteMoveSelector =
     config.whiteMoveStrategy === "prepareSearch"
-      ? createPrepareSearchWhiteMoveSelector(config)
+      ? createPrepareSearchWhiteMoveSelector(
+          config,
+          options.cachedData?.[config.id],
+        )
       : config.whiteMoveStrategy === "search"
       ? createSearchWhiteMoveSelector(config)
       : selectEndgameHeuristicWhiteMove;
@@ -621,8 +702,9 @@ function createSearchWhiteMoveSelector(config: FlowchartConfig): WhiteMoveSelect
 
 function createPrepareSearchWhiteMoveSelector(
   config: FlowchartConfig,
+  cachedData?: FlowchartData,
 ): WhiteMoveSelector {
-  const policy = createPrepareSearchPolicy(config);
+  const policy = createPrepareSearchPolicy(config, cachedData);
 
   return (fen) => {
     const normalizedFen = normalizeFen(fen);
@@ -636,19 +718,90 @@ function createPrepareSearchWhiteMoveSelector(
   };
 }
 
-function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy {
+function createCachedPrepareSearchPolicy(
+  config: FlowchartConfig,
+  cachedData?: FlowchartData,
+): CachedPrepareSearchPolicy | undefined {
+  if (config.id !== "knightBishopPrepare" || cachedData?.id !== config.id) {
+    return undefined;
+  }
+
+  const cachedNodesById = new Map(
+    cachedData.nodes.map((node) => [node.id, node]),
+  );
+  const cachedEdgesById = new Map(
+    cachedData.edges.map((edge) => [edge.id, edge]),
+  );
   const nodes = new Map<string, PrepareSearchPolicyNode>();
   const distances = new Map<string, number>();
   const whiteMoves = new Map<string, string[]>();
+  const fenByKey = new Map<string, string>();
+
+  cachedData.nodes.forEach((node) => {
+    const fen = normalizeFen(node.fen);
+    const key = Brain.boardTurnKey(fen);
+    fenByKey.set(key, fen);
+
+    const children = node.outgoingEdgeIds
+      .map((edgeId) => cachedEdgesById.get(edgeId))
+      .filter((edge): edge is FlowchartEdge => edge !== undefined)
+      .map((edge) => {
+        const childNode = cachedNodesById.get(edge.to);
+        return childNode
+          ? {
+              san: edge.san,
+              childKey: Brain.boardTurnKey(normalizeFen(childNode.fen)),
+            }
+          : undefined;
+      })
+      .filter(
+        (child): child is { san: string; childKey: string } =>
+          child !== undefined,
+      );
+
+    nodes.set(key, {
+      fen,
+      turn: node.turn,
+      layer: 0,
+      terminal: node.terminal,
+      children,
+    });
+    if (typeof node.movesToSuccess === "number") {
+      distances.set(key, node.movesToSuccess);
+    } else if (node.terminal === "success") {
+      distances.set(key, 0);
+    }
+    if (node.turn === "w" && !node.terminal && children.length > 0) {
+      whiteMoves.set(
+        key,
+        children.map((child) => child.san),
+      );
+    }
+  });
+
+  return { nodes, distances, whiteMoves, fenByKey };
+}
+
+function createPrepareSearchPolicy(
+  config: FlowchartConfig,
+  cachedData?: FlowchartData,
+): PrepareSearchPolicy {
+  const cachedPolicy = createCachedPrepareSearchPolicy(config, cachedData);
+  const nodes = new Map<string, PrepareSearchPolicyNode>(
+    cachedPolicy?.nodes ?? [],
+  );
+  const distances = new Map<string, number>(cachedPolicy?.distances ?? []);
+  const whiteMoves = new Map<string, string[]>(cachedPolicy?.whiteMoves ?? []);
   const policyStarts = config.preparePolicyStarts || config.starts;
   const queue = policyStarts.map((fen) => Brain.boardTurnKey(normalizeFen(fen)));
   const queued = new Set(queue);
-  const fenByKey = new Map(
-    policyStarts.map((fen) => [
+  const fenByKey = new Map<string, string>(cachedPolicy?.fenByKey ?? []);
+  policyStarts.forEach((fen) => {
+    fenByKey.set(
       Brain.boardTurnKey(normalizeFen(fen)),
       normalizeFen(fen),
-    ]),
-  );
+    );
+  });
 
   for (let head = 0; head < queue.length; head += 1) {
     const key = queue[head];
@@ -689,6 +842,7 @@ function createPrepareSearchPolicy(config: FlowchartConfig): PrepareSearchPolicy
   }
 
   prepareSearchDebugReport.calls = nodes.size;
+  prepareSearchDebugReport.memoHits = cachedPolicy?.distances.size ?? 0;
   prepareSearchDebugReport.outcomeCounts.success = [...nodes.values()].filter(
     (node) => node.terminal === "success",
   ).length;

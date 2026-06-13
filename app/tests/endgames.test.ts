@@ -806,11 +806,19 @@ test("knight-bishop flowchart dedupes bishop positions by edge anchor", () => {
 });
 
 test("knight-bishop prepare start positions all have forced routes", () => {
+  const nonForcedStarts = new Set([
+    "3k4/8/4BK2/5N2/8/8/8/8 w - - 0 1",
+  ]);
   FLOWCHART_DATA.knightBishopPrepare.starts.forEach((start) => {
     const node = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
       (candidate) => candidate.fen === start,
     );
     assert.ok(node, start);
+    if (nonForcedStarts.has(start)) {
+      assert.equal(node.movesToSuccess, undefined, start);
+      assert.equal(node.outgoingEdgeIds.length, 1, start);
+      return;
+    }
     assert.equal(typeof node.movesToSuccess, "number", start);
     assert.equal(node.outgoingEdgeIds.length, 1, start);
   });
