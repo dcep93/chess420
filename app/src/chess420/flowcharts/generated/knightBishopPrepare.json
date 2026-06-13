@@ -66,23 +66,7 @@
         "n1-0-n7"
       ],
       "movesToSuccess": 11,
-      "moveReason": "Play Nd5+ to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5+",
-        "expectedSans": [
-          "Kf5",
-          "Kd5",
-          "Na4",
-          "Nb5",
-          "Nd5+",
-          "Ne4",
-          "Ne2",
-          "Nd1",
-          "Nb1",
-          "Na2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5+ because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n2",
@@ -107,21 +91,7 @@
         "n2-0-n8"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd4",
-        "expectedSans": [
-          "Kf5",
-          "Kd5",
-          "Na5",
-          "Nc5",
-          "Nd4",
-          "Nd2",
-          "Nc1",
-          "Na1"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n3",
@@ -150,16 +120,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nh5",
         "expectedSans": [
-          "Kf5",
-          "Kd5",
-          "Ne4",
-          "Nf5+",
-          "Nh5",
-          "Nh1",
-          "Nf1",
-          "Ne2"
+          "Nf5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -185,19 +148,7 @@
         "n4-0-n10"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nf4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Kf5",
-          "Kd5",
-          "Nf4",
-          "Ng5",
-          "Ng1",
-          "Nf2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n5",
@@ -232,27 +183,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne7",
         "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Ke5",
-          "Nd6",
-          "Ne7",
-          "Ng7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
-          "Nd4"
+          "Kf7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -546,7 +479,7 @@
         "n14-0-n30"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n15",
@@ -575,21 +508,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Nb6",
-          "Nc7+",
-          "Nf6+",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4"
+          "Nf4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -654,7 +575,7 @@
         "n17-0-n33"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n18",
@@ -704,7 +625,7 @@
         "n19-0-n35"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kf6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kf6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n20",
@@ -729,7 +650,7 @@
         "n20-0-n36"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n21",
@@ -758,19 +679,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nf6+",
-          "Ng7+",
-          "Ng3",
           "Nf4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -828,7 +739,7 @@
         "n23-0-n39"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n24",
@@ -1485,26 +1396,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7+",
-          "Ne7",
-          "Nf6+",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Ne7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1534,26 +1428,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1636,15 +1513,7 @@
         "n49-0-n68"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kf6 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kf6",
-        "expectedSans": [
-          "Kf6",
-          "Ke5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kf6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n50",
@@ -1673,30 +1542,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne2",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nb5",
-          "Nc6",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
+          "Nc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1747,32 +1595,7 @@
         "n52-0-n40"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Nf4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nf6+",
-          "Ng7+",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n53",
@@ -1845,28 +1668,7 @@
         "n54-0-n39"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Nf4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n55",
@@ -1916,35 +1718,7 @@
         "n56-0-n71"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Kd7 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd7",
-        "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd5",
-          "Ng6+",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd7 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n57",
@@ -1994,7 +1768,7 @@
         "n58-0-n73"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n59",
@@ -2049,7 +1823,7 @@
       "outgoingEdgeIds": [
         "n60-0-n75"
       ],
-      "moveReason": "Play Kf8 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kf8 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n61",
@@ -2917,23 +2691,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb4",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5",
-          "Nb6",
-          "Ne7",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Ne7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -3010,29 +2770,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc3",
-          "Nd4",
-          "Nf4",
-          "Ng3",
-          "Ng1",
-          "Nc1"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -3062,25 +2802,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc3",
           "Nd4",
-          "Nf4",
-          "Ng3",
-          "Ng1",
-          "Nc1"
+          "Nf4"
         ],
         "kind": "globalTie"
       }
@@ -3140,7 +2863,7 @@
         "n91-0-n73"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n92",
@@ -4535,7 +4258,7 @@
         "n136-0-n170"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Play Kg5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kg5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n137",
@@ -5052,7 +4775,7 @@
       "outgoingEdgeIds": [
         "n152-0-n180"
       ],
-      "moveReason": "Play Kd8 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd8 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n153",
@@ -5301,7 +5024,7 @@
       "outgoingEdgeIds": [
         "n159-0-n187"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n160",
@@ -5371,7 +5094,7 @@
       "outgoingEdgeIds": [
         "n162-0-n188"
       ],
-      "moveReason": "Play Kd8 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd8 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n163",
@@ -6381,7 +6104,7 @@
         "n193-0-n214"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n194",
@@ -6585,7 +6308,7 @@
       "outgoingEdgeIds": [
         "n200-0-n187"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n201",
@@ -6834,7 +6557,7 @@
       "outgoingEdgeIds": [
         "n206-0-n223"
       ],
-      "moveReason": "Play Kc7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n207",
@@ -7818,7 +7541,7 @@
         "n232-0-n214"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n233",
@@ -8375,7 +8098,7 @@
       "outgoingEdgeIds": [
         "n251-0-n217"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n252",
@@ -8485,6 +8208,18 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
+          "Nd8+",
+          "Ne7",
+          "Ne5",
+          "Nd4",
+          "Nb4",
+          "Na5+",
+          "Bd7",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
           "Kd6",
           "Kc5"
         ],
@@ -8514,7 +8249,25 @@
         "n255-0-n272"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc5",
+        "expectedSans": [
+          "Na7",
+          "Ne7",
+          "Ne5",
+          "Nd4",
+          "Nb4",
+          "Na5",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Kc5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n256",
@@ -8558,7 +8311,24 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
+          "Nb8+",
+          "Nd8",
+          "Ne7",
+          "Ne5",
+          "Nd4",
+          "Nb4+",
+          "Bd7",
+          "Bc8+",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
           "Kd6",
+          "Ke5",
+          "Ke4",
+          "Kd4",
+          "Kc4",
           "Kc5"
         ],
         "kind": "globalTie"
@@ -9347,7 +9117,7 @@
         "n279-0-n310"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n280",
@@ -9522,7 +9292,7 @@
         "n284-0-n315"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n285",
@@ -9975,7 +9745,7 @@
         "n298-0-n326"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n299",
@@ -10103,7 +9873,7 @@
         "n301-0-n315"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n302",
@@ -10179,7 +9949,7 @@
         "n303-0-n329"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n304",
@@ -11392,7 +11162,7 @@
         "n337-0-n386"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n338",
@@ -11536,7 +11306,7 @@
         "n341-0-n315"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n342",
@@ -11995,7 +11765,22 @@
       "outgoingEdgeIds": [
         "n357-0-n186"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Nd8+",
+          "Ne7",
+          "Nd4",
+          "Nb4",
+          "Na5+",
+          "Bd7",
+          "Bd5",
+          "Kd6",
+          "Kd5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n358",
@@ -12101,7 +11886,36 @@
       "outgoingEdgeIds": [
         "n362-0-n217"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Nb8+",
+          "Nd8",
+          "Ne7",
+          "Nd4",
+          "Nb4+",
+          "Bd7",
+          "Bc8+",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4+",
+          "Bb3",
+          "Ba2",
+          "Kd6",
+          "Kf6",
+          "Kf5",
+          "Kf4",
+          "Ke4",
+          "Kd4",
+          "Kd5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n363",
@@ -12158,7 +11972,7 @@
         "n364-0-n326"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n365",
@@ -12183,7 +11997,7 @@
         "n365-0-n395"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kc7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n366",
@@ -12260,7 +12074,7 @@
         "n367-0-n310"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n368",
@@ -12460,7 +12274,7 @@
         "n372-0-n399"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n373",
@@ -12485,7 +12299,7 @@
         "n373-0-n400"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n374",
@@ -12669,7 +12483,7 @@
         "n378-0-n272"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n379",
@@ -12782,7 +12596,7 @@
         "n381-0-n275"
       ],
       "movesToSuccess": 15,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n382",
@@ -13845,7 +13659,7 @@
         "n413-0-n456"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n414",
@@ -14170,7 +13984,7 @@
       "outgoingEdgeIds": [
         "n424-0-n463"
       ],
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n425",
@@ -14277,7 +14091,7 @@
       "outgoingEdgeIds": [
         "n427-0-n466"
       ],
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n428",
@@ -14301,7 +14115,27 @@
       "outgoingEdgeIds": [
         "n428-0-n187"
       ],
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kd6",
+        "expectedSans": [
+          "Nb8",
+          "Nd8",
+          "Ne7",
+          "Ne5",
+          "Nd4",
+          "Nb4",
+          "Bd7",
+          "Bc8",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Kd6"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n429",
@@ -14557,10 +14391,28 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
+          "Bd7",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Kc6",
           "Kd6",
-          "Kc5"
+          "Ke5",
+          "Ke4",
+          "Kd4",
+          "Kc5",
+          "Na5",
+          "Nb6",
+          "Nd6",
+          "Ne5",
+          "Ne3",
+          "Nd2",
+          "Nb2",
+          "Na3"
         ],
-        "kind": "notBest"
+        "kind": "globalTie"
       }
     },
     {
@@ -14586,7 +14438,7 @@
         "n436-0-n469"
       ],
       "movesToSuccess": 12,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n437",
@@ -14615,8 +14467,24 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
+          "Bd7",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
           "Kd6",
-          "Kc5"
+          "Ke5",
+          "Ke4",
+          "Kd4",
+          "Kc5",
+          "Na5+",
+          "Nd6+",
+          "Ne5",
+          "Ne3",
+          "Nd2",
+          "Nb2",
+          "Na3"
         ],
         "kind": "globalTie"
       }
@@ -14854,7 +14722,7 @@
         "n443-0-n473"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Ka5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ka5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n444",
@@ -14912,7 +14780,7 @@
         "n445-0-n329"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n446",
@@ -14998,7 +14866,7 @@
         "n447-0-n474"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n448",
@@ -17105,27 +16973,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne3",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Na5",
-          "Nb6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17151,7 +17001,7 @@
         "n509-0-n534"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kc7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n510",
@@ -17312,7 +17162,7 @@
         "n514-0-n534"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kc7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n515",
@@ -17393,7 +17243,7 @@
         "n516-0-n315"
       ],
       "movesToSuccess": 2,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n517",
@@ -17563,7 +17413,7 @@
         "n520-0-n329"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n521",
@@ -18276,7 +18126,7 @@
       "outgoingEdgeIds": [
         "n538-0-n568"
       ],
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n539",
@@ -18300,7 +18150,7 @@
       "outgoingEdgeIds": [
         "n539-0-n569"
       ],
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n540",
@@ -18366,7 +18216,7 @@
       "outgoingEdgeIds": [
         "n541-0-n571"
       ],
-      "moveReason": "Play Ke7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n542",
@@ -19153,31 +19003,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19210,34 +19038,7 @@
         "n562-0-n30"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd5 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5",
-        "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n563",
@@ -20087,7 +19888,7 @@
         "n584-0-n606"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n585",
@@ -20112,7 +19913,7 @@
         "n585-0-n607"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n586",
@@ -20494,25 +20295,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nb7+",
-          "Nc8",
           "Nf7+",
           "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kc6",
-          "Ke5",
-          "Ke4",
-          "Kd4",
-          "Kc4",
-          "Kc5"
+          "Nc4"
         ],
         "kind": "globalTie"
       }
@@ -20584,9 +20369,23 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
+          "Nc8",
+          "Ne8+",
+          "Nf7",
+          "Nf5",
+          "Ne4",
+          "Nc4",
+          "Nb5+",
+          "Bc8",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Ke5",
           "Kc5"
         ],
-        "kind": "notBest"
+        "kind": "globalTie"
       }
     },
     {
@@ -20778,27 +20577,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ng7+",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ne7",
-          "Ng7+",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
-          "Nd4"
+          "Ne7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -21492,32 +21273,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nb7+",
-          "Nc8",
-          "Nf7+",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Kc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -21543,7 +21301,7 @@
         "n623-0-n644"
       ],
       "movesToSuccess": 14,
-      "moveReason": "Play Ka5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ka5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n624",
@@ -21747,7 +21505,7 @@
         "n628-0-n314"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n629",
@@ -21889,7 +21647,15 @@
         "n632-0-n647"
       ],
       "movesToSuccess": 19,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc5",
+        "expectedSans": [
+          "Kc4",
+          "Kc5"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n633",
@@ -22000,15 +21766,7 @@
         "n637-0-n650"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd6",
-        "expectedSans": [
-          "Kd6",
-          "Ke5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n638",
@@ -22033,7 +21791,28 @@
         "n638-0-n651"
       ],
       "movesToSuccess": 13,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc5",
+        "expectedSans": [
+          "Bf7",
+          "Bg8",
+          "Ke5",
+          "Ke4",
+          "Kd4",
+          "Kc4",
+          "Kc5",
+          "Nd6",
+          "Ne7",
+          "Ng7",
+          "Nh6",
+          "Nh4",
+          "Ng3",
+          "Ne3",
+          "Nd4"
+        ],
+        "kind": "globalTie"
+      }
     },
     {
       "id": "n639",
@@ -22095,7 +21874,7 @@
         "n640-0-n458"
       ],
       "movesToSuccess": 1,
-      "moveReason": "Play Kc7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc7 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n641",
@@ -22157,20 +21936,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nh5",
         "expectedSans": [
-          "Nh5",
-          "Nf5",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nf5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -22578,7 +22346,7 @@
         "n653-0-n681"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Ke5 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Ke5 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n654",
@@ -22654,7 +22422,7 @@
         "n655-0-n607"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n656",
@@ -22760,7 +22528,7 @@
         "n658-0-n607"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n659",
@@ -22785,7 +22553,7 @@
         "n659-0-n682"
       ],
       "movesToSuccess": 12,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n660",
@@ -22881,7 +22649,7 @@
         "n662-0-n608"
       ],
       "movesToSuccess": 15,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n663",
@@ -23313,29 +23081,7 @@
         "n675-0-n691"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Ne7 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ne7",
-        "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ne7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
-          "Nd4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Ne7 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n676",
@@ -23360,7 +23106,7 @@
         "n676-0-n264"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n677",
@@ -23385,7 +23131,7 @@
         "n677-0-n692"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n678",
@@ -24013,31 +23759,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb5",
         "expectedSans": [
-          "Nb7+",
-          "Nc8",
-          "Nf7+",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
           "Kd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -24067,30 +23791,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nb7",
-          "Nc8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5"
+          "Kf5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -24116,7 +23819,7 @@
         "n697-0-n723"
       ],
       "movesToSuccess": 13,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n698",
@@ -24669,26 +24372,7 @@
         "n714-0-n731"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd4",
-        "expectedSans": [
-          "Kd6",
-          "Kf6",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nd6+",
-          "Ng7+",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
-          "Nd4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n715",
@@ -24738,7 +24422,7 @@
         "n716-0-n732"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n717",
@@ -24763,7 +24447,7 @@
         "n717-0-n733"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n718",
@@ -25437,26 +25121,7 @@
         "n735-0-n731"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd4",
-        "expectedSans": [
-          "Na7",
-          "Nc7+",
-          "Nd6+",
-          "Nd4",
-          "Nc3",
-          "Na3",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n736",
@@ -25481,21 +25146,7 @@
         "n736-0-n8"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd4 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd4",
-        "expectedSans": [
-          "Na7",
-          "Nc7",
-          "Nd6",
-          "Nd4",
-          "Nc3",
-          "Na3",
-          "Kf5",
-          "Kd5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd4 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n737",
@@ -25520,7 +25171,7 @@
         "n737-0-n469"
       ],
       "movesToSuccess": 12,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n738",
@@ -25943,7 +25594,7 @@
         "n748-0-n759"
       ],
       "movesToSuccess": 13,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n749",
@@ -26150,7 +25801,7 @@
         "n753-0-n733"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n754",
@@ -26447,7 +26098,7 @@
         "n761-0-n774"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Play Ka5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ka5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n762",
@@ -26472,7 +26123,7 @@
         "n762-0-n775"
       ],
       "movesToSuccess": 6,
-      "moveReason": "Play Ka5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ka5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n763",
@@ -26542,7 +26193,7 @@
         "n764-0-n759"
       ],
       "movesToSuccess": 13,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n765",
@@ -26720,7 +26371,7 @@
         "n769-0-n317"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n770",
@@ -26745,7 +26396,7 @@
         "n770-0-n759"
       ],
       "movesToSuccess": 13,
-      "moveReason": "Play Kc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kc5 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n771",
@@ -26809,7 +26460,7 @@
         "n772-0-n777"
       ],
       "movesToSuccess": 12,
-      "moveReason": "Play Kd6 to establish the Zone X setup around the bishop."
+      "moveReason": "Play Kd6 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n773",
@@ -27107,7 +26758,7 @@
         "n780-0-n456"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kb6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Kb6 to bring White's king closer while staying on the color opposite the bishop."
     },
     {
       "id": "n781",
@@ -27261,30 +26912,7 @@
         "n784-0-n790"
       ],
       "movesToSuccess": 11,
-      "moveReason": "Play Ne7 to establish the Zone X setup around the bishop.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ne7",
-        "expectedSans": [
-          "Ne7",
-          "Nb6",
-          "Na7",
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Ne7 because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place."
     },
     {
       "id": "n785",
@@ -27707,25 +27335,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6+",
-          "Nf5",
-          "Nd5",
-          "Nc6",
-          "Kd7",
-          "Bd7",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {

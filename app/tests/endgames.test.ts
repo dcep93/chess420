@@ -1471,6 +1471,12 @@ test("knight-bishop rule 7 brings the white king closer off the bishop color", (
     Brain.scoreKnightAndBishopWhiteMove(fen, "Ke4").kingCloserOppositeBishopScore,
     2,
   );
+  const centerExitFen = "8/8/8/k7/3K4/1B6/8/7N w - - 0 1";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(centerExitFen, "Kc5")
+      .kingCloserOppositeBishopScore,
+    99,
+  );
 });
 
 test("knight-bishop zone x geometry derives reference and equivalents", () => {
@@ -1570,6 +1576,13 @@ test("knight-bishop rule 5 forces zone x stable-square instances", () => {
     Brain.knightAndBishopWhiteMoveForcesZone5(offPathFen, "Kf6"),
     false,
   );
+
+  const prepareStarFen = "8/4k3/4B3/4K3/8/2N5/8/8 w - - 0 1";
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(prepareStarFen, "Nd5+"),
+    "prepare zone x",
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(prepareStarFen), ["Nd5+"]);
 });
 
 test("knight-bishop rule 8 places the bishop in front of the white king", () => {
@@ -4250,13 +4263,13 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "[prepare] Reach the knight's key-square pattern or force black into Zone X when available.",
+      "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
     ),
     true,
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Bring White's king closer to Black's king while staying on the color opposite the bishop.",
+      "Keep White's king in the center four squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
     ),
     true,
   );

@@ -255,6 +255,7 @@ type KnightAndBishopExplicitWhiteMoveReason =
   | "enter mating net"
   | "key square pattern"
   | "force zone x"
+  | "prepare zone x"
   | "bring king closer"
   | "bishop in front";
 
@@ -1456,10 +1457,10 @@ export default class Brain {
         "king not between pieces": "",
         "shorter queen move": "Prefer the shorter queen move when everything else is tied.",
         "enter mating net": "[mate] Follow the known knight-and-bishop mating net when it is available.",
-        "key square pattern": "[prepare] Reach the knight's key-square pattern or force black into Zone X when available.",
+        "key square pattern": "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
         "force zone x": "",
-        "prepare zone x": "[prepare *] When the bishop is on its Zone X square, move the white king towards the black king or otherwise the white knight along the shortest path to its Zone X square.",
-        "bring king closer": "Bring White's king closer to Black's king while staying on the color opposite the bishop.",
+        "prepare zone x": "",
+        "bring king closer": "Keep White's king in the center four squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
         "bishop in front": "Place the bishop on the square in front of White's king, between the kings.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
@@ -2103,6 +2104,12 @@ export default class Brain {
       {
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
         reason: "force zone x",
+      },
+      {
+        compare: (a, b) =>
+          a.zoneXPrepareScore - b.zoneXPrepareScore ||
+          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
+        reason: "prepare zone x",
       },
       {
         compare: (a, b) =>
@@ -3152,6 +3159,8 @@ export default class Brain {
       a.phaseTwoEntryScore - b.phaseTwoEntryScore ||
       a.keySquarePatternScore - b.keySquarePatternScore ||
       a.zoneXEntryScore - b.zoneXEntryScore ||
+      a.zoneXPrepareScore - b.zoneXPrepareScore ||
+      a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity ||
       a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
       a.bishopInFrontScore - b.bishopInFrontScore
     );
@@ -3182,6 +3191,12 @@ export default class Brain {
       {
         reason: "force zone x",
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
+      },
+      {
+        reason: "prepare zone x",
+        compare: (a, b) =>
+          a.zoneXPrepareScore - b.zoneXPrepareScore ||
+          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
       },
       {
         reason: "bring king closer",
@@ -3244,6 +3259,12 @@ export default class Brain {
     ) {
       return 99;
     }
+    if (
+      Brain.isKnightAndBishopCenterFourSquare(beforeWhiteKing.square) &&
+      !Brain.isKnightAndBishopCenterFourSquare(afterWhiteKing.square)
+    ) {
+      return 99;
+    }
 
     const afterDistance = Brain.manhattanDistance(
       afterWhiteKing.square,
@@ -3258,6 +3279,10 @@ export default class Brain {
     return Brain.sameSquareColor(afterWhiteKing.square, bishop.square)
       ? 99
       : afterDistance;
+  }
+
+  static isKnightAndBishopCenterFourSquare(square: Square): boolean {
+    return square === "d4" || square === "d5" || square === "e4" || square === "e5";
   }
 
   static knightAndBishopBishopInFrontScore(
