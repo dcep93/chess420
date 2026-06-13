@@ -65,32 +65,7 @@
         "n1-0-n6"
       ],
       "movesToSuccess": 11,
-      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5+",
-        "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf5",
-          "Kd5",
-          "Na4",
-          "Nb5",
-          "Nd5+",
-          "Ne4",
-          "Ne2",
-          "Nd1",
-          "Nb1",
-          "Na2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n2",
@@ -115,28 +90,7 @@
         "n2-0-n7"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd4",
-        "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Kf5",
-          "Kd5",
-          "Na5",
-          "Nc5",
-          "Nd4",
-          "Nd2",
-          "Nc1",
-          "Na1"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n3",
@@ -165,25 +119,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nh5",
         "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf5",
-          "Kd5",
-          "Ne4",
-          "Nf5+",
-          "Nh5",
-          "Nh1",
-          "Nf1",
-          "Ne2"
+          "Nf5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -209,27 +147,7 @@
         "n4-0-n9"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf5",
-          "Kd5",
-          "Nf4",
-          "Ng5",
-          "Ng1",
-          "Nf2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n5",
@@ -491,30 +409,7 @@
         "n12-0-n26"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd6",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n13",
@@ -543,26 +438,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7+",
-          "Nf6+",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4"
+          "Nf4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -599,26 +477,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf5",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4"
+          "Kf6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -644,35 +505,7 @@
         "n15-0-n29"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd6",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd5",
-          "Nb5",
-          "Nc6+",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n16",
@@ -722,35 +555,7 @@
         "n17-0-n31"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kf6",
-        "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd5",
-          "Nb5",
-          "Nc6",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n18",
@@ -775,33 +580,7 @@
         "n18-0-n32"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd6",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nf6",
-          "Ng7",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n19",
@@ -830,28 +609,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nf6+",
-          "Ng7+",
-          "Ng3",
           "Nf4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -881,27 +641,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nf6",
-          "Ng3",
-          "Nf4"
+          "Kf6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -927,35 +669,7 @@
         "n21-0-n35"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd6",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nd5",
-          "Ng6",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n22",
@@ -1023,30 +737,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kf6",
-          "Kf5",
-          "Ke4",
-          "Kd4",
-          "Kd5",
-          "Nd5",
-          "Ng6+",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
+          "Kf6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1502,26 +1195,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7+",
-          "Ne7",
-          "Nf6+",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Ne7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1551,26 +1227,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Nb6",
-          "Nc7",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1667,29 +1326,7 @@
         "n44-0-n58"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kf6",
-        "expectedSans": [
-          "Bc8",
-          "Bg8",
-          "Nb6",
-          "Nc7+",
-          "Nf6+",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
-          "Kf6",
-          "Kg6",
-          "Kg5",
-          "Kg4",
-          "Kf4",
-          "Ke4",
-          "Ke5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kf6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n45",
@@ -1718,30 +1355,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne2",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nb5",
-          "Nc6",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
+          "Nc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1792,32 +1408,7 @@
         "n47-0-n36"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7+",
-          "Bc8",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nf6+",
-          "Ng7+",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n48",
@@ -1890,28 +1481,7 @@
         "n49-0-n35"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n50",
@@ -1961,35 +1531,7 @@
         "n51-0-n61"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Kd7 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Kd7",
-        "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd5",
-          "Ng6+",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Kd7 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n52",
@@ -2457,27 +1999,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ng6+",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kg6",
-          "Kg5",
-          "Kg4",
-          "Ke4",
-          "Ke5",
-          "Nd5",
-          "Ng6+",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
+          "Kf6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -2632,23 +2156,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb4",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5",
-          "Nb6",
-          "Ne7",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Ne7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -2725,29 +2235,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc3",
-          "Nd4",
-          "Nf4",
-          "Ng3",
-          "Ng1",
-          "Nc1"
+          "Kd7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -2777,25 +2267,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc3",
           "Nd4",
-          "Nf4",
-          "Ng3",
-          "Ng1",
-          "Nc1"
+          "Nf4"
         ],
         "kind": "globalTie"
       }

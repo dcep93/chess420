@@ -244,11 +244,18 @@ type KnightAndBishopZone5 = {
   stableKnightSquare: Square;
 };
 
+type KnightAndBishopZoneXSetup = {
+  bishopSquare: Square;
+  blackAnchorSquares: Square[];
+  stableKnightSquares: Square[];
+};
+
 type KnightAndBishopExplicitWhiteMoveReason =
   | "mate"
   | "enter mating net"
   | "key square pattern"
-  | "force zone x";
+  | "force zone x"
+  | "prepare zone x";
 
 type ScoreReason<T> = {
   reason: string;
@@ -1448,8 +1455,9 @@ export default class Brain {
         "king not between pieces": "",
         "shorter queen move": "Prefer the shorter queen move when everything else is tied.",
         "enter mating net": "[mate] Follow the known knight-and-bishop mating net when it is available.",
-        "key square pattern": "[prepare] Reach the key-square pattern or force black into Zone X when available.",
+        "key square pattern": "[prepare] Reach the knight's key-square pattern or force black into Zone X when available.",
         "force zone x": "",
+        "prepare zone x": "[prepare *] When the bishop is on its Zone X square, move the white king towards the black king or otherwise the white knight along the shortest path to its Zone X square.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
         "take direct opposition": "Phase 2: take direct king opposition, unless it moves the white king into a square controlled by a bishop.",
@@ -2092,6 +2100,12 @@ export default class Brain {
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
         reason: "force zone x",
       },
+      {
+        compare: (a, b) =>
+          a.zoneXPrepareScore - b.zoneXPrepareScore ||
+          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
+        reason: "prepare zone x",
+      },
     ];
 
     for (const stage of stages) {
@@ -2255,6 +2269,92 @@ export default class Brain {
         (zone5) => blackKing && zone5.zoneSquares.includes(blackKing.square)
       )
       .sort((a, b) => Brain.compareKnightAndBishopZone5Candidates(fen, a, b))[0];
+  }
+
+  static getKnightAndBishopZoneXSetup(
+    fen: string
+  ): KnightAndBishopZoneXSetup | undefined {
+    return Brain.getKnightAndBishopZoneXSetupCandidates(fen).sort((a, b) =>
+      Brain.compareKnightAndBishopZoneXSetups(fen, a, b)
+    )[0];
+  }
+
+  static getKnightAndBishopZoneXSetupCandidates(
+    fen: string
+  ): KnightAndBishopZoneXSetup[] {
+    const bishop = Brain.findPiece(fen, "w", "b");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    if (!bishop || !blackKing) {
+      return [];
+    }
+
+    const canonical = {
+      bishop: "e6" as Square,
+      blackAnchorSquares: ["e7", "d8", "e8", "f8"] as Square[],
+      stableKnightSquares: ["c6", "g6"] as Square[],
+    };
+    const candidates = new Map<string, KnightAndBishopZoneXSetup>();
+
+    Brain.SQUARE_TRANSFORMS.forEach((transform) => {
+      const transformedBishop = Brain.transformSquare(canonical.bishop, transform);
+      const bishopCoords = Brain.squareCoords(bishop.square);
+      const transformedBishopCoords = Brain.squareCoords(transformedBishop);
+      const fileOffset = bishopCoords.file - transformedBishopCoords.file;
+      const rankOffset = bishopCoords.rank - transformedBishopCoords.rank;
+      const transformAndTranslate = (square: Square) =>
+        Brain.translateSquare(
+          Brain.transformSquare(square, transform),
+          fileOffset,
+          rankOffset
+        );
+      const blackAnchorSquares = canonical.blackAnchorSquares
+        .map(transformAndTranslate)
+        .filter((square): square is Square => square != null);
+      const stableKnightSquares = canonical.stableKnightSquares
+        .map(transformAndTranslate)
+        .filter((square): square is Square => square != null);
+      if (
+        blackAnchorSquares.length !== canonical.blackAnchorSquares.length ||
+        stableKnightSquares.length !== canonical.stableKnightSquares.length ||
+        !blackAnchorSquares.includes(blackKing.square) ||
+        !blackAnchorSquares.slice(1).every((square) => Brain.edgeDistance(square) === 0)
+      ) {
+        return;
+      }
+      const setup = {
+        bishopSquare: bishop.square,
+        blackAnchorSquares,
+        stableKnightSquares,
+      };
+      const key = [
+        setup.bishopSquare,
+        [...setup.blackAnchorSquares].sort().join("/"),
+        [...setup.stableKnightSquares].sort().join("/"),
+      ].join("|");
+      candidates.set(key, setup);
+    });
+
+    return [...candidates.values()];
+  }
+
+  static compareKnightAndBishopZoneXSetups(
+    fen: string,
+    a: KnightAndBishopZoneXSetup,
+    b: KnightAndBishopZoneXSetup
+  ): number {
+    const knight = Brain.findPiece(fen, "w", "n");
+    const aKnightDistance = knight
+      ? Brain.getKnightDistanceToAnySquare(knight.square, a.stableKnightSquares)
+      : 99;
+    const bKnightDistance = knight
+      ? Brain.getKnightDistanceToAnySquare(knight.square, b.stableKnightSquares)
+      : 99;
+    return (
+      aKnightDistance - bKnightDistance ||
+      [...a.stableKnightSquares].sort().join("/").localeCompare(
+        [...b.stableKnightSquares].sort().join("/")
+      )
+    );
   }
 
   static getKnightAndBishopZone5PathInstance(
@@ -2529,6 +2629,124 @@ export default class Brain {
     }
 
     return undefined;
+  }
+
+  static getKnightAndBishopZoneXPrepareScore(
+    fen: string,
+    _san: string,
+    resultFen: string,
+    move: ReturnType<Chess["move"]>
+  ): { zoneXPrepareScore: number; zoneXPreparePieceProximity: number } {
+    const setup = Brain.getKnightAndBishopZoneXSetup(fen);
+    if (!setup) {
+      return { zoneXPrepareScore: 0, zoneXPreparePieceProximity: 0 };
+    }
+
+    if (Brain.knightAndBishopHasZoneXKingProgressMove(fen)) {
+      const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
+      const beforeBlackKing = Brain.findPiece(fen, "b", "k");
+      const afterWhiteKing = Brain.findPiece(resultFen, "w", "k");
+      const afterBlackKing = Brain.findPiece(resultFen, "b", "k");
+      const movedKingCloser =
+        move?.piece === "k" &&
+        beforeWhiteKing &&
+        beforeBlackKing &&
+        afterWhiteKing &&
+        afterBlackKing &&
+        Brain.manhattanDistance(afterWhiteKing.square, afterBlackKing.square) <
+          Brain.manhattanDistance(beforeWhiteKing.square, beforeBlackKing.square);
+      return {
+        zoneXPrepareScore: movedKingCloser
+          ? Brain.manhattanDistance(afterWhiteKing!.square, afterBlackKing!.square)
+          : 99,
+        zoneXPreparePieceProximity: movedKingCloser
+          ? Brain.kingDistance(afterWhiteKing!.square, afterBlackKing!.square)
+          : 99,
+      };
+    }
+
+    const knight = Brain.findPiece(resultFen, "w", "n");
+    if (!knight) {
+      return { zoneXPrepareScore: 0, zoneXPreparePieceProximity: 0 };
+    }
+    const knightDistance = Brain.getKnightDistanceToAnySquare(
+      knight.square,
+      setup.stableKnightSquares
+    );
+    const knightAlreadyPlaced = setup.stableKnightSquares.includes(knight.square);
+    const knightMovePenalty = move?.piece === "n" || knightAlreadyPlaced ? 0 : 99;
+    return {
+      zoneXPrepareScore: knightMovePenalty + knightDistance,
+      zoneXPreparePieceProximity:
+        Brain.getKnightAndBishopZoneXSetupPieceProximity(resultFen),
+    };
+  }
+
+  static knightAndBishopHasZoneXKingProgressMove(fen: string): boolean {
+    const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
+    const beforeBlackKing = Brain.findPiece(fen, "b", "k");
+    if (!beforeWhiteKing || !beforeBlackKing) {
+      return false;
+    }
+    const beforeDistance = Brain.manhattanDistance(
+      beforeWhiteKing.square,
+      beforeBlackKing.square
+    );
+    return Brain.getChess(fen).moves().some((san) => {
+      const chess = Brain.getChess(fen);
+      const move = chess.move(san);
+      if (move?.captured === "k") {
+        return false;
+      }
+      const whiteKing = Brain.findPiece(chess.fen(), "w", "k");
+      const blackKing = Brain.findPiece(chess.fen(), "b", "k");
+      return Boolean(
+        move?.piece === "k" &&
+        whiteKing &&
+        blackKing &&
+        Brain.manhattanDistance(whiteKing.square, blackKing.square) < beforeDistance
+      );
+    });
+  }
+
+  static getKnightAndBishopZoneXSetupPieceProximity(fen: string): number {
+    const knight = Brain.findPiece(fen, "w", "n");
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const bishop = Brain.findPiece(fen, "w", "b");
+    if (!knight || !whiteKing || !bishop) {
+      return 99;
+    }
+    return (
+      Brain.kingDistance(knight.square, whiteKing.square) +
+      Brain.kingDistance(knight.square, bishop.square)
+    );
+  }
+
+  static getKnightDistanceToAnySquare(
+    from: Square,
+    targets: Square[]
+  ): number {
+    const targetSet = new Set(targets);
+    if (targetSet.has(from)) {
+      return 0;
+    }
+    const queue = [from];
+    const distance = new Map<Square, number>([[from, 0]]);
+    for (let head = 0; head < queue.length; head += 1) {
+      const square = queue[head];
+      const nextDistance = distance.get(square)! + 1;
+      for (const next of Brain.allSquares()) {
+        if (!Brain.isKnightMove(square, next) || distance.has(next)) {
+          continue;
+        }
+        if (targetSet.has(next)) {
+          return nextDistance;
+        }
+        distance.set(next, nextDistance);
+        queue.push(next);
+      }
+    }
+    return 99;
   }
 
   static getZoneXEdgeDirection(
@@ -2820,6 +3038,7 @@ export default class Brain {
       zoneXEntryScore: Brain.knightAndBishopWhiteMoveUsesZoneX(fen, san)
         ? 0
         : 1,
+      ...Brain.getKnightAndBishopZoneXPrepareScore(fen, san, resultFen, move),
       bishopKnightDiagonalAdjacencyScore:
         Brain.bishopKnightDiagonallyAdjacent(resultFen) ? 0 : 1,
       usefulCheckScore:
@@ -2914,7 +3133,9 @@ export default class Brain {
       a.pieceSafetyScore - b.pieceSafetyScore ||
       a.phaseTwoEntryScore - b.phaseTwoEntryScore ||
       a.keySquarePatternScore - b.keySquarePatternScore ||
-      a.zoneXEntryScore - b.zoneXEntryScore
+      a.zoneXEntryScore - b.zoneXEntryScore ||
+      a.zoneXPrepareScore - b.zoneXPrepareScore ||
+      a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity
     );
   }
 
@@ -2943,6 +3164,12 @@ export default class Brain {
       {
         reason: "force zone x",
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
+      },
+      {
+        reason: "prepare zone x",
+        compare: (a, b) =>
+          a.zoneXPrepareScore - b.zoneXPrepareScore ||
+          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
       },
     ];
   }
@@ -5460,12 +5687,37 @@ export default class Brain {
 
   static findEndgameLoop() {
     if (!Brain.hasSelectedEndgame()) return;
+    if (
+      Brain.endgameId === "knightAndBishop" ||
+      Brain.endgameId === "knightAndBishop+"
+    ) {
+      void Brain.findKnightAndBishopFlowchartLoop();
+      return;
+    }
     const result = Brain.searchRandomEndgameLoops();
     if (result.found) {
       Brain.loadEndgameLine(result.found.startingFen, result.found.moves);
       return;
     }
     alert(Brain.formatEndgameLoopSearchStats(result));
+  }
+
+  static async findKnightAndBishopFlowchartLoop() {
+    const {
+      findKnbFlowchartIssuePath,
+      formatKnbFlowchartIssuePathStats,
+      getKnbFlowchartPathModeForEndgame,
+    } = await import("./flowcharts/KnBCycleDetector");
+    const mode = getKnbFlowchartPathModeForEndgame(Brain.endgameId);
+    if (!mode) {
+      return;
+    }
+    const result = findKnbFlowchartIssuePath(mode);
+    if (result.result !== "none") {
+      Brain.loadEndgameLine(result.startingFen, result.moves);
+      return;
+    }
+    alert(formatKnbFlowchartIssuePathStats(result));
   }
 
   static loadEndgameLine(startingFen: string, moves: string[]) {

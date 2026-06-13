@@ -1,10 +1,14 @@
 import { type Square } from "chess.js";
+import { type EndgameId } from "../Endgames";
 import Brain, { View } from "../Brain";
 import { FLOWCHART_DATA } from "./flowchartData";
+import { type FlowchartData } from "./FlowchartTypes";
 
 export type KnbCycleMode = "prepare" | "all";
+export type KnbFlowchartPathMode = "prepare" | "mate";
 
 const FAILURE_EXAMPLE_LIMIT = 20;
+const DEFAULT_PATH_EXPANSION_LIMIT = 10000;
 
 export type KnbCycleEdge = {
   san: string;
@@ -57,6 +61,43 @@ export type KnbCycleSearchOptions = {
   }) => void;
 };
 
+export type KnbFlowchartPathSearchOptions = {
+  starts?: string[];
+  allowedPositionKeys?: Set<string>;
+  maxExpansions?: number;
+};
+
+export type KnbFlowchartIssuePathResult =
+  | {
+    result: "cycle" | "failure";
+    mode: KnbFlowchartPathMode;
+    startCount: number;
+    allowedPositionCount: number;
+    expanded: number;
+    startingFen: string;
+    finalFen: string;
+    moves: string[];
+    reason?: string;
+    cycleStartIndex?: number;
+  }
+  | {
+    result: "none";
+    mode: KnbFlowchartPathMode;
+    startCount: number;
+    allowedPositionCount: number;
+    expanded: number;
+    capped: boolean;
+  };
+
+export type KnbFlowchartSearchEdge = KnbCycleEdge & {
+  toFen: string;
+  originalIndex: number;
+};
+
+type KnbFlowchartTerminal =
+  | { result: "success"; reason?: string }
+  | { result: "failure"; reason?: string };
+
 export function findKnbCycles(
   mode: KnbCycleMode,
   options: KnbCycleSearchOptions = {},
@@ -94,6 +135,177 @@ export function findKnbCycles(
   });
 }
 
+export function getKnbFlowchartPathModeForEndgame(
+  endgameId?: EndgameId,
+): KnbFlowchartPathMode | undefined {
+  if (endgameId === "knightAndBishop") {
+    return "prepare";
+  }
+  if (endgameId === "knightAndBishop+") {
+    return "mate";
+  }
+  return undefined;
+}
+
+export function findKnbFlowchartIssuePath(
+  mode: KnbFlowchartPathMode,
+  options: KnbFlowchartPathSearchOptions = {},
+): KnbFlowchartIssuePathResult {
+  const data = getKnbFlowchartPathData(mode);
+  return withKnightAndBishopEndgame(() => {
+    const starts = (options.starts || data.starts).map(normalizeFen);
+    const allowedPositionKeys =
+      options.allowedPositionKeys || getFlowchartPositionKeys(data);
+    const nodesByKey = new Map(
+      data.nodes.map((node) => [Brain.boardTurnKey(node.fen), node]),
+    );
+    const maxExpansions =
+      options.maxExpansions ?? DEFAULT_PATH_EXPANSION_LIMIT;
+    const discovered = new Set<string>();
+    const stackKeys: string[] = [];
+    const stackIndexByKey = new Map<string, number>();
+    const pathMoves: string[] = [];
+    let expanded = 0;
+    let capped = false;
+
+    const makeBaseResult = () => ({
+      mode,
+      startCount: starts.length,
+      allowedPositionCount: allowedPositionKeys.size,
+      expanded,
+    });
+
+    const makeIssueResult = (
+      result: "cycle" | "failure",
+      startingFen: string,
+      finalFen: string,
+      reason?: string,
+      cycleStartIndex?: number,
+    ): KnbFlowchartIssuePathResult => ({
+      ...makeBaseResult(),
+      result,
+      startingFen,
+      finalFen,
+      moves: pathMoves.slice(),
+      reason,
+      cycleStartIndex,
+    });
+
+    const search = (
+      fen: string,
+      startingFen: string,
+    ): KnbFlowchartIssuePathResult | null => {
+      const key = Brain.boardTurnKey(fen);
+      if (!allowedPositionKeys.has(key)) {
+        return makeIssueResult(
+          "failure",
+          startingFen,
+          normalizeFen(fen),
+          "outsideFlowchart",
+        );
+      }
+
+      const terminal = getKnbFlowchartTerminal(fen, mode, nodesByKey);
+      if (terminal?.result === "success") {
+        return null;
+      }
+      if (terminal?.result === "failure") {
+        return makeIssueResult(
+          "failure",
+          startingFen,
+          normalizeFen(fen),
+          terminal.reason,
+        );
+      }
+      if (discovered.has(key)) {
+        return null;
+      }
+      if (expanded >= maxExpansions) {
+        capped = true;
+        return null;
+      }
+
+      discovered.add(key);
+      expanded += 1;
+      stackIndexByKey.set(key, stackKeys.length);
+      stackKeys.push(key);
+
+      const edges = getKnbFlowchartSearchEdges(
+        fen,
+        stackIndexByKey,
+        discovered,
+      );
+      if (edges.length === 0) {
+        return makeIssueResult(
+          "failure",
+          startingFen,
+          normalizeFen(fen),
+          "noSearchableMove",
+        );
+      }
+
+      for (const edge of edges) {
+        pathMoves.push(edge.san);
+        const cycleStartIndex = stackIndexByKey.get(edge.to);
+        if (cycleStartIndex !== undefined) {
+          return makeIssueResult(
+            "cycle",
+            startingFen,
+            edge.toFen,
+            undefined,
+            cycleStartIndex,
+          );
+        }
+
+        const result = search(edge.toFen, startingFen);
+        if (result) {
+          return result;
+        }
+        pathMoves.pop();
+      }
+
+      stackKeys.pop();
+      stackIndexByKey.delete(key);
+      return null;
+    };
+
+    for (const start of starts) {
+      const result = search(start, start);
+      if (result) {
+        return result;
+      }
+      if (capped) {
+        break;
+      }
+    }
+
+    return {
+      ...makeBaseResult(),
+      result: "none",
+      capped,
+    };
+  }, data.endgameId);
+}
+
+export function formatKnbFlowchartIssuePathStats(
+  result: KnbFlowchartIssuePathResult,
+): string {
+  if (result.result !== "none") {
+    return [
+      `Found ${result.result} in ${result.mode} flowchart search.`,
+      `Expanded positions: ${result.expanded}`,
+      `Moves: ${result.moves.length}`,
+    ].join("\n");
+  }
+  return [
+    `No cycle or failure found in ${result.mode} flowchart search.`,
+    `Starts: ${result.startCount}`,
+    `Allowed positions: ${result.allowedPositionCount}`,
+    `Expanded positions: ${result.expanded}`,
+    `Expansion cap reached: ${result.capped ? "yes" : "no"}`,
+  ].join("\n");
+}
+
 export function getKnbCycleStarts(mode: KnbCycleMode): string[] {
   if (mode === "prepare") {
     return FLOWCHART_DATA.knightBishopPrepare.starts.map(normalizeFen);
@@ -102,11 +314,7 @@ export function getKnbCycleStarts(mode: KnbCycleMode): string[] {
 }
 
 function getKnbPrepareFlowchartPositionKeys(): Set<string> {
-  return new Set(
-    FLOWCHART_DATA.knightBishopPrepare.nodes.map((node) =>
-      Brain.boardTurnKey(node.fen),
-    ),
-  );
+  return getFlowchartPositionKeys(FLOWCHART_DATA.knightBishopPrepare);
 }
 
 export function buildKnbCycleGraph(
@@ -252,6 +460,94 @@ function getKnbCycleEdges(fen: string, mode: KnbCycleMode): KnbCycleEdge[] {
         : null;
     })
     .filter((edge): edge is KnbCycleEdge => edge !== null);
+}
+
+function getKnbFlowchartSearchEdges(
+  fen: string,
+  stackIndexByKey: Map<string, number>,
+  discovered: Set<string>,
+): KnbFlowchartSearchEdge[] {
+  const chess = Brain.getChess(fen);
+  const moves =
+    chess.turn() === "w" ? getKnbCycleWhiteMoves(fen) : chess.moves();
+  const edges = moves
+    .map((san, originalIndex) => {
+      const nextChess = Brain.getChess(fen);
+      const move = nextChess.move(san);
+      return move
+        ? {
+          san,
+          to: Brain.boardTurnKey(nextChess.fen()),
+          toFen: normalizeFen(nextChess.fen()),
+          originalIndex,
+        }
+        : null;
+    })
+    .filter((edge): edge is KnbFlowchartSearchEdge => edge !== null);
+
+  if (chess.turn() === "b") {
+    return orderKnbBlackFlowchartSearchEdges(
+      edges,
+      stackIndexByKey,
+      discovered,
+    );
+  }
+
+  return edges.sort((a, b) => {
+    const optionDelta =
+      countBlackLegalOptions(b.toFen) - countBlackLegalOptions(a.toFen);
+    return optionDelta || a.originalIndex - b.originalIndex;
+  });
+}
+
+export function orderKnbBlackFlowchartSearchEdges(
+  edges: KnbFlowchartSearchEdge[],
+  stackIndexByKey: Map<string, number>,
+  discovered: Set<string>,
+): KnbFlowchartSearchEdge[] {
+  return edges.slice().sort((a, b) => {
+    const stackDelta =
+      Number(stackIndexByKey.has(b.to)) - Number(stackIndexByKey.has(a.to));
+    const discoveredDelta =
+      Number(discovered.has(b.to)) - Number(discovered.has(a.to));
+    return stackDelta || discoveredDelta || a.originalIndex - b.originalIndex;
+  });
+}
+
+function countBlackLegalOptions(fen: string): number {
+  const chess = Brain.getChess(fen);
+  return chess.turn() === "b" ? chess.moves().length : 0;
+}
+
+function getKnbFlowchartTerminal(
+  fen: string,
+  mode: KnbFlowchartPathMode,
+  nodesByKey: Map<string, { terminal?: "success" | "failure"; terminalReason?: string }>,
+): KnbFlowchartTerminal | undefined {
+  const node = nodesByKey.get(Brain.boardTurnKey(fen));
+  if (node?.terminal) {
+    return {
+      result: node.terminal,
+      reason: node.terminalReason,
+    };
+  }
+  if (mode === "prepare") {
+    const terminal = getKnbPrepareCycleTerminal(fen);
+    if (!terminal) {
+      return undefined;
+    }
+    return terminal === "prepared"
+      ? { result: "success", reason: terminal }
+      : { result: "failure", reason: terminal };
+  }
+
+  const terminalOutcome = Brain.getEndgameTerminalOutcome(fen);
+  if (!terminalOutcome) {
+    return undefined;
+  }
+  return terminalOutcome === "checkmate"
+    ? { result: "success", reason: terminalOutcome }
+    : { result: "failure", reason: terminalOutcome };
 }
 
 function isKnbCycleTerminal(fen: string, mode: KnbCycleMode): boolean {
@@ -407,11 +703,24 @@ function keyToFen(key: string): string {
   return `${key} - - 0 1`;
 }
 
-function withKnightAndBishopEndgame<T>(run: () => T): T {
+function getKnbFlowchartPathData(mode: KnbFlowchartPathMode): FlowchartData {
+  return mode === "prepare"
+    ? FLOWCHART_DATA.knightBishopPrepare
+    : FLOWCHART_DATA.knightBishop;
+}
+
+function getFlowchartPositionKeys(data: FlowchartData): Set<string> {
+  return new Set(data.nodes.map((node) => Brain.boardTurnKey(node.fen)));
+}
+
+function withKnightAndBishopEndgame<T>(
+  run: () => T,
+  endgameId: EndgameId = "knightAndBishop+",
+): T {
   const previousView = Brain.view;
   const previousEndgameId = Brain.endgameId;
   Brain.view = View.endgame;
-  Brain.endgameId = "knightAndBishop+";
+  Brain.endgameId = endgameId;
   try {
     return run();
   } finally {

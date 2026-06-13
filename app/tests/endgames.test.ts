@@ -17,7 +17,13 @@ import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
 import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
-import { analyzeDirectedCycles } from "../src/chess420/flowcharts/KnBCycleDetector";
+import {
+  analyzeDirectedCycles,
+  findKnbFlowchartIssuePath,
+  getKnbFlowchartPathModeForEndgame,
+  orderKnbBlackFlowchartSearchEdges,
+  type KnbFlowchartSearchEdge,
+} from "../src/chess420/flowcharts/KnBCycleDetector";
 import { getFlowchartBestMoveMismatches } from "../src/chess420/flowcharts/FlowchartRuleAudit";
 
 function wait(ms: number): Promise<void> {
@@ -694,6 +700,74 @@ test("cycle detector counts nodes in directed cycles", () => {
 
   assert.deepEqual([...analysis.cyclicNodes].sort(), ["b", "c", "d"]);
   assert.equal(analysis.cyclicComponents.length, 2);
+});
+
+test("knight-bishop find-loop modes use the requested flowchart starts", () => {
+  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop"), "prepare");
+  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop+"), "mate");
+  assert.equal(getKnbFlowchartPathModeForEndgame("rook"), undefined);
+
+  const prepare = findKnbFlowchartIssuePath("prepare", { maxExpansions: 0 });
+  const mate = findKnbFlowchartIssuePath("mate", { maxExpansions: 0 });
+
+  assert.equal(
+    prepare.startCount,
+    FLOWCHART_DATA.knightBishopPrepare.starts.length,
+  );
+  assert.equal(mate.startCount, FLOWCHART_DATA.knightBishop.starts.length);
+});
+
+test("knight-bishop flowchart path search returns a concrete failure line", () => {
+  const start = FLOWCHART_DATA.knightBishopPrepare.starts[0];
+  const result = findKnbFlowchartIssuePath("prepare", {
+    starts: [start],
+    allowedPositionKeys: new Set([boardTurnKey(start)]),
+  });
+
+  assert.equal(result.result, "failure");
+  assert.equal(result.reason, "outsideFlowchart");
+  assert.equal(boardTurnKey(result.startingFen), boardTurnKey(start));
+  assert.ok(result.moves.length > 0);
+
+  const states = Brain.getEndgameLineStates(result.startingFen, result.moves);
+  assert.equal(
+    boardTurnKey(states[states.length - 1].fen),
+    boardTurnKey(result.finalFen),
+  );
+});
+
+test("knight-bishop flowchart black search tries seen positions first", () => {
+  const edges: KnbFlowchartSearchEdge[] = [
+    {
+      san: "new",
+      to: "new-position b",
+      toFen: "new-position b - - 0 1",
+      originalIndex: 0,
+    },
+    {
+      san: "discovered",
+      to: "discovered-position b",
+      toFen: "discovered-position b - - 0 1",
+      originalIndex: 1,
+    },
+    {
+      san: "stack",
+      to: "stack-position b",
+      toFen: "stack-position b - - 0 1",
+      originalIndex: 2,
+    },
+  ];
+
+  const ordered = orderKnbBlackFlowchartSearchEdges(
+    edges,
+    new Map([["stack-position b", 0]]),
+    new Set(["discovered-position b", "stack-position b"]),
+  );
+
+  assert.deepEqual(
+    ordered.map((edge) => edge.san),
+    ["stack", "discovered", "new"],
+  );
 });
 
 test("knight-bishop flowchart dedupes bishop positions by edge anchor", () => {
@@ -1484,6 +1558,51 @@ test("knight-bishop rule 5 forces zone x stable-square instances", () => {
   assert.equal(
     Brain.knightAndBishopWhiteMoveForcesZone5(offPathFen, "Kf6"),
     false,
+  );
+});
+
+test("knight-bishop rule 6 establishes zone x from bishop anchor positions", () => {
+  setEndgame("knightAndBishop");
+
+  const n1Fen = "8/4k3/4B3/4K3/8/2N5/8/8 w - - 0 1";
+  assert.deepEqual(
+    Brain.getKnightAndBishopZoneXSetup(n1Fen)?.stableKnightSquares.sort(),
+    ["c6", "g6"],
+  );
+  assert.equal(
+    Brain.knightAndBishopHasZoneXKingProgressMove(n1Fen),
+    false,
+  );
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(n1Fen, "Nd5+"),
+    "prepare zone x",
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(n1Fen), ["Nd5+"]);
+
+  const onlyKingProgressFen = "4k3/8/4B3/3N1K2/8/8/8/8 w - - 0 1";
+  assert.equal(
+    Brain.knightAndBishopHasZoneXKingProgressMove(onlyKingProgressFen),
+    true,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(onlyKingProgressFen, "Kf6").zoneXPrepareScore,
+    3,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(onlyKingProgressFen, "Kg6").zoneXPrepareScore,
+    99,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(onlyKingProgressFen, "Kf6").zoneXPreparePieceProximity,
+    2,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(onlyKingProgressFen, "Ke5").zoneXPreparePieceProximity,
+    3,
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(onlyKingProgressFen),
+    ["Kf6"],
   );
 });
 
@@ -4142,7 +4261,13 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "[prepare] Reach the key-square pattern or force black into Zone X when available.",
+      "[prepare] Reach the knight's key-square pattern or force black into Zone X when available.",
+    ),
+    true,
+  );
+  assert.equal(
+    knightAndBishopHelp.whitePriorities.includes(
+      "[prepare *] When the bishop is on its Zone X square, move the white king towards the black king or otherwise the white knight along the shortest path to its Zone X square.",
     ),
     true,
   );
