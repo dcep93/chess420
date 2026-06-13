@@ -255,7 +255,8 @@ type KnightAndBishopExplicitWhiteMoveReason =
   | "enter mating net"
   | "key square pattern"
   | "force zone x"
-  | "prepare zone x";
+  | "bring king closer"
+  | "bishop in front";
 
 type ScoreReason<T> = {
   reason: string;
@@ -1458,6 +1459,8 @@ export default class Brain {
         "key square pattern": "[prepare] Reach the knight's key-square pattern or force black into Zone X when available.",
         "force zone x": "",
         "prepare zone x": "[prepare *] When the bishop is on its Zone X square, move the white king towards the black king or otherwise the white knight along the shortest path to its Zone X square.",
+        "bring king closer": "Bring White's king closer to Black's king while staying on the color opposite the bishop.",
+        "bishop in front": "Place the bishop on the square in front of White's king, between the kings.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
         "take direct opposition": "Phase 2: take direct king opposition, unless it moves the white king into a square controlled by a bishop.",
@@ -1484,6 +1487,7 @@ export default class Brain {
         "king near middle": "White king near middle",
         "king closer": "White king closer",
         "bring king closer": "White king closer",
+        "bishop in front": "bishop in front of White king",
         "force black to edge": "force Black to edge",
         "bishops closer": "bishops closer to Black king",
         "bishops far from corner": "bishops farther from corner",
@@ -2102,9 +2106,13 @@ export default class Brain {
       },
       {
         compare: (a, b) =>
-          a.zoneXPrepareScore - b.zoneXPrepareScore ||
-          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
-        reason: "prepare zone x",
+          a.kingCloserOppositeBishopScore -
+          b.kingCloserOppositeBishopScore,
+        reason: "bring king closer",
+      },
+      {
+        compare: (a, b) => a.bishopInFrontScore - b.bishopInFrontScore,
+        reason: "bishop in front",
       },
     ];
 
@@ -3099,6 +3107,16 @@ export default class Brain {
       )
         ? 0
         : 1,
+      kingCloserOppositeBishopScore:
+        Brain.knightAndBishopKingCloserOppositeBishopScore(
+          fen,
+          resultFen,
+          move?.piece
+        ),
+      bishopInFrontScore: Brain.knightAndBishopBishopInFrontScore(
+        fen,
+        resultFen
+      ),
       triangleCompactness: useEdgePlan
         ? 0
         : Brain.whiteTriangleCompactness(resultFen),
@@ -3134,8 +3152,8 @@ export default class Brain {
       a.phaseTwoEntryScore - b.phaseTwoEntryScore ||
       a.keySquarePatternScore - b.keySquarePatternScore ||
       a.zoneXEntryScore - b.zoneXEntryScore ||
-      a.zoneXPrepareScore - b.zoneXPrepareScore ||
-      a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity
+      a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
+      a.bishopInFrontScore - b.bishopInFrontScore
     );
   }
 
@@ -3166,10 +3184,14 @@ export default class Brain {
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
       },
       {
-        reason: "prepare zone x",
+        reason: "bring king closer",
         compare: (a, b) =>
-          a.zoneXPrepareScore - b.zoneXPrepareScore ||
-          a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
+          a.kingCloserOppositeBishopScore -
+          b.kingCloserOppositeBishopScore,
+      },
+      {
+        reason: "bishop in front",
+        compare: (a, b) => a.bishopInFrontScore - b.bishopInFrontScore,
       },
     ];
   }
@@ -3198,6 +3220,92 @@ export default class Brain {
       return false;
     }
     return Brain.kingDistance(blackKing.square, bishop.square) <= 1;
+  }
+
+  static knightAndBishopKingCloserOppositeBishopScore(
+    fen: string,
+    resultFen: string,
+    piece: string | undefined
+  ): number {
+    if (piece !== "k") {
+      return 99;
+    }
+    const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
+    const beforeBlackKing = Brain.findPiece(fen, "b", "k");
+    const afterWhiteKing = Brain.findPiece(resultFen, "w", "k");
+    const afterBlackKing = Brain.findPiece(resultFen, "b", "k");
+    const bishop = Brain.findPiece(resultFen, "w", "b");
+    if (
+      !beforeWhiteKing ||
+      !beforeBlackKing ||
+      !afterWhiteKing ||
+      !afterBlackKing ||
+      !bishop
+    ) {
+      return 99;
+    }
+
+    const afterDistance = Brain.manhattanDistance(
+      afterWhiteKing.square,
+      afterBlackKing.square
+    );
+    if (
+      afterDistance >=
+      Brain.manhattanDistance(beforeWhiteKing.square, beforeBlackKing.square)
+    ) {
+      return 99;
+    }
+    return Brain.sameSquareColor(afterWhiteKing.square, bishop.square)
+      ? 99
+      : afterDistance;
+  }
+
+  static knightAndBishopBishopInFrontScore(
+    fen: string,
+    resultFen: string
+  ): number {
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const bishop = Brain.findPiece(resultFen, "w", "b");
+    if (!whiteKing || !blackKing || !bishop) {
+      return 0;
+    }
+
+    const frontSquare = Brain.getSquareInFrontOfWhiteKingBetweenKings(
+      whiteKing.square,
+      blackKing.square
+    );
+    if (!frontSquare) {
+      return 0;
+    }
+    return bishop.square === frontSquare ? 0 : 1;
+  }
+
+  static getSquareInFrontOfWhiteKingBetweenKings(
+    whiteKing: Square,
+    blackKing: Square
+  ): Square | null {
+    const whiteCoords = Brain.squareCoords(whiteKing);
+    const blackCoords = Brain.squareCoords(blackKing);
+    const fileDistance = blackCoords.file - whiteCoords.file;
+    const rankDistance = blackCoords.rank - whiteCoords.rank;
+    const absoluteFileDistance = Math.abs(fileDistance);
+    const absoluteRankDistance = Math.abs(rankDistance);
+    const kingsAreAligned =
+      fileDistance === 0 ||
+      rankDistance === 0 ||
+      absoluteFileDistance === absoluteRankDistance;
+    if (
+      !kingsAreAligned ||
+      Math.max(absoluteFileDistance, absoluteRankDistance) < 2
+    ) {
+      return null;
+    }
+
+    return Brain.squareFromCoords(
+      whiteCoords.file + Math.sign(fileDistance),
+      whiteCoords.rank + Math.sign(rankDistance)
+    );
   }
 
   static knightAndBishopBestBlackReplyCenterDistance(fen: string): number {

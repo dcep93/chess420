@@ -1483,8 +1483,11 @@ function getGeneratedPrepareMoveReason(fen: string, san: string): string {
   if (explicitReason === "force zone x") {
     return `Play ${san} to force Black into Zone X while White keeps the stable knight-and-bishop geometry.`;
   }
-  if (explicitReason === "prepare zone x") {
-    return `Play ${san} to establish the Zone X setup around the bishop.`;
+  if (explicitReason === "bring king closer") {
+    return `Play ${san} to bring White's king closer while staying on the color opposite the bishop.`;
+  }
+  if (explicitReason === "bishop in front") {
+    return `Play ${san} to place the bishop in front of White's king, between the kings.`;
   }
   return `Play ${san} to continue the generated preparation route; tied best moves remain shown as yellow arrows.`;
 }
