@@ -2,8 +2,22 @@ import React from "react";
 import Brain, { View } from "./Brain";
 import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
 import { stats, subscribeToLichessStats } from "./Lichess";
-import settings from "./Settings";
 import StorageW from "./StorageW";
+
+export function hasDebugQueryParam(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  return new URLSearchParams(window.location.search).has("debug");
+}
+
+export function shouldShowEndgameLoopFinder(): boolean {
+  return (
+    Brain.view === View.endgame &&
+    Brain.hasSelectedEndgame() &&
+    hasDebugQueryParam()
+  );
+}
 
 export function Header() {
   return (
@@ -34,7 +48,7 @@ export function Header() {
               </option>
             ))}
           </select>
-          {settings.IS_DEV && Brain.hasSelectedEndgame() ? (
+          {shouldShowEndgameLoopFinder() ? (
             <button onClick={Brain.findEndgameLoop}>find a loop</button>
           ) : null}
         </div>

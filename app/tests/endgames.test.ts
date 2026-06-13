@@ -4,7 +4,7 @@ import { type Square } from "chess.js";
 
 import { getLastMoveSquares } from "../src/chess420/Board";
 import Brain, { View } from "../src/chess420/Brain";
-import { Header } from "../src/chess420/Controls";
+import { Header, shouldShowEndgameLoopFinder } from "../src/chess420/Controls";
 import {
   ENDGAME_OPTIONS,
   ENDGAMES,
@@ -101,12 +101,16 @@ function textContent(node: unknown): string {
   return getChildren(node).map(textContent).join("");
 }
 
-function setTestHash(hash = "") {
+function setTestLocation(hash = "", search = "") {
   (
     globalThis as typeof globalThis & {
-      window: { location: { hash: string } };
+      window: { location: { hash: string; search: string } };
     }
-  ).window = { location: { hash } };
+  ).window = { location: { hash, search } };
+}
+
+function setTestHash(hash = "") {
+  setTestLocation(hash);
 }
 
 function assertFiniteScore(fen: string) {
@@ -1040,6 +1044,7 @@ function getWorstKnownFlowchartReplyDistance(
 }
 
 test("endgame dropdown is only shown in endgame mode", () => {
+  setTestLocation();
   Brain.view = View.speedrun;
   Brain.endgameId = undefined;
   assert.equal(hasElementType(Header(), "select"), false);
@@ -1056,6 +1061,7 @@ test("endgame dropdown is only shown in endgame mode", () => {
   assert.equal(hasElementType(header, "select"), true);
   assert.match(textContent(header), /select endgame/);
   assert.doesNotMatch(textContent(header), /find a loop/);
+  assert.equal(shouldShowEndgameLoopFinder(), false);
   assert.match(textContent(header), /Rook \+/);
   assert.match(textContent(header), /Queen \+/);
   assert.match(textContent(header), /Two Bishops \+/);
@@ -1079,9 +1085,13 @@ test("endgame dropdown is only shown in endgame mode", () => {
     true,
   );
 
-  settings.IS_DEV = true;
+  setTestLocation("", "?debug");
+  assert.equal(shouldShowEndgameLoopFinder(), true);
   assert.match(textContent(Header()), /find a loop/);
-  settings.IS_DEV = false;
+
+  Brain.view = View.speedrun;
+  assert.equal(shouldShowEndgameLoopFinder(), false);
+  assert.equal(hasElementType(Header(), "select"), false);
 });
 
 test("piece-count guard detects impossible endgame positions", () => {
