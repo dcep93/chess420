@@ -1461,7 +1461,7 @@ export default class Brain {
         "key square pattern": "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
         "force zone x": "",
         "prepare zone x": "",
-        "bring king closer": "Keep White's king in the center four squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
+        "bring king closer": "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
         "bishop in front": "Place the bishop on the square in front of White's king, between the kings.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
@@ -3101,7 +3101,7 @@ export default class Brain {
         : 99,
       whiteKingDistance:
         whiteKing && blackKing
-          && Brain.centerDistance(whiteKing.square) > 0
+          && Brain.isMiddle16Square(whiteKing.square)
           ? Brain.manhattanDistance(whiteKing.square, blackKing.square)
           : 0,
       bishopBlackKingDistance:
@@ -3261,8 +3261,8 @@ export default class Brain {
       return 99;
     }
     if (
-      Brain.isKnightAndBishopCenterFourSquare(beforeWhiteKing.square) &&
-      !Brain.isKnightAndBishopCenterFourSquare(afterWhiteKing.square)
+      Brain.isMiddle16Square(beforeWhiteKing.square) &&
+      !Brain.isMiddle16Square(afterWhiteKing.square)
     ) {
       return 99;
     }
@@ -3280,10 +3280,6 @@ export default class Brain {
     return Brain.sameSquareColor(afterWhiteKing.square, bishop.square)
       ? 99
       : afterDistance;
-  }
-
-  static isKnightAndBishopCenterFourSquare(square: Square): boolean {
-    return square === "d4" || square === "d5" || square === "e4" || square === "e5";
   }
 
   static knightAndBishopBishopInFrontScore(

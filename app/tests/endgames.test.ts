@@ -1473,7 +1473,7 @@ test("knight-bishop phase-one immediately hands off to lookup", () => {
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nf7"]);
 });
 
-test("knight-bishop rule 7 brings the white king closer off the bishop color", () => {
+test("knight-bishop rule 6 keeps the king in the middle 16 squares", () => {
   setEndgame("knightAndBishop");
 
   const fen = "8/8/8/3NK3/2k5/2B5/8/8 w - - 72 37";
@@ -1489,6 +1489,12 @@ test("knight-bishop rule 7 brings the white king closer off the bishop color", (
   const centerExitFen = "8/8/8/k7/3K4/1B6/8/7N w - - 0 1";
   assert.equal(
     Brain.scoreKnightAndBishopWhiteMove(centerExitFen, "Kc5")
+      .kingCloserOppositeBishopScore,
+    2,
+  );
+  const middle16ExitFen = "k7/8/8/2K5/8/1B6/8/7N w - - 0 1";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(middle16ExitFen, "Kb6")
       .kingCloserOppositeBishopScore,
     99,
   );
@@ -4296,7 +4302,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Keep White's king in the center four squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
+      "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
     ),
     true,
   );
