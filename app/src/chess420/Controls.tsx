@@ -2,6 +2,7 @@ import React from "react";
 import Brain, { View } from "./Brain";
 import { ENDGAME_OPTIONS, type EndgameId } from "./Endgames";
 import { stats, subscribeToLichessStats } from "./Lichess";
+import settings from "./Settings";
 import StorageW from "./StorageW";
 
 export function hasDebugQueryParam(): boolean {
@@ -15,7 +16,7 @@ export function shouldShowEndgameLoopFinder(): boolean {
   return (
     Brain.view === View.endgame &&
     Brain.hasSelectedEndgame() &&
-    hasDebugQueryParam()
+    (settings.IS_DEV || hasDebugQueryParam())
   );
 }
 

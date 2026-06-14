@@ -1089,6 +1089,12 @@ test("endgame dropdown is only shown in endgame mode", () => {
   assert.equal(shouldShowEndgameLoopFinder(), true);
   assert.match(textContent(Header()), /find a loop/);
 
+  setTestLocation();
+  settings.IS_DEV = true;
+  assert.equal(shouldShowEndgameLoopFinder(), true);
+  assert.match(textContent(Header()), /find a loop/);
+  settings.IS_DEV = false;
+
   Brain.view = View.speedrun;
   assert.equal(shouldShowEndgameLoopFinder(), false);
   assert.equal(hasElementType(Header(), "select"), false);
