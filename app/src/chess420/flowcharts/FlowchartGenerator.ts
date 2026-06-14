@@ -11,6 +11,7 @@ import {
   type FlowchartTerminal,
   type FlowchartTranspositionKind,
 } from "./FlowchartTypes";
+import { KNIGHT_BISHOP_PREPARE_STARTS } from "./KnightBishopPrepareStarts";
 
 type FlowchartConfig = {
   id: FlowchartId;
@@ -176,19 +177,8 @@ export const FLOWCHART_CONFIGS: Record<FlowchartId, FlowchartConfig> = {
     title: "Knight and Bishop: Prepare",
     endgameId: "knightAndBishop+",
     playEndgameId: "knightAndBishop",
-    starts: [
-      "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
-      "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
-      "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
-      "8/4k3/4B3/4K3/8/6N1/8/8 w - - 4 3",
-      "8/4k3/4B3/4K3/8/7N/8/8 w - - 72 37",
-      "3k4/8/4BK2/5N2/8/8/8/8 w - - 18 10",
-    ],
-    preparePolicyStarts: [
-      "8/4k3/4B3/4K3/1N6/8/8/8 w - - 62 32",
-      "8/4k3/4B3/4K3/8/2N5/8/8 w - - 66 34",
-      "8/4k3/4B3/4K3/8/1N6/8/8 w - - 72 37",
-    ],
+    starts: [...KNIGHT_BISHOP_PREPARE_STARTS],
+    preparePolicyStarts: [...KNIGHT_BISHOP_PREPARE_STARTS.slice(0, 3)],
     success: getKnightBishopPrepareSuccess,
     failure: getKnightBishopPrepareFailure,
     maxNodes: 1200,

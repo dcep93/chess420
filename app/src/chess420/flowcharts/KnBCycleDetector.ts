@@ -138,11 +138,8 @@ export function findKnbCycles(
 export function getKnbFlowchartPathModeForEndgame(
   endgameId?: EndgameId,
 ): KnbFlowchartPathMode | undefined {
-  if (endgameId === "knightAndBishop") {
-    return "prepare";
-  }
   if (endgameId === "knightAndBishop+") {
-    return "mate";
+    return "prepare";
   }
   return undefined;
 }

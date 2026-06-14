@@ -16,6 +16,7 @@ import { type LogType } from "./Log";
 import settings from "./Settings";
 import StorageW from "./StorageW";
 import traverseF, { type TraverseType, startTraverseF } from "./Traverse";
+import { KNIGHT_BISHOP_PREPARE_STARTS } from "./flowcharts/KnightBishopPrepareStarts";
 
 export type StateType = {
   fen: string;
@@ -5820,10 +5821,7 @@ export default class Brain {
 
   static findEndgameLoop() {
     if (!Brain.hasSelectedEndgame()) return;
-    if (
-      Brain.endgameId === "knightAndBishop" ||
-      Brain.endgameId === "knightAndBishop+"
-    ) {
+    if (Brain.endgameId === "knightAndBishop+") {
       void Brain.findKnightAndBishopFlowchartLoop();
       return;
     }
@@ -5956,8 +5954,8 @@ export default class Brain {
 
     if (!Brain.hasSelectedEndgame()) return stats;
 
-    for (let i = 0; i < maxPositions; i += 1) {
-      const startingFen = Brain.getRandomEndgameFen(Brain.endgameId!);
+    const startingFens = Brain.getEndgameLoopSearchStartFens(maxPositions);
+    for (const startingFen of startingFens) {
       const path = Brain.tryEndgamePathToMate(startingFen, plyLimit, random);
       stats.checked += 1;
       stats.totalPlies += path.plies;
@@ -5982,6 +5980,15 @@ export default class Brain {
     }
 
     return stats;
+  }
+
+  static getEndgameLoopSearchStartFens(maxPositions: number): string[] {
+    if (Brain.endgameId === "knightAndBishop+") {
+      return [...KNIGHT_BISHOP_PREPARE_STARTS];
+    }
+    return Array.from({ length: maxPositions }, () =>
+      Brain.getRandomEndgameFen(Brain.endgameId!),
+    );
   }
 
   static tryEndgamePathToMate(
@@ -6068,7 +6075,7 @@ export default class Brain {
     const averagePlies =
       result.checked === 0 ? 0 : Math.round(result.totalPlies / result.checked);
     return [
-      `No loops found in ${result.checked} random positions.`,
+      `No loops found in ${result.checked} positions.`,
       `Mates: ${result.mates}`,
       `Limits: ${result.limits}`,
       `No moves: ${result.noMoves}`,

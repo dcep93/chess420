@@ -17,6 +17,7 @@ import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
 import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
+import { KNIGHT_BISHOP_PREPARE_STARTS } from "../src/chess420/flowcharts/KnightBishopPrepareStarts";
 import {
   analyzeDirectedCycles,
   findKnbFlowchartIssuePath,
@@ -706,19 +707,17 @@ test("cycle detector counts nodes in directed cycles", () => {
   assert.equal(analysis.cyclicComponents.length, 2);
 });
 
-test("knight-bishop find-loop modes use the requested flowchart starts", () => {
-  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop"), "prepare");
-  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop+"), "mate");
+test("knight-bishop plus find-loop mode uses the prepare flowchart starts", () => {
+  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop"), undefined);
+  assert.equal(getKnbFlowchartPathModeForEndgame("knightAndBishop+"), "prepare");
   assert.equal(getKnbFlowchartPathModeForEndgame("rook"), undefined);
 
   const prepare = findKnbFlowchartIssuePath("prepare", { maxExpansions: 0 });
-  const mate = findKnbFlowchartIssuePath("mate", { maxExpansions: 0 });
 
   assert.equal(
     prepare.startCount,
     FLOWCHART_DATA.knightBishopPrepare.starts.length,
   );
-  assert.equal(mate.startCount, FLOWCHART_DATA.knightBishop.starts.length);
 });
 
 test("knight-bishop flowchart path search returns a concrete failure line", () => {
@@ -4025,6 +4024,18 @@ test("endgame loop search detects a single repeated position on the final ply", 
     Brain.getIdealEndgameWhiteMoves = originalWhiteMoves;
     Brain.getEndgameOpponentCandidates = originalOpponentCandidates;
   }
+});
+
+test("knight-bishop loop search uses prepare starts only for plus mode", () => {
+  setEndgame("knightAndBishop+");
+  const plusResult = Brain.searchRandomEndgameLoops(99, 0, () => 0);
+  assert.equal(plusResult.checked, KNIGHT_BISHOP_PREPARE_STARTS.length);
+  assert.equal(plusResult.limits, KNIGHT_BISHOP_PREPARE_STARTS.length);
+
+  setEndgame("knightAndBishop");
+  const baseResult = Brain.searchRandomEndgameLoops(3, 0, () => 0);
+  assert.equal(baseResult.checked, 3);
+  assert.equal(baseResult.limits, 3);
 });
 
 test("black endgame replies prefer returning to the previous white-turn position", () => {
