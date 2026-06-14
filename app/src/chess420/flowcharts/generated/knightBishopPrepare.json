@@ -2891,7 +2891,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
-          "Nd5"
+          "Bf7"
         ],
         "kind": "notBest"
       }
@@ -4798,8 +4798,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Ne5",
-          "Nd4"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -7562,8 +7561,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Ne5",
-          "Nd4"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -15270,7 +15268,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Ne5"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -15308,7 +15306,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Ne5"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -15346,7 +15344,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Ne5"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -17435,7 +17433,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf7",
         "expectedSans": [
-          "Ne4"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -17512,7 +17510,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb7",
         "expectedSans": [
-          "Ne4"
+          "Bd7"
         ],
         "kind": "notBest"
       }
