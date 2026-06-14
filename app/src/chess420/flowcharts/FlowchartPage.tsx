@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Brain from "../Brain";
+import Brain, { View } from "../Brain";
 import { FLOWCHART_DATA } from "./flowchartData";
 import {
   FLOWCHART_IDS,
@@ -16,7 +16,262 @@ export default function FlowchartPage() {
   if (!isFlowchartId(id)) {
     return <FlowchartIndex />;
   }
-  return <FlowchartView data={FLOWCHART_DATA[id]} />;
+  return <FlowchartView data={getRenderedFlowchartData(FLOWCHART_DATA[id])} />;
+}
+
+const renderedFlowchartCache = new WeakMap<FlowchartData, FlowchartData>();
+
+export function getRenderedFlowchartData(data: FlowchartData): FlowchartData {
+  if (data.id !== "knightBishopPrepare") {
+    return data;
+  }
+  const cached = renderedFlowchartCache.get(data);
+  if (cached) {
+    return cached;
+  }
+  const renderedData = withPrepareFailureExampleChildren(data);
+  renderedFlowchartCache.set(data, renderedData);
+  return renderedData;
+}
+
+function withPrepareFailureExampleChildren(data: FlowchartData): FlowchartData {
+  return withEndgame("knightAndBishop+", () => {
+    const nodesByKey = new Map(data.nodes.map((node) => [node.key, node]));
+    const failurePaths = getPrepareFailurePaths(data, nodesByKey);
+    if (failurePaths.size === 0) {
+      return data;
+    }
+
+    const edgesBySourceSan = new Map(
+      data.edges.map((edge) => [`${edge.from}:${edge.san}`, edge]),
+    );
+    const replacementEdges: FlowchartEdge[] = [];
+    const syntheticChildren: FlowchartNode[] = [];
+    const syntheticChildByKey = new Map<string, FlowchartNode>();
+    const replacedNodeIds = new Set(failurePaths.keys());
+    let layoutHeight = data.layout.height;
+
+    const renderedNodes = data.nodes.map((node) => {
+      const path = failurePaths.get(node.id);
+      if (!path) {
+        return node;
+      }
+      const move = getLegalMove(node.fen, path.moves[0]);
+      if (!move) {
+        return node;
+      }
+      const childFen = normalizeFen(move.after);
+      const childKey = Brain.boardTurnKey(childFen);
+      const target =
+        nodesByKey.get(childKey) ||
+        getSyntheticFailureChild(
+          data,
+          node,
+          childFen,
+          path.reason,
+          syntheticChildByKey,
+          syntheticChildren,
+        );
+      layoutHeight = Math.max(layoutHeight, target.y + data.layout.nodeHeight);
+
+      const edge =
+        edgesBySourceSan.get(`${node.id}:${move.san}`) ||
+        getSyntheticFailureEdge(data, node, target, move);
+      replacementEdges.push(edge);
+      return {
+        ...node,
+        outgoingEdgeIds: [edge.id],
+        boardArrows: [
+          {
+            id: edge.id,
+            san: edge.san,
+            from: edge.fromSquare,
+            to: edge.toSquare,
+            color: node.turn === "w" ? "white" as const : "black" as const,
+          },
+        ],
+        moveReason:
+          node.turn === "w"
+            ? `Play ${edge.san} to follow an optimal line that exposes this prepare-flowchart failure.`
+            : node.moveReason,
+        bestMoveMismatch: node.turn === "w" ? undefined : node.bestMoveMismatch,
+      };
+    });
+
+    return {
+      ...data,
+      nodes: [...renderedNodes, ...syntheticChildren],
+      edges: [
+        ...data.edges.filter((edge) => !replacedNodeIds.has(edge.from)),
+        ...replacementEdges,
+      ],
+      layout: {
+        ...data.layout,
+        height: layoutHeight,
+      },
+    };
+  });
+}
+
+type PrepareFailurePath = {
+  moves: string[];
+  finalFen: string;
+  reason: string;
+};
+
+type PrepareFailureCandidate = {
+  san: string;
+  childFen: string;
+  childKey: string;
+};
+
+function getPrepareFailurePaths(
+  data: FlowchartData,
+  nodesByKey: Map<string, FlowchartNode>,
+): Map<string, PrepareFailurePath> {
+  const paths = new Map<string, PrepareFailurePath>();
+  const candidatesById = new Map<string, PrepareFailureCandidate[]>();
+  data.nodes.forEach((node) => {
+    if (node.terminal) {
+      return;
+    }
+    const chess = Brain.getChess(node.fen);
+    const moves =
+      chess.turn() === "w" ? Brain.getIdealEndgameWhiteMoves(node.fen) : chess.moves();
+    candidatesById.set(
+      node.id,
+      moves
+        .map((san) => {
+          const move = getLegalMove(node.fen, san);
+          return move
+            ? {
+                san: move.san,
+                childFen: normalizeFen(move.after),
+                childKey: Brain.boardTurnKey(move.after),
+              }
+            : undefined;
+        })
+        .filter(
+          (candidate): candidate is PrepareFailureCandidate =>
+            candidate !== undefined,
+        ),
+    );
+  });
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    data.nodes.forEach((node) => {
+      if (node.terminal || paths.has(node.id)) {
+        return;
+      }
+      const candidates = candidatesById.get(node.id) || [];
+      for (const candidate of candidates) {
+        const childNode = nodesByKey.get(candidate.childKey);
+        const childPath = childNode ? paths.get(childNode.id) : undefined;
+        const reason = !childNode
+          ? "outside flowchart"
+          : childNode.terminal === "failure"
+            ? childNode.terminalReason || "failure"
+            : childPath?.reason;
+        if (!reason) {
+          continue;
+        }
+        paths.set(node.id, {
+          moves: [candidate.san, ...(childPath?.moves || [])],
+          finalFen: childPath?.finalFen || candidate.childFen,
+          reason,
+        });
+        changed = true;
+        break;
+      }
+    });
+  }
+
+  return paths;
+}
+
+function getLegalMove(fen: string, san: string) {
+  const chess = Brain.getChess(fen);
+  const move = chess.move(san);
+  return move ? { ...move, after: chess.fen() } : null;
+}
+
+function getSyntheticFailureChild(
+  data: FlowchartData,
+  source: FlowchartNode,
+  fen: string,
+  reason: string,
+  syntheticChildByKey: Map<string, FlowchartNode>,
+  syntheticChildren: FlowchartNode[],
+): FlowchartNode {
+  const key = Brain.boardTurnKey(fen);
+  const existing = syntheticChildByKey.get(key);
+  if (existing) {
+    return existing;
+  }
+  const child: FlowchartNode = {
+    id: `failure-example-${syntheticChildren.length + 1}`,
+    key,
+    fen,
+    boardFen: fen.split(" ")[0],
+    turn: Brain.getChess(fen).turn(),
+    x: source.x,
+    y: source.y + data.layout.nodeHeight + data.layout.rowGap,
+    imageUrl: `http://www.fen-to-image.com/image/${fen.split(" ")[0]}`,
+    playUrl: `/endgames/knightAndBishop#w//${fen.replaceAll(" ", "_")}`,
+    boardArrows: [],
+    outgoingEdgeIds: [],
+    terminal: "failure",
+    terminalReason: reason,
+  };
+  syntheticChildByKey.set(key, child);
+  syntheticChildren.push(child);
+  return child;
+}
+
+function getSyntheticFailureEdge(
+  data: FlowchartData,
+  source: FlowchartNode,
+  target: FlowchartNode,
+  move: NonNullable<ReturnType<typeof getLegalMove>>,
+): FlowchartEdge {
+  return {
+    id: `${source.id}-failure-example-edge`,
+    from: source.id,
+    to: target.id,
+    san: move.san,
+    fromSquare: move.from,
+    toSquare: move.to,
+    transposition: false,
+    points: [
+      {
+        x: source.x + data.layout.nodeWidth / 2,
+        y: source.y + data.layout.nodeHeight,
+      },
+      {
+        x: target.x + data.layout.nodeWidth / 2,
+        y: target.y,
+      },
+    ],
+  };
+}
+
+function withEndgame<T>(endgameId: typeof Brain.endgameId, run: () => T): T {
+  const previousView = Brain.view;
+  const previousEndgameId = Brain.endgameId;
+  Brain.view = View.endgame;
+  Brain.endgameId = endgameId;
+  try {
+    return run();
+  } finally {
+    Brain.view = previousView;
+    Brain.endgameId = previousEndgameId;
+  }
+}
+
+function normalizeFen(fen: string): string {
+  return `${Brain.boardTurnKey(fen)} - - 0 1`;
 }
 
 function FlowchartIndex() {

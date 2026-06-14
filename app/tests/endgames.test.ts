@@ -16,6 +16,7 @@ import { type LogType } from "../src/chess420/Log";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
+import { getRenderedFlowchartData } from "../src/chess420/flowcharts/FlowchartPage";
 import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
 import { KNIGHT_BISHOP_PREPARE_STARTS } from "../src/chess420/flowcharts/KnightBishopPrepareStarts";
 import {
@@ -891,6 +892,76 @@ test("knight-bishop prepare former n72 remains a rule gap", () => {
     ),
     undefined,
   );
+});
+
+test("knight-bishop prepare renders one child for every failure path", () => {
+  setEndgame(FLOWCHART_DATA.knightBishopPrepare.endgameId);
+  const rawNode = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
+    (candidate) => candidate.id === "n27",
+  );
+  assert.ok(rawNode);
+  assert.equal(rawNode.fen, "8/2k1N3/4BK2/8/8/8/8/8 w - - 0 1");
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(rawNode.fen), ["Nd5+"]);
+
+  const rawEdge = FLOWCHART_DATA.knightBishopPrepare.edges.find(
+    (edge) => edge.id === rawNode.outgoingEdgeIds[0],
+  );
+  assert.ok(rawEdge);
+  assert.equal(rawEdge.san, "Kf7");
+
+  const renderedData = getRenderedFlowchartData(
+    FLOWCHART_DATA.knightBishopPrepare,
+  );
+  const renderedNode = renderedData.nodes.find(
+    (candidate) => candidate.id === "n27",
+  );
+  assert.ok(renderedNode);
+  assert.equal(renderedNode.outgoingEdgeIds.length, 1);
+  const renderedEdge = renderedData.edges.find(
+    (edge) => edge.id === renderedNode.outgoingEdgeIds[0],
+  );
+  assert.ok(renderedEdge);
+  assert.equal(renderedEdge.san, "Nd5+");
+
+  const renderedEdgesBySource = new Map<string, typeof renderedData.edges>();
+  renderedData.edges.forEach((edge) => {
+    renderedEdgesBySource.set(edge.from, [
+      ...(renderedEdgesBySource.get(edge.from) || []),
+      edge,
+    ]);
+  });
+  const failurePathNodeIds = new Set(
+    renderedData.nodes
+      .filter((node) => node.terminal === "failure")
+      .map((node) => node.id),
+  );
+  let changed = true;
+  while (changed) {
+    changed = false;
+    renderedData.edges.forEach((edge) => {
+      if (failurePathNodeIds.has(edge.to) && !failurePathNodeIds.has(edge.from)) {
+        failurePathNodeIds.add(edge.from);
+        changed = true;
+      }
+    });
+  }
+  assert.ok(failurePathNodeIds.has("n27"));
+  renderedData.nodes.forEach((node) => {
+    if (node.terminal || !failurePathNodeIds.has(node.id)) {
+      return;
+    }
+    assert.equal(
+      renderedEdgesBySource.get(node.id)?.length,
+      1,
+      `${node.id} should render a single child on its failure path`,
+    );
+  });
+
+  const child = renderedData.nodes.find((node) => node.id === renderedEdge.to);
+  assert.ok(child);
+  assert.equal(child.fen, "8/2k5/4BK2/3N4/8/8/8/8 b - - 0 1");
+  assert.equal(child.terminal, "failure");
+  assert.equal(child.terminalReason, "outside flowchart");
 });
 
 test("knight-bishop prepare white moves explain their purpose", () => {
