@@ -863,29 +863,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5+",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Nd5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1487,21 +1467,13 @@
         "expectedSans": [
           "Bd7",
           "Bc8",
-          "Nb6",
-          "Nc7",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4",
           "Kg5",
           "Kg4",
           "Kf4",
           "Ke4",
           "Ke5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1634,30 +1606,7 @@
         "n53-0-n41"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nf6",
-          "Ng3",
-          "Nf4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n54",
@@ -1786,30 +1735,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd5",
-          "Nh5+",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -1955,28 +1883,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Ke8",
-          "Kf8",
-          "Kg8",
-          "Kg7",
-          "Kg6",
-          "Kf6",
-          "Bd7",
-          "Bc8+",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -2765,13 +2674,7 @@
           "Kg6",
           "Kg5",
           "Kf5",
-          "Ke5",
-          "Nb6",
-          "Ne7",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Ke5"
         ],
         "kind": "globalTie"
       }
@@ -2835,10 +2738,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Nd4",
-          "Nf4"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -2989,7 +2891,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
-          "Bf7"
+          "Nd5"
         ],
         "kind": "notBest"
       }
@@ -3045,26 +2947,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
-          "Kf8",
-          "Kf7",
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -3193,27 +3078,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
-          "Kg8",
-          "Kg7",
-          "Kf7",
-          "Ke8",
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5+",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -3294,16 +3161,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne7",
         "expectedSans": [
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -3339,15 +3200,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne7",
         "expectedSans": [
-          "Na7",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Bd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4295,19 +4151,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kg5",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ne7",
-          "Nh4",
-          "Nf4",
-          "Ne5",
-          "Kg5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4387,30 +4233,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kh5",
-          "Kh4",
-          "Kg4",
-          "Kf5",
-          "Nd5",
-          "Ng6+",
-          "Nh5",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4440,28 +4265,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ng6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kh5",
-          "Kh4",
-          "Kg4",
-          "Kf5",
-          "Nd5",
-          "Ng6",
-          "Nh5+",
-          "Nh3",
-          "Ng2",
-          "Ne2",
-          "Nd3"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4781,26 +4587,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc6",
         "expectedSans": [
-          "Kd8",
-          "Ke8",
-          "Kd6",
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Nc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4916,27 +4705,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5+",
-          "Ke8",
-          "Kf8",
-          "Kg8",
-          "Kg7",
-          "Kg6",
-          "Kf6",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4996,29 +4767,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nc8+",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Nc6+",
-          "Ke8",
-          "Kf8",
-          "Kg8",
-          "Kg7",
-          "Kg6",
-          "Kf6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -5047,7 +4798,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bd7"
+          "Ne5",
+          "Nd4"
         ],
         "kind": "notBest"
       }
@@ -5172,17 +4924,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Kd7",
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -5218,17 +4963,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne7",
         "expectedSans": [
-          "Na7",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -5334,17 +5072,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Kd7",
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6158,30 +5889,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6211,30 +5921,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nc8+",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6264,31 +5953,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6317,24 +5984,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Kd6",
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6495,23 +6148,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Ne7",
-          "Nd6+",
-          "Ke8",
-          "Ke7",
-          "Kd7",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6540,22 +6179,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc7",
         "expectedSans": [
-          "Ne7",
-          "Nd6",
-          "Nb6+",
-          "Ke8",
-          "Ke7",
-          "Kd7",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd6"
         ],
         "kind": "notBest"
       }
@@ -6593,23 +6217,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Ne7",
-          "Nd6",
-          "Nb6",
-          "Ke8",
-          "Ke7",
-          "Kd7",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6638,19 +6248,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Ne7+",
-          "Na7+",
-          "Ke8",
-          "Ke7",
-          "Bd7+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne7+"
         ],
         "kind": "notBest"
       }
@@ -6754,14 +6352,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
         "kind": "notBest"
       }
@@ -6800,29 +6392,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8",
         "expectedSans": [
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6858,27 +6431,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Kd7",
-          "Kd5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6908,31 +6464,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
-          "Nb8+",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4+",
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -6962,27 +6497,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Kd7",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -7579,30 +7097,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -7686,35 +7183,7 @@
         "n233-0-n263"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Nd5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5",
-        "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Nc6",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc5",
-          "Kc4",
-          "Kb4",
-          "Ka4",
-          "Ka5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n234",
@@ -7743,29 +7212,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nc8",
-          "Ng8",
-          "Ng6",
-          "Nf5",
-          "Nd5",
-          "Nc6+",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -7795,23 +7244,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nf7",
-          "Nc6+",
-          "Ke8",
-          "Ke7",
-          "Kd6",
-          "Kc6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nc6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -7975,23 +7410,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd8",
         "expectedSans": [
-          "Ne7",
-          "Nd6+",
-          "Kd8",
-          "Ke8",
-          "Ke7",
-          "Kd6",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8050,29 +7471,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Ke8",
-          "Ke7",
-          "Kd7",
-          "Kc8",
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8161,7 +7562,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Bd7"
+          "Ne5",
+          "Nd4"
         ],
         "kind": "notBest"
       }
@@ -8247,26 +7649,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nf7",
-          "Nc6+",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nc6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8296,28 +7681,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nf7",
-          "Nc6+",
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nc6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8453,27 +7819,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb4",
         "expectedSans": [
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kd5",
-          "Kb5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8510,30 +7859,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8",
         "expectedSans": [
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -8563,23 +7892,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne5",
         "expectedSans": [
-          "Na7",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd5",
-          "Kb5"
+          "Nd4"
         ],
         "kind": "globalTie"
       }
@@ -9270,30 +8584,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd6",
-          "Ne7",
-          "Ng7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
           "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9323,27 +8616,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nf7",
-          "Nb7",
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nf7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9373,28 +8648,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nf7",
-          "Nb7",
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nf7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9424,26 +8680,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nf7",
-          "Nb7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nf7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9473,26 +8712,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb7",
         "expectedSans": [
-          "Nf7",
-          "Nb7",
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2"
+          "Nf7"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9610,25 +8832,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb7",
         "expectedSans": [
-          "Kc8",
-          "Kd8",
-          "Ke8",
-          "Ke7",
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -9727,14 +8931,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne5",
         "expectedSans": [
-          "Na7",
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5"
+          "Nd4"
         ],
         "kind": "globalTie"
       }
@@ -9787,12 +8985,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke5",
         "expectedSans": [
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4"
+          "Nd4"
         ],
         "kind": "notBest"
       }
@@ -9823,14 +9017,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Nb4",
-          "Na5+",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
         "kind": "notBest"
       }
@@ -9869,32 +9057,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb5",
-          "Na6",
-          "Nc6",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9924,31 +9089,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb5",
-          "Na6+",
-          "Nc6+",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -9974,32 +9117,7 @@
         "n299-0-n327"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5+",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb5",
-          "Na6+",
-          "Nc6",
-          "Nd5+",
-          "Nd3",
-          "Nc2",
-          "Na2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n300",
@@ -10028,30 +9146,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb5",
-          "Nc6+",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -10081,28 +9178,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nf7",
-          "Nc6+",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nc6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -10132,28 +9210,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nf7",
-          "Nc6+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nc6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -10200,15 +9259,7 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nc6+",
-          "Nd7+",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb5"
         ],
         "kind": "globalTie"
       }
@@ -10280,17 +9331,9 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -10320,17 +9363,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nd8+",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Na5+",
-          "Bd7",
-          "Bd5",
-          "Kb5",
-          "Kc5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -10360,14 +9396,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne5",
         "expectedSans": [
-          "Nb8",
-          "Nd8",
-          "Ne7",
           "Ne5",
-          "Nd4",
-          "Na5",
-          "Bd7",
-          "Bd5"
+          "Nd4"
         ],
         "kind": "globalTie"
       }
@@ -11239,11 +10269,9 @@
         "generatedSan": "Nb7",
         "expectedSans": [
           "Kc6",
-          "Nb7",
-          "Nb5",
           "Bf5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -11304,15 +10332,9 @@
           "Bg8",
           "Bf5",
           "Bg4",
-          "Bh3",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Bh3"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -11453,31 +10475,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne8",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd7",
-          "Ne8",
-          "Ng8",
-          "Nh7",
-          "Nh5",
-          "Ng4",
-          "Ne4",
-          "Nd5",
-          "Kc5",
-          "Kc4",
-          "Kb4",
-          "Ka4",
-          "Ka5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -11648,8 +10648,7 @@
         "generatedSan": "Nc5",
         "expectedSans": [
           "Nd6",
-          "Nc5",
-          "Bf7"
+          "Nc5"
         ],
         "kind": "globalTie"
       }
@@ -11677,31 +10676,7 @@
         "n345-0-n312"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Play Nd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd6",
-        "expectedSans": [
-          "Ne7",
-          "Nd6",
-          "Na7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n346",
@@ -11937,12 +10912,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc8",
         "expectedSans": [
-          "Nd8",
-          "Nd6",
-          "Kc8",
-          "Bd5"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12000,16 +10972,9 @@
           "Kg7",
           "Kg6",
           "Kg5",
-          "Kf5",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kf5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12077,15 +11042,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Na7",
-          "Ne7",
-          "Nd4",
-          "Nb4",
-          "Na5",
-          "Bd5",
-          "Kd5"
+          "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12216,29 +11175,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Na6+",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12268,29 +11207,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc7",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12320,29 +11239,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd3",
         "expectedSans": [
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12384,14 +11283,7 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nb6",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Kb5"
         ],
         "kind": "globalTie"
       }
@@ -12465,14 +11357,7 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nb6",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Kb5"
         ],
         "kind": "globalTie"
       }
@@ -12504,31 +11389,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Na6",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Na6",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12581,15 +11444,9 @@
           "Bd5+",
           "Bc4",
           "Bb3",
-          "Ba2",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Ba2"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12619,31 +11476,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kb4",
-          "Kb5",
-          "Na5",
-          "Nb6+",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12673,30 +11508,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kb4",
-          "Kb5",
-          "Na5",
-          "Nb6",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12726,26 +11540,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Kd5",
-          "Kd4",
-          "Kb4",
-          "Kb5",
-          "Na5",
-          "Nb6",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12800,30 +11597,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kb4",
-          "Kb5",
-          "Na5",
-          "Nb6",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -12952,13 +11728,6 @@
           "Bc4",
           "Bb3",
           "Ba2",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4",
           "Ka5",
           "Kb5",
           "Kc5",
@@ -13034,14 +11803,6 @@
           "Bc4+",
           "Bb3",
           "Ba2",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4",
           "Kc5",
           "Kc4",
           "Kc3",
@@ -13049,7 +11810,7 @@
           "Ka3",
           "Ka4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -13873,16 +12634,9 @@
           "Bg8",
           "Bf5",
           "Bg4",
-          "Bh3",
-          "Nb6",
-          "Ne7",
-          "Nf6",
-          "Nf4",
-          "Ne3",
-          "Nc3",
-          "Nb4"
+          "Bh3"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -13915,36 +12669,7 @@
         "n410-0-n453"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Ne4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ne4",
-        "expectedSans": [
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nd7+",
-          "Ne8",
-          "Ng8",
-          "Nh7",
-          "Nh5",
-          "Ng4",
-          "Ne4",
-          "Nd5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Ne4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n411",
@@ -13969,37 +12694,7 @@
         "n411-0-n454"
       ],
       "movesToSuccess": 3,
-      "moveReason": "Play Ne4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ne4",
-        "expectedSans": [
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ne8",
-          "Ng8",
-          "Nh7",
-          "Nh5",
-          "Ng4",
-          "Ne4",
-          "Nd5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Ne4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n412",
@@ -14118,8 +12813,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc7",
         "expectedSans": [
-          "Nc5",
-          "Bf5"
+          "Nc5"
         ],
         "kind": "notBest"
       }
@@ -14290,20 +12984,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb8",
         "expectedSans": [
-          "Kb8",
           "Nd8+",
-          "Na5+",
-          "Bd7+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Na5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14386,28 +13070,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14436,17 +13101,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5+",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5+"
         ],
         "kind": "notBest"
       }
@@ -14477,20 +13132,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14519,28 +13163,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6+",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14601,30 +13226,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Na6",
         "expectedSans": [
-          "Kc8",
-          "Kd8",
-          "Kd7",
-          "Kd6",
-          "Kc6",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Na6",
-          "Nd5",
-          "Nd3",
-          "Nc2",
-          "Na2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14761,29 +13365,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Na5",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -14950,30 +13534,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Na5",
-          "Nb6+",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15010,28 +13573,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Na5",
-          "Nb6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15061,26 +13605,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Na5+",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15239,17 +13766,9 @@
           "Kc4",
           "Kb4",
           "Ka4",
-          "Ka5",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Ka5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15297,15 +13816,7 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb5"
         ],
         "kind": "globalTie"
       }
@@ -15358,17 +13869,9 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15414,17 +13917,9 @@
           "Kd5",
           "Kd4",
           "Kc4",
-          "Kb4",
-          "Nc6",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -15471,15 +13966,7 @@
           "Kd4",
           "Kc4",
           "Kb4",
-          "Kb5",
-          "Nc6+",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Kb5"
         ],
         "kind": "globalTie"
       }
@@ -15550,29 +14037,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Ka5",
-          "Kb5",
-          "Kc5",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4",
-          "Na5+",
-          "Nd6+",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -16750,23 +15217,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc8",
         "expectedSans": [
-          "Kc8",
-          "Ka8",
-          "Nd8",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -16817,7 +15270,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Bd7"
+          "Ne5"
         ],
         "kind": "notBest"
       }
@@ -16855,7 +15308,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Bd7"
+          "Ne5"
         ],
         "kind": "notBest"
       }
@@ -16893,7 +15346,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Bd7"
+          "Ne5"
         ],
         "kind": "notBest"
       }
@@ -16956,17 +15409,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf7",
         "expectedSans": [
-          "Nc8",
-          "Ne8+",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5+",
-          "Ke7",
-          "Ke5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17032,21 +15477,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke5",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Ke7",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17082,33 +15515,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf7",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17144,16 +15553,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke5",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Ke7",
-          "Ke5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17204,21 +15606,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke5",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Ke7",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17279,26 +15669,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Kd8",
-          "Ke8",
-          "Kf8",
-          "Kf6",
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5+",
-          "Nd6",
-          "Bd7+",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17479,29 +15852,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc7",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Na5",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17699,26 +16052,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nf7",
-          "Nc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka6",
-          "Kb6",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Nc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17787,17 +16123,9 @@
           "Bd5",
           "Bc4",
           "Bb3",
-          "Ba2",
-          "Nc6+",
-          "Nd7+",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Ba2"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17827,28 +16155,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kb4",
-          "Kb5",
-          "Na5+",
-          "Nb6",
-          "Nd6+",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17902,16 +16211,9 @@
           "Bd5",
           "Bc4",
           "Bb3",
-          "Ba2",
-          "Nd7",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Ba2"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -17956,14 +16258,7 @@
           "Bd5",
           "Bc4",
           "Bb3",
-          "Ba2",
-          "Nd7+",
-          "Nf7",
-          "Ng6",
-          "Ng4",
-          "Nf3",
-          "Nd3",
-          "Nc4"
+          "Ba2"
         ],
         "kind": "globalTie"
       }
@@ -17991,15 +16286,7 @@
         "n521-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Nc4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nc4",
-        "expectedSans": [
-          "Nd7",
-          "Nc4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nc4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n522",
@@ -18683,29 +16970,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18734,25 +17001,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18781,20 +17032,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18823,29 +17063,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ke7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18882,27 +17102,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18932,26 +17134,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -18981,29 +17166,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc5",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19032,32 +17197,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19086,26 +17228,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nc8",
-          "Ne8+",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5+",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19141,22 +17266,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -19217,31 +17327,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19270,31 +17358,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kf6",
-          "Kf5",
-          "Kf4",
-          "Ke4",
-          "Kd4",
-          "Kd5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19331,29 +17397,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19389,7 +17435,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf7",
         "expectedSans": [
-          "Bd7"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -19435,31 +17481,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Kd8",
-          "Ke8",
-          "Kf8",
-          "Kf7",
-          "Kf6",
-          "Kd7",
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19488,7 +17512,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb7",
         "expectedSans": [
-          "Bd7"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -19526,22 +17550,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Bd7+",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -19587,31 +17596,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Kd8",
-          "Ke8",
-          "Kf8",
-          "Kf7",
-          "Kf6",
-          "Kd7",
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19737,30 +17724,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Kc8",
-          "Kd8",
-          "Kd7",
-          "Kd6",
-          "Kc6",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Na5",
-          "Nb6+",
-          "Nd6",
-          "Ne5",
-          "Ne3",
-          "Nd2",
-          "Nb2",
-          "Na3"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -19861,15 +17827,7 @@
         "n567-0-n389"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Nc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nc5",
-        "expectedSans": [
-          "Nc5",
-          "Bc4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nc5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n568",
@@ -20530,28 +18488,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nf7",
-          "Nc6",
-          "Kc7",
-          "Kd7",
-          "Ke7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20581,31 +18520,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20635,30 +18552,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20695,25 +18591,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20743,29 +18623,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb4",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8+",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20795,30 +18655,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20848,28 +18687,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8+",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6+",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -20962,23 +18782,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb5",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Ke5",
-          "Ke4",
-          "Kd4",
-          "Kc4"
+          "Ne4"
         ],
         "kind": "notBest"
       }
@@ -21041,7 +18845,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nf7+",
           "Nf5",
           "Nc4"
         ],
@@ -21146,12 +18949,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Nd8",
           "Nd6",
-          "Nc5",
-          "Na5",
-          "Bc8",
-          "Bd5"
+          "Nc5"
         ],
         "kind": "notBest"
       }
@@ -21182,11 +18981,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Nd8",
           "Nd6",
-          "Nc5",
-          "Na5",
-          "Bd5"
+          "Nc5"
         ],
         "kind": "notBest"
       }
@@ -21232,10 +19028,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Nd8",
-          "Nd6",
-          "Bc8",
-          "Bd5"
+          "Nd6"
         ],
         "kind": "notBest"
       }
@@ -21266,11 +19059,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Nd8",
           "Nd6",
-          "Nc5+",
-          "Bc8",
-          "Bd5"
+          "Nc5+"
         ],
         "kind": "notBest"
       }
@@ -21918,29 +19708,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -21970,7 +19740,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nb5",
           "Bc4",
           "Bb3",
           "Kc6"
@@ -22062,30 +19831,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6+",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka5",
-          "Kb5",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -22122,28 +19870,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -22173,7 +19902,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nb5",
           "Bc4",
           "Bb3",
           "Kc6"
@@ -22241,29 +19969,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nf7",
-          "Nc6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nc6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -22289,15 +19997,7 @@
         "n629-0-n272"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Nc6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nc6",
-        "expectedSans": [
-          "Nf7",
-          "Nc6"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nc6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n630",
@@ -22322,32 +20022,7 @@
         "n630-0-n228"
       ],
       "movesToSuccess": 10,
-      "moveReason": "Play Nc6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nc6",
-        "expectedSans": [
-          "Nf7",
-          "Nc6",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nc6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n631",
@@ -22376,7 +20051,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nb5+",
           "Bc4",
           "Kc6"
         ],
@@ -22571,12 +20245,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc5",
         "expectedSans": [
-          "Nd8",
           "Nd6",
-          "Nc5",
-          "Na5",
-          "Kc6",
-          "Bd5"
+          "Nc5"
         ],
         "kind": "globalTie"
       }
@@ -22633,10 +20303,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nh5",
         "expectedSans": [
-          "Nh5",
           "Nf5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23105,28 +20774,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nd8",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6",
-          "Bd7",
-          "Bc8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka6",
-          "Kb6",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23181,25 +20831,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Nd8+",
-          "Nh8",
-          "Nh6",
-          "Ng5",
-          "Ne5",
-          "Nd6+",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Ne5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23408,15 +21042,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23446,32 +21074,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23760,25 +21365,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke5",
         "expectedSans": [
-          "Kc7",
-          "Ke5",
-          "Kd5",
-          "Kc5",
-          "Kc6",
-          "Bd7",
-          "Bc8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ne7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
           "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23840,31 +21429,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nd6",
-          "Ne7",
-          "Ng7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
           "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -23919,29 +21486,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne3",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nd6+",
-          "Ne7",
-          "Ng7",
-          "Nh6",
-          "Nh4",
-          "Ng3",
-          "Ne3",
           "Nd4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -24840,16 +22387,9 @@
           "Kd6",
           "Kd5",
           "Kc4",
-          "Kb4",
-          "Nb5",
-          "Nc6",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
+          "Kb4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -25185,35 +22725,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -25243,34 +22757,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -25296,35 +22785,7 @@
         "n718-0-n327"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5+",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nc4",
-          "Nd5+",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n719",
@@ -25353,33 +22814,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -25409,34 +22846,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26056,34 +23468,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ne8",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka5",
-          "Kb5",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26113,31 +23500,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc8+",
         "expectedSans": [
-          "Nc8+",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4+",
-          "Nb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26255,13 +23620,7 @@
           "Bd5",
           "Bc4",
           "Bb3",
-          "Ba2",
-          "Nb5",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
+          "Ba2"
         ],
         "kind": "globalTie"
       }
@@ -26340,15 +23699,9 @@
           "Bd5",
           "Bc4+",
           "Bb3",
-          "Ba2",
-          "Nb5",
-          "Nf5",
-          "Nf3",
-          "Ne2",
-          "Nc2",
-          "Nb3"
+          "Ba2"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26378,7 +23731,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf5",
         "expectedSans": [
-          "Nb5+",
           "Bc4"
         ],
         "kind": "notBest"
@@ -26500,31 +23852,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26561,33 +23891,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Kc7",
-          "Kc6",
-          "Kc5",
-          "Kb5",
-          "Ka5",
-          "Ka6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26617,34 +23923,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Kc7",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26674,32 +23955,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Kb6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Nc4",
-          "Nd5",
-          "Nf5",
-          "Ng4",
-          "Ng2",
-          "Nf1",
-          "Nd1",
-          "Nc2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26729,10 +23987,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Nc4",
           "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -26949,29 +24206,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Ng7",
-          "Nf6",
-          "Nd6+",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka5",
-          "Kb5",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27051,22 +24288,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Ne7",
-          "Nd6+",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Ka5",
-          "Kb5",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27121,24 +24345,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc4",
         "expectedSans": [
-          "Ne7+",
-          "Na7+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Ne7+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27168,25 +24377,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ka4",
         "expectedSans": [
-          "Ne7",
-          "Nd6",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bc4+",
-          "Bb3",
-          "Ba2",
-          "Kc5",
-          "Kc4",
-          "Kc3",
-          "Kb3",
-          "Ka3",
-          "Ka4"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27331,23 +24524,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Ne7",
-          "Nd6",
-          "Nb6",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kb6",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27402,21 +24581,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb6",
         "expectedSans": [
-          "Ne7",
-          "Nd6+",
-          "Nb6",
-          "Bd7",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27617,28 +24784,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Ng7",
-          "Nf6",
-          "Nd6",
-          "Nc7+",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka6",
-          "Kb6",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Nd6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27700,24 +24848,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb5",
         "expectedSans": [
-          "Ng7",
-          "Nf6",
-          "Nd6+",
-          "Bd7",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Nd6+"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27743,31 +24876,7 @@
         "n782-0-n789"
       ],
       "movesToSuccess": 4,
-      "moveReason": "Play Nd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd6",
-        "expectedSans": [
-          "Ng7",
-          "Nf6",
-          "Nd6",
-          "Nc7",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb5",
-          "Kb4",
-          "Ka4"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd6 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n783",
@@ -27854,31 +24963,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd6",
         "expectedSans": [
-          "Nc8",
-          "Nd7+",
-          "Nd5",
-          "Nc4",
-          "Na4",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kd6",
-          "Kd5",
-          "Kd4",
-          "Kc4",
-          "Kb4",
-          "Kb5"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -27904,31 +24991,7 @@
         "n786-0-n327"
       ],
       "movesToSuccess": 8,
-      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nd5+",
-        "expectedSans": [
-          "Na8+",
-          "Nc8",
-          "Nd7",
-          "Nd5+",
-          "Nc4",
-          "Na4",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kb5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Nd5+ to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n787",
@@ -27989,26 +25052,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nc8+",
-          "Nd7",
-          "Nd5",
-          "Nc4",
-          "Na4",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Kc6",
-          "Kb5"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -28169,31 +25215,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kb6",
         "expectedSans": [
-          "Nc8",
-          "Ne8",
-          "Nf7",
-          "Nf5",
-          "Ne4",
-          "Nc4",
-          "Nb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5+",
-          "Bc4",
-          "Bb3",
-          "Ba2",
-          "Ka6",
-          "Kb6",
-          "Kb5",
-          "Kb4",
-          "Ka4"
+          "Ne4"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -28305,14 +25329,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Nc8",
-          "Nd7",
-          "Nd5",
-          "Nc4",
-          "Na4",
-          "Kc5"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -28342,16 +25361,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nc8+",
-          "Nd7",
-          "Nd5",
-          "Nc4",
-          "Na4",
-          "Kc7",
-          "Kc5",
-          "Kc6"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -28381,29 +25393,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc8",
         "expectedSans": [
-          "Nc8",
-          "Nd7+",
-          "Nd5",
-          "Nc4",
-          "Na4",
-          "Kd7",
-          "Kd6",
-          "Kd5",
-          "Kc5",
-          "Kb5",
-          "Bd7",
-          "Bc8",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {

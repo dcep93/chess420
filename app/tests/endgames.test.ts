@@ -1606,26 +1606,34 @@ test("knight-bishop rule 5 forces zone x stable-square instances", () => {
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(prepareStarFen), ["Nd5+"]);
 });
 
-test("knight-bishop rule 8 places the bishop in front of the white king", () => {
+test("knight-bishop rule 8 keeps the knight closer to the center", () => {
   setEndgame("knightAndBishop");
 
-  const fen = "8/4k3/8/8/4K3/2B5/N7/8 w - - 0 1";
+  const fen = "8/8/8/8/1B1k4/N4K2/8/8 w - - 12 7";
+  const idealMoves = Brain.getIdealEndgameWhiteMoves(fen);
+  assert.equal(idealMoves.includes("Nb1"), false);
+  assert.deepEqual(idealMoves, ["Nb5+"]);
   assert.equal(
-    Brain.getSquareInFrontOfWhiteKingBetweenKings("e4", "e7"),
-    "e5",
-  );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Be5"]);
-  assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Be5"),
-    "bishop in front",
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nb5+"),
+    "knight closer center",
   );
   assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Be5").bishopInFrontScore,
-    0,
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nb5+").knightCentralDistance,
+    2,
   );
   assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Kd5").bishopInFrontScore,
-    1,
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nb1").knightCentralDistance,
+    5,
+  );
+  const tieFen = "8/8/8/8/8/B7/5K2/1N5k w - - 0 1";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(tieFen, "Nc3").knightCentralDistance,
+    Brain.scoreKnightAndBishopWhiteMove(tieFen, "Nd2").knightCentralDistance,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(tieFen, "Nc3").knightBlackKingDistance >
+      Brain.scoreKnightAndBishopWhiteMove(tieFen, "Nd2").knightBlackKingDistance,
+    true,
   );
 });
 
@@ -4308,7 +4316,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Place the bishop on the square in front of White's king, between the kings.",
+      "Keep the knight closer to the center, preferring squares farther from Black's king.",
     ),
     true,
   );
