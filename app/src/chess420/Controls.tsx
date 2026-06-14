@@ -87,7 +87,7 @@ export default function Controls() {
           <Header />
         </section>
 
-        <section className="controls__section">
+        <section className="controls__section controls__section--modes">
           <div className="controls__section-top">
             <div className="controls__section-heading">
               <h2>Modes</h2>
@@ -112,7 +112,7 @@ export default function Controls() {
           </div>
         </section>
 
-        <section className="controls__section">
+        <section className="controls__section controls__section--board-actions">
           <div className="controls__section-top">
             <h2>Board Actions</h2>
             <label className="controls__checkbox controls__checkbox--header">
@@ -131,7 +131,7 @@ export default function Controls() {
               <span>Auto Reply</span>
             </label>
           </div>
-          <div className="controls__buttons">
+          <div className="controls__buttons controls__buttons--board-actions">
             <button onClick={Brain.newGame}>new game</button>
             <button onClick={Brain.undo}>undo</button>
             <button onClick={Brain.playBest}>play best</button>
@@ -149,7 +149,7 @@ export default function Controls() {
           </div>
         </section>
 
-        <section className="controls__section">
+        <section className="controls__section controls__section--lichess">
           <div className="controls__section-top">
             <h2>Lichess</h2>
             <span className="controls__request-count">

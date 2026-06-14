@@ -986,10 +986,72 @@
 
 @media (max-width: 520px) {
   .chess420-app { padding: 0.4rem; }
+  .chess420-shell {
+    grid-template-columns: minmax(0, 70vw) minmax(0, 1fr);
+    grid-template-areas:
+      "board actions"
+      "summary summary"
+      "title title"
+      "modes modes"
+      "lichess lichess"
+      "log log";
+    gap: 0.45rem;
+  }
+  .chess420-board-card {
+    grid-area: board;
+    width: 100%;
+    margin: 0;
+  }
+  .chess420-summary-card { grid-area: summary; }
+  .chess420-log-card { grid-area: log; }
+  .chess420-controls-card,
+  .controls,
+  .controls__grid {
+    display: contents;
+  }
+  .controls__section--title { grid-area: title; }
+  .controls__section--modes { grid-area: modes; }
+  .controls__section--board-actions {
+    grid-area: actions;
+    align-self: stretch;
+    min-width: 0;
+    padding: 0.45rem;
+  }
+  .controls__section--lichess { grid-area: lichess; }
   .controls, .log-table { padding: 0.6rem; }
-  .controls__grid { display: grid; grid-template-columns: 1fr; }
   .controls__section { width: auto; }
   .controls__buttons { grid-template-columns: repeat(2, minmax(0, max-content)); }
+  .controls__section--board-actions .controls__section-top {
+    margin: -0.45rem -0.45rem 0;
+    padding: 0.42rem 0.45rem 0.38rem;
+    display: grid;
+    gap: 0.34rem;
+  }
+  .controls__section--board-actions h2 {
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+  .controls__section--board-actions .controls__checkbox--header {
+    font-size: 0.66rem;
+    white-space: normal;
+  }
+  .controls__buttons--board-actions {
+    grid-template-columns: 1fr;
+    gap: 0.32rem;
+  }
+  .controls__buttons--board-actions button {
+    width: 100%;
+    min-height: 1.68rem;
+    height: auto;
+    padding: 0.28rem 0.34rem;
+    font-size: 0.68rem;
+    line-height: 1.05;
+    white-space: normal;
+  }
+  .controls__buttons--modes,
+  .controls__buttons--lichess {
+    justify-content: start;
+  }
   .log-column { padding-left: 0.85rem; }
   .help-shell {
     padding: 0.7rem;
@@ -1016,8 +1078,23 @@
 
 @media (max-width: 360px) {
   .chess420-app { padding: 0.25rem; }
-  .board-shell { border-width: 0.65rem; }
+  .chess420-shell {
+    grid-template-columns: minmax(0, 69vw) minmax(5.35rem, 1fr);
+    gap: 0.32rem;
+  }
+  .board-shell { border-width: 0.52rem; }
   .controls { padding: 0.65rem; }
+  .controls__section--board-actions {
+    padding: 0.36rem;
+  }
+  .controls__section--board-actions .controls__section-top {
+    margin: -0.36rem -0.36rem 0;
+    padding: 0.36rem 0.36rem 0.32rem;
+  }
+  .controls__buttons--board-actions button {
+    padding-inline: 0.24rem;
+    font-size: 0.62rem;
+  }
   .summary-content { margin: 0.35rem 0.5rem 0.5rem; }
   .log-table { padding: 0.5rem; }
 }
