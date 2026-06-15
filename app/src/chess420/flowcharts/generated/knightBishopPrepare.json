@@ -1422,8 +1422,6 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf4",
         "expectedSans": [
-          "Bd7",
-          "Bc8",
           "Ke5"
         ],
         "kind": "notBest"
@@ -1559,14 +1557,7 @@
         "n53-0-n41"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Nf4",
-        "expectedSans": [
-          "Ke5"
-        ],
-        "kind": "notBest"
-      }
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n54",
@@ -2621,7 +2612,14 @@
         "n87-0-n121"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ke5",
+        "expectedSans": [
+          "Nf4"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n88",
@@ -7256,7 +7254,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
-          "Ne8"
+          "Bd7",
+          "Bc8"
         ],
         "kind": "notBest"
       }
@@ -7433,7 +7432,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Nf7"
+          "Ke5",
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -13094,7 +13094,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kc6",
         "expectedSans": [
-          "Ne5"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -16447,7 +16447,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd8",
         "expectedSans": [
-          "Ne5"
+          "Bd7"
         ],
         "kind": "notBest"
       }
@@ -20556,7 +20556,14 @@
         "n674-0-n690"
       ],
       "movesToSuccess": 9,
-      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Ke5",
+        "expectedSans": [
+          "Nd4"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n675",

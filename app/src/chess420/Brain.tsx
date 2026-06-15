@@ -3376,11 +3376,11 @@ export default class Brain {
     ) {
       return 99;
     }
-    const frontSquare = Brain.getSquareInFrontOfWhiteKingBetweenKings(
+    const frontSquares = Brain.getSquaresInFrontOfWhiteKingBetweenKings(
       afterWhiteKing.square,
       afterBlackKing.square
     );
-    return frontSquare === bishop.square
+    return frontSquares.includes(bishop.square)
       ? Brain.squaredEuclideanDistance(
         afterWhiteKing.square,
         afterBlackKing.square
@@ -3438,19 +3438,22 @@ export default class Brain {
     if (!whiteKing || !blackKing || !bishop) {
       return 99;
     }
-    const frontSquare = Brain.getSquareInFrontOfWhiteKingBetweenKings(
+    const frontSquares = Brain.getSquaresInFrontOfWhiteKingBetweenKings(
       whiteKing.square,
       blackKing.square
     );
-    if (!frontSquare || !Brain.sameDiagonal(bishop.square, frontSquare)) {
+    const preparedFrontSquare = frontSquares.find((frontSquare) =>
+      Brain.sameDiagonal(bishop.square, frontSquare)
+    );
+    if (!preparedFrontSquare) {
       return 99;
     }
-    if (bishop.square === frontSquare) {
+    if (bishop.square === preparedFrontSquare) {
       return 99;
     }
     return Brain.diagonalSegmentContainsSquare(
       bishop.square,
-      frontSquare,
+      preparedFrontSquare,
       blackKing.square
     )
       ? 0
@@ -3465,14 +3468,14 @@ export default class Brain {
       return 0;
     }
 
-    const frontSquare = Brain.getSquareInFrontOfWhiteKingBetweenKings(
+    const frontSquares = Brain.getSquaresInFrontOfWhiteKingBetweenKings(
       whiteKing.square,
       blackKing.square
     );
-    if (!frontSquare) {
+    if (frontSquares.length === 0) {
       return 0;
     }
-    return bishop.square === frontSquare ? 0 : 1;
+    return frontSquares.includes(bishop.square) ? 0 : 1;
   }
 
   static knightAndBishopKnightBehindWhiteKingScore(fen: string): number {
@@ -3525,6 +3528,14 @@ export default class Brain {
     whiteKing: Square,
     blackKing: Square
   ): Square | null {
+    return Brain.getSquaresInFrontOfWhiteKingBetweenKings(whiteKing, blackKing)[0] ??
+      null;
+  }
+
+  static getSquaresInFrontOfWhiteKingBetweenKings(
+    whiteKing: Square,
+    blackKing: Square
+  ): Square[] {
     const whiteCoords = Brain.squareCoords(whiteKing);
     const blackCoords = Brain.squareCoords(blackKing);
     const fileDistance = blackCoords.file - whiteCoords.file;
@@ -3532,25 +3543,35 @@ export default class Brain {
     const absoluteFileDistance = Math.abs(fileDistance);
     const absoluteRankDistance = Math.abs(rankDistance);
     if (Math.max(absoluteFileDistance, absoluteRankDistance) < 2) {
-      return null;
+      return [];
     }
 
     if (absoluteFileDistance > absoluteRankDistance) {
-      return Brain.squareFromCoords(
-        whiteCoords.file + Math.sign(fileDistance),
-        whiteCoords.rank
-      );
+      return [
+        Brain.squareFromCoords(
+          whiteCoords.file + Math.sign(fileDistance),
+          whiteCoords.rank
+        ),
+      ].filter((square): square is Square => Boolean(square));
     }
     if (absoluteRankDistance > absoluteFileDistance) {
-      return Brain.squareFromCoords(
+      return [
+        Brain.squareFromCoords(
+          whiteCoords.file,
+          whiteCoords.rank + Math.sign(rankDistance)
+        ),
+      ].filter((square): square is Square => Boolean(square));
+    }
+    return [
+      Brain.squareFromCoords(
+        whiteCoords.file + Math.sign(fileDistance),
+        whiteCoords.rank
+      ),
+      Brain.squareFromCoords(
         whiteCoords.file,
         whiteCoords.rank + Math.sign(rankDistance)
-      );
-    }
-    return Brain.squareFromCoords(
-      whiteCoords.file + Math.sign(fileDistance),
-      whiteCoords.rank + Math.sign(rankDistance)
-    );
+      ),
+    ].filter((square): square is Square => Boolean(square));
   }
 
   static diagonalSegmentContainsSquare(

@@ -1835,6 +1835,31 @@ test("knight-bishop rule 8 establishes the bishop in front of the white king", (
     Brain.scoreKnightAndBishopWhiteMove(fen, "Kd5").bishopInFrontScore,
     1,
   );
+
+  const diagonalKingsFen = "8/8/3K4/8/8/2N3kB/8/8 w - - 8 5";
+  assert.deepEqual(
+    Brain.getSquaresInFrontOfWhiteKingBetweenKings("d6", "g3"),
+    ["e6", "d5"],
+  );
+  assert.equal(
+    Brain.getSquareInFrontOfWhiteKingBetweenKings("d6", "g3"),
+    "e6",
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(diagonalKingsFen, "Be6")
+      .bishopInFrontScore,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(diagonalKingsFen, "Bf5")
+      .bishopInFrontScore,
+    1,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(diagonalKingsFen), ["Be6"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(diagonalKingsFen, "Be6"),
+    "bishop front",
+  );
 });
 
 test("knight-bishop rule 8 maintains the bishop in front of the white king", () => {
