@@ -1677,6 +1677,31 @@ test("knight-bishop rule 5 forces zone x stable-square instances", () => {
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(prepareStarFen), ["Nd5+"]);
 });
 
+test("knight-bishop rule 7 prepares the bishop front square", () => {
+  setEndgame("knightAndBishop");
+
+  const fen = "8/8/8/B7/3k1N2/5K2/8/8 w - - 36 19";
+  assert.equal(
+    Brain.getSquareInFrontOfWhiteKingBetweenKings("f3", "d4"),
+    "e3",
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bb6+")
+      .bishopFrontPreparationScore,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Ne6+")
+      .bishopFrontPreparationScore,
+    99,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bb6+"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bb6+"),
+    "prepare bishop in front",
+  );
+});
+
 test("knight-bishop rule 8 places the bishop in front of the white king", () => {
   setEndgame("knightAndBishop");
 
@@ -4404,7 +4429,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
+      "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop. Also prepare the bishop to move to the square in front of White's king when that front square lies on the bishop's diagonal, even if a piece currently blocks the path.",
     ),
     true,
   );
