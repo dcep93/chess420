@@ -1760,6 +1760,44 @@ test("knight-bishop rule 5 can establish the bishop zone x square", () => {
   );
 });
 
+test("knight-bishop rule 5 drifts the knight toward its zone x square", () => {
+  setEndgame("knightAndBishop");
+
+  const fen = "8/8/8/3N4/8/1BK5/8/1k6 w - - 6 4";
+  assert.equal(Brain.getKnightAndBishopZoneXSetup(fen), undefined);
+  assert.equal(
+    Brain.getKnightAndBishopZoneXKnightDriftTarget(fen),
+    "d3",
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nb4").zoneXPrepareScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nf4").zoneXPrepareScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bc2+").zoneXPrepareScore,
+    99,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nf4", "Nb4"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nf4"),
+    "prepare zone x",
+  );
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nb4"),
+    "prepare zone x",
+  );
+
+  const mirrorFileFen = "8/8/8/8/8/5KB1/8/6k1 w - - 0 1";
+  assert.equal(
+    Brain.getKnightAndBishopZoneXKnightDriftTarget(mirrorFileFen),
+    "e3",
+  );
+});
+
 test("knight-bishop rule 5 forces zone x stable-square instances", () => {
   setEndgame("knightAndBishop");
 

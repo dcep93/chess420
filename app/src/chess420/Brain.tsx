@@ -2119,27 +2119,45 @@ export default class Brain {
         reason: "prepare zone x",
       },
       {
-        compare: (a, b) => a.bishopPivotScore - b.bishopPivotScore,
+        compare: (a, b) =>
+          Brain.compareAfterZoneXDrift(a, b, () =>
+            a.bishopPivotScore - b.bishopPivotScore
+          ),
         reason: "bishop pivot",
       },
       {
         compare: (a, b) =>
-          a.kingCloserOppositeBishopScore -
-          b.kingCloserOppositeBishopScore,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.kingCloserOppositeBishopScore -
+              b.kingCloserOppositeBishopScore
+          ),
         reason: "bring king closer",
       },
       {
         compare: (a, b) =>
-          a.bishopInFrontScore - b.bishopInFrontScore ||
-          a.bishopFrontPreparationScore - b.bishopFrontPreparationScore,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.bishopInFrontScore - b.bishopInFrontScore ||
+              a.bishopFrontPreparationScore - b.bishopFrontPreparationScore
+          ),
         reason: "bishop front",
       },
       {
         compare: (a, b) =>
-          a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
-          Brain.compareKnightMoveWhiteKingDistances(a, b) ||
-          a.knightCentralDistance - b.knightCentralDistance ||
-          b.knightBlackKingDistance - a.knightBlackKingDistance,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
+              Brain.compareKnightMoveWhiteKingDistances(a, b) ||
+              a.knightCentralDistance - b.knightCentralDistance ||
+              b.knightBlackKingDistance - a.knightBlackKingDistance
+          ),
         reason: "knight closer center",
       },
     ];
@@ -2162,7 +2180,11 @@ export default class Brain {
       candidates = nextCandidates;
     }
 
-    return candidates.length === 1 && candidates[0].san === san
+    if (candidates.length === 1 && candidates[0].san === san) {
+      return lastExplicitReason;
+    }
+    return candidates.some((candidate) => candidate.san === san) &&
+      candidates.every((candidate) => candidate.score.zoneXDriftScore === 0)
       ? lastExplicitReason
       : undefined;
   }
@@ -2371,6 +2393,51 @@ export default class Brain {
     });
 
     return [...candidates.values()];
+  }
+
+  static getKnightAndBishopZoneXKnightDriftTarget(
+    fen: string
+  ): Square | undefined {
+    const bishop = Brain.findPiece(fen, "w", "b");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    if (!bishop || !blackKing || !whiteKing || Brain.edgeDistance(blackKing.square) !== 0) {
+      return undefined;
+    }
+
+    const canonical = {
+      bishop: "b3" as Square,
+      blackKing: "b1" as Square,
+      whiteKing: "c3" as Square,
+      knightDriftTarget: "d3" as Square,
+    };
+    const targets = new Set<Square>();
+
+    Brain.SQUARE_TRANSFORMS.forEach((transform) => {
+      const transformedBishop = Brain.transformSquare(canonical.bishop, transform);
+      const bishopCoords = Brain.squareCoords(bishop.square);
+      const transformedBishopCoords = Brain.squareCoords(transformedBishop);
+      const fileOffset = bishopCoords.file - transformedBishopCoords.file;
+      const rankOffset = bishopCoords.rank - transformedBishopCoords.rank;
+      const transformAndTranslate = (square: Square) =>
+        Brain.translateSquare(
+          Brain.transformSquare(square, transform),
+          fileOffset,
+          rankOffset
+        );
+      if (transformAndTranslate(canonical.blackKing) !== blackKing.square) {
+        return;
+      }
+      if (transformAndTranslate(canonical.whiteKing) !== whiteKing.square) {
+        return;
+      }
+      const target = transformAndTranslate(canonical.knightDriftTarget);
+      if (target) {
+        targets.add(target);
+      }
+    });
+
+    return [...targets].sort()[0];
   }
 
   static compareKnightAndBishopZoneXSetups(
@@ -2672,16 +2739,47 @@ export default class Brain {
     _san: string,
     resultFen: string,
     move: ReturnType<Chess["move"]>
-  ): { zoneXPrepareScore: number; zoneXPreparePieceProximity: number } {
+  ): {
+    zoneXPrepareScore: number;
+    zoneXPreparePieceProximity: number;
+    zoneXDriftScore: number;
+  } {
     const setup = Brain.getKnightAndBishopZoneXSetup(fen);
     if (!setup) {
-      return Brain.getKnightAndBishopZoneXSetup(resultFen)
-        ? {
+      const resultSetup = Brain.getKnightAndBishopZoneXSetup(resultFen);
+      if (resultSetup) {
+        return {
           zoneXPrepareScore: 0,
           zoneXPreparePieceProximity:
             Brain.getKnightAndBishopZoneXSetupPieceProximity(resultFen),
+          zoneXDriftScore: 99,
+        };
+      }
+      const driftTarget = Brain.getKnightAndBishopZoneXKnightDriftTarget(fen);
+      const beforeKnight = Brain.findPiece(fen, "w", "n");
+      const afterKnight = Brain.findPiece(resultFen, "w", "n");
+      if (driftTarget && beforeKnight && afterKnight && move?.piece === "n") {
+        const beforeDistance = Brain.getKnightDistanceToAnySquare(
+          beforeKnight.square,
+          [driftTarget]
+        );
+        const afterDistance = Brain.getKnightDistanceToAnySquare(
+          afterKnight.square,
+          [driftTarget]
+        );
+        if (afterDistance < beforeDistance) {
+          return {
+            zoneXPrepareScore: afterDistance,
+            zoneXPreparePieceProximity: 0,
+            zoneXDriftScore: 0,
+          };
         }
-        : { zoneXPrepareScore: 99, zoneXPreparePieceProximity: 99 };
+      }
+      return {
+        zoneXPrepareScore: 99,
+        zoneXPreparePieceProximity: 99,
+        zoneXDriftScore: 99,
+      };
     }
 
     if (Brain.knightAndBishopHasZoneXKingProgressMove(fen)) {
@@ -2704,12 +2802,17 @@ export default class Brain {
         zoneXPreparePieceProximity: movedKingCloser
           ? Brain.kingDistance(afterWhiteKing!.square, afterBlackKing!.square)
           : 99,
+        zoneXDriftScore: 99,
       };
     }
 
     const knight = Brain.findPiece(resultFen, "w", "n");
     if (!knight) {
-      return { zoneXPrepareScore: 0, zoneXPreparePieceProximity: 0 };
+      return {
+        zoneXPrepareScore: 0,
+        zoneXPreparePieceProximity: 0,
+        zoneXDriftScore: 99,
+      };
     }
     const knightDistance = Brain.getKnightDistanceToAnySquare(
       knight.square,
@@ -2721,6 +2824,7 @@ export default class Brain {
       zoneXPrepareScore: knightMovePenalty + knightDistance,
       zoneXPreparePieceProximity:
         Brain.getKnightAndBishopZoneXSetupPieceProximity(resultFen),
+      zoneXDriftScore: 99,
     };
   }
 
@@ -3204,14 +3308,19 @@ export default class Brain {
       a.zoneXEntryScore - b.zoneXEntryScore ||
       a.zoneXPrepareScore - b.zoneXPrepareScore ||
       a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity ||
-      a.bishopPivotScore - b.bishopPivotScore ||
-      a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
-      a.bishopInFrontScore - b.bishopInFrontScore ||
-      a.bishopFrontPreparationScore - b.bishopFrontPreparationScore ||
-      a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
-      Brain.compareKnightMoveWhiteKingDistances(a, b) ||
-      a.knightCentralDistance - b.knightCentralDistance ||
-      b.knightBlackKingDistance - a.knightBlackKingDistance
+      Brain.compareAfterZoneXDrift(
+        a,
+        b,
+        () =>
+          a.bishopPivotScore - b.bishopPivotScore ||
+          a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
+          a.bishopInFrontScore - b.bishopInFrontScore ||
+          a.bishopFrontPreparationScore - b.bishopFrontPreparationScore ||
+          a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
+          Brain.compareKnightMoveWhiteKingDistances(a, b) ||
+          a.knightCentralDistance - b.knightCentralDistance ||
+          b.knightBlackKingDistance - a.knightBlackKingDistance
+      )
     );
   }
 
@@ -3249,29 +3358,57 @@ export default class Brain {
       },
       {
         reason: "bishop pivot",
-        compare: (a, b) => a.bishopPivotScore - b.bishopPivotScore,
+        compare: (a, b) =>
+          Brain.compareAfterZoneXDrift(a, b, () =>
+            a.bishopPivotScore - b.bishopPivotScore
+          ),
       },
       {
         reason: "bring king closer",
         compare: (a, b) =>
-          a.kingCloserOppositeBishopScore -
-          b.kingCloserOppositeBishopScore,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.kingCloserOppositeBishopScore -
+              b.kingCloserOppositeBishopScore
+          ),
       },
       {
         reason: "bishop front",
         compare: (a, b) =>
-          a.bishopInFrontScore - b.bishopInFrontScore ||
-          a.bishopFrontPreparationScore - b.bishopFrontPreparationScore,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.bishopInFrontScore - b.bishopInFrontScore ||
+              a.bishopFrontPreparationScore - b.bishopFrontPreparationScore
+          ),
       },
       {
         reason: "knight closer center",
         compare: (a, b) =>
-          a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
-          Brain.compareKnightMoveWhiteKingDistances(a, b) ||
-          a.knightCentralDistance - b.knightCentralDistance ||
-          b.knightBlackKingDistance - a.knightBlackKingDistance,
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
+              Brain.compareKnightMoveWhiteKingDistances(a, b) ||
+              a.knightCentralDistance - b.knightCentralDistance ||
+              b.knightBlackKingDistance - a.knightBlackKingDistance
+          ),
       },
     ];
+  }
+
+  static compareAfterZoneXDrift(
+    a: ReturnType<typeof Brain.scoreKnightAndBishopWhiteMove>,
+    b: ReturnType<typeof Brain.scoreKnightAndBishopWhiteMove>,
+    compare: () => number
+  ): number {
+    return a.zoneXDriftScore === 0 && b.zoneXDriftScore === 0
+      ? 0
+      : compare();
   }
 
   static compareKnightMoveWhiteKingDistances(
