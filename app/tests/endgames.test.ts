@@ -1585,61 +1585,6 @@ test("knight-bishop rule 6 keeps the king in the middle 16 squares", () => {
   ]);
 });
 
-test("knight-bishop bishop pivot precedes bringing the king closer", () => {
-  setEndgame("knightAndBishop");
-
-  const fen = "8/8/3k4/8/3BK3/8/3N4/8 w - - 22 12";
-  assert.equal(Brain.isKnightAndBishopBishopPivotShape(fen), true);
-  assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Kd3").bishopPivotScore,
-    9,
-  );
-  assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Nf3").bishopPivotScore,
-    99,
-  );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kd3"]);
-  assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Kd3"),
-    "bishop pivot",
-  );
-  assert.equal(Brain.getEndgameReason(fen), "bishop pivot");
-});
-
-test("knight-bishop bishop pivot requires the exact king and bishop geometry", () => {
-  setEndgame("knightAndBishop");
-
-  const farKingFen = "8/3k4/8/8/3BK3/8/3N4/8 w - - 0 1";
-  assert.equal(Brain.isKnightAndBishopBishopPivotShape(farKingFen), false);
-  assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(farKingFen, "Kd3").bishopPivotScore,
-    99,
-  );
-
-  const noOppositionFen = "8/8/3k4/8/4K3/4B3/3N4/8 w - - 0 1";
-  assert.equal(Brain.isKnightAndBishopBishopPivotShape(noOppositionFen), false);
-  assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(noOppositionFen, "Kd3")
-      .bishopPivotScore,
-    99,
-  );
-});
-
-test("knight-bishop bishop pivot keeps the king in the middle 16", () => {
-  setEndgame("knightAndBishop");
-
-  const fen = "8/8/8/2k5/8/1KB5/8/N7 w - - 0 1";
-  assert.equal(Brain.isKnightAndBishopBishopPivotShape(fen), true);
-  assert.equal(
-    Brain.getSquareInFrontOfWhiteKingBetweenKings("c2", "c5"),
-    "c3",
-  );
-  assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Kc2").bishopPivotScore,
-    99,
-  );
-});
-
 test("knight-bishop zone x geometry derives reference and equivalents", () => {
   setEndgame("knightAndBishop");
   const reference = Brain.getKnightAndBishopZone5(

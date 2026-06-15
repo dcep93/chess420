@@ -15009,7 +15009,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
-          "Kf6"
+          "Bd7+"
         ],
         "kind": "notBest"
       }

@@ -257,7 +257,6 @@ type KnightAndBishopExplicitWhiteMoveReason =
   | "key square pattern"
   | "force zone x"
   | "prepare zone x"
-  | "bishop pivot"
   | "bring king closer"
   | "bishop front"
   | "knight closer center";
@@ -1463,7 +1462,6 @@ export default class Brain {
         "key square pattern": "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Establish the bishop on its Zone X square when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
         "force zone x": "",
         "prepare zone x": "",
-        "bishop pivot": "",
         "bring king closer": "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
         "bishop front": "Establish, maintain, or prepare the bishop on the square in front of White's king, between the kings.",
         "knight closer center": "Keep the knight behind White's king relative to Black's king, then closer to White's king, then closer to the center, preferring squares farther from Black's king.",
@@ -1493,7 +1491,6 @@ export default class Brain {
         "king near middle": "White king near middle",
         "king closer": "White king closer",
         "bring king closer": "White king closer",
-        "bishop pivot": "Bishop pivot",
         "bishop front": "bishop in front of White king",
         "knight closer center": "Knight closer to center",
         "force black to edge": "force Black to edge",
@@ -2117,13 +2114,6 @@ export default class Brain {
           a.zoneXPrepareScore - b.zoneXPrepareScore ||
           a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
         reason: "prepare zone x",
-      },
-      {
-        compare: (a, b) =>
-          Brain.compareAfterZoneXDrift(a, b, () =>
-            a.bishopPivotScore - b.bishopPivotScore
-          ),
-        reason: "bishop pivot",
       },
       {
         compare: (a, b) =>
@@ -3255,11 +3245,6 @@ export default class Brain {
       )
         ? 0
         : 1,
-      bishopPivotScore: Brain.knightAndBishopBishopPivotScore(
-        fen,
-        resultFen,
-        move?.piece
-      ),
       kingCloserOppositeBishopScore:
         Brain.knightAndBishopKingCloserOppositeBishopScore(
           fen,
@@ -3327,7 +3312,6 @@ export default class Brain {
         a,
         b,
         () =>
-          a.bishopPivotScore - b.bishopPivotScore ||
           a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
           a.kingDistanceRegressionScore - b.kingDistanceRegressionScore ||
           a.bishopInFrontScore - b.bishopInFrontScore ||
@@ -3371,13 +3355,6 @@ export default class Brain {
         compare: (a, b) =>
           a.zoneXPrepareScore - b.zoneXPrepareScore ||
           a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity,
-      },
-      {
-        reason: "bishop pivot",
-        compare: (a, b) =>
-          Brain.compareAfterZoneXDrift(a, b, () =>
-            a.bishopPivotScore - b.bishopPivotScore
-          ),
       },
       {
         reason: "bring king closer",
@@ -3543,75 +3520,6 @@ export default class Brain {
       afterBlackKing.square
     );
     return Math.max(0, afterDistance - beforeDistance);
-  }
-
-  static knightAndBishopBishopPivotScore(
-    fen: string,
-    resultFen: string,
-    piece: string | undefined
-  ): number {
-    if (piece !== "k" || !Brain.isKnightAndBishopBishopPivotShape(fen)) {
-      return 99;
-    }
-    const afterWhiteKing = Brain.findPiece(resultFen, "w", "k");
-    const afterBlackKing = Brain.findPiece(resultFen, "b", "k");
-    const bishop = Brain.findPiece(resultFen, "w", "b");
-    if (!afterWhiteKing || !afterBlackKing || !bishop) {
-      return 99;
-    }
-    if (
-      !Brain.isMiddle16Square(afterWhiteKing.square) ||
-      Brain.sameSquareColor(afterWhiteKing.square, bishop.square)
-    ) {
-      return 99;
-    }
-    const frontSquares = Brain.getSquaresInFrontOfWhiteKingBetweenKings(
-      afterWhiteKing.square,
-      afterBlackKing.square
-    );
-    return frontSquares.includes(bishop.square)
-      ? Brain.squaredEuclideanDistance(
-        afterWhiteKing.square,
-        afterBlackKing.square
-      )
-      : 99;
-  }
-
-  static isKnightAndBishopBishopPivotShape(fen: string): boolean {
-    const whiteKing = Brain.findPiece(fen, "w", "k");
-    const blackKing = Brain.findPiece(fen, "b", "k");
-    const bishop = Brain.findPiece(fen, "w", "b");
-    if (!whiteKing || !blackKing || !bishop) {
-      return false;
-    }
-    const whiteKingCoords = Brain.squareCoords(whiteKing.square);
-    const blackKingCoords = Brain.squareCoords(blackKing.square);
-    const bishopCoords = Brain.squareCoords(bishop.square);
-    const kingFileDistance = Math.abs(
-      whiteKingCoords.file - blackKingCoords.file
-    );
-    const kingRankDistance = Math.abs(
-      whiteKingCoords.rank - blackKingCoords.rank
-    );
-    const bishopFileDistance = Math.abs(
-      bishopCoords.file - whiteKingCoords.file
-    );
-    const bishopRankDistance = Math.abs(
-      bishopCoords.rank - whiteKingCoords.rank
-    );
-    const kingsAreKnightMoveApart =
-      (kingFileDistance === 1 && kingRankDistance === 2) ||
-      (kingFileDistance === 2 && kingRankDistance === 1);
-    const bishopIsOrthogonallyAdjacent =
-      bishopFileDistance + bishopRankDistance === 1;
-    const bishopOpposesBlackKing =
-      bishopCoords.file === blackKingCoords.file ||
-      bishopCoords.rank === blackKingCoords.rank;
-    return (
-      kingsAreKnightMoveApart &&
-      bishopIsOrthogonallyAdjacent &&
-      bishopOpposesBlackKing
-    );
   }
 
   static knightAndBishopBishopFrontPreparationScore(
