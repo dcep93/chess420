@@ -1474,7 +1474,7 @@ function getGeneratedPrepareMoveReason(fen: string, san: string): string {
     return `Play ${san} to force Black into Zone X while White keeps the stable knight-and-bishop geometry.`;
   }
   if (explicitReason === "prepare zone x") {
-    return `Play ${san} because prepare * is true: keep the bishop anchored for Zone X and move the king or knight into place.`;
+    return `Play ${san} to establish or use prepare *: keep the bishop anchored for Zone X and move the king or knight into place.`;
   }
   if (explicitReason === "bring king closer") {
     return `Play ${san} to bring White's king closer while staying on the color opposite the bishop.`;

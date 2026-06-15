@@ -36,22 +36,25 @@ export function getRenderedFlowchartData(data: FlowchartData): FlowchartData {
 
 function withPrepareFailureExampleChildren(data: FlowchartData): FlowchartData {
   return withEndgame("knightAndBishop+", () => {
-    const nodesByKey = new Map(data.nodes.map((node) => [node.key, node]));
-    const failurePaths = getPrepareFailurePaths(data, nodesByKey);
+    const reachableData = withStartReachableNodes(data);
+    const nodesByKey = new Map(
+      reachableData.nodes.map((node) => [node.key, node]),
+    );
+    const failurePaths = getPrepareFailurePaths(reachableData, nodesByKey);
     if (failurePaths.size === 0) {
-      return data;
+      return reachableData;
     }
 
     const edgesBySourceSan = new Map(
-      data.edges.map((edge) => [`${edge.from}:${edge.san}`, edge]),
+      reachableData.edges.map((edge) => [`${edge.from}:${edge.san}`, edge]),
     );
     const replacementEdges: FlowchartEdge[] = [];
     const syntheticChildren: FlowchartNode[] = [];
     const syntheticChildByKey = new Map<string, FlowchartNode>();
     const replacedNodeIds = new Set(failurePaths.keys());
-    let layoutHeight = data.layout.height;
+    let layoutHeight = reachableData.layout.height;
 
-    const renderedNodes = data.nodes.map((node) => {
+    const renderedNodes = reachableData.nodes.map((node) => {
       const path = failurePaths.get(node.id);
       if (!path) {
         return node;
@@ -65,7 +68,7 @@ function withPrepareFailureExampleChildren(data: FlowchartData): FlowchartData {
       const target =
         nodesByKey.get(childKey) ||
         getSyntheticFailureChild(
-          data,
+          reachableData,
           node,
           childFen,
           path.reason,
@@ -99,18 +102,78 @@ function withPrepareFailureExampleChildren(data: FlowchartData): FlowchartData {
     });
 
     return {
-      ...data,
+      ...reachableData,
       nodes: [...renderedNodes, ...syntheticChildren],
       edges: [
-        ...data.edges.filter((edge) => !replacedNodeIds.has(edge.from)),
+        ...reachableData.edges.filter((edge) => !replacedNodeIds.has(edge.from)),
         ...replacementEdges,
       ],
       layout: {
-        ...data.layout,
+        ...reachableData.layout,
         height: layoutHeight,
       },
     };
   });
+}
+
+function withStartReachableNodes(data: FlowchartData): FlowchartData {
+  const nodesById = new Map(data.nodes.map((node) => [node.id, node]));
+  const nodesByKey = new Map(data.nodes.map((node) => [node.key, node]));
+  const outgoingEdges = new Map<string, FlowchartEdge[]>();
+  data.edges.forEach((edge) => {
+    outgoingEdges.set(edge.from, [
+      ...(outgoingEdges.get(edge.from) || []),
+      edge,
+    ]);
+  });
+
+  const queue = data.starts
+    .map((fen) => nodesByKey.get(Brain.boardTurnKey(fen))?.id)
+    .filter((id): id is string => id !== undefined);
+  const reachableIds = new Set<string>();
+  for (let index = 0; index < queue.length; index += 1) {
+    const id = queue[index];
+    if (reachableIds.has(id)) {
+      continue;
+    }
+    reachableIds.add(id);
+    (outgoingEdges.get(id) || []).forEach((edge) => {
+      if (nodesById.has(edge.to)) {
+        queue.push(edge.to);
+      }
+    });
+  }
+  if (reachableIds.size === data.nodes.length) {
+    return data;
+  }
+
+  const nodes = data.nodes.filter((node) => reachableIds.has(node.id));
+  const edges = data.edges.filter(
+    (edge) => reachableIds.has(edge.from) && reachableIds.has(edge.to),
+  );
+  return {
+    ...data,
+    nodes,
+    edges,
+    layout: getReachableLayout(data, nodes),
+  };
+}
+
+function getReachableLayout(
+  data: FlowchartData,
+  nodes: FlowchartNode[],
+): FlowchartData["layout"] {
+  const width =
+    Math.max(0, ...nodes.map((node) => node.x + data.layout.nodeWidth)) ||
+    data.layout.width;
+  const height =
+    Math.max(0, ...nodes.map((node) => node.y + data.layout.nodeHeight)) ||
+    data.layout.height;
+  return {
+    ...data.layout,
+    width,
+    height,
+  };
 }
 
 type PrepareFailurePath = {

@@ -59,7 +59,7 @@ function getFlowchartBestMoveMismatch(
   if (Brain.getKnightAndBishopExplicitWhiteMoveReason(node.fen, edge.san)) {
     return undefined;
   }
-  const expectedSans = Brain.getIdealEndgameWhiteMoves(node.fen);
+  const expectedSans = getStableKnightAndBishopWhiteMoves(node.fen);
   return {
     generatedSan: edge.san,
     expectedSans,
@@ -69,6 +69,43 @@ function getFlowchartBestMoveMismatch(
         ? "globalTie"
         : "implicit",
   };
+}
+
+function getStableKnightAndBishopWhiteMoves(fen: string): string[] {
+  const chess = Brain.getChess(fen);
+  const moves = chess.moves();
+  if (chess.turn() !== "w" || moves.length === 0) {
+    return moves;
+  }
+
+  const mateMoves = Brain.getImmediateMateMoves(fen, moves);
+  if (mateMoves.length > 0) {
+    return mateMoves;
+  }
+
+  const lookupMoves = Brain.getKnightAndBishopLookupWhiteMoves(fen);
+  if (lookupMoves.length > 0) {
+    return lookupMoves;
+  }
+
+  const scoredMoves = moves.map((san, index) => ({
+    san,
+    score: {
+      index,
+      ...Brain.scoreKnightAndBishopWhiteMove(fen, san),
+    },
+  }));
+  const best = scoredMoves.reduce((currentBest, candidate) =>
+    Brain.compareKnightAndBishopWhiteScores(candidate.score, currentBest.score) < 0
+      ? candidate
+      : currentBest
+  );
+  return scoredMoves
+    .filter(
+      (candidate) =>
+        Brain.compareKnightAndBishopWhiteScores(candidate.score, best.score) === 0,
+    )
+    .map((candidate) => candidate.san);
 }
 
 function withEndgame<T>(endgameId: EndgameId, run: () => T): T {
