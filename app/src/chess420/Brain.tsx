@@ -2142,6 +2142,15 @@ export default class Brain {
             a,
             b,
             () =>
+              a.kingDistanceRegressionScore - b.kingDistanceRegressionScore
+          ),
+      },
+      {
+        compare: (a, b) =>
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
               a.bishopInFrontScore - b.bishopInFrontScore ||
               a.bishopFrontPreparationScore - b.bishopFrontPreparationScore
           ),
@@ -3257,6 +3266,12 @@ export default class Brain {
           resultFen,
           move?.piece
         ),
+      kingDistanceRegressionScore:
+        Brain.knightAndBishopKingDistanceRegressionScore(
+          fen,
+          resultFen,
+          move?.piece
+        ),
       bishopFrontPreparationScore:
         Brain.knightAndBishopBishopFrontPreparationScore(
           resultFen,
@@ -3314,6 +3329,7 @@ export default class Brain {
         () =>
           a.bishopPivotScore - b.bishopPivotScore ||
           a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
+          a.kingDistanceRegressionScore - b.kingDistanceRegressionScore ||
           a.bishopInFrontScore - b.bishopInFrontScore ||
           a.bishopFrontPreparationScore - b.bishopFrontPreparationScore ||
           a.knightBehindWhiteKingScore - b.knightBehindWhiteKingScore ||
@@ -3372,6 +3388,16 @@ export default class Brain {
             () =>
               a.kingCloserOppositeBishopScore -
               b.kingCloserOppositeBishopScore
+          ),
+      },
+      {
+        reason: "bring king closer",
+        compare: (a, b) =>
+          Brain.compareAfterZoneXDrift(
+            a,
+            b,
+            () =>
+              a.kingDistanceRegressionScore - b.kingDistanceRegressionScore
           ),
       },
       {
@@ -3491,6 +3517,32 @@ export default class Brain {
     return Brain.sameSquareColor(afterWhiteKing.square, bishop.square)
       ? 99
       : afterDistance;
+  }
+
+  static knightAndBishopKingDistanceRegressionScore(
+    fen: string,
+    resultFen: string,
+    piece: string | undefined
+  ): number {
+    if (piece !== "k") {
+      return 0;
+    }
+    const beforeWhiteKing = Brain.findPiece(fen, "w", "k");
+    const beforeBlackKing = Brain.findPiece(fen, "b", "k");
+    const afterWhiteKing = Brain.findPiece(resultFen, "w", "k");
+    const afterBlackKing = Brain.findPiece(resultFen, "b", "k");
+    if (!beforeWhiteKing || !beforeBlackKing || !afterWhiteKing || !afterBlackKing) {
+      return 0;
+    }
+    const beforeDistance = Brain.squaredEuclideanDistance(
+      beforeWhiteKing.square,
+      beforeBlackKing.square
+    );
+    const afterDistance = Brain.squaredEuclideanDistance(
+      afterWhiteKing.square,
+      afterBlackKing.square
+    );
+    return Math.max(0, afterDistance - beforeDistance);
   }
 
   static knightAndBishopBishopPivotScore(

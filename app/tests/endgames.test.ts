@@ -1900,6 +1900,27 @@ test("knight-bishop rule 8 establishes the bishop in front of the white king", (
   );
 });
 
+test("knight-bishop rule 7 deprioritizes king moves that increase distance", () => {
+  setEndgame("knightAndBishop");
+
+  const fen = "8/8/8/2N1B3/4K3/8/2k5/8 w - - 18 10";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bd4")
+      .kingDistanceRegressionScore,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Kf5")
+      .kingDistanceRegressionScore,
+    10,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bd4"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bd4"),
+    "bishop front",
+  );
+});
+
 test("knight-bishop rule 8 maintains the bishop in front of the white king", () => {
   setEndgame("knightAndBishop");
 
