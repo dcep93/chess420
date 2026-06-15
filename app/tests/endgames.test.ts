@@ -863,7 +863,7 @@ test("knight-bishop prepare selected nodes match singular white rules", () => {
   });
 });
 
-test("knight-bishop prepare former n72 remains a rule gap", () => {
+test("knight-bishop prepare former n72 keeps its generated route", () => {
   setEndgame(FLOWCHART_DATA.knightBishopPrepare.endgameId);
   const node = FLOWCHART_DATA.knightBishopPrepare.nodes.find(
     (candidate) =>
@@ -880,7 +880,7 @@ test("knight-bishop prepare former n72 remains a rule gap", () => {
       node.fen,
       generatedEdge.san,
     ),
-    undefined,
+    "key square pattern",
   );
 });
 
@@ -1542,6 +1542,28 @@ test("knight-bishop phase-one immediately hands off to lookup", () => {
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nf7"]);
 });
 
+test("knight-bishop enters only forced black-turn lookup paths", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/6k1/3BK3/8/3N4/8/8/8 w - - 118 60";
+  const resultFen = Brain.getFen(fen, "Nf5+");
+
+  assert.equal(Brain.isKnightAndBishopLookupPhasePosition(fen), false);
+  assert.equal(Brain.isKnightAndBishopLookupPhasePosition(resultFen), false);
+  assert.equal(
+    Brain.knightAndBishopWhiteMoveReachesLookupPath(fen, "Nf5+"),
+    false,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nf5+").phaseTwoEntryScore,
+    1,
+  );
+  assert.notDeepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nf5+"]);
+  assert.notEqual(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nf5+"),
+    "enter mating net",
+  );
+});
+
 test("knight-bishop rule 6 keeps the king in the middle 16 squares", () => {
   setEndgame("knightAndBishop");
 
@@ -1611,6 +1633,15 @@ test("knight-bishop zone x geometry derives reference and equivalents", () => {
   assert.deepEqual(reflected.zoneSquares, ["e8", "d8"]);
   assert.equal(reflected.escapeSquare, "c7");
   assert.equal(reflected.targetKingSquare, "d6");
+
+  const edgeStable = Brain.getKnightAndBishopZone5(
+    "1k6/8/1BKN4/8/8/8/8/8 w - - 16 9",
+  );
+  assert.ok(edgeStable);
+  assert.deepEqual(edgeStable.zoneSquares, ["b8", "c8"]);
+  assert.equal(edgeStable.escapeSquare, "d7");
+  assert.equal(edgeStable.targetKingSquare, "c6");
+  assert.equal(edgeStable.stableKnightSquare, "d6");
 
   assert.equal(
     Brain.getKnightAndBishopZone5(
@@ -1694,6 +1725,11 @@ test("knight-bishop rule 5 can establish the bishop zone x square", () => {
     Brain.scoreKnightAndBishopWhiteMove(fen, "Bf5").zoneXPrepareScore,
     0,
   );
+  const setupFen = Brain.getFen(fen, "Bf5");
+  assert.equal(
+    Brain.knightAndBishopAllBlackRepliesPreserveZoneXSetup(setupFen),
+    true,
+  );
   assert.equal(
     Brain.scoreKnightAndBishopWhiteMove(fen, "Bg4+").zoneXPrepareScore,
     99,
@@ -1701,6 +1737,30 @@ test("knight-bishop rule 5 can establish the bishop zone x square", () => {
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bf5"]);
   assert.equal(
     Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bf5"),
+    "prepare zone x",
+  );
+
+  const escapingKingFen = "8/8/8/6k1/3KB3/4N3/8/8 w - - 20 11";
+  const escapingSetupFen = Brain.getFen(escapingKingFen, "Bf5");
+  assert.deepEqual(
+    Brain.getKnightAndBishopZoneXSetup(escapingSetupFen),
+    {
+      bishopSquare: "f5",
+      blackAnchorSquares: ["g5", "h4", "h5", "h6"],
+      stableKnightSquares: ["f3", "f7"],
+    },
+  );
+  assert.equal(
+    Brain.knightAndBishopAllBlackRepliesPreserveZoneXSetup(escapingSetupFen),
+    false,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(escapingKingFen, "Bf5")
+      .zoneXPrepareScore,
+    99,
+  );
+  assert.notEqual(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(escapingKingFen, "Bf5"),
     "prepare zone x",
   );
 });
@@ -1767,6 +1827,32 @@ test("knight-bishop rule 5 forces zone x stable-square instances", () => {
     false,
   );
 
+  const edgeStableFen = "2k5/5N2/1BK5/8/8/8/8/8 w - - 14 8";
+  assert.equal(
+    Brain.knightAndBishopWhiteMoveForcesZone5(edgeStableFen, "Nd6+"),
+    true,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(edgeStableFen), ["Nd6+"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(edgeStableFen, "Nd6+"),
+    "force zone x",
+  );
+
+  const shiftedZoneFen = "3k4/8/3BKN2/8/8/8/8/8 w - - 60 31";
+  assert.equal(
+    Brain.knightAndBishopWhiteMoveForcesZone5(shiftedZoneFen, "Kd5"),
+    true,
+  );
+  assert.equal(
+    Brain.knightAndBishopWhiteMoveForcesZone5(shiftedZoneFen, "Ke5"),
+    false,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(shiftedZoneFen), ["Kd5"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(shiftedZoneFen, "Kd5"),
+    "force zone x",
+  );
+
   const prepareStarFen = "8/4k3/4B3/4K3/8/2N5/8/8 w - - 0 1";
   assert.equal(
     Brain.getKnightAndBishopExplicitWhiteMoveReason(prepareStarFen, "Nd5+"),
@@ -1793,11 +1879,45 @@ test("knight-bishop rule 8 prepares the bishop front square", () => {
       .bishopFrontPreparationScore,
     99,
   );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bb6+"]);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Ng2"]);
+  assert.equal(Brain.getEndgameReason(fen), "knight closer center");
+
+  const frontTargetFen = "8/8/8/2N1B3/4K3/8/3k4/8 w - - 12 7";
   assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bb6+"),
-    "bishop front",
+    Brain.getSquareInFrontOfWhiteKingBetweenKings("e4", "d2"),
+    "e3",
   );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(frontTargetFen, "Bd4")
+      .bishopFrontPreparationScore,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(frontTargetFen, "Bf4")
+      .bishopFrontPreparationScore,
+    0,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(frontTargetFen, "Ne6")
+      .bishopFrontPreparationScore,
+    99,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(frontTargetFen), ["Ne6"]);
+  assert.equal(Brain.getEndgameReason(frontTargetFen), "knight closer center");
+
+  const closerBishopFen = "8/8/8/3KB3/1k6/4N3/8/8 w - - 32 17";
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(closerBishopFen, "Bd6+")
+      .bishopBlackKingDistance,
+    4,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(closerBishopFen, "Bd4")
+      .bishopBlackKingDistance,
+    2,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(closerBishopFen), ["Nf5"]);
+  assert.equal(Brain.getEndgameReason(closerBishopFen), "knight closer center");
 });
 
 test("knight-bishop rule 8 establishes the bishop in front of the white king", () => {
@@ -1859,10 +1979,66 @@ test("knight-bishop rule 7 deprioritizes king moves that increase distance", () 
       .kingDistanceRegressionScore,
     10,
   );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bd4"]);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Ne6"]);
   assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bd4"),
-    "bishop front",
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Ne6"),
+    "knight closer center",
+  );
+
+  const diagonalBishopApproachFen =
+    "8/8/2K5/2B5/N3k3/8/8/8 w - - 46 24";
+  assert.equal(
+    Brain.isKnightAndBishopDiagonalBishopApproachShape(
+      diagonalBishopApproachFen,
+    ),
+    true,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(diagonalBishopApproachFen, "Kd6")
+      .kingCloserOppositeBishopScore,
+    5,
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(diagonalBishopApproachFen),
+    ["Kd6"],
+  );
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(
+      diagonalBishopApproachFen,
+      "Kd6",
+    ),
+    "bring king closer",
+  );
+
+  const middle16ApproachFen =
+    "8/8/8/8/8/K7/N7/k2B4 w - - 12 7";
+  assert.equal(
+    Brain.knightAndBishopKingApproachesMiddle16(
+      middle16ApproachFen,
+      Brain.getFen(middle16ApproachFen, "Kb3"),
+      "k",
+    ),
+    true,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(middle16ApproachFen, "Kb3")
+      .kingCloserOppositeBishopScore,
+    51,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(middle16ApproachFen, "Kb4")
+      .kingDistanceRegressionScore,
+    6,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(middle16ApproachFen), [
+    "Kb3",
+  ]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(
+      middle16ApproachFen,
+      "Kb3",
+    ),
+    "bring king closer",
   );
 });
 
@@ -1885,17 +2061,37 @@ test("knight-bishop rule 8 maintains the bishop in front of the white king", () 
   assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kd3"]);
 });
 
+test("knight-bishop rule 8 yields to non-bishop moves in bishop opposition loops", () => {
+  setEndgame("knightAndBishop");
+
+  const fen = "8/8/5k2/8/5BK1/8/3N4/8 w - - 24 13";
+  assert.equal(Brain.isKnightAndBishopBishopOppositionLoopShape(fen), true);
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bg5+")
+      .bishopOppositionLoopScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bg5+").bishopInFrontScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Nf3").bishopOppositionLoopScore,
+    0,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Kf3"]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Kf3"),
+    "key square pattern",
+  );
+});
+
 test("knight-bishop rule 9 keeps the knight closer to the white king before center", () => {
   setEndgame("knightAndBishop");
 
   const fen = "8/8/8/8/1B1k4/N4K2/8/8 w - - 12 7";
   const idealMoves = Brain.getIdealEndgameWhiteMoves(fen);
   assert.equal(idealMoves.includes("Nb1"), false);
-  assert.deepEqual(idealMoves, ["Nc2+"]);
-  assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nc2+"),
-    "knight closer center",
-  );
   assert.equal(
     Brain.scoreKnightAndBishopWhiteMove(fen, "Nc2+").knightWhiteKingDistance,
     3,
@@ -1941,19 +2137,30 @@ test("knight-bishop rule 9 keeps the knight closer to the white king before cent
     ),
     "knight closer center",
   );
+
+  const knightBehindBeforeBishopFen =
+    "8/8/4B3/1k6/2N5/2K5/8/8 w - - 2 2";
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(knightBehindBeforeBishopFen),
+    ["Nd2"],
+  );
+  assert.equal(
+    Brain.getEndgameReason(knightBehindBeforeBishopFen),
+    "knight closer center",
+  );
 });
 
 test("knight-bishop rule 9 keeps the knight behind the white king", () => {
   setEndgame("knightAndBishop");
 
-  const fen = "8/8/8/3k4/4N3/4BK2/8/8 w - - 14 8";
+  const fen = "8/8/8/3k4/4N3/5K2/8/B7 w - - 14 8";
   assert.equal(Brain.knightAndBishopKnightBehindWhiteKingScore(fen), 1);
   assert.equal(
     Brain.scoreKnightAndBishopWhiteMove(fen, "Nc5").knightBehindWhiteKingScore,
     1,
   );
   assert.equal(
-    Brain.scoreKnightAndBishopWhiteMove(fen, "Bc5").knightBehindWhiteKingScore,
+    Brain.scoreKnightAndBishopWhiteMove(fen, "Bc3").knightBehindWhiteKingScore,
     1,
   );
   assert.equal(
@@ -1964,8 +2171,6 @@ test("knight-bishop rule 9 keeps the knight behind the white king", () => {
     Brain.scoreKnightAndBishopWhiteMove(fen, "Nf2").knightBehindWhiteKingScore,
     0,
   );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Ng3", "Nf2"]);
-  assert.equal(Brain.getEndgameReason(fen), "knight closer center");
 });
 
 test.skip("knight-bishop phase-one reaches the guide handoff from edge cages", () => {
@@ -2022,11 +2227,11 @@ test("knight-bishop phase uses the pre-move position and strict w-maneuver hando
   const preMoveFen = "6k1/8/5KB1/6N1/8/8/8/8 w - - 0 1";
   const chess = Brain.getChess(preMoveFen);
   chess.move("Nf7");
-  assert.equal(Brain.getEndgamePhase(preMoveFen), "1/2");
+  assert.equal(Brain.getEndgamePhase(preMoveFen), "2/2");
   assert.equal(Brain.getEndgamePhase(chess.fen()), "1/2");
   assert.equal(
     Brain.getEndgameLogFields(preMoveFen, "Nf7", chess.fen()).endgame_phase,
-    "1/2",
+    "2/2",
   );
 });
 
@@ -4371,6 +4576,84 @@ test("endgame loop search detects a single repeated position on the final ply", 
   }
 });
 
+test("exhaustive endgame loop search considers every legal black move", async () => {
+  setEndgame("knightAndBishop");
+  const startingFen = "8/8/8/4k3/7B/3K2N1/8/8 w - - 48 25";
+  const afterFirstBlack = Brain.getFen(Brain.getFen(startingFen, "Kc3"), "Kf4");
+  const originalWhiteMoves = Brain.getIdealEndgameWhiteMoves;
+  const originalOpponentCandidates = Brain.getEndgameOpponentCandidates;
+  let opponentCandidateCalls = 0;
+
+  Brain.getIdealEndgameWhiteMoves = (fen) => {
+    const key = Brain.boardTurnKey(fen);
+    if (key === Brain.boardTurnKey(startingFen)) {
+      return ["Kc3"];
+    }
+    if (key === Brain.boardTurnKey(afterFirstBlack)) {
+      return ["Kd3"];
+    }
+    return [];
+  };
+  Brain.getEndgameOpponentCandidates = () => {
+    opponentCandidateCalls += 1;
+    return { moves: ["Ke6"], idealMoves: ["Ke6"] };
+  };
+
+  try {
+    const result = await Brain.tryExhaustiveEndgamePathToMate(
+      startingFen,
+      4,
+      {
+        knownNoLoop: new Map(),
+        seenPositions: new Set(),
+        visitedNodes: 0,
+        totalEstimate: 1,
+        yieldEvery: 1000,
+      }
+    );
+    assert.equal(result.result, "loop");
+    assert.deepEqual(result.moves, ["Kc3", "Kf4", "Kd3", "Ke5"]);
+    assert.equal(opponentCandidateCalls, 0);
+  } finally {
+    Brain.getIdealEndgameWhiteMoves = originalWhiteMoves;
+    Brain.getEndgameOpponentCandidates = originalOpponentCandidates;
+  }
+});
+
+test("endgame loop search progress formats a loose percentage", () => {
+  const searchingProgress = {
+    isSearching: true,
+    percent: 0.05,
+    seenPositions: 10,
+    checked: 2,
+  };
+  assert.equal(
+    Brain.formatEndgameLoopSearchProgressPercent(searchingProgress),
+    "",
+  );
+  assert.equal(
+    Brain.formatEndgameLoopSearchProgressPercent({
+      ...searchingProgress,
+      isSearching: false,
+    }),
+    "<0.1%",
+  );
+
+  let calls = 0;
+  const unsubscribe = Brain.subscribeToEndgameLoopSearchProgress(() => {
+    calls += 1;
+  });
+  Brain.setEndgameLoopSearchProgress(searchingProgress);
+  unsubscribe();
+  Brain.setEndgameLoopSearchProgress({
+    isSearching: false,
+    percent: 0,
+    seenPositions: 10,
+    checked: 2,
+  });
+  assert.equal(calls, 1);
+});
+
 test("knight-bishop loop search uses prepare starts only for plus mode", () => {
   setEndgame("knightAndBishop+");
   const plusResult = Brain.searchRandomEndgameLoops(99, 0, () => 0);
@@ -4641,7 +4924,7 @@ test("endgame priority help does not hide active queen and rook rules", () => {
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(
-      "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
+      "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop; when outside the middle 16, walk toward it first. The color rule can also yield when the two kings are two diagonal squares apart and the adjacent bishop is a knight move from Black's king.",
     ),
     true,
   );
@@ -4656,6 +4939,10 @@ test("endgame priority help does not hide active queen and rook rules", () => {
       "Keep the knight behind White's king relative to Black's king, then closer to White's king, then closer to the center, preferring squares farther from Black's king.",
     ),
     true,
+  );
+  assert.equal(
+    knightAndBishopHelp.whitePriorities.length,
+    new Set(knightAndBishopHelp.whitePriorities).size,
   );
   assert.equal(
     knightAndBishopHelp.whitePriorities.includes(

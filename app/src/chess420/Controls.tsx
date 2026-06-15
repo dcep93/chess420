@@ -20,7 +20,12 @@ export function shouldShowEndgameLoopFinder(): boolean {
   );
 }
 
-export function Header() {
+export function Header(props: {
+  loopProgress?: typeof Brain.endgameLoopSearchProgress;
+} = {}) {
+  const loopProgress = props.loopProgress ?? Brain.endgameLoopSearchProgress;
+  const loopProgressLabel =
+    Brain.formatEndgameLoopSearchProgressPercent(loopProgress);
   return (
     <div className="controls__header">
       <h1>♟ chess420 ♟</h1>
@@ -50,7 +55,12 @@ export function Header() {
             ))}
           </select>
           {shouldShowEndgameLoopFinder() ? (
-            <button onClick={Brain.findEndgameLoop}>find a loop</button>
+            <button
+              disabled={loopProgress.isSearching}
+              onClick={() => void Brain.findEndgameLoop()}
+            >
+              find a loop{loopProgressLabel ? ` ${loopProgressLabel}` : ""}
+            </button>
           ) : null}
         </div>
       ) : null}
@@ -61,6 +71,9 @@ export function Header() {
 export default function Controls() {
   const lichessRef = React.useRef<HTMLInputElement>(null);
   const fen = Brain.getState().fen;
+  const [loopProgress, setLoopProgress] = React.useState(
+    Brain.endgameLoopSearchProgress
+  );
   const [lichessRequests, updateLichessRequests] = React.useState(
     stats.requests
   );
@@ -79,12 +92,19 @@ export default function Controls() {
       unsubscribe();
     };
   }, []);
+  React.useEffect(
+    () =>
+      Brain.subscribeToEndgameLoopSearchProgress(() =>
+        setLoopProgress(Brain.endgameLoopSearchProgress)
+      ),
+    []
+  );
 
   return (
     <div className="controls">
       <div className="controls__grid">
         <section className="controls__section controls__section--title">
-          <Header />
+          <Header loopProgress={loopProgress} />
         </section>
 
         <section className="controls__section controls__section--modes">
