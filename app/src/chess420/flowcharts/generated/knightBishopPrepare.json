@@ -1606,7 +1606,14 @@
         "n53-0-n41"
       ],
       "movesToSuccess": 5,
-      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Nf4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nf4",
+        "expectedSans": [
+          "Ke5"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n54",
@@ -1883,7 +1890,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nd5"
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -2661,23 +2668,7 @@
         "n87-0-n121"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ke5",
-        "expectedSans": [
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5",
-          "Ke5"
-        ],
-        "kind": "globalTie"
-      }
+      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n88",
@@ -2891,6 +2882,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf7",
         "expectedSans": [
+          "Kd6",
           "Bf7"
         ],
         "kind": "notBest"
@@ -3284,10 +3276,9 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke7",
         "expectedSans": [
-          "Kf6",
-          "Ke7"
+          "Kf6"
         ],
-        "kind": "globalTie"
+        "kind": "notBest"
       }
     },
     {
@@ -4705,7 +4696,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nd5+"
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -4767,7 +4758,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Ke8",
         "expectedSans": [
-          "Nd5"
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -10955,12 +10946,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nf7",
         "expectedSans": [
-          "Ke7",
-          "Kf7",
-          "Kg7",
-          "Kg6",
-          "Kg5",
-          "Kf5"
+          "Nd3"
         ],
         "kind": "notBest"
       }
@@ -11556,7 +11542,14 @@
         "n375-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings."
+      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc6",
+        "expectedSans": [
+          "Ne5"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n376",
@@ -13621,7 +13614,14 @@
         "n442-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings."
+      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc6",
+        "expectedSans": [
+          "Ne5"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n443",
@@ -15258,9 +15258,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
-        "kind": "notBest"
+        "kind": "globalTie"
       }
     },
     {
@@ -15296,9 +15297,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
-        "kind": "notBest"
+        "kind": "globalTie"
       }
     },
     {
@@ -15334,9 +15336,10 @@
       "bestMoveMismatch": {
         "generatedSan": "Kf6",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
-        "kind": "notBest"
+        "kind": "globalTie"
       }
     },
     {
@@ -15657,6 +15660,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nd6",
         "expectedSans": [
+          "Kf6",
           "Bd7+"
         ],
         "kind": "notBest"
@@ -15979,7 +15983,15 @@
         "n513-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings."
+      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc6",
+        "expectedSans": [
+          "Kd6",
+          "Kc7"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n514",
@@ -16274,7 +16286,29 @@
         "n521-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Nc4 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
+      "moveReason": "Play Nc4 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
+      "bestMoveMismatch": {
+        "generatedSan": "Nc4",
+        "expectedSans": [
+          "Kc7",
+          "Kd7",
+          "Kd6",
+          "Kd5",
+          "Kc5",
+          "Bd7",
+          "Bc8+",
+          "Bf7",
+          "Bg8",
+          "Bf5",
+          "Bg4",
+          "Bh3",
+          "Bd5",
+          "Bc4+",
+          "Bb3",
+          "Ba2"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n522",
@@ -17185,7 +17219,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Bd5"
+          "Bd5",
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -17315,7 +17350,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Bd5"
+          "Bd5",
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -17346,7 +17382,8 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd5",
         "expectedSans": [
-          "Bd5"
+          "Bd5",
+          "Kf6"
         ],
         "kind": "notBest"
       }
@@ -17469,6 +17506,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
         "kind": "notBest"
@@ -17500,6 +17538,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nb7",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
         "kind": "notBest"
@@ -17584,6 +17623,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Kd7",
         "expectedSans": [
+          "Kf6",
           "Bd7"
         ],
         "kind": "notBest"
@@ -17740,7 +17780,14 @@
         "n564-0-n402"
       ],
       "movesToSuccess": 7,
-      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings."
+      "moveReason": "Play Kc6 to reach the key-square pattern with Black on the edge and the knight between the kings.",
+      "bestMoveMismatch": {
+        "generatedSan": "Kc6",
+        "expectedSans": [
+          "Ne5"
+        ],
+        "kind": "notBest"
+      }
     },
     {
       "id": "n565",
@@ -21349,14 +21396,7 @@
         "n674-0-n690"
       ],
       "movesToSuccess": 9,
-      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows.",
-      "bestMoveMismatch": {
-        "generatedSan": "Ke5",
-        "expectedSans": [
-          "Nd4"
-        ],
-        "kind": "notBest"
-      }
+      "moveReason": "Play Ke5 to continue the generated preparation route; tied best moves remain shown as yellow arrows."
     },
     {
       "id": "n675",
@@ -25008,7 +25048,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Kc6"
+          "Nd5"
         ],
         "kind": "notBest"
       }
@@ -25413,17 +25453,7 @@
       "bestMoveMismatch": {
         "generatedSan": "Nc4",
         "expectedSans": [
-          "Bd7",
-          "Bc8+",
-          "Bf7",
-          "Bg8",
-          "Bf5",
-          "Bg4",
-          "Bh3",
-          "Bd5",
-          "Bc4+",
-          "Bb3",
-          "Ba2"
+          "Nd5"
         ],
         "kind": "notBest"
       }

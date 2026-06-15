@@ -1479,8 +1479,8 @@ function getGeneratedPrepareMoveReason(fen: string, san: string): string {
   if (explicitReason === "bring king closer") {
     return `Play ${san} to bring White's king closer while staying on the color opposite the bishop.`;
   }
-  if (explicitReason === "bishop in front") {
-    return `Play ${san} to place the bishop in front of White's king, between the kings.`;
+  if (explicitReason === "bishop front") {
+    return `Play ${san} to establish, maintain, or prepare the bishop in front of White's king, between the kings.`;
   }
   if (explicitReason === "knight closer center") {
     return `Play ${san} to keep the knight closer to the center and farther from Black's king.`;

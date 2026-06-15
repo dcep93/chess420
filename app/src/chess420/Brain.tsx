@@ -258,8 +258,7 @@ type KnightAndBishopExplicitWhiteMoveReason =
   | "force zone x"
   | "prepare zone x"
   | "bring king closer"
-  | "prepare bishop in front"
-  | "bishop in front"
+  | "bishop front"
   | "knight closer center";
 
 type ScoreReason<T> = {
@@ -1463,9 +1462,8 @@ export default class Brain {
         "key square pattern": "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
         "force zone x": "",
         "prepare zone x": "",
-        "bring king closer": "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop. Also prepare the bishop to move to the square in front of White's king when that front square lies on the bishop's diagonal, even if a piece currently blocks the path.",
-        "prepare bishop in front": "Prepare the bishop to move to the square in front of White's king, between the kings.",
-        "bishop in front": "Place the bishop on the square in front of White's king, between the kings.",
+        "bring king closer": "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
+        "bishop front": "Establish, maintain, or prepare the bishop on the square in front of White's king, between the kings.",
         "knight closer center": "Keep the knight closer to the center, preferring squares farther from Black's king.",
         "waiting move": "Phase 2: use the specific bishop waiting move when Black is boxed in.",
         "force opponent to take opposition": "Phase 2: force Black along the edge toward direct king opposition without moving the bishop on the black king's current color, unless it's a check.",
@@ -1493,8 +1491,7 @@ export default class Brain {
         "king near middle": "White king near middle",
         "king closer": "White king closer",
         "bring king closer": "White king closer",
-        "prepare bishop in front": "Prepare bishop in front",
-        "bishop in front": "bishop in front of White king",
+        "bishop front": "bishop in front of White king",
         "knight closer center": "Knight closer to center",
         "force black to edge": "force Black to edge",
         "bishops closer": "bishops closer to Black king",
@@ -2126,12 +2123,9 @@ export default class Brain {
       },
       {
         compare: (a, b) =>
+          a.bishopInFrontScore - b.bishopInFrontScore ||
           a.bishopFrontPreparationScore - b.bishopFrontPreparationScore,
-        reason: "prepare bishop in front",
-      },
-      {
-        compare: (a, b) => a.bishopInFrontScore - b.bishopInFrontScore,
-        reason: "bishop in front",
+        reason: "bishop front",
       },
       {
         compare: (a, b) =>
@@ -2867,7 +2861,8 @@ export default class Brain {
       .filter(
         (square): square is Square =>
           square != null &&
-          Brain.kingDistance(square, blackKing.square) === 1
+          Brain.kingDistance(square, blackKing.square) === 1 &&
+          Brain.sameSquareColor(square, bishop.square)
       );
     if (keySquares.length === 0) {
       return 2;
@@ -3143,10 +3138,7 @@ export default class Brain {
           resultFen,
           move?.piece
         ),
-      bishopInFrontScore: Brain.knightAndBishopBishopInFrontScore(
-        fen,
-        resultFen
-      ),
+      bishopInFrontScore: Brain.knightAndBishopBishopInFrontScore(resultFen),
       knightCentralDistance: Brain.knightAndBishopKnightCentralDistance(resultFen),
       knightBlackKingDistance:
         Brain.knightAndBishopKnightBlackKingDistance(resultFen),
@@ -3188,8 +3180,8 @@ export default class Brain {
       a.zoneXPrepareScore - b.zoneXPrepareScore ||
       a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity ||
       a.kingCloserOppositeBishopScore - b.kingCloserOppositeBishopScore ||
-      a.bishopFrontPreparationScore - b.bishopFrontPreparationScore ||
       a.bishopInFrontScore - b.bishopInFrontScore ||
+      a.bishopFrontPreparationScore - b.bishopFrontPreparationScore ||
       a.knightCentralDistance - b.knightCentralDistance ||
       b.knightBlackKingDistance - a.knightBlackKingDistance
     );
@@ -3234,13 +3226,10 @@ export default class Brain {
           b.kingCloserOppositeBishopScore,
       },
       {
-        reason: "prepare bishop in front",
+        reason: "bishop front",
         compare: (a, b) =>
+          a.bishopInFrontScore - b.bishopInFrontScore ||
           a.bishopFrontPreparationScore - b.bishopFrontPreparationScore,
-      },
-      {
-        reason: "bishop in front",
-        compare: (a, b) => a.bishopInFrontScore - b.bishopInFrontScore,
       },
       {
         reason: "knight closer center",
@@ -3353,12 +3342,9 @@ export default class Brain {
       : 99;
   }
 
-  static knightAndBishopBishopInFrontScore(
-    fen: string,
-    resultFen: string
-  ): number {
-    const whiteKing = Brain.findPiece(fen, "w", "k");
-    const blackKing = Brain.findPiece(fen, "b", "k");
+  static knightAndBishopBishopInFrontScore(resultFen: string): number {
+    const whiteKing = Brain.findPiece(resultFen, "w", "k");
+    const blackKing = Brain.findPiece(resultFen, "b", "k");
     const bishop = Brain.findPiece(resultFen, "w", "b");
     if (!whiteKing || !blackKing || !bishop) {
       return 0;
