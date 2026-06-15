@@ -1463,7 +1463,7 @@ export default class Brain {
         "key square pattern": "[prepare] Reach the knight's key-square pattern or force Black into Zone X when available. Establish the bishop on its Zone X square when available. Prepare * is true when the bishop is on its Zone X square: move White's king toward Black's king, otherwise move the knight by the shortest path to its Zone X square.",
         "force zone x": "",
         "prepare zone x": "",
-        "bishop pivot": "Pivot White's king when the kings are a knight move apart and the bishop is adjacent to White's king while opposing Black's king, so the bishop becomes the square in front of White's king.",
+        "bishop pivot": "",
         "bring king closer": "Keep White's king in the middle 16 squares while bringing it closer to Black's king and staying on the color opposite the bishop.",
         "bishop front": "Establish, maintain, or prepare the bishop on the square in front of White's king, between the kings.",
         "knight closer center": "Keep the knight behind White's king relative to Black's king, then closer to White's king, then closer to the center, preferring squares farther from Black's king.",
