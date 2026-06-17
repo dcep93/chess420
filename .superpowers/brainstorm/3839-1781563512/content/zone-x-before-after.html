@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zone X Before After</title>
+  <style>
+    :root {
+      --ink: #14171b;
+      --muted: #5f6670;
+      --line: #d8dde5;
+      --panel: #fff;
+      --light: #eddab9;
+      --dark: #8a674b;
+      --current: #c93f37;
+      --proposed: #16815d;
+      --stable: #246edb;
+      --escape: #d34242;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f6f8;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1400px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(32px, 4vw, 50px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      margin: 0 0 18px;
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: minmax(300px, 430px) minmax(250px, 1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(20, 23, 27, .06);
+    }
+
+    .board-wrap {
+      width: 100%;
+      max-width: 430px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+
+    .board {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 3px solid #15191f;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .sq {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sq.light { background: var(--light); }
+    .sq.dark { background: var(--dark); }
+
+    .sq.current::after,
+    .sq.proposed::after,
+    .sq.stable::after,
+    .sq.escape::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 6px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sq.current::after {
+      border: 5px solid var(--current);
+      background: rgba(201, 63, 55, .16);
+    }
+
+    .sq.proposed::after {
+      border: 5px solid var(--proposed);
+      background: rgba(22, 129, 93, .16);
+    }
+
+    .sq.stable::after {
+      border: 4px solid var(--stable);
+      background: rgba(36, 110, 219, .13);
+    }
+
+    .sq.escape::after {
+      border: 4px solid var(--escape);
+      background: rgba(211, 66, 66, .16);
+    }
+
+    .piece {
+      position: relative;
+      z-index: 3;
+      font-family: "Apple Symbols", "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", serif;
+      font-size: clamp(38px, 7vw, 64px);
+      line-height: 1;
+      filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .56));
+      user-select: none;
+    }
+
+    .piece.white {
+      color: #fff;
+      -webkit-text-stroke: 1.25px #111;
+    }
+
+    .piece.black {
+      color: #111;
+      -webkit-text-stroke: 1px #fff;
+    }
+
+    .coord {
+      position: absolute;
+      left: 4px;
+      bottom: 2px;
+      z-index: 4;
+      color: rgba(15, 18, 22, .76);
+      font-size: 10px;
+      font-weight: 800;
+      text-shadow: 0 1px rgba(255, 255, 255, .45);
+      pointer-events: none;
+    }
+
+    .arrow-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .copy { min-width: 0; }
+
+    .change {
+      margin: 0 0 12px;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .current-text { color: var(--current); font-weight: 850; }
+    .proposed-text { color: var(--proposed); font-weight: 850; }
+
+    .fen {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #303741;
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    li + li { margin-top: 7px; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 6px 9px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 4px;
+      border: 3px solid currentColor;
+    }
+
+    .dot.current { color: var(--current); background: rgba(201, 63, 55, .16); }
+    .dot.proposed { color: var(--proposed); background: rgba(22, 129, 93, .16); }
+    .dot.stable { color: var(--stable); background: rgba(36, 110, 219, .13); }
+    .dot.escape { color: var(--escape); background: rgba(211, 66, 66, .16); }
+
+    @media (max-width: 1100px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { width: min(100vw - 18px, 520px); padding-top: 14px; }
+      .card { grid-template-columns: 1fr; }
+      .board-wrap { max-width: none; }
+      .piece { font-size: clamp(34px, 12vw, 58px); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Before / After Moves</h1>
+    <p class="intro">
+      These are the two concrete move choices that change if shallow Zone X is no longer allowed to win the scoring.
+    </p>
+    <div class="legend">
+      <span class="chip"><span class="dot current"></span>Current move target</span>
+      <span class="chip"><span class="dot proposed"></span>New move target</span>
+      <span class="chip"><span class="dot stable"></span>Knight lock squares</span>
+      <span class="chip"><span class="dot escape"></span>Escape square</span>
+    </div>
+    <section class="cards" id="cards"></section>
+  </main>
+
+  <script>
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
+    const symbols = { K: "&#9812;", B: "&#9815;", N: "&#9816;", k: "&#9818;" };
+
+    const examples = [
+      {
+        current: "Bf5",
+        proposed: "Bg4+",
+        fen: "8/8/4B3/7k/4NK2/8/8/8 w - - 22 12",
+        pieces: { e6: "B", h5: "k", f4: "K", e4: "N" },
+        highlights: {
+          current: ["f5"],
+          proposed: ["g4"],
+          stable: ["f3", "f7"],
+          escape: ["g5"]
+        },
+        arrows: [
+          { from: "e6", to: "f5", kind: "current" },
+          { from: "e6", to: "g4", kind: "proposed" }
+        ],
+        bullets: [
+          "Currently Bf5 wins because it creates the shallow f5/h-file Zone X shape.",
+          "After the change, that shallow setup is not desirable.",
+          "The fallback choice is Bg4+, which keeps normal pressure instead of chasing the false setup."
+        ]
+      },
+      {
+        current: "Kg6",
+        proposed: "Nc5",
+        fen: "8/8/5K2/5B2/7k/1N6/8/8 w - - 26 14",
+        pieces: { f6: "K", f5: "B", h4: "k", b3: "N" },
+        highlights: {
+          current: ["g6"],
+          proposed: ["c5"],
+          stable: ["f3", "f7"],
+          escape: ["g3"]
+        },
+        arrows: [
+          { from: "f6", to: "g6", kind: "current" },
+          { from: "b3", to: "c5", kind: "proposed" },
+          { from: "h4", to: "g3", kind: "escape" }
+        ],
+        bullets: [
+          "Currently Kg6 wins because the old setup detector likes the same shallow f5/h-file shape.",
+          "After the change, Kg6 no longer counts as prepare Zone X because g3 is still an escape.",
+          "The fallback choice is Nc5, moving the knight instead of walking the king into a fake cage."
+        ]
+      }
+    ];
+
+    function squareToIndex(square) {
+      return { file: files.indexOf(square[0]), rank: ranks.indexOf(square[1]) };
+    }
+
+    function squareCenter(square) {
+      const { file, rank } = squareToIndex(square);
+      return { x: (file + 0.5) * 12.5, y: (rank + 0.5) * 12.5 };
+    }
+
+    function buildBoard(example) {
+      const wrap = document.createElement("div");
+      wrap.className = "board-wrap";
+      const board = document.createElement("div");
+      board.className = "board";
+
+      for (let r = 0; r < 8; r += 1) {
+        for (let f = 0; f < 8; f += 1) {
+          const square = files[f] + ranks[r];
+          const cell = document.createElement("div");
+          cell.className = `sq ${(r + f) % 2 === 0 ? "light" : "dark"}`;
+          for (const [name, squares] of Object.entries(example.highlights)) {
+            if (squares.includes(square)) cell.classList.add(name);
+          }
+          const coord = document.createElement("span");
+          coord.className = "coord";
+          coord.textContent = square;
+          cell.appendChild(coord);
+          const piece = example.pieces[square];
+          if (piece) {
+            const node = document.createElement("span");
+            node.className = `piece ${piece === piece.toLowerCase() ? "black" : "white"}`;
+            node.innerHTML = symbols[piece];
+            cell.appendChild(node);
+          }
+          board.appendChild(cell);
+        }
+      }
+
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "arrow-layer");
+      svg.setAttribute("viewBox", "0 0 100 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.innerHTML = `
+        <defs>
+          <marker id="current-head" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(201,63,55,.94)"></polygon>
+          </marker>
+          <marker id="proposed-head" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(22,129,93,.94)"></polygon>
+          </marker>
+          <marker id="escape-head" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(211,66,66,.94)"></polygon>
+          </marker>
+        </defs>
+      `;
+      for (const arrow of example.arrows) {
+        const start = squareCenter(arrow.from);
+        const end = squareCenter(arrow.to);
+        const color = arrow.kind === "proposed"
+          ? "rgba(22,129,93,.94)"
+          : arrow.kind === "escape"
+            ? "rgba(211,66,66,.94)"
+            : "rgba(201,63,55,.94)";
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", start.x);
+        line.setAttribute("y1", start.y);
+        line.setAttribute("x2", end.x);
+        line.setAttribute("y2", end.y);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", "1.9");
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("marker-end", `url(#${arrow.kind}-head)`);
+        svg.appendChild(line);
+      }
+
+      wrap.appendChild(board);
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    const root = document.getElementById("cards");
+    for (const example of examples) {
+      const card = document.createElement("article");
+      card.className = "card";
+      const copy = document.createElement("div");
+      copy.className = "copy";
+      copy.innerHTML = `
+        <h2 class="change">Currently <span class="current-text">${example.current}</span>, after this change <span class="proposed-text">${example.proposed}</span></h2>
+        <p class="fen">${example.fen}</p>
+        <ul>${example.bullets.map((item) => `<li>${item}</li>`).join("")}</ul>
+      `;
+      card.appendChild(buildBoard(example));
+      card.appendChild(copy);
+      root.appendChild(card);
+    }
+  </script>
+</body>
+</html>

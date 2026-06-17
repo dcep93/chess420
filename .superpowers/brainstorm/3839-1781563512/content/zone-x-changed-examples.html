@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zone X Changed Positions</title>
+  <style>
+    :root {
+      --ink: #14171b;
+      --muted: #626a75;
+      --panel: #ffffff;
+      --line: #d7dce3;
+      --light: #eddab9;
+      --dark: #8a674b;
+      --bad: #c93f37;
+      --warn: #a46a00;
+      --good: #16815d;
+      --anchor: #e0a500;
+      --stable: #246edb;
+      --escape: #d34242;
+      --move: #7b4bd3;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #f5f6f8;
+    }
+
+    main {
+      width: min(1520px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: 300px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #303741;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border: 3px solid currentColor;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .dot.anchor { color: var(--anchor); background: rgba(224, 165, 0, .16); }
+    .dot.stable { color: var(--stable); background: rgba(36, 110, 219, .14); }
+    .dot.escape { color: var(--escape); background: rgba(211, 66, 66, .16); }
+    .dot.move { color: var(--move); background: rgba(123, 75, 211, .14); }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .example {
+      display: grid;
+      grid-template-columns: minmax(290px, 420px) minmax(240px, 1fr);
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(20, 23, 27, .06);
+    }
+
+    .board-wrap {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+
+    .board {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 3px solid #15191f;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .sq {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sq.light { background: var(--light); }
+    .sq.dark { background: var(--dark); }
+
+    .sq.anchor::after,
+    .sq.stable::after,
+    .sq.escape::after,
+    .sq.move::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sq.anchor::after {
+      border: 4px solid var(--anchor);
+      background: rgba(224, 165, 0, .14);
+    }
+
+    .sq.stable::after {
+      border: 4px solid var(--stable);
+      background: rgba(36, 110, 219, .13);
+    }
+
+    .sq.escape::after {
+      border: 4px solid var(--escape);
+      background: rgba(211, 66, 66, .17);
+    }
+
+    .sq.move::after {
+      border: 4px solid var(--move);
+      background: rgba(123, 75, 211, .14);
+    }
+
+    .piece {
+      position: relative;
+      z-index: 3;
+      font-family: "Apple Symbols", "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", serif;
+      font-size: clamp(36px, 7vw, 61px);
+      line-height: 1;
+      filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .55));
+      transform: translateY(-1px);
+      user-select: none;
+    }
+
+    .piece.white {
+      color: #fff;
+      -webkit-text-stroke: 1.25px #111;
+    }
+
+    .piece.black {
+      color: #111;
+      -webkit-text-stroke: 1px #fff;
+    }
+
+    .coord {
+      position: absolute;
+      left: 4px;
+      bottom: 2px;
+      z-index: 4;
+      color: rgba(15, 18, 22, .76);
+      font-size: 10px;
+      font-weight: 800;
+      text-shadow: 0 1px rgba(255, 255, 255, .45);
+      pointer-events: none;
+    }
+
+    .arrow-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .copy { min-width: 0; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 850;
+      margin-bottom: 10px;
+    }
+
+    .status.reject { background: var(--bad); }
+    .status.caution { background: var(--warn); }
+    .status.accept { background: var(--good); }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: clamp(20px, 2.1vw, 27px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .fen {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #303741;
+      font-size: 15px;
+      line-height: 1.42;
+    }
+
+    li + li { margin-top: 7px; }
+
+    .takeaway {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--bad);
+      border-radius: 8px;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1100px) {
+      header { align-items: start; flex-direction: column; }
+      .legend { justify-content: flex-start; }
+      .examples { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { width: min(100vw - 18px, 520px); padding-top: 14px; }
+      .example { grid-template-columns: 1fr; }
+      .board-wrap { max-width: none; }
+      .piece { font-size: clamp(34px, 12vw, 58px); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Positions That Change</h1>
+        <p class="intro">
+          These are concrete current-engine positions affected by the stricter Zone X idea.
+          The boards show the resulting position after the currently preferred or currently recognized move.
+        </p>
+      </div>
+      <div class="legend">
+        <span class="chip"><span class="dot anchor"></span>Current anchor zone</span>
+        <span class="chip"><span class="dot stable"></span>Knight lock square</span>
+        <span class="chip"><span class="dot escape"></span>Escape square</span>
+        <span class="chip"><span class="dot move"></span>Moved / target square</span>
+      </div>
+    </header>
+
+    <section class="examples" id="examples"></section>
+
+    <section class="takeaway">
+      Proposed implementation split: keep a lightweight geometry recognizer, but only let <strong>prepare zone x</strong>
+      win when the resulting setup is desirable. Desirable means either the black king is shifted all the way toward
+      the corner, or the knight lock is paired with White's king actually holding the escape.
+    </section>
+  </main>
+
+  <script>
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
+    const symbols = { K: "&#9812;", B: "&#9815;", N: "&#9816;", k: "&#9818;" };
+
+    const examples = [
+      {
+        status: "reject",
+        label: "Will stop being ideal",
+        title: "Bf5 currently establishes shallow Zone X",
+        fen: "Start: 8/8/4B3/7k/4NK2/8/8/8 w - - 22 12. Current ideal: Bf5, reason prepare zone x.",
+        pieces: { f5: "B", h5: "k", f4: "K", e4: "N" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f3", "f7"],
+          move: ["f5"],
+          escape: ["g5"]
+        },
+        arrows: [["e6", "f5"]],
+        bullets: [
+          "Current engine: Bf5 is the only ideal move.",
+          "New rule: reject as a target because the knight is not on f3/f7.",
+          "Also not deep enough: this is still the shallow h-file pattern."
+        ]
+      },
+      {
+        status: "reject",
+        label: "Will stop being ideal",
+        title: "Kg6 currently prepares a false Zone X",
+        fen: "Start: 8/8/5K2/5B2/7k/1N6/8/8 w - - 26 14. Current ideal: Kg6, reason prepare zone x.",
+        pieces: { g6: "K", f5: "B", h4: "k", b3: "N" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f3", "f7"],
+          escape: ["g3"],
+          move: ["g6"]
+        },
+        arrows: [["f6", "g6"], ["h4", "g3"]],
+        bullets: [
+          "Current engine: Kg6 wins because it preserves the current setup shape.",
+          "New rule: reject because Black is not deep enough and the knight is not locking f3/f7.",
+          "White's king on g6 still does not hold the g3 escape."
+        ]
+      },
+      {
+        status: "caution",
+        label: "Detection only",
+        title: "Knight lock exists, but should not be a target",
+        fen: "Example state: 8/5N2/5K2/5B2/7k/8/8/8 b - - 0 1.",
+        pieces: { f7: "N", f6: "K", f5: "B", h4: "k" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f7", "f3"],
+          escape: ["g3"]
+        },
+        arrows: [["h4", "g3"]],
+        bullets: [
+          "The knight on f7 matches the lock geometry.",
+          "But the white king cannot stop h4-g3.",
+          "So this may be recognized, but should not be scored as desirable prepare Zone X."
+        ]
+      },
+      {
+        status: "reject",
+        label: "Will stop qualifying as deep",
+        title: "h6 is still too shallow",
+        fen: "Example state: 8/8/5K1k/5B2/8/1N6/8/8 w - - 0 1.",
+        pieces: { f6: "K", f5: "B", h6: "k", b3: "N" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f3", "f7"],
+          move: ["h6"]
+        },
+        arrows: [],
+        bullets: [
+          "This was the previous visual 'deep enough' example.",
+          "New rule: reject it. The pattern has not shifted two squares toward the corner.",
+          "Bishop plus king alone should not be enough here."
+        ]
+      },
+      {
+        status: "accept",
+        label: "Threshold example",
+        title: "h8 is the deep-enough version",
+        fen: "Reference state: 5K1k/5B2/8/8/8/1N6/8/8 w - - 0 1.",
+        pieces: { f8: "K", f7: "B", h8: "k", b3: "N" },
+        highlights: {
+          anchor: ["g7", "h6", "h7", "h8"],
+          move: ["f7", "h8"]
+        },
+        arrows: [],
+        bullets: [
+          "This is the same pattern shifted two squares toward h8.",
+          "Now bishop plus king can count without the knight lock.",
+          "This gives us a clear geometric threshold."
+        ]
+      }
+    ];
+
+    function squareToIndex(square) {
+      return { file: files.indexOf(square[0]), rank: ranks.indexOf(square[1]) };
+    }
+
+    function squareCenter(square) {
+      const { file, rank } = squareToIndex(square);
+      return { x: (file + 0.5) * 12.5, y: (rank + 0.5) * 12.5 };
+    }
+
+    function buildBoard(example) {
+      const wrap = document.createElement("div");
+      wrap.className = "board-wrap";
+      const board = document.createElement("div");
+      board.className = "board";
+
+      for (let r = 0; r < 8; r += 1) {
+        for (let f = 0; f < 8; f += 1) {
+          const square = files[f] + ranks[r];
+          const cell = document.createElement("div");
+          cell.className = `sq ${(r + f) % 2 === 0 ? "light" : "dark"}`;
+          for (const [name, squares] of Object.entries(example.highlights || {})) {
+            if (squares.includes(square)) cell.classList.add(name);
+          }
+          const coord = document.createElement("span");
+          coord.className = "coord";
+          coord.textContent = square;
+          cell.appendChild(coord);
+          const piece = example.pieces[square];
+          if (piece) {
+            const node = document.createElement("span");
+            node.className = `piece ${piece === piece.toLowerCase() ? "black" : "white"}`;
+            node.innerHTML = symbols[piece];
+            cell.appendChild(node);
+          }
+          board.appendChild(cell);
+        }
+      }
+
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "arrow-layer");
+      svg.setAttribute("viewBox", "0 0 100 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.innerHTML = `
+        <defs>
+          <marker id="arrowhead" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(123,75,211,.92)"></polygon>
+          </marker>
+          <marker id="escapehead" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(211,66,66,.92)"></polygon>
+          </marker>
+        </defs>
+      `;
+      for (const [index, pair] of (example.arrows || []).entries()) {
+        const [from, to] = pair;
+        const start = squareCenter(from);
+        const end = squareCenter(to);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", start.x);
+        line.setAttribute("y1", start.y);
+        line.setAttribute("x2", end.x);
+        line.setAttribute("y2", end.y);
+        line.setAttribute("stroke", index === 1 ? "rgba(211,66,66,.92)" : "rgba(123,75,211,.92)");
+        line.setAttribute("stroke-width", "1.8");
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("marker-end", index === 1 ? "url(#escapehead)" : "url(#arrowhead)");
+        svg.appendChild(line);
+      }
+
+      wrap.appendChild(board);
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    const root = document.getElementById("examples");
+    for (const example of examples) {
+      const card = document.createElement("article");
+      card.className = "example";
+      const copy = document.createElement("div");
+      copy.className = "copy";
+      copy.innerHTML = `
+        <div class="status ${example.status}">${example.label}</div>
+        <h2>${example.title}</h2>
+        <p class="fen">${example.fen}</p>
+        <ul>${example.bullets.map((item) => `<li>${item}</li>`).join("")}</ul>
+      `;
+      card.appendChild(buildBoard(example));
+      card.appendChild(copy);
+      root.appendChild(card);
+    }
+  </script>
+</body>
+</html>

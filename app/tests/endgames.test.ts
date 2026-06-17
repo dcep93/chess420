@@ -1708,6 +1708,19 @@ test("knight-bishop key-square pattern requires the bishop color", () => {
   );
 });
 
+test("knight-bishop key-square pattern rejects edge key squares", () => {
+  setEndgame("knightAndBishop");
+
+  const fen = "8/8/8/8/B7/1K6/N7/1k6 w - - 6 4";
+  const resultFen = Brain.getFen(fen, "Ka3");
+
+  assert.equal(Brain.getKnightAndBishopKeySquarePatternScore(resultFen), 2);
+  assert.notEqual(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Ka3"),
+    "key square pattern",
+  );
+});
+
 test("knight-bishop rule 5 can establish the bishop zone x square", () => {
   setEndgame("knightAndBishop");
 
@@ -1786,11 +1799,7 @@ test("knight-bishop rule 5 drifts the knight toward its zone x square", () => {
     Brain.scoreKnightAndBishopWhiteMove(fen, "Bc2+").zoneXPrepareScore,
     99,
   );
-  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nf4", "Nb4"]);
-  assert.equal(
-    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nf4"),
-    "prepare zone x",
-  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Nb4"]);
   assert.equal(
     Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Nb4"),
     "prepare zone x",
@@ -1800,6 +1809,72 @@ test("knight-bishop rule 5 drifts the knight toward its zone x square", () => {
   assert.equal(
     Brain.getKnightAndBishopZoneXKnightDriftTarget(mirrorFileFen),
     "e3",
+  );
+
+  const establishedCageFen = "8/8/8/8/2N5/2K5/k1B5/8 w - - 14 8";
+  assert.equal(
+    Brain.getKnightAndBishopEstablishedZoneXKnightRouteTarget(
+      establishedCageFen,
+    ),
+    "b3",
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(establishedCageFen, "Nd2")
+      .zoneXEstablishedKnightRouteScore,
+    1,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(establishedCageFen, "Na5")
+      .zoneXEstablishedKnightRouteScore,
+    99,
+  );
+  assert.equal(
+    Brain.scoreKnightAndBishopWhiteMove(establishedCageFen, "Kd2")
+      .zoneXEntryScore,
+    0,
+  );
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(establishedCageFen), [
+    "Nd2",
+  ]);
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(
+      establishedCageFen,
+      "Nd2",
+    ),
+    "prepare zone x",
+  );
+
+  const establishedCageOtherZoneSquareFen =
+    "8/8/8/8/8/2K5/2BN4/k7 w - - 20 11";
+  assert.equal(
+    Brain.getKnightAndBishopEstablishedZoneXKnightRouteTarget(
+      establishedCageOtherZoneSquareFen,
+    ),
+    "b3",
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(establishedCageOtherZoneSquareFen),
+    ["Nb3+"],
+  );
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(
+      establishedCageOtherZoneSquareFen,
+      "Nb3+",
+    ),
+    "prepare zone x",
+  );
+
+  const mirroredEstablishedCageFen =
+    "8/8/8/8/5N2/5K2/5B1k/8 w - - 14 8";
+  assert.equal(
+    Brain.getKnightAndBishopEstablishedZoneXKnightRouteTarget(
+      mirroredEstablishedCageFen,
+    ),
+    "g3",
+  );
+  assert.deepEqual(
+    Brain.getIdealEndgameWhiteMoves(mirroredEstablishedCageFen),
+    ["Ne2"],
   );
 });
 
@@ -2038,7 +2113,7 @@ test("knight-bishop rule 7 deprioritizes king moves that increase distance", () 
       middle16ApproachFen,
       "Kb3",
     ),
-    "bring king closer",
+    "key square pattern",
   );
 });
 
@@ -2307,6 +2382,19 @@ test("knight-bishop lookup chooses mating net moves", () => {
     assertPhaseTwoOnlyOnWhiteTurn(chess.fen());
   }
   assert.equal(chess.isCheckmate(), true);
+});
+
+test("knight-bishop lookup includes bishop g4 mating-net entry", () => {
+  setEndgame("knightAndBishop");
+  const fen = "8/8/5KNk/5B2/8/8/8/8 w - - 34 18";
+
+  assert.deepEqual(Brain.getKnightAndBishopLookupWhiteMoves(fen), ["Bg4"]);
+  assert.deepEqual(Brain.getIdealEndgameWhiteMoves(fen), ["Bg4"]);
+  assert.equal(Brain.getEndgameReason(fen), "mating net");
+  assert.equal(
+    Brain.getKnightAndBishopExplicitWhiteMoveReason(fen, "Bg4"),
+    "enter mating net",
+  );
 });
 
 test("knight-bishop lookup resolves final collision groups", () => {
@@ -5154,4 +5242,52 @@ test("endgame autoreply waits until after the white move is committed", async ()
   Brain.playEndgameMove("Rb7");
   assert.equal(Brain.getState().logs[1].san, "Rb7+");
   assert.equal(typeof Brain.getState().logs[1].duration_ms, "number");
+});
+
+test("latest game import fast-forwards to the first non-best user move", async () => {
+  const originalView = Brain.view;
+  const originalHistory = Brain.history;
+  const originalUpdateHistory = Brain.updateHistory;
+  const originalGetBestByNoveltyElseScore = Brain.getBestByNoveltyElseScore;
+  const originalFastForwardVersion = Brain.latestGameFastForwardVersion;
+  const game = {
+    sans: ["e4", "e5", "Nf3", "Nc6", "Bc4"],
+    orientationIsWhite: true,
+  };
+  const checkedFens: string[] = [];
+
+  try {
+    Brain.view = View.lichess_latest;
+    Brain.history = {
+      index: 0,
+      states: [
+        {
+          fen: Brain.getFen(),
+          startingFen: undefined,
+          orientationIsWhite: true,
+          logs: [],
+        },
+      ],
+    };
+    Brain.updateHistory = (history) => {
+      Brain.history = history;
+    };
+    Brain.getBestByNoveltyElseScore = (fen) => {
+      checkedFens.push(fen);
+      return Promise.resolve(checkedFens.length === 1 ? "e4" : "Bc4");
+    };
+
+    await Brain.loadMoves(game);
+    await Brain.fastForwardLatestGameToFirstNonBestMove(game);
+
+    assert.equal(checkedFens.length, 2);
+    assert.equal(Brain.getState().logs.length, 3);
+    assert.equal(Brain.getState().logs.at(-1)?.san, "Nf3");
+  } finally {
+    Brain.view = originalView;
+    Brain.history = originalHistory;
+    Brain.updateHistory = originalUpdateHistory;
+    Brain.getBestByNoveltyElseScore = originalGetBestByNoveltyElseScore;
+    Brain.latestGameFastForwardVersion = originalFastForwardVersion;
+  }
 });

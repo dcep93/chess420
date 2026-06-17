@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zone X Setup Examples</title>
+  <style>
+    :root {
+      --ink: #121417;
+      --muted: #5f6670;
+      --panel: #ffffff;
+      --line: #d6dae0;
+      --light: #e9d7b5;
+      --dark: #8e6b4e;
+      --good: #16845f;
+      --bad: #c43c3c;
+      --stable: #286bd6;
+      --anchor: #e2a300;
+      --escape: #d94848;
+      --prepare: #7a4dcc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #f5f6f8;
+    }
+
+    main {
+      width: min(1480px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 26px 0 36px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      min-width: 280px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #2e333a;
+      font-size: 13px;
+      font-weight: 650;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      border: 2px solid currentColor;
+      background: #fff;
+    }
+
+    .dot.anchor { color: var(--anchor); background: rgba(226, 163, 0, .18); }
+    .dot.stable { color: var(--stable); background: rgba(40, 107, 214, .16); }
+    .dot.escape { color: var(--escape); background: rgba(217, 72, 72, .14); }
+    .dot.prepare { color: var(--prepare); background: rgba(122, 77, 204, .14); }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .example {
+      display: grid;
+      grid-template-columns: minmax(280px, 430px) minmax(220px, 1fr);
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(18, 20, 23, .06);
+    }
+
+    .board-wrap {
+      width: 100%;
+      max-width: 430px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+
+    .board {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 3px solid #14181d;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #111;
+      position: relative;
+    }
+
+    .sq {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sq.light { background: var(--light); }
+    .sq.dark { background: var(--dark); }
+
+    .sq.anchor::after,
+    .sq.stable::after,
+    .sq.escape::after,
+    .sq.prepare::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sq.anchor::after {
+      border: 4px solid var(--anchor);
+      background: rgba(226, 163, 0, .16);
+    }
+
+    .sq.stable::after {
+      border: 4px solid var(--stable);
+      background: rgba(40, 107, 214, .13);
+    }
+
+    .sq.escape::after {
+      border: 4px solid var(--escape);
+      background: rgba(217, 72, 72, .18);
+    }
+
+    .sq.prepare::after {
+      border: 4px solid var(--prepare);
+      background: rgba(122, 77, 204, .15);
+    }
+
+    .piece {
+      position: relative;
+      z-index: 3;
+      font-family: "Apple Symbols", "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", serif;
+      font-size: clamp(36px, 7vw, 62px);
+      line-height: 1;
+      filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .55));
+      transform: translateY(-1px);
+      user-select: none;
+    }
+
+    .piece.white {
+      color: #fff;
+      -webkit-text-stroke: 1.25px #111;
+    }
+
+    .piece.black {
+      color: #111;
+      -webkit-text-stroke: 1px #fff;
+    }
+
+    .coord {
+      position: absolute;
+      left: 4px;
+      bottom: 2px;
+      z-index: 4;
+      color: rgba(15, 18, 22, .76);
+      font-size: 10px;
+      font-weight: 750;
+      text-shadow: 0 1px rgba(255, 255, 255, .45);
+      pointer-events: none;
+    }
+
+    .arrow-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .copy {
+      min-width: 0;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .status.good { background: var(--good); }
+    .status.bad { background: var(--bad); }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: clamp(20px, 2.2vw, 28px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .fen {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #2f353d;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    li + li { margin-top: 7px; }
+
+    .takeaway {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--stable);
+      border-radius: 8px;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1040px) {
+      header { align-items: start; flex-direction: column; }
+      .legend { justify-content: flex-start; }
+      .examples { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { width: min(100vw - 18px, 520px); padding-top: 14px; }
+      .example { grid-template-columns: 1fr; }
+      .board-wrap { max-width: none; }
+      .piece { font-size: clamp(34px, 12vw, 58px); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Zone X Setup Detection</h1>
+        <p class="intro">
+          Same bishop/edge idea, but Zone X should only count when the black king is actually locked:
+          either the knight is on the stabilizing square, or the black king is already deeper toward the corner.
+        </p>
+      </div>
+      <div class="legend" aria-label="Legend">
+        <span class="chip"><span class="dot anchor"></span>Black anchor zone</span>
+        <span class="chip"><span class="dot stable"></span>Knight lock square</span>
+        <span class="chip"><span class="dot escape"></span>Escape square</span>
+        <span class="chip"><span class="dot prepare"></span>Prepared bishop square</span>
+      </div>
+    </header>
+
+    <section class="examples" id="examples"></section>
+
+    <section class="takeaway">
+      Proposed rule shape: bishop on its Zone X square is a prerequisite, not proof. Accept the setup only if
+      the knight occupies the stable square two files/ranks from the bishop parallel to the edge, or the black king
+      is already closer to the corner with the same bishop cage geometry.
+    </section>
+  </main>
+
+  <script>
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
+    const symbols = {
+      K: "&#9812;",
+      B: "&#9815;",
+      N: "&#9816;",
+      k: "&#9818;"
+    };
+
+    const examples = [
+      {
+        status: "Reject",
+        title: "Bishop alone is not Zone X",
+        fen: "8/8/5K2/5B2/7k/1N6/8/8 w - - 26 14",
+        pieces: { f6: "K", f5: "B", b3: "N", h4: "k" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f7", "f3"],
+          escape: ["g3"]
+        },
+        arrows: [["h4", "g3"]],
+        bullets: [
+          "The bishop is on f5, but the knight is nowhere near f7 or f3.",
+          "The black king is on h4, not deep enough toward h8/h1.",
+          "So this should not trigger prepare Zone X."
+        ]
+      },
+      {
+        status: "Accept",
+        title: "Knight locks the cage",
+        fen: "8/5N2/5K2/5B2/7k/8/8/8 w - - 0 1",
+        pieces: { f7: "N", f6: "K", f5: "B", h4: "k" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f7", "f3"],
+          escape: ["g3"]
+        },
+        arrows: [],
+        bullets: [
+          "The same h4 black king can qualify when the knight is on f7.",
+          "f7 is two squares from the bishop, parallel to the edge.",
+          "The lock is static: no black-reply search needed."
+        ]
+      },
+      {
+        status: "Accept",
+        title: "Black king is deep enough",
+        fen: "8/8/5K1k/5B2/8/1N6/8/8 w - - 0 1",
+        pieces: { f6: "K", f5: "B", b3: "N", h6: "k" },
+        highlights: {
+          anchor: ["g5", "h4", "h5", "h6"],
+          stable: ["f7", "f3"],
+          prepare: ["f5"]
+        },
+        arrows: [],
+        bullets: [
+          "Here the knight does not lock f7/f3.",
+          "But the black king is already deeper toward the h8 corner.",
+          "With the bishop still on f5, that can count as established Zone X."
+        ]
+      },
+      {
+        status: "Accept",
+        title: "Same idea after reflection",
+        fen: "8/8/2K5/2B5/k7/8/6N1/8 w - - 0 1",
+        pieces: { c6: "K", c5: "B", a4: "k", g2: "N" },
+        highlights: {
+          anchor: ["b5", "a4", "a5", "a6"],
+          stable: ["c7", "c3"],
+          escape: ["b3"]
+        },
+        arrows: [["a4", "b3"]],
+        bullets: [
+          "The same test should be generated by board transforms.",
+          "This reflected loose case is rejected unless the knight is on c7/c3.",
+          "That keeps the rule small while covering rotations and reflections."
+        ]
+      }
+    ];
+
+    function squareToIndex(square) {
+      const file = files.indexOf(square[0]);
+      const rank = ranks.indexOf(square[1]);
+      return { file, rank };
+    }
+
+    function squareCenter(square) {
+      const { file, rank } = squareToIndex(square);
+      return {
+        x: (file + 0.5) * 12.5,
+        y: (rank + 0.5) * 12.5
+      };
+    }
+
+    function buildBoard(example) {
+      const wrap = document.createElement("div");
+      wrap.className = "board-wrap";
+
+      const board = document.createElement("div");
+      board.className = "board";
+
+      for (let r = 0; r < 8; r += 1) {
+        for (let f = 0; f < 8; f += 1) {
+          const square = files[f] + ranks[r];
+          const cell = document.createElement("div");
+          cell.className = `sq ${(r + f) % 2 === 0 ? "light" : "dark"}`;
+
+          for (const [name, squares] of Object.entries(example.highlights || {})) {
+            if (squares.includes(square)) cell.classList.add(name);
+          }
+
+          const coord = document.createElement("span");
+          coord.className = "coord";
+          coord.textContent = square;
+          cell.appendChild(coord);
+
+          const piece = example.pieces[square];
+          if (piece) {
+            const pieceNode = document.createElement("span");
+            pieceNode.className = `piece ${piece === piece.toLowerCase() ? "black" : "white"}`;
+            pieceNode.innerHTML = symbols[piece];
+            cell.appendChild(pieceNode);
+          }
+
+          board.appendChild(cell);
+        }
+      }
+
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "arrow-layer");
+      svg.setAttribute("viewBox", "0 0 100 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.innerHTML = `
+        <defs>
+          <marker id="arrowhead" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="rgba(217,72,72,.9)"></polygon>
+          </marker>
+        </defs>
+      `;
+
+      for (const [from, to] of example.arrows || []) {
+        const start = squareCenter(from);
+        const end = squareCenter(to);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", start.x);
+        line.setAttribute("y1", start.y);
+        line.setAttribute("x2", end.x);
+        line.setAttribute("y2", end.y);
+        line.setAttribute("stroke", "rgba(217,72,72,.9)");
+        line.setAttribute("stroke-width", "1.8");
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("marker-end", "url(#arrowhead)");
+        svg.appendChild(line);
+      }
+
+      wrap.appendChild(board);
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    function render() {
+      const root = document.getElementById("examples");
+      for (const example of examples) {
+        const card = document.createElement("article");
+        card.className = "example";
+
+        const copy = document.createElement("div");
+        copy.className = "copy";
+        copy.innerHTML = `
+          <div class="status ${example.status === "Accept" ? "good" : "bad"}">${example.status}</div>
+          <h2>${example.title}</h2>
+          <p class="fen">${example.fen}</p>
+          <ul>${example.bullets.map((text) => `<li>${text}</li>`).join("")}</ul>
+        `;
+
+        card.appendChild(buildBoard(example));
+        card.appendChild(copy);
+        root.appendChild(card);
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>

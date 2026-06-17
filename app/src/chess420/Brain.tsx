@@ -339,6 +339,7 @@ export default class Brain {
   static updateOpenings: (openings: { [fen: string]: string }) => void;
 
   static timeout: ReturnType<typeof setTimeout>;
+  static latestGameFastForwardVersion = 0;
   static endgameLoopSearchProgress: EndgameLoopSearchProgress = {
     isSearching: false,
     percent: 0,
@@ -359,6 +360,11 @@ export default class Brain {
   static flowchartId: string | undefined = undefined;
   static readonly ENDGAME_PICKER_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
   static readonly KNIGHT_AND_BISHOP_LOOKUP_ENTRIES: KnightAndBishopLookupEntry[] = [
+    {
+      key: "8/8/5KNk/5B2/8/8/8/8 w",
+      from: "f5",
+      to: "g4",
+    },
     {
       key: "7k/8/5K2/6N1/4B3/8/8/8 w",
       from: "g5",
@@ -2143,6 +2149,12 @@ export default class Brain {
         reason: "key square pattern",
       },
       {
+        compare: (a, b) =>
+          a.zoneXEstablishedKnightRouteScore -
+          b.zoneXEstablishedKnightRouteScore,
+        reason: "prepare zone x",
+      },
+      {
         compare: (a, b) => a.zoneXEntryScore - b.zoneXEntryScore,
         reason: "force zone x",
       },
@@ -2878,6 +2890,75 @@ export default class Brain {
     return undefined;
   }
 
+  static getKnightAndBishopEstablishedZoneXKnightRouteTarget(
+    fen: string
+  ): Square | undefined {
+    const bishop = Brain.findPiece(fen, "w", "b");
+    const blackKing = Brain.findPiece(fen, "b", "k");
+    const whiteKing = Brain.findPiece(fen, "w", "k");
+    if (!bishop || !blackKing || !whiteKing) {
+      return undefined;
+    }
+
+    const canonical = {
+      blackKingSquares: ["a2", "a1"] as Square[],
+      whiteKing: "c3" as Square,
+      bishop: "c2" as Square,
+      knightRouteTarget: "b3" as Square,
+    };
+    const targets = new Set<Square>();
+
+    Brain.SQUARE_TRANSFORMS.forEach((transform) => {
+      if (Brain.transformSquare(canonical.bishop, transform) !== bishop.square) {
+        return;
+      }
+      if (
+        !canonical.blackKingSquares
+          .map((square) => Brain.transformSquare(square, transform))
+          .includes(blackKing.square)
+      ) {
+        return;
+      }
+      if (Brain.transformSquare(canonical.whiteKing, transform) !== whiteKing.square) {
+        return;
+      }
+      const target = Brain.transformSquare(canonical.knightRouteTarget, transform);
+      if (Brain.edgeDistance(target) > 0) {
+        targets.add(target);
+      }
+    });
+
+    return [...targets].sort()[0];
+  }
+
+  static getKnightAndBishopEstablishedZoneXKnightRouteScore(
+    fen: string,
+    resultFen: string,
+    move: ReturnType<Chess["move"]>
+  ): number {
+    const target = Brain.getKnightAndBishopEstablishedZoneXKnightRouteTarget(fen);
+    const beforeKnight = Brain.findPiece(fen, "w", "n");
+    const afterKnight = Brain.findPiece(resultFen, "w", "n");
+    if (
+      !target ||
+      !beforeKnight ||
+      !afterKnight ||
+      move?.piece !== "n" ||
+      Brain.edgeDistance(afterKnight.square) === 0
+    ) {
+      return 99;
+    }
+    const beforeDistance = Brain.getKnightDistanceToAnySquare(
+      beforeKnight.square,
+      [target]
+    );
+    const afterDistance = Brain.getKnightDistanceToAnySquare(
+      afterKnight.square,
+      [target]
+    );
+    return afterDistance < beforeDistance ? afterDistance : 99;
+  }
+
   static getKnightAndBishopZoneXPrepareScore(
     fen: string,
     _san: string,
@@ -3169,6 +3250,7 @@ export default class Brain {
       .filter(
         (square): square is Square =>
           square != null &&
+          Brain.edgeDistance(square) > 0 &&
           Brain.kingDistance(square, blackKing.square) === 1 &&
           Brain.sameSquareColor(square, bishop.square)
       );
@@ -3404,6 +3486,12 @@ export default class Brain {
         Brain.knightAndBishopKingApproachesMiddle16(fen, resultFen, move?.piece)
           ? 0
           : Brain.getKnightAndBishopKeySquarePatternScore(resultFen),
+      zoneXEstablishedKnightRouteScore:
+        Brain.getKnightAndBishopEstablishedZoneXKnightRouteScore(
+          fen,
+          resultFen,
+          move
+        ),
       zoneXEntryScore: Brain.getKnightAndBishopZoneXEntryScore(fen, san),
       ...Brain.getKnightAndBishopZoneXPrepareScore(fen, san, resultFen, move),
       bishopKnightDiagonalAdjacencyScore:
@@ -3533,6 +3621,8 @@ export default class Brain {
       a.pieceSafetyScore - b.pieceSafetyScore ||
       a.phaseTwoEntryScore - b.phaseTwoEntryScore ||
       a.keySquarePatternScore - b.keySquarePatternScore ||
+      a.zoneXEstablishedKnightRouteScore -
+        b.zoneXEstablishedKnightRouteScore ||
       a.zoneXEntryScore - b.zoneXEntryScore ||
       a.zoneXPrepareScore - b.zoneXPrepareScore ||
       a.zoneXPreparePieceProximity - b.zoneXPreparePieceProximity ||
@@ -3575,6 +3665,12 @@ export default class Brain {
         reason: "key square pattern",
         compare: (a, b) =>
           a.keySquarePatternScore - b.keySquarePatternScore,
+      },
+      {
+        reason: "prepare zone x",
+        compare: (a, b) =>
+          a.zoneXEstablishedKnightRouteScore -
+          b.zoneXEstablishedKnightRouteScore,
       },
       {
         reason: "force zone x",
@@ -6277,7 +6373,11 @@ export default class Brain {
         } else if (Brain.view === View.lichess_id) {
           getGameById(Brain.lichessUsername!).then(Brain.loadMoves);
         } else if (Brain.view === View.lichess_latest) {
-          getLatestGame(Brain.lichessUsername!).then(Brain.loadMoves);
+          getLatestGame(Brain.lichessUsername!).then((game) =>
+            Brain.loadMoves(game).then(() =>
+              Brain.fastForwardLatestGameToFirstNonBestMove(game)
+            )
+          );
         }
       });
   }
@@ -6529,6 +6629,62 @@ export default class Brain {
     return lichessF(fen, { prepareNext: true })
       .then((moves) => moves.sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san);
+  }
+
+  static getBestByNoveltyElseScore(
+    fen: string,
+    orientationIsWhite = Brain.getState().orientationIsWhite
+  ): Promise<string | undefined> {
+    if (Brain.isMyTurn(fen, orientationIsWhite)) {
+      const novelty = Brain.getNovelty(fen);
+      if (novelty !== null) {
+        return Promise.resolve(novelty);
+      }
+    }
+    return lichessF(fen, { prepareNext: true })
+      .then((moves) => moves.slice().sort((a, b) => b.score - a.score))
+      .then((moves) => moves[0]?.san);
+  }
+
+  static setLatestGameMoveCount(moveCount: number, totalMoves: number) {
+    Brain.updateHistory({
+      ...Brain.history,
+      index: Math.max(0, totalMoves - moveCount),
+    });
+  }
+
+  static async fastForwardLatestGameToFirstNonBestMove(game: {
+    sans: string[];
+    orientationIsWhite: boolean;
+  }) {
+    const version = ++Brain.latestGameFastForwardVersion;
+    const chess = Brain.getChess();
+
+    for (let i = 0; i < game.sans.length; i++) {
+      const fen = chess.fen();
+      const san = game.sans[i];
+      const isMyMove = Brain.isMyTurn(fen, game.orientationIsWhite);
+      const bestSan = isMyMove
+        ? await Brain.getBestByNoveltyElseScore(fen, game.orientationIsWhite)
+        : undefined;
+      const move = chess.move(san);
+
+      if (
+        version !== Brain.latestGameFastForwardVersion ||
+        Brain.view !== View.lichess_latest
+      ) {
+        return;
+      }
+      if (!move) {
+        return;
+      }
+      if (isMyMove && bestSan !== undefined && move.san !== bestSan) {
+        Brain.setLatestGameMoveCount(i + 1, game.sans.length);
+        return;
+      }
+    }
+
+    Brain.setLatestGameMoveCount(game.sans.length, game.sans.length);
   }
 
   static async findEndgameLoop() {
