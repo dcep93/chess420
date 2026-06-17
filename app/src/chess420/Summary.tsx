@@ -33,6 +33,7 @@ function EndgameSummary() {
 function SelectedEndgameSummary() {
   const [now, updateNow] = useState(Date.now());
   const [shareStatus, updateShareStatus] = useState("");
+  const [showTimer, updateShowTimer] = useState(true);
   const state = Brain.getState();
   const terminalOutcome = Brain.getEndgameTerminalOutcome(state.fen);
   const elapsedMs = Brain.getEndgameElapsedMs(state, now);
@@ -58,7 +59,16 @@ function SelectedEndgameSummary() {
   return (
     <div className="summary-top summary-top--endgame">
       <button onClick={Brain.startOver}>start over</button>
-      <div className="summary-endgame-timer">{formatDuration(elapsedMs)}</div>
+      <button
+        className="summary-timer-toggle"
+        onClick={() => updateShowTimer((value) => !value)}
+        aria-pressed={!showTimer}
+      >
+        {showTimer ? "hide timer" : "show timer"}
+      </button>
+      {showTimer ? (
+        <div className="summary-endgame-timer">{formatDuration(elapsedMs)}</div>
+      ) : null}
       {terminalOutcome ? (
         <>
           <button onClick={shareEndgame}>

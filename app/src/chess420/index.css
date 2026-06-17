@@ -381,8 +381,12 @@
   align-items: center;
 }
 .summary-endgame-timer {
+  min-width: 4.75rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-variant-numeric: tabular-nums;
+}
+.summary-timer-toggle {
+  white-space: nowrap;
 }
 .summary-share-status {
   color: var(--text-muted);
