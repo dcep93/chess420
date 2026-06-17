@@ -6328,33 +6328,43 @@ export default class Brain {
     ).flat();
   }
 
+  static getMoveStates(o: {
+    sans: string[];
+    orientationIsWhite: boolean;
+  }): StateType[] {
+    const chess = Brain.getChess();
+    const logs: LogType[] = [];
+    return o.sans.map((san) => {
+      const fen = chess.fen();
+      chess.move(san);
+      logs.push({ fen, san });
+      return {
+        fen: chess.fen(),
+        startingFen: fen as string | undefined,
+        orientationIsWhite: o.orientationIsWhite,
+        logs: logs.slice(),
+      };
+    });
+  }
+
   static loadMoves(o: { sans: string[]; orientationIsWhite: boolean }) {
     return Promise.resolve(o)
-      .then(({ sans, orientationIsWhite }) => {
-        const chess = Brain.getChess();
-        clearTimeout(Brain.timeout);
-        const logs: LogType[] = [];
-        return sans.map((san) => {
-          const fen = chess.fen();
-          chess.move(san);
-          logs.push({ fen, san });
-          return {
-            fen: chess.fen(),
-            startingFen: fen as string | undefined,
-            orientationIsWhite,
-            logs: logs.slice(),
-          };
-        });
-      })
+      .then((game) => Brain.getMoveStates(game))
       .then((moveStates) => {
-        const states = moveStates
-          .reverse()
-          .concat(Brain.history.states.slice(Brain.history.index));
-        Brain.updateHistory({
-          index: states.length - 2,
-          states,
-        });
+        Brain.loadMoveStates(moveStates, moveStates.length > 0 ? 1 : 0);
       });
+  }
+
+  static loadMoveStates(moveStates: StateType[], moveCount: number) {
+    clearTimeout(Brain.timeout);
+    const states = moveStates
+      .slice()
+      .reverse()
+      .concat(Brain.history.states.slice(Brain.history.index));
+    Brain.updateHistory({
+      index: Math.max(0, moveStates.length - moveCount),
+      states,
+    });
   }
 
   static setInitialState() {
@@ -6373,11 +6383,7 @@ export default class Brain {
         } else if (Brain.view === View.lichess_id) {
           getGameById(Brain.lichessUsername!).then(Brain.loadMoves);
         } else if (Brain.view === View.lichess_latest) {
-          getLatestGame(Brain.lichessUsername!).then((game) =>
-            Brain.loadMoves(game).then(() =>
-              Brain.fastForwardLatestGameToFirstNonBestMove(game)
-            )
-          );
+          getLatestGame(Brain.lichessUsername!).then(Brain.loadLatestGame);
         }
       });
   }
@@ -6646,17 +6652,10 @@ export default class Brain {
       .then((moves) => moves[0]?.san);
   }
 
-  static setLatestGameMoveCount(moveCount: number, totalMoves: number) {
-    Brain.updateHistory({
-      ...Brain.history,
-      index: Math.max(0, totalMoves - moveCount),
-    });
-  }
-
-  static async fastForwardLatestGameToFirstNonBestMove(game: {
+  static async getLatestGameFastForwardMoveCount(game: {
     sans: string[];
     orientationIsWhite: boolean;
-  }) {
+  }): Promise<number | undefined> {
     const version = ++Brain.latestGameFastForwardVersion;
     const chess = Brain.getChess();
 
@@ -6673,18 +6672,27 @@ export default class Brain {
         version !== Brain.latestGameFastForwardVersion ||
         Brain.view !== View.lichess_latest
       ) {
-        return;
+        return undefined;
       }
       if (!move) {
-        return;
+        return undefined;
       }
       if (isMyMove && bestSan !== undefined && move.san !== bestSan) {
-        Brain.setLatestGameMoveCount(i + 1, game.sans.length);
-        return;
+        return i + 1;
       }
     }
 
-    Brain.setLatestGameMoveCount(game.sans.length, game.sans.length);
+    return game.sans.length;
+  }
+
+  static async loadLatestGame(game: {
+    sans: string[];
+    orientationIsWhite: boolean;
+  }) {
+    const moveStates = Brain.getMoveStates(game);
+    const moveCount = await Brain.getLatestGameFastForwardMoveCount(game);
+    if (moveCount === undefined) return;
+    Brain.loadMoveStates(moveStates, moveCount);
   }
 
   static async findEndgameLoop() {

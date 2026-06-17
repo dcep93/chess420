@@ -5255,6 +5255,7 @@ test("latest game import fast-forwards to the first non-best user move", async (
     orientationIsWhite: true,
   };
   const checkedFens: string[] = [];
+  let historyUpdates = 0;
 
   try {
     Brain.view = View.lichess_latest;
@@ -5270,6 +5271,7 @@ test("latest game import fast-forwards to the first non-best user move", async (
       ],
     };
     Brain.updateHistory = (history) => {
+      historyUpdates += 1;
       Brain.history = history;
     };
     Brain.getBestByNoveltyElseScore = (fen) => {
@@ -5277,9 +5279,9 @@ test("latest game import fast-forwards to the first non-best user move", async (
       return Promise.resolve(checkedFens.length === 1 ? "e4" : "Bc4");
     };
 
-    await Brain.loadMoves(game);
-    await Brain.fastForwardLatestGameToFirstNonBestMove(game);
+    await Brain.loadLatestGame(game);
 
+    assert.equal(historyUpdates, 1);
     assert.equal(checkedFens.length, 2);
     assert.equal(Brain.getState().logs.length, 3);
     assert.equal(Brain.getState().logs.at(-1)?.san, "Nf3");
