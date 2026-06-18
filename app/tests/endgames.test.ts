@@ -5283,8 +5283,9 @@ test("latest game import fast-forwards to the first non-best user move", async (
 
     assert.equal(historyUpdates, 1);
     assert.equal(checkedFens.length, 2);
-    assert.equal(Brain.getState().logs.length, 3);
-    assert.equal(Brain.getState().logs.at(-1)?.san, "Nf3");
+    assert.equal(Brain.getState().logs.length, 2);
+    assert.equal(Brain.getState().logs.at(-1)?.san, "e5");
+    assert.equal(Brain.getChess(Brain.getState().fen).turn(), "w");
   } finally {
     Brain.view = originalView;
     Brain.history = originalHistory;

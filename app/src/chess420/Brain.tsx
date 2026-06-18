@@ -6362,7 +6362,10 @@ export default class Brain {
       .reverse()
       .concat(Brain.history.states.slice(Brain.history.index));
     Brain.updateHistory({
-      index: Math.max(0, moveStates.length - moveCount),
+      index: Math.max(
+        0,
+        Math.min(states.length - 1, moveStates.length - moveCount)
+      ),
       states,
     });
   }
@@ -6647,7 +6650,7 @@ export default class Brain {
         return Promise.resolve(novelty);
       }
     }
-    return lichessF(fen, { prepareNext: true })
+    return lichessF(fen)
       .then((moves) => moves.slice().sort((a, b) => b.score - a.score))
       .then((moves) => moves[0]?.san);
   }
@@ -6678,7 +6681,7 @@ export default class Brain {
         return undefined;
       }
       if (isMyMove && bestSan !== undefined && move.san !== bestSan) {
-        return i + 1;
+        return i;
       }
     }
 
