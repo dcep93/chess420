@@ -202,7 +202,7 @@ function SubBoard() {
               return false;
             }
             const didMove = moveFromTo(sourceSquare, targetSquare, isEndgame);
-            if (!didMove) resetDragState();
+            resetDragState();
             return didMove;
           },
           onSquareClick: ({ square }) => {
