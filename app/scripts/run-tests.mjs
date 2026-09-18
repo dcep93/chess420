@@ -1,15 +1,17 @@
-import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { mkdirSync, readdirSync } from "node:fs";
+import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { build } from "esbuild";
 
-const outfile = resolve(".tmp/endgames.test.mjs");
+const outdir = resolve(".tmp");
+const tests = readdirSync("tests").filter((file) => file.endsWith(".test.ts"));
 
-mkdirSync(dirname(outfile), { recursive: true });
+mkdirSync(outdir, { recursive: true });
 
 await build({
-  entryPoints: ["tests/endgames.test.ts"],
-  outfile,
+  entryPoints: tests.map((file) => `tests/${file}`),
+  outdir,
+  outExtension: { ".js": ".mjs" },
   bundle: true,
   platform: "node",
   format: "esm",
@@ -21,7 +23,7 @@ await build({
   },
 });
 
-const result = spawnSync(process.execPath, ["--test", outfile], {
+const result = spawnSync(process.execPath, ["--test", ...tests.map((file) => resolve(outdir, file.replace(/\.ts$/, ".mjs")))], {
   stdio: "inherit",
 });
 

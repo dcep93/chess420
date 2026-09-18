@@ -21,27 +21,9 @@ export default class StorageW {
   }
 
   static clear(maxSize: number) {
-    try {
-      while (true) {
-        const lichessStored = Object.entries({ ...localStorage })
-          .map(([kk, obj]) => ({
-            kk,
-            timestamp: JSON.parse(obj)?.timestamp,
-          }))
-          .filter(({ timestamp }) => timestamp);
-
-        if (lichessStored.length <= maxSize) {
-          break;
-        }
-        const oldest = lichessStored.reduce(
-          (prev, curr) => (prev.timestamp < curr.timestamp ? prev : curr),
-          { kk: "", timestamp: Number.POSITIVE_INFINITY }
-        );
-        localStorage.removeItem(oldest.kk);
-      }
-    } catch {
-      localStorage.clear();
-      return;
+    const cached = getCacheEntries();
+    for (const { key } of cached.slice(0, Math.max(0, cached.length - maxSize))) {
+      localStorage.removeItem(key);
     }
   }
 
@@ -59,7 +41,7 @@ export default class StorageW {
       return;
     }
     const v = JSON.stringify(content);
-    localStorage.setItem(k, v);
+    setWithCacheEviction(k, v);
   }
 
   static getLichess(key: string): any {
@@ -70,10 +52,52 @@ export default class StorageW {
   }
 
   static setLichess(fen: string, content: any) {
-    StorageW.clear(MAX_LICHESS_STORED);
     const k = getLichessKey(fen);
     const v = JSON.stringify({ content, timestamp: Date.now() });
-    setTimeout(() => localStorage.setItem(k, v));
+    setTimeout(() => {
+      try {
+        StorageW.clear(MAX_LICHESS_STORED - 1);
+        setWithCacheEviction(k, v);
+      } catch {
+        // The cache is optional; a failed write must not interrupt play.
+      }
+    });
+  }
+}
+
+function getCacheEntries() {
+  return Object.keys(localStorage)
+    .filter((key) => key.startsWith(getKey("lichess:")))
+    .map((key) => {
+      let timestamp = 0;
+      try {
+        const entry = JSON.parse(localStorage.getItem(key)!);
+        if (typeof entry?.timestamp === "number" && Number.isFinite(entry.timestamp)) {
+          timestamp = entry.timestamp;
+        }
+      } catch {
+        // Malformed cache entries can be discarded, never user novelties.
+      }
+      return { key, timestamp };
+    })
+    .sort((a, b) => a.timestamp - b.timestamp);
+}
+
+function setWithCacheEviction(key: string, value: string) {
+  let cached: ReturnType<typeof getCacheEntries> | undefined;
+  while (true) {
+    try {
+      localStorage.setItem(key, value);
+      return;
+    } catch (error) {
+      if (!(error instanceof DOMException) || error.name !== "QuotaExceededError") {
+        throw error;
+      }
+      cached ??= getCacheEntries();
+      const oldest = cached.shift();
+      if (!oldest) throw error;
+      localStorage.removeItem(oldest.key);
+    }
   }
 }
 

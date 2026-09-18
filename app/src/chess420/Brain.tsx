@@ -7422,7 +7422,12 @@ export default class Brain {
         Brain.view !== View.traverse &&
         Brain.view !== View.endgame
       ) {
-        Brain.setNovelty(state.fen, move.san);
+        try {
+          Brain.setNovelty(state.fen, move.san);
+        } catch (error) {
+          console.error("Could not save novelty", error);
+          alert("Your move will be played, but its novelty could not be saved. Browser storage is full or unavailable.");
+        }
       }
       Brain.playMove(move.san);
       return true;
