@@ -145,7 +145,7 @@ function SubBoard() {
       if (shouldSnap) updateInstantFen(nextFen);
       updateFen(nextFen);
     };
-    if (isEndgame && shouldSnap) {
+    if (shouldSnap) {
       flushSync(updateOptimisticPosition);
     } else {
       updateOptimisticPosition();
@@ -201,7 +201,7 @@ function SubBoard() {
               resetDragState();
               return false;
             }
-            const didMove = moveFromTo(sourceSquare, targetSquare, isEndgame);
+            const didMove = moveFromTo(sourceSquare, targetSquare, true);
             resetDragState();
             return didMove;
           },
@@ -211,7 +211,7 @@ function SubBoard() {
             } else if (prevClicked === square) {
               updateClicked(null);
             } else {
-              if (moveFromTo(prevClicked, square, true)) return;
+              if (moveFromTo(prevClicked, square, false)) return;
               selectSquare(square);
             }
           },
