@@ -171,7 +171,22 @@ export default function Controls() {
 
         <section className="controls__section controls__section--lichess">
           <div className="controls__section-top">
-            <h2>Lichess</h2>
+            <div className="controls__section-heading">
+              <h2>Lichess</h2>
+              <button
+                className="controls__open-button"
+                title="Open current position in Lichess analysis"
+                onClick={() =>
+                  window.open(
+                    `https://lichess.org/analysis/${Brain.getState().fen.replace(/ /g, "_")}`,
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+              >
+                open
+              </button>
+            </div>
             <span className="controls__request-count">
               {lichessRequests} req
             </span>

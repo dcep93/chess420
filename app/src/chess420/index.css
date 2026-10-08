@@ -310,6 +310,11 @@
   height: var(--control-height);
   line-height: 1;
 }
+.controls button.controls__open-button {
+  height: auto;
+  padding: 0.18rem 0.45rem;
+  font-size: 0.72rem;
+}
 .controls button.controls__help-button {
   width: auto;
   height: auto;
