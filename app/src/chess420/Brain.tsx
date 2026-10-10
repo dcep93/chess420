@@ -6662,14 +6662,25 @@ export default class Brain {
     const version = ++Brain.latestGameFastForwardVersion;
     const chess = Brain.getChess();
 
-    for (let i = 0; i < game.sans.length; i++) {
+    for (let i = 0; i <= game.sans.length; i++) {
       const fen = chess.fen();
+      const moves = await lichessF(fen);
+      if (
+        version !== Brain.latestGameFastForwardVersion ||
+        Brain.view !== View.lichess_latest
+      ) {
+        return undefined;
+      }
+      const total = moves.reduce((sum, move) => sum + move.total, 0);
+      if (total <= settings.RARE_THRESHOLD || i === game.sans.length) {
+        return i;
+      }
+
       const san = game.sans[i];
-      const isMyMove = Brain.isMyTurn(fen, game.orientationIsWhite);
-      const bestSan = isMyMove
-        ? await Brain.getBestByNoveltyElseScore(fen, game.orientationIsWhite)
+      const isWhiteMove = chess.turn() === "w";
+      const bestSan = isWhiteMove
+        ? await Brain.getBestByNoveltyElseScore(fen, true)
         : undefined;
-      const move = chess.move(san);
 
       if (
         version !== Brain.latestGameFastForwardVersion ||
@@ -6677,10 +6688,11 @@ export default class Brain {
       ) {
         return undefined;
       }
+      const move = chess.move(san);
       if (!move) {
         return undefined;
       }
-      if (isMyMove && bestSan !== undefined && move.san !== bestSan) {
+      if (isWhiteMove && bestSan !== undefined && move.san !== bestSan) {
         return i;
       }
     }

@@ -15,6 +15,7 @@ import {
 import { type LogType } from "../src/chess420/Log";
 import { assignBrainRoute } from "../src/chess420/Routing";
 import settings from "../src/chess420/Settings";
+import StorageW from "../src/chess420/StorageW";
 import { FLOWCHART_DATA } from "../src/chess420/flowcharts/flowchartData";
 import { getRenderedFlowchartData } from "../src/chess420/flowcharts/FlowchartPage";
 import { getKnightBishopBishopAnchorKey } from "../src/chess420/flowcharts/FlowchartGenerator";
@@ -5244,7 +5245,11 @@ test("endgame autoreply waits until after the white move is committed", async ()
   assert.equal(typeof Brain.getState().logs[1].duration_ms, "number");
 });
 
-test("latest game import fast-forwards to the first non-best user move", async () => {
+test("latest game import fast-forwards to the first non-best White move", async (t) => {
+  t.mock.method(StorageW, "getLichess", () => [
+    { san: "e4", white: 100, black: 100, draws: 0 },
+  ]);
+  t.mock.method(StorageW, "setLichess", () => {});
   const originalView = Brain.view;
   const originalHistory = Brain.history;
   const originalUpdateHistory = Brain.updateHistory;
